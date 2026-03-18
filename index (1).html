@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Win-Win Network</title>
+
+  <meta name="description" content="Рекомендуйте бизнесы друзьям и зарабатывайте автоматически" />
+  <meta property="og:title" content="Вас пригласили в Win-Win Network" />
+  <meta property="og:description" content="Рекомендуйте бизнесы и зарабатывайте автоматически" />
+  <meta property="og:image" content="https://iiassistent7-jpg.github.io/winwin-invite/preview.png" />
+  <meta property="og:url" content="https://iiassistent7-jpg.github.io/winwin-invite/" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#6c63ff" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-1: #0a0a0f;
+      --bg-2: #1a1a2e;
+      --accent-1: #6c63ff;
+      --accent-2: #00d4aa;
+      --text-main: #ffffff;
+      --text-muted: #a0a0b0;
+      --wa: #25d366;
+      --tg: #0088cc;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.28);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --max-width: 480px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(108, 99, 255, 0.14), transparent 35%),
+        radial-gradient(circle at 80% 10%, rgba(0, 212, 170, 0.12), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), #111122, var(--bg-1));
+      background-size: 180% 180%;
+      animation: bgShift 15s ease infinite;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    body.rtl {
+      direction: rtl;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--max-width);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: pageIn 0.6s ease forwards;
+    }
+
+    @keyframes pageIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 28px 22px 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.4), rgba(0, 212, 170, 0.18), rgba(255, 255, 255, 0.05));
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .invited-text {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.01em;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .logo-sub {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 12px;
+      text-align: center;
+      min-height: 116px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.5s ease forwards;
+    }
+
+    .step:nth-child(1) { animation-delay: 0.10s; }
+    .step:nth-child(2) { animation-delay: 0.20s; }
+    .step:nth-child(3) { animation-delay: 0.30s; }
+
+    @keyframes cardIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .step .emoji {
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .step .label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .actions {
+      display: grid;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      outline: none;
+      text-decoration: none;
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 16px 20px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      will-change: transform;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.03);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid rgba(255,255,255,0.7);
+      outline-offset: 3px;
+    }
+
+    .btn.wa {
+      background: linear-gradient(135deg, #22c55e, var(--wa));
+    }
+
+    .btn.wa:hover {
+      box-shadow: 0 0 0 1px rgba(37, 211, 102, 0.25), 0 10px 30px rgba(37, 211, 102, 0.34);
+    }
+
+    .btn.tg {
+      background: linear-gradient(135deg, #149adf, var(--tg));
+    }
+
+    .btn.tg:hover {
+      box-shadow: 0 0 0 1px rgba(0, 136, 204, 0.25), 0 10px 30px rgba(0, 136, 204, 0.34);
+    }
+
+    .btn svg {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 22px;
+      display: block;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      color: var(--text-muted);
+    }
+
+    .footer .copyright {
+      font-size: 0.84rem;
+      margin-bottom: 6px;
+    }
+
+    .footer .note {
+      font-size: 0.72rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 640px) {
+      .panel {
+        padding: 26px 18px 18px;
+        border-radius: 24px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        min-height: 88px;
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 16px;
+      }
+
+      body.rtl .step {
+        text-align: right;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="panel">
+      <header class="header">
+        <p class="invited-text" id="title">Вас пригласили в</p>
+        <h2 class="logo">Win-Win</h2>
+        <div class="logo-sub">Network</div>
+      </header>
+
+      <section class="hero">
+        <p id="subtitle">Рекомендуйте бизнесы друзьям и зарабатывайте автоматически</p>
+      </section>
+
+      <section class="steps" aria-label="How it works">
+        <article class="step">
+          <div class="emoji">🤝</div>
+          <div class="label" id="step1">Рекомендуй</div>
+        </article>
+        <article class="step">
+          <div class="emoji">💰</div>
+          <div class="label" id="step2">Зарабатывай</div>
+        </article>
+        <article class="step">
+          <div class="emoji">🚀</div>
+          <div class="label" id="step3">Продвигай</div>
+        </article>
+      </section>
+
+      <section class="actions">
+        <a id="waBtn" class="btn wa" href="https://wa.me/972534218573" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 32 32" aria-hidden="true" fill="currentColor">
+            <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
+            <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
+          </svg>
+          <span id="waText">Присоединиться через WhatsApp</span>
+        </a>
+
+        <a id="tgBtn" class="btn tg" href="https://t.me/winwin_lead_bot" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
+          </svg>
+          <span id="tgText">Присоединиться через Telegram</span>
+        </a>
+      </section>
+
+      <footer class="footer">
+        <div class="copyright">Win-Win Network © 2025</div>
+        <div class="note" id="footerNote">Бесплатно для агентов • Эффективно для бизнеса</div>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const TEXTS = {
+        ru: {
+          htmlLang: "ru",
+          dir: "ltr",
+          title: "Вас пригласили в",
+          subtitle: "Рекомендуйте бизнесы друзьям и зарабатывайте автоматически",
+          step1: "Рекомендуй",
+          step2: "Зарабатывай",
+          step3: "Продвигай",
+          wa: "Присоединиться через WhatsApp",
+          tg: "Присоединиться через Telegram",
+          footer: "Бесплатно для агентов • Эффективно для бизнеса"
+        },
+        he: {
+          htmlLang: "he",
+          dir: "rtl",
+          title: "הוזמנתם ל",
+          subtitle: "המליצו על עסקים לחברים והרוויחו אוטומטית",
+          step1: "המלץ",
+          step2: "הרוויח",
+          step3: "קדם",
+          wa: "הצטרפו דרך WhatsApp",
+          tg: "הצטרפו דרך Telegram",
+          footer: "חינם לסוכנים • יעיל לעסקים"
+        },
+        en: {
+          htmlLang: "en",
+          dir: "ltr",
+          title: "You've been invited to",
+          subtitle: "Recommend businesses to friends and earn automatically",
+          step1: "Recommend",
+          step2: "Earn",
+          step3: "Promote",
+          wa: "Join via WhatsApp",
+          tg: "Join via Telegram",
+          footer: "Free for agents • Effective for businesses"
+        },
+        ar: {
+          htmlLang: "ar",
+          dir: "rtl",
+          title: "تمت دعوتك إلى",
+          subtitle: "أوصِ بالأعمال للأصدقاء واكسب تلقائياً",
+          step1: "أوصِ",
+          step2: "اكسب",
+          step3: "روّج",
+          wa: "انضم عبر WhatsApp",
+          tg: "انضم عبر Telegram",
+          footer: "مجاني للوكلاء • فعّال للأعمال"
+        }
+      };
+
+      const lang =
+        navigator.language && navigator.language.startsWith("he") ? "he" :
+        navigator.language && navigator.language.startsWith("ar") ? "ar" :
+        navigator.language && navigator.language.startsWith("ru") ? "ru" :
+        "en";
+
+      const t = TEXTS[lang] || TEXTS.en;
+
+      document.documentElement.lang = t.htmlLang;
+      document.body.dir = t.dir;
+      document.body.classList.toggle("rtl", t.dir === "rtl");
+
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("subtitle").textContent = t.subtitle;
+      document.getElementById("step1").textContent = t.step1;
+      document.getElementById("step2").textContent = t.step2;
+      document.getElementById("step3").textContent = t.step3;
+      document.getElementById("waText").textContent = t.wa;
+      document.getElementById("tgText").textContent = t.tg;
+      document.getElementById("footerNote").textContent = t.footer;
+
+      const ref = new URLSearchParams(window.location.search).get("ref");
+      const safeRef = ref ? encodeURIComponent(ref.trim()) : "";
+
+      const tgLink = safeRef
+        ? `https://t.me/winwin_lead_bot?start=winwin_ref_${safeRef}`
+        : "https://t.me/winwin_lead_bot";
+
+      const waLink = safeRef
+        ? `https://wa.me/972534218573?text=${encodeURIComponent(`ref_${decodeURIComponent(safeRef)}`)}`
+        : "https://wa.me/972534218573";
+
+      const waBtn = document.getElementById("waBtn");
+      const tgBtn = document.getElementById("tgBtn");
+
+      waBtn.href = waLink;
+      tgBtn.href = tgLink;
+    })();
+  </script>
+</body>
+</html>
