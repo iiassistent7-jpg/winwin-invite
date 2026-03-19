@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win Network</title>
+  <title>Win-Win — Приглашение</title>
 
-  <meta name="description" content="Recommend businesses to friends and earn automatically" />
+  <meta name="description" content="Вас пригласили в Win-Win Network" />
   <meta property="og:title" content="Win-Win Network" />
-  <meta property="og:description" content="Everyone wins. Recommend. Earn. Grow." />
-  <meta property="og:image" content="https://iiassistent7-jpg.github.io/winwin-invite/preview.png" />
-  <meta property="og:url" content="https://iiassistent7-jpg.github.io/winwin-invite/" />
-  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Здесь выигрывают все" />
+  <meta property="og:image" content="https://invite.winwinnetwork.pro/preview.png" />
   <meta name="theme-color" content="#6c63ff" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,9 +25,9 @@
       --text-muted: #a0a0b0;
       --wa: #25d366;
       --tg: #0088cc;
-      --card: rgba(255, 255, 255, 0.06);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --card: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.08);
+      --ease-out: cubic-bezier(0.23,1,0.32,1);
       --max-width: 480px;
     }
 
@@ -38,11 +36,11 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
       color: var(--text-main);
       background:
-        radial-gradient(circle at 20% 20%, rgba(108, 99, 255, 0.14), transparent 35%),
-        radial-gradient(circle at 80% 10%, rgba(0, 212, 170, 0.12), transparent 30%),
+        radial-gradient(circle at 20% 20%, rgba(108,99,255,0.14), transparent 35%),
+        radial-gradient(circle at 80% 10%, rgba(0,212,170,0.12), transparent 30%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2), #111122, var(--bg-1));
       background-size: 180% 180%;
       animation: bgShift 15s ease infinite;
@@ -72,19 +70,17 @@
       animation: pageIn 0.6s var(--ease-out) forwards;
     }
 
-    @keyframes pageIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes pageIn { to { opacity: 1; transform: translateY(0); } }
 
     .panel {
       position: relative;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 28px;
       padding: 24px 22px 20px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.28);
       overflow: hidden;
     }
 
@@ -132,56 +128,56 @@
     }
 
     /* ШАПКА */
-    .header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
+    .header { text-align: center; margin-bottom: 16px; }
 
-    .invited-text {
-      margin: 0 0 4px;
+    .invited-label {
       font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-main);
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 0 0 6px;
     }
 
-    .logo {
-      margin: 0;
-      font-size: clamp(2rem, 6vw, 2.8rem);
+    /* Имя бизнеса — большое и яркое */
+    .biz-name {
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
       font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
       background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      margin: 0 0 4px;
     }
 
-    .logo-sub {
-      display: inline-block;
-      margin-top: 6px;
-      font-size: 0.83rem;
+    .winwin-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
       color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .winwin-tag span {
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
     }
 
     /* HERO */
-    .hero {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .hero-subtitle {
-      margin: 0 0 10px;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
+    .hero { text-align: center; margin-bottom: 20px; }
 
     .hero-slogan {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
       background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
       -webkit-background-clip: text;
@@ -190,12 +186,57 @@
       letter-spacing: -0.01em;
     }
 
+    /* БЛОК ИНФОРМАЦИИ О БИЗНЕСЕ */
+    .biz-info-block {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: none; /* показываем только если есть данные */
+    }
+
+    .biz-info-block.visible { display: block; }
+
+    .biz-info-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .biz-info-text {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .biz-info-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(0,212,170,0.1));
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-decoration: none;
+      transition: filter 0.2s;
+    }
+
+    .biz-info-link:hover { filter: brightness(1.1); }
+
     /* КАРТОЧКИ */
     .steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin: 20px 0;
+      margin: 0 0 20px;
     }
 
     .step {
@@ -204,7 +245,7 @@
       border-radius: 18px;
       padding: 14px 10px;
       text-align: center;
-      min-height: 110px;
+      min-height: 100px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -219,36 +260,15 @@
     .step:nth-child(2) { animation-delay: 0.20s; }
     .step:nth-child(3) { animation-delay: 0.30s; }
 
-    @keyframes cardIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
 
-    .step-icon {
-      width: 30px;
-      height: 30px;
-      fill: var(--accent-2);
-      flex-shrink: 0;
-    }
+    .step-icon { width: 28px; height: 28px; fill: var(--accent-2); flex-shrink: 0; }
 
-    .step .label {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.2;
-    }
-
-    .step .hint {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
+    .step .label { font-size: 0.82rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+    .step .hint  { font-size: 0.68rem; color: var(--text-muted); line-height: 1.3; }
 
     /* КНОПКИ */
-    .actions {
-      display: grid;
-      gap: 12px;
-      margin-top: 4px;
-    }
+    .actions { display: grid; gap: 12px; }
 
     .btn {
       appearance: none;
@@ -268,14 +288,12 @@
       font-weight: 700;
       color: #fff;
       cursor: pointer;
-      transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), filter 0.22s var(--ease-out);
+      transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), filter 0.22s;
       box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-      will-change: transform;
     }
 
     .btn:hover  { transform: scale(1.03); filter: brightness(1.04); }
     .btn:active { transform: scale(0.98); }
-    .btn:focus-visible { outline: 2px solid rgba(255,255,255,0.7); outline-offset: 3px; }
 
     .btn.wa { background: linear-gradient(135deg, #22c55e, var(--wa)); }
     .btn.wa:hover { box-shadow: 0 0 0 1px rgba(37,211,102,0.25), 0 10px 30px rgba(37,211,102,0.34); }
@@ -286,11 +304,7 @@
     .btn svg { width: 22px; height: 22px; flex: 0 0 22px; fill: #fff; }
 
     /* ФУТЕР */
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      color: var(--text-muted);
-    }
+    .footer { text-align: center; margin-top: 20px; color: var(--text-muted); }
     .footer .copyright { font-size: 0.84rem; margin-bottom: 4px; }
     .footer .note      { font-size: 0.72rem; opacity: 0.9; }
 
@@ -299,21 +313,20 @@
       .panel { padding: 20px 16px 18px; border-radius: 24px; }
       .steps { grid-template-columns: 1fr; }
       .step {
-        min-height: 72px;
+        min-height: 68px;
         flex-direction: row;
         justify-content: flex-start;
         text-align: left;
-        padding: 14px 16px;
+        padding: 12px 16px;
         gap: 12px;
       }
       body.rtl .step { text-align: right; }
-      .step-icon { width: 26px; height: 26px; }
+      .step-icon { width: 24px; height: 24px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
     }
@@ -331,62 +344,76 @@
       </div>
 
       <header class="header">
-        <p class="invited-text" id="invited">Вас пригласили в</p>
-        <h1 class="logo">Win-Win</h1>
-        <div class="logo-sub">Network</div>
+        <p class="invited-label" id="invitedLabel">Вас пригласили в</p>
+        <h1 class="biz-name" id="bizName">Win-Win</h1>
+        <div class="winwin-tag">
+          via <span>Win-Win</span> Network
+        </div>
       </header>
 
       <section class="hero">
-        <p class="hero-subtitle" id="subtitle">Рекомендуйте бизнесы друзьям и зарабатывайте автоматически</p>
-        <p class="hero-slogan" id="slogan">Выигрывают все</p>
+        <p class="hero-slogan" id="slogan">Здесь выигрывают все</p>
       </section>
 
-      <section class="steps" aria-label="How it works">
-        <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+      <!-- Блок инфо о бизнесе — показывается только если есть данные -->
+      <div class="biz-info-block" id="bizInfoBlock">
+        <div class="biz-info-label" id="bizInfoLabel">О бизнесе</div>
+        <div class="biz-info-text" id="bizInfoText"></div>
+        <a class="biz-info-link" id="bizInfoLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
           </svg>
+          <span id="bizInfoLinkText">Узнать больше</span>
+        </a>
+      </div>
+
+      <section class="steps">
+        <article class="step">
+          <svg class="step-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           <div>
-            <div class="label" id="step1">Рекомендуй</div>
-            <div class="hint"  id="hint1">Отправь ссылку другу</div>
+            <div class="label" id="step1">Зарегистрируйтесь</div>
+            <div class="hint"  id="hint1">1 минута</div>
           </div>
         </article>
 
         <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
-          </svg>
+          <svg class="step-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           <div>
-            <div class="label" id="step2">Зарабатывай</div>
-            <div class="hint"  id="hint2">Получай % за клиента</div>
+            <div class="label" id="step2">Отправьте свой контакт</div>
+            <div class="hint" id="hint2"></div>
           </div>
         </article>
 
         <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
-          </svg>
+          <div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px">
+            <svg class="step-icon" viewBox="0 0 24 24" style="width:22px;height:22px">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+            </svg>
+            <svg class="step-icon" viewBox="0 0 24 24" style="width:22px;height:22px">
+              <path d="M6.62 10.79a15.15 15.15 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/>
+            </svg>
+          </div>
           <div>
-            <div class="label" id="step3">Продвигай</div>
-            <div class="hint"  id="hint3">Расширяй сеть</div>
+            <div class="label" id="step3">Бизнес с вами свяжется</div>
+            <div class="hint"  id="hint3">в ближайшее время</div>
           </div>
         </article>
       </section>
 
       <section class="actions">
         <a id="waBtn" class="btn wa" href="https://wa.me/972534218573" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
             <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
             <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
           </svg>
-          <span id="waText">Присоединиться через WhatsApp</span>
+          <span id="waText">Написать через WhatsApp</span>
         </a>
 
         <a id="tgBtn" class="btn tg" href="https://t.me/winwin_lead_bot" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
             <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
           </svg>
-          <span id="tgText">Присоединиться через Telegram</span>
+          <span id="tgText">Написать через Telegram</span>
         </a>
       </section>
 
@@ -399,121 +426,153 @@
   </main>
 
   <script>
-    (function () {
-      "use strict";
+  (function () {
+    "use strict";
 
-      const TEXTS = {
-        en: {
-          dir: "ltr", htmlLang: "en",
-          invited:  "You've been invited to",
-          subtitle: "Recommend businesses to friends and earn automatically",
-          slogan:   "Everyone wins",
-          step1: "Recommend",   hint1: "Send a link to a friend",
-          step2: "Earn",        hint2: "Get % per referred client",
-          step3: "Grow",        hint3: "Expand your network",
-          wa: "Join via WhatsApp",
-          tg: "Join via Telegram",
-          footer: "Free for agents \u2022 Effective for businesses"
-        },
-        he: {
-          dir: "rtl", htmlLang: "he",
-          invited:  "\u05d4\u05d5\u05d6\u05de\u05e0\u05ea\u05dd \u05dc",
-          subtitle: "\u05d4\u05de\u05dc\u05d9\u05e6\u05d5 \u05e2\u05dc \u05e2\u05e1\u05e7\u05d9\u05dd \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd \u05d5\u05d4\u05e8\u05d5\u05d5\u05d9\u05d7\u05d5 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea",
-          slogan:   "\u05db\u05d5\u05dc\u05dd \u05de\u05e8\u05d5\u05d5\u05d9\u05d7\u05d9\u05dd",
-          step1: "\u05d4\u05de\u05dc\u05e5",   hint1: "\u05e9\u05dc\u05d7 \u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05d7\u05d1\u05e8",
-          step2: "\u05d4\u05e8\u05d5\u05d5\u05d7", hint2: "\u05e7\u05d1\u05dc % \u05e2\u05dc \u05db\u05dc \u05dc\u05e7\u05d5\u05d7",
-          step3: "\u05e7\u05d3\u05dd",    hint3: "\u05d4\u05e8\u05d7\u05d1 \u05d0\u05ea \u05d4\u05e8\u05e9\u05ea \u05e9\u05dc\u05da",
-          wa: "\u05d4\u05e6\u05d8\u05e8\u05e4\u05d5 \u05d3\u05e8\u05da WhatsApp",
-          tg: "\u05d4\u05e6\u05d8\u05e8\u05e4\u05d5 \u05d3\u05e8\u05da Telegram",
-          footer: "\u05d7\u05d9\u05e0\u05dd \u05dc\u05e1\u05d5\u05db\u05e0\u05d9\u05dd \u2022 \u05d9\u05e2\u05d9\u05dc \u05dc\u05e2\u05e1\u05e7\u05d9\u05dd"
-        },
-        ar: {
-          dir: "rtl", htmlLang: "ar",
-          invited:  "\u062a\u0645\u062a \u062f\u0639\u0648\u062a\u0643 \u0625\u0644\u0649",
-          subtitle: "\u0623\u0648\u0635\u0650 \u0628\u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0644\u0644\u0623\u0635\u062f\u0642\u0627\u0621 \u0648\u0627\u0643\u0633\u0628 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b",
-          slogan:   "\u0627\u0644\u062c\u0645\u064a\u0639 \u064a\u0631\u0628\u062d",
-          step1: "\u0623\u0648\u0635\u0650",   hint1: "\u0623\u0631\u0633\u0644 \u0631\u0627\u0628\u0637\u0627\u064b \u0644\u0635\u062f\u064a\u0642",
-          step2: "\u0627\u0643\u0633\u0628",   hint2: "\u0627\u062d\u0635\u0644 % \u0644\u0643\u0644 \u0639\u0645\u064a\u0644",
-          step3: "\u0631\u0648\u0651\u062c",   hint3: "\u0648\u0633\u0651\u0639 \u0634\u0628\u0643\u062a\u0643",
-          wa: "\u0627\u0646\u0636\u0645 \u0639\u0628\u0631 WhatsApp",
-          tg: "\u0627\u0646\u0636\u0645 \u0639\u0628\u0631 Telegram",
-          footer: "\u0645\u062c\u0627\u0646\u064a \u0644\u0644\u0648\u0643\u0644\u0627\u0621 \u2022 \u0641\u0639\u0651\u0627\u0644 \u0644\u0644\u0623\u0639\u0645\u0627\u0644"
-        },
-        ru: {
-          dir: "ltr", htmlLang: "ru",
-          invited:  "\u0412\u0430\u0441 \u043f\u0440\u0438\u0433\u043b\u0430\u0441\u0438\u043b\u0438 \u0432",
-          subtitle: "\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0439\u0442\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u044b \u0434\u0440\u0443\u0437\u044c\u044f\u043c \u0438 \u0437\u0430\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0439\u0442\u0435 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438",
-          slogan:   "\u0412\u044b\u0438\u0433\u0440\u044b\u0432\u0430\u044e\u0442 \u0432\u0441\u0435",
-          step1: "\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0439", hint1: "\u041e\u0442\u043f\u0440\u0430\u0432\u044c \u0441\u0441\u044b\u043b\u043a\u0443 \u0434\u0440\u0443\u0433\u0443",
-          step2: "\u0417\u0430\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0439", hint2: "\u041f\u043e\u043b\u0443\u0447\u0430\u0439 % \u0437\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0430",
-          step3: "\u041f\u0440\u043e\u0434\u0432\u0438\u0433\u0430\u0439",   hint3: "\u0420\u0430\u0441\u0448\u0438\u0440\u044f\u0439 \u0441\u0435\u0442\u044c",
-          wa: "\u041f\u0440\u0438\u0441\u043e\u0435\u0434\u0438\u043d\u0438\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 WhatsApp",
-          tg: "\u041f\u0440\u0438\u0441\u043e\u0435\u0434\u0438\u043d\u0438\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 Telegram",
-          footer: "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u0434\u043b\u044f \u0430\u0433\u0435\u043d\u0442\u043e\u0432 \u2022 \u042d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u0434\u043b\u044f \u0431\u0438\u0437\u043d\u0435\u0441\u0430"
-        }
-      };
+    // ── ТЕКСТЫ ────────────────────────────────────────────────────────
+    const TEXTS = {
+      en: {
+        dir: "ltr", htmlLang: "en",
+        invitedLabel: "You've been invited to",
+        slogan:   "Here everyone wins",
+        bizInfoLabel: "About the business",
+        bizInfoLinkText: "Learn more",
+        step1: "Register",      hint1: "Takes 1 minute",
+        step2: "Send your contact",       hint2: "",
+        step3: "Business will reach out",  hint3: "As soon as possible",
+        wa: "Send contact via WhatsApp",
+        tg: "Send contact via Telegram",
+        footer: "Free for agents \u2022 Effective for businesses",
+      },
+      he: {
+        dir: "rtl", htmlLang: "he",
+        invitedLabel: "\u05d4\u05d5\u05d6\u05de\u05e0\u05ea\u05dd \u05d0\u05dc",
+        slogan:   "\u05db\u05d0\u05df \u05db\u05d5\u05dc\u05dd \u05de\u05e8\u05d5\u05d5\u05d9\u05d7\u05d9\u05dd",
+        bizInfoLabel: "\u05e2\u05dc \u05d4\u05e2\u05e1\u05e7",
+        bizInfoLinkText: "\u05dc\u05de\u05d9\u05d3\u05e2 \u05e2\u05d5\u05d3",
+        step1: "\u05d4\u05d9\u05e8\u05e9\u05dd",   hint1: "\u05d3\u05e7\u05d4 \u05d0\u05d7\u05ea",
+        step2: "\u05e9\u05dc\u05d7 \u05d0\u05ea \u05d0\u05d9\u05e9\u05d9 \u05d4\u05e7\u05e9\u05e8", hint2: "",
+        step3: "\u05d4\u05e2\u05e1\u05e7 \u05d9\u05d7\u05d6\u05d5\u05e8 \u05d0\u05dc\u05d9\u05da", hint3: "\u05d1\u05d4\u05e7\u05d3\u05dd \u05d4\u05d0\u05e4\u05e9\u05e8",
+        wa: "\u05e9\u05dc\u05d7 \u05e7\u05e9\u05e8 \u05d3\u05e8\u05da WhatsApp",
+        tg: "\u05e9\u05dc\u05d7 \u05e7\u05e9\u05e8 \u05d3\u05e8\u05da Telegram",
+        footer: "\u05d7\u05d9\u05e0\u05dd \u05dc\u05e1\u05d5\u05db\u05e0\u05d9\u05dd \u2022 \u05d9\u05e2\u05d9\u05dc \u05dc\u05e2\u05e1\u05e7\u05d9\u05dd",
+      },
+      ar: {
+        dir: "rtl", htmlLang: "ar",
+        invitedLabel: "\u062a\u0645\u062a \u062f\u0639\u0648\u062a\u0643 \u0625\u0644\u0649",
+        slogan:   "\u0647\u0646\u0627 \u0627\u0644\u062c\u0645\u064a\u0639 \u064a\u0631\u0628\u062d",
+        bizInfoLabel: "\u0639\u0646 \u0627\u0644\u0634\u0631\u0643\u0629",
+        bizInfoLinkText: "\u0645\u0639\u0631\u0641\u0629 \u0627\u0644\u0645\u0632\u064a\u062f",
+        step1: "\u0633\u062c\u0651\u0644",        hint1: "\u062f\u0642\u064a\u0642\u0629 \u0648\u0627\u062d\u062f\u0629",
+        step2: "\u0623\u0631\u0633\u0644 \u0628\u064a\u0627\u0646\u0627\u062a\u0643", hint2: "",
+        step3: "\u0633\u064a\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0643 \u0627\u0644\u0639\u0645\u0644", hint3: "\u0641\u064a \u0623\u0642\u0631\u0628 \u0648\u0642\u062a",
+        wa: "\u0625\u0631\u0633\u0627\u0644 \u0628\u064a\u0627\u0646\u0627\u062a \u0639\u0628\u0631 WhatsApp",
+        tg: "\u0625\u0631\u0633\u0627\u0644 \u0628\u064a\u0627\u0646\u0627\u062a \u0639\u0628\u0631 Telegram",
+        footer: "\u0645\u062c\u0627\u0646\u064a \u0644\u0644\u0648\u0643\u0644\u0627\u0621 \u2022 \u0641\u0639\u0651\u0627\u0644 \u0644\u0644\u0623\u0639\u0645\u0627\u0644",
+      },
+      ru: {
+        dir: "ltr", htmlLang: "ru",
+        invitedLabel: "\u0412\u0430\u0441 \u043f\u0440\u0438\u0433\u043b\u0430\u0441\u0438\u043b\u0438 \u0432",
+        slogan:   "\u0417\u0434\u0435\u0441\u044c \u0432\u044b\u0438\u0433\u0440\u044b\u0432\u0430\u044e\u0442 \u0432\u0441\u0435",
+        bizInfoLabel: "\u041e \u0431\u0438\u0437\u043d\u0435\u0441\u0435",
+        bizInfoLinkText: "\u0423\u0437\u043d\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u0435",
+        step1: "\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044c", hint1: "1 \u043c\u0438\u043d\u0443\u0442\u0430",
+        step2: "\u041e\u0442\u043f\u0440\u0430\u0432\u044c\u0442\u0435 \u0441\u0432\u043e\u0439 \u043a\u043e\u043d\u0442\u0430\u043a\u0442", hint2: "",
+        step3: "\u0411\u0438\u0437\u043d\u0435\u0441 \u0441 \u0432\u0430\u043c\u0438 \u0441\u0432\u044f\u0436\u0435\u0442\u0441\u044f", hint3: "\u0432 \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0432\u0440\u0435\u043c\u044f",
+        wa: "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u043d\u0442\u0430\u043a\u0442 \u0447\u0435\u0440\u0435\u0437 WhatsApp",
+        tg: "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u043d\u0442\u0430\u043a\u0442 \u0447\u0435\u0440\u0435\u0437 Telegram",
+        footer: "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u0434\u043b\u044f \u0430\u0433\u0435\u043d\u0442\u043e\u0432 \u2022 \u042d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u0434\u043b\u044f \u0431\u0438\u0437\u043d\u0435\u0441\u0430",
+      },
+    };
 
-      function detectLang() {
-        const n = navigator.language || "";
-        if (n.startsWith("he") || n.startsWith("iw")) return "he";
-        if (n.startsWith("ar")) return "ar";
-        if (n.startsWith("ru") || n.startsWith("uk") || n.startsWith("be")) return "ru";
-        return "en";
-      }
+    // ── ПАРАМЕТРЫ URL ─────────────────────────────────────────────────
+    const params   = new URLSearchParams(window.location.search);
+    const bizName  = params.get("biz_name")  ? decodeURIComponent(params.get("biz_name"))  : "Win-Win";
+    const bizInfo  = params.get("biz_info")  ? decodeURIComponent(params.get("biz_info"))  : "";
+    const senderId = params.get("sender")    || "";
+    const bizId    = params.get("receiver")  || "";
 
-      function applyLang(lang) {
-        const t = TEXTS[lang] || TEXTS.en;
-        document.documentElement.lang = t.htmlLang;
-        document.body.dir = t.dir;
-        document.body.classList.toggle("rtl", t.dir === "rtl");
+    // ── ЯЗЫК ──────────────────────────────────────────────────────────
+    function detectLang() {
+      const n = navigator.language || "";
+      if (n.startsWith("he") || n.startsWith("iw")) return "he";
+      if (n.startsWith("ar")) return "ar";
+      if (n.startsWith("ru") || n.startsWith("uk") || n.startsWith("be")) return "ru";
+      return "en";
+    }
 
-        document.getElementById("invited").textContent    = t.invited;
-        document.getElementById("subtitle").textContent   = t.subtitle;
-        document.getElementById("slogan").textContent     = t.slogan;
-        document.getElementById("step1").textContent      = t.step1;
-        document.getElementById("hint1").textContent      = t.hint1;
-        document.getElementById("step2").textContent      = t.step2;
-        document.getElementById("hint2").textContent      = t.hint2;
-        document.getElementById("step3").textContent      = t.step3;
-        document.getElementById("hint3").textContent      = t.hint3;
-        document.getElementById("waText").textContent     = t.wa;
-        document.getElementById("tgText").textContent     = t.tg;
-        document.getElementById("footerNote").textContent = t.footer;
+    function applyLang(lang) {
+      const t = TEXTS[lang] || TEXTS.en;
+      document.documentElement.lang = t.htmlLang;
+      document.body.dir = t.dir;
+      document.body.classList.toggle("rtl", t.dir === "rtl");
 
-        document.querySelectorAll(".lang-btn").forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.lang === lang);
-        });
-      }
-
-      const ref     = new URLSearchParams(window.location.search).get("ref");
-      const safeRef = ref ? encodeURIComponent(ref.trim()) : "";
-
-      const waTexts = {
-        ru: "Привет! 👋",
-        he: "שלום! 👋",
-        ar: "مرحباً! 👋",
-        en: "Hi! 👋",
-      };
-      const _lang = detectLang ? detectLang() : "en";
-      const waGreet = encodeURIComponent(waTexts[_lang] || waTexts.en);
-
-      const tgLink = safeRef
-        ? "https://t.me/winwin_lead_bot?start=winwin_ref_" + safeRef
-        : "https://t.me/winwin_lead_bot?start=start";
-
-      const waLink = safeRef
-        ? "https://wa.me/972534218573?text=" + encodeURIComponent("ref_" + decodeURIComponent(safeRef))
-        : "https://wa.me/972534218573?text=" + waGreet;
-
-      document.getElementById("waBtn").href = waLink;
-      document.getElementById("tgBtn").href = tgLink;
+      document.getElementById("invitedLabel").textContent  = t.invitedLabel;
+      document.getElementById("slogan").textContent        = t.slogan;
+      document.getElementById("bizInfoLabel").textContent  = t.bizInfoLabel;
+      document.getElementById("bizInfoLinkText").textContent = t.bizInfoLinkText;
+      document.getElementById("step1").textContent         = t.step1;
+      document.getElementById("hint1").textContent         = t.hint1;
+      document.getElementById("step2").textContent         = t.step2;
+      document.getElementById("hint2").textContent         = t.hint2;
+      document.getElementById("step3").textContent         = t.step3;
+      document.getElementById("hint3").textContent         = t.hint3;
+      document.getElementById("waText").textContent        = t.wa;
+      document.getElementById("tgText").textContent        = t.tg;
+      document.getElementById("footerNote").textContent    = t.footer;
 
       document.querySelectorAll(".lang-btn").forEach(btn => {
-        btn.addEventListener("click", () => applyLang(btn.dataset.lang));
+        btn.classList.toggle("active", btn.dataset.lang === lang);
       });
+    }
 
-      applyLang(detectLang());
-    })();
+    // ── ПОДСТАВЛЯЕМ ИМЯ БИЗНЕСА ──────────────────────────────────────
+    document.getElementById("bizName").textContent = bizName;
+
+    // ── БЛОК ИНФОРМАЦИИ О БИЗНЕСЕ ─────────────────────────────────────
+    // Показываем только если есть данные
+    if (bizInfo) {
+      const block = document.getElementById("bizInfoBlock");
+      block.classList.add("visible");
+
+      // Если это ссылка — показываем кнопку, иначе текст
+      const isUrl = bizInfo.startsWith("http://") || bizInfo.startsWith("https://");
+      if (isUrl) {
+        const link = document.getElementById("bizInfoLink");
+        link.href = bizInfo;
+        link.style.display = "inline-flex";
+      } else {
+        document.getElementById("bizInfoText").textContent = bizInfo;
+      }
+    }
+
+    // ── ССЫЛКИ НА КНОПКАХ ─────────────────────────────────────────────
+    const lang = detectLang();
+
+    const waTexts = { ru: "Привет! 👋", he: "שלום! 👋", ar: "مرحباً! 👋", en: "Hi! 👋" };
+    const waGreet = encodeURIComponent(waTexts[lang] || waTexts.en);
+
+    // Формируем параметр для бота — sender и receiver
+    const startParam = senderId && bizId
+      ? `client_${senderId}_${bizId}`
+      : "start";
+
+    document.getElementById("tgBtn").href =
+      `https://t.me/winwin_lead_bot?start=${startParam}`;
+
+    document.getElementById("waBtn").href =
+      senderId && bizId
+        ? `https://wa.me/972534218573?text=${encodeURIComponent(`client_${senderId}_${bizId}`)}`
+        : `https://wa.me/972534218573?text=${waGreet}`;
+
+    // ── ЯЗЫК ──────────────────────────────────────────────────────────
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => applyLang(btn.dataset.lang));
+    });
+
+    applyLang(lang);
+
+  })();
   </script>
 </body>
 </html>
