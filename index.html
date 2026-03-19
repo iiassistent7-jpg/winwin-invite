@@ -488,13 +488,22 @@
       const ref     = new URLSearchParams(window.location.search).get("ref");
       const safeRef = ref ? encodeURIComponent(ref.trim()) : "";
 
+      const waTexts = {
+        ru: "Привет! 👋",
+        he: "שלום! 👋",
+        ar: "مرحباً! 👋",
+        en: "Hi! 👋",
+      };
+      const _lang = detectLang ? detectLang() : "en";
+      const waGreet = encodeURIComponent(waTexts[_lang] || waTexts.en);
+
       const tgLink = safeRef
         ? "https://t.me/winwin_lead_bot?start=winwin_ref_" + safeRef
-        : "https://t.me/winwin_lead_bot";
+        : "https://t.me/winwin_lead_bot?start=start";
 
       const waLink = safeRef
         ? "https://wa.me/972534218573?text=" + encodeURIComponent("ref_" + decodeURIComponent(safeRef))
-        : "https://wa.me/972534218573";
+        : "https://wa.me/972534218573?text=" + waGreet;
 
       document.getElementById("waBtn").href = waLink;
       document.getElementById("tgBtn").href = tgLink;
