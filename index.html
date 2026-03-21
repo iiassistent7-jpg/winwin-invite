@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
@@ -25,8 +26,6 @@
       --accent-2: #00d4aa;
       --text-main: #ffffff;
       --text-muted: #a0a0b0;
-      --wa: #25d366;
-      --tg: #0088cc;
       --card: rgba(255, 255, 255, 0.06);
       --card-border: rgba(255, 255, 255, 0.08);
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -169,7 +168,7 @@
     /* HERO */
     .hero {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .hero-subtitle {
@@ -190,100 +189,40 @@
       letter-spacing: -0.01em;
     }
 
-    /* КАРТОЧКИ */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .step {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 14px 10px;
+    /* QR БЛОК */
+    .qr-section {
       text-align: center;
-      min-height: 110px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      opacity: 0;
-      transform: translateY(12px);
-      animation: cardIn 0.5s var(--ease-out) forwards;
+      margin-bottom: 20px;
     }
 
-    .step:nth-child(1) { animation-delay: 0.10s; }
-    .step:nth-child(2) { animation-delay: 0.20s; }
-    .step:nth-child(3) { animation-delay: 0.30s; }
-
-    @keyframes cardIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .step-icon {
-      width: 30px;
-      height: 30px;
-      fill: var(--accent-2);
-      flex-shrink: 0;
-    }
-
-    .step .label {
-      font-size: 0.88rem;
+    .qr-hint {
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
-      line-height: 1.2;
+      line-height: 1.5;
+      margin-bottom: 16px;
     }
 
-    .step .hint {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-
-    /* КНОПКИ */
-    .actions {
-      display: grid;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      appearance: none;
-      border: none;
-      outline: none;
-      text-decoration: none;
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
+    .qr-wrap {
+      display: flex;
       justify-content: center;
-      gap: 12px;
-      min-height: 56px;
-      padding: 15px 20px;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), filter 0.22s var(--ease-out);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-      will-change: transform;
     }
 
-    .btn:hover  { transform: scale(1.03); filter: brightness(1.04); }
-    .btn:active { transform: scale(0.98); }
-    .btn:focus-visible { outline: 2px solid rgba(255,255,255,0.7); outline-offset: 3px; }
+    .qr-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow:
+        0 4px 32px rgba(108, 99, 255, 0.28),
+        0 0 0 1px rgba(108, 99, 255, 0.15);
+      display: inline-block;
+    }
 
-    .btn.wa { background: linear-gradient(135deg, #22c55e, var(--wa)); }
-    .btn.wa:hover { box-shadow: 0 0 0 1px rgba(37,211,102,0.25), 0 10px 30px rgba(37,211,102,0.34); }
-
-    .btn.tg { background: linear-gradient(135deg, #149adf, var(--tg)); }
-    .btn.tg:hover { box-shadow: 0 0 0 1px rgba(0,136,204,0.25), 0 10px 30px rgba(0,136,204,0.34); }
-
-    .btn svg { width: 22px; height: 22px; flex: 0 0 22px; fill: #fff; }
+    #qrcode canvas,
+    #qrcode img {
+      display: block;
+      border-radius: 6px;
+    }
 
     /* ФУТЕР */
     .footer {
@@ -294,20 +233,8 @@
     .footer .copyright { font-size: 0.84rem; margin-bottom: 4px; }
     .footer .note      { font-size: 0.72rem; opacity: 0.9; }
 
-    /* МОБАЙЛ */
     @media (max-width: 640px) {
       .panel { padding: 20px 16px 18px; border-radius: 24px; }
-      .steps { grid-template-columns: 1fr; }
-      .step {
-        min-height: 72px;
-        flex-direction: row;
-        justify-content: flex-start;
-        text-align: left;
-        padding: 14px 16px;
-        gap: 12px;
-      }
-      body.rtl .step { text-align: right; }
-      .step-icon { width: 26px; height: 26px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -341,53 +268,13 @@
         <p class="hero-slogan" id="slogan">Выигрывают все</p>
       </section>
 
-      <section class="steps" aria-label="How it works">
-        <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-          </svg>
-          <div>
-            <div class="label" id="step1">Рекомендуй</div>
-            <div class="hint"  id="hint1">Отправь ссылку другу</div>
+      <section class="qr-section">
+        <p class="qr-hint" id="qrHint">Если человек рядом — покажи этот QR<br>для сканирования</p>
+        <div class="qr-wrap">
+          <div class="qr-card">
+            <div id="qrcode"></div>
           </div>
-        </article>
-
-        <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
-          </svg>
-          <div>
-            <div class="label" id="step2">Зарабатывай</div>
-            <div class="hint"  id="hint2">Получай % за клиента</div>
-          </div>
-        </article>
-
-        <article class="step">
-          <svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
-          </svg>
-          <div>
-            <div class="label" id="step3">Продвигай</div>
-            <div class="hint"  id="hint3">Расширяй сеть</div>
-          </div>
-        </article>
-      </section>
-
-      <section class="actions">
-        <a id="waBtn" class="btn wa" href="https://wa.me/972534218573" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
-            <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
-          </svg>
-          <span id="waText">Присоединиться через WhatsApp</span>
-        </a>
-
-        <a id="tgBtn" class="btn tg" href="https://t.me/winwin_lead_bot" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
-          </svg>
-          <span id="tgText">Присоединиться через Telegram</span>
-        </a>
+        </div>
       </section>
 
       <footer class="footer">
@@ -405,51 +292,35 @@
       const TEXTS = {
         en: {
           dir: "ltr", htmlLang: "en",
-          invited:  "You've been invited to",
-          subtitle: "Recommend businesses to friends and earn automatically",
-          slogan:   "Everyone wins",
-          step1: "Recommend",   hint1: "Send a link to a friend",
-          step2: "Earn",        hint2: "Get % per referred client",
-          step3: "Grow",        hint3: "Expand your network",
-          wa: "Join via WhatsApp",
-          tg: "Join via Telegram",
-          footer: "Free for agents \u2022 Effective for businesses"
+          invited:  "Invitation",
+          subtitle: "Recommend businesses to friends",
+          slogan:   "Here everyone wins",
+          qrHint:   "If the person is nearby — show them this QR\nfor scanning",
+          footer:   "Free for agents \u2022 Effective for businesses"
         },
         he: {
           dir: "rtl", htmlLang: "he",
-          invited:  "\u05d4\u05d5\u05d6\u05de\u05e0\u05ea\u05dd \u05dc",
-          subtitle: "\u05d4\u05de\u05dc\u05d9\u05e6\u05d5 \u05e2\u05dc \u05e2\u05e1\u05e7\u05d9\u05dd \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd \u05d5\u05d4\u05e8\u05d5\u05d5\u05d9\u05d7\u05d5 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea",
-          slogan:   "\u05db\u05d5\u05dc\u05dd \u05de\u05e8\u05d5\u05d5\u05d9\u05d7\u05d9\u05dd",
-          step1: "\u05d4\u05de\u05dc\u05e5",   hint1: "\u05e9\u05dc\u05d7 \u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05d7\u05d1\u05e8",
-          step2: "\u05d4\u05e8\u05d5\u05d5\u05d7", hint2: "\u05e7\u05d1\u05dc % \u05e2\u05dc \u05db\u05dc \u05dc\u05e7\u05d5\u05d7",
-          step3: "\u05e7\u05d3\u05dd",    hint3: "\u05d4\u05e8\u05d7\u05d1 \u05d0\u05ea \u05d4\u05e8\u05e9\u05ea \u05e9\u05dc\u05da",
-          wa: "\u05d4\u05e6\u05d8\u05e8\u05e4\u05d5 \u05d3\u05e8\u05da WhatsApp",
-          tg: "\u05d4\u05e6\u05d8\u05e8\u05e4\u05d5 \u05d3\u05e8\u05da Telegram",
-          footer: "\u05d7\u05d9\u05e0\u05dd \u05dc\u05e1\u05d5\u05db\u05e0\u05d9\u05dd \u2022 \u05d9\u05e2\u05d9\u05dc \u05dc\u05e2\u05e1\u05e7\u05d9\u05dd"
+          invited:  "\u05d4\u05d6\u05de\u05e0\u05d4",
+          subtitle: "\u05d4\u05de\u05dc\u05d9\u05e6\u05d5 \u05e2\u05dc \u05e2\u05e1\u05e7\u05d9\u05dd \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd",
+          slogan:   "\u05db\u05d0\u05df \u05db\u05d5\u05dc\u05dd \u05de\u05e8\u05d5\u05d5\u05d9\u05d7\u05d9\u05dd",
+          qrHint:   "\u05d0\u05dd \u05d4\u05d0\u05d3\u05dd \u05dc\u05d9\u05d3\u05da \u2014 \u05d4\u05e8\u05d0\u05d4 \u05dc\u05d5 \u05d0\u05ea \u05d4-QR\n\u05dc\u05e1\u05e8\u05d9\u05e7\u05d4",
+          footer:   "\u05d7\u05d9\u05e0\u05dd \u05dc\u05e1\u05d5\u05db\u05e0\u05d9\u05dd \u2022 \u05d9\u05e2\u05d9\u05dc \u05dc\u05e2\u05e1\u05e7\u05d9\u05dd"
         },
         ar: {
           dir: "rtl", htmlLang: "ar",
-          invited:  "\u062a\u0645\u062a \u062f\u0639\u0648\u062a\u0643 \u0625\u0644\u0649",
-          subtitle: "\u0623\u0648\u0635\u0650 \u0628\u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0644\u0644\u0623\u0635\u062f\u0642\u0627\u0621 \u0648\u0627\u0643\u0633\u0628 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b",
-          slogan:   "\u0627\u0644\u062c\u0645\u064a\u0639 \u064a\u0631\u0628\u062d",
-          step1: "\u0623\u0648\u0635\u0650",   hint1: "\u0623\u0631\u0633\u0644 \u0631\u0627\u0628\u0637\u0627\u064b \u0644\u0635\u062f\u064a\u0642",
-          step2: "\u0627\u0643\u0633\u0628",   hint2: "\u0627\u062d\u0635\u0644 % \u0644\u0643\u0644 \u0639\u0645\u064a\u0644",
-          step3: "\u0631\u0648\u0651\u062c",   hint3: "\u0648\u0633\u0651\u0639 \u0634\u0628\u0643\u062a\u0643",
-          wa: "\u0627\u0646\u0636\u0645 \u0639\u0628\u0631 WhatsApp",
-          tg: "\u0627\u0646\u0636\u0645 \u0639\u0628\u0631 Telegram",
-          footer: "\u0645\u062c\u0627\u0646\u064a \u0644\u0644\u0648\u0643\u0644\u0627\u0621 \u2022 \u0641\u0639\u0651\u0627\u0644 \u0644\u0644\u0623\u0639\u0645\u0627\u0644"
+          invited:  "\u062f\u0639\u0648\u0629",
+          subtitle: "\u0623\u0648\u0635\u0650 \u0628\u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0644\u0644\u0623\u0635\u062f\u0642\u0627\u0621",
+          slogan:   "\u0647\u0646\u0627 \u0627\u0644\u062c\u0645\u064a\u0639 \u064a\u0631\u0628\u062d",
+          qrHint:   "\u0625\u0630\u0627 \u0643\u0627\u0646 \u0627\u0644\u0634\u062e\u0635 \u0628\u0627\u0644\u0642\u0631\u0628 \u2014 \u0623\u0631\u0647 \u0647\u0630\u0627 \u0627\u0644\u0631\u0645\u0632\n\u0644\u0644\u0645\u0633\u062d",
+          footer:   "\u0645\u062c\u0627\u0646\u064a \u0644\u0644\u0648\u0643\u0644\u0627\u0621 \u2022 \u0641\u0639\u0651\u0627\u0644 \u0644\u0644\u0623\u0639\u0645\u0627\u0644"
         },
         ru: {
           dir: "ltr", htmlLang: "ru",
-          invited:  "\u0412\u0430\u0441 \u043f\u0440\u0438\u0433\u043b\u0430\u0441\u0438\u043b\u0438 \u0432",
-          subtitle: "\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0439\u0442\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u044b \u0434\u0440\u0443\u0437\u044c\u044f\u043c \u0438 \u0437\u0430\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0439\u0442\u0435 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438",
-          slogan:   "\u0412\u044b\u0438\u0433\u0440\u044b\u0432\u0430\u044e\u0442 \u0432\u0441\u0435",
-          step1: "\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0439", hint1: "\u041e\u0442\u043f\u0440\u0430\u0432\u044c \u0441\u0441\u044b\u043b\u043a\u0443 \u0434\u0440\u0443\u0433\u0443",
-          step2: "\u0417\u0430\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0439", hint2: "\u041f\u043e\u043b\u0443\u0447\u0430\u0439 % \u0437\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0430",
-          step3: "\u041f\u0440\u043e\u0434\u0432\u0438\u0433\u0430\u0439",   hint3: "\u0420\u0430\u0441\u0448\u0438\u0440\u044f\u0439 \u0441\u0435\u0442\u044c",
-          wa: "\u041f\u0440\u0438\u0441\u043e\u0435\u0434\u0438\u043d\u0438\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 WhatsApp",
-          tg: "\u041f\u0440\u0438\u0441\u043e\u0435\u0434\u0438\u043d\u0438\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 Telegram",
-          footer: "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u0434\u043b\u044f \u0430\u0433\u0435\u043d\u0442\u043e\u0432 \u2022 \u042d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u0434\u043b\u044f \u0431\u0438\u0437\u043d\u0435\u0441\u0430"
+          invited:  "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435",
+          subtitle: "\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0439\u0442\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u044b \u0434\u0440\u0443\u0437\u044c\u044f\u043c",
+          slogan:   "\u0417\u0434\u0435\u0441\u044c \u0432\u044b\u0438\u0433\u0440\u044b\u0432\u0430\u044e\u0442 \u0432\u0441\u0435",
+          qrHint:   "\u0415\u0441\u043b\u0438 \u0447\u0435\u043b\u043e\u0432\u0435\u043a \u0440\u044f\u0434\u043e\u043c \u2014 \u043f\u043e\u043a\u0430\u0436\u0438\u0442\u0435 \u044d\u0442\u043e\u0442 QR\n\u0434\u043b\u044f \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+          footer:   "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u0434\u043b\u044f \u0430\u0433\u0435\u043d\u0442\u043e\u0432 \u2022 \u042d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u0434\u043b\u044f \u0431\u0438\u0437\u043d\u0435\u0441\u0430"
         }
       };
 
@@ -470,14 +341,7 @@
         document.getElementById("invited").textContent    = t.invited;
         document.getElementById("subtitle").textContent   = t.subtitle;
         document.getElementById("slogan").textContent     = t.slogan;
-        document.getElementById("step1").textContent      = t.step1;
-        document.getElementById("hint1").textContent      = t.hint1;
-        document.getElementById("step2").textContent      = t.step2;
-        document.getElementById("hint2").textContent      = t.hint2;
-        document.getElementById("step3").textContent      = t.step3;
-        document.getElementById("hint3").textContent      = t.hint3;
-        document.getElementById("waText").textContent     = t.wa;
-        document.getElementById("tgText").textContent     = t.tg;
+        document.getElementById("qrHint").innerHTML       = t.qrHint.replace("\n", "<br>");
         document.getElementById("footerNote").textContent = t.footer;
 
         document.querySelectorAll(".lang-btn").forEach(btn => {
@@ -485,28 +349,23 @@
         });
       }
 
-      const ref     = new URLSearchParams(window.location.search).get("ref");
-      const safeRef = ref ? encodeURIComponent(ref.trim()) : "";
+      // Параметр ref → ссылка для QR
+      // type=invite: агент приглашает нового человека на платформу
+      // QR ведёт в TG бота с параметром client_SENDER (только sender, без receiver)
+      const ref = new URLSearchParams(window.location.search).get("ref");
+      const tgLink = ref
+        ? "https://t.me/winwin_lead_bot?start=client_" + encodeURIComponent(ref.trim())
+        : "https://t.me/winwin_lead_bot";
 
-      const waTexts = {
-        ru: "Привет! 👋",
-        he: "שלום! 👋",
-        ar: "مرحباً! 👋",
-        en: "Hi! 👋",
-      };
-      const _lang = detectLang ? detectLang() : "en";
-      const waGreet = encodeURIComponent(waTexts[_lang] || waTexts.en);
-
-      const tgLink = safeRef
-        ? "https://t.me/winwin_lead_bot?start=winwin_ref_" + safeRef
-        : "https://t.me/winwin_lead_bot?start=start";
-
-      const waLink = safeRef
-        ? "https://wa.me/972534218573?text=" + encodeURIComponent("ref_" + decodeURIComponent(safeRef))
-        : "https://wa.me/972534218573?text=" + waGreet;
-
-      document.getElementById("waBtn").href = waLink;
-      document.getElementById("tgBtn").href = tgLink;
+      // Генерируем QR
+      new QRCode(document.getElementById("qrcode"), {
+        text: tgLink,
+        width: 240,
+        height: 240,
+        colorDark: "#0a0a1a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
 
       document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.addEventListener("click", () => applyLang(btn.dataset.lang));
