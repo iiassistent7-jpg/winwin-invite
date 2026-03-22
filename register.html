@@ -612,6 +612,7 @@
         payload.sender = urlParams.get('sender') || '';
         payload.receiver = urlParams.get('receiver') || '';
         payload.type = urlParams.get('type') || '';
+        payload.source_url = window.location.href;
         for (let [key, value] of formData.entries()) payload[key] = value;
 
         try {
