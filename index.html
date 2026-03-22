@@ -743,8 +743,17 @@
         const waText = "reg_" + respData.temp_key;
         const tgStart = "reg_" + respData.temp_key;
 
+        // Подсказка перед редиректом
+        const hints = {
+          ru: "Нажми отправить 👉",
+          en: "Tap send 👉",
+          he: "👈 לחץ שלח",
+          ar: "👈 اضغط إرسال"
+        };
+        const waTextFinal = waText + "\n" + (hints[currentLang] || hints.ru);
+
         if (channel === "wa") {
-          window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+          window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waTextFinal);
         } else {
           window.location.href = "https://t.me/winwin_lead_bot?start=" + encodeURIComponent(tgStart);
         }
