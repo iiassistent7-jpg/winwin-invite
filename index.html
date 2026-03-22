@@ -494,7 +494,8 @@
       rewardLabel: "Вознаграждение агенту за клиента",
       rPct: "% от сделки", rFix: "Фикс ₪", rGift: "Подарок",
       rewardPh: "Укажите размер...",
-      payLabel: "Выберите способ получения благодарности",
+      payLabelAgent: "Выберите способ получения благодарности",
+      payLabelBiz: "Выберите способ выплаты благодарности",
       payTransfer: "Перевод", payCash: "Наличные",
       socialLabel: "Ссылка на сайт / соцсеть",
       socialPh: "Instagram, Facebook, сайт...",
@@ -517,7 +518,8 @@
       rewardLabel: "Agent reward per client",
       rPct: "% of deal", rFix: "Fixed ₪", rGift: "Gift",
       rewardPh: "Enter amount...",
-      payLabel: "Choose how to receive your bonus",
+      payLabelAgent: "Choose how to receive your bonus",
+      payLabelBiz: "Choose how to pay the bonus",
       payTransfer: "Transfer", payCash: "Cash",
       socialLabel: "Website / social link",
       socialPh: "Instagram, Facebook, website...",
@@ -540,7 +542,8 @@
       rewardLabel: "גמול לסוכן עבור לקוח",
       rPct: "% מהעסקה", rFix: "סכום קבוע ₪", rGift: "מתנה",
       rewardPh: "הכניסו גודל...",
-      payLabel: "בחרו אופן קבלת תגמול",
+      payLabelAgent: "בחרו אופן קבלת תגמול",
+      payLabelBiz: "בחרו אופן תשלום תגמול",
       payTransfer: "העברה", payCash: "מזומן",
       socialLabel: "קישור לאתר / רשת חברתית",
       socialPh: "Instagram, Facebook, אתר...",
@@ -563,7 +566,8 @@
       rewardLabel: "مكافأة الوكيل لكل عميل",
       rPct: "% من الصفقة", rFix: "مبلغ ثابت ₪", rGift: "هدية",
       rewardPh: "أدخل المبلغ...",
-      payLabel: "اختر طريقة استلام المكافأة",
+      payLabelAgent: "اختر طريقة استلام المكافأة",
+      payLabelBiz: "اختر طريقة دفع المكافأة",
       payTransfer: "تحويل", payCash: "نقداً",
       socialLabel: "رابط الموقع / الشبكة الاجتماعية",
       socialPh: "Instagram, Facebook, موقع...",
@@ -578,6 +582,7 @@
 
   // ── Языки ─────────────────────────────────────────────────────────
   let currentLang = "ru";
+  let selectedRole = null; // вынесено выше, чтобы использовать в applyLang
 
   function detectLang() {
     const n = navigator.language || "";
@@ -609,7 +614,10 @@
     document.getElementById("rFix").textContent = t.rFix;
     document.getElementById("rGift").textContent = t.rGift;
     document.getElementById("rewardValue").placeholder = t.rewardPh;
-    document.getElementById("payLabel").textContent = t.payLabel;
+    
+    // Динамический заголовок оплаты
+    document.getElementById("payLabel").textContent = selectedRole === "business" ? t.payLabelBiz : t.payLabelAgent;
+    
     document.getElementById("payTransfer").textContent = t.payTransfer;
     document.getElementById("payCash").textContent = t.payCash;
     document.getElementById("socialLabel").innerHTML = t.socialLabel + ' <span style="color:var(--text-muted);font-weight:400">' + (lang === "ru" ? "(необязательно)" : lang === "he" ? "(לא חובה)" : lang === "ar" ? "(اختياري)" : "(optional)") + '</span>';
@@ -631,14 +639,16 @@
   });
 
   // ── Роль ─────────────────────────────────────────────────────────
-  let selectedRole = null;
-
   document.querySelectorAll('input[name="role"]').forEach(radio => {
     radio.addEventListener("change", () => {
       selectedRole = radio.value;
 
       document.querySelectorAll(".role-card").forEach(c => c.classList.remove("selected"));
       radio.closest(".role-card").classList.add("selected");
+
+      // Обновляем текст лейбла оплаты при смене роли
+      const t = T[currentLang] || T.ru;
+      document.getElementById("payLabel").textContent = selectedRole === "business" ? t.payLabelBiz : t.payLabelAgent;
 
       // Показываем нужные поля
       document.getElementById("bizFields").classList.toggle("open", selectedRole === "business");
@@ -755,7 +765,14 @@
   // ── Слушатели для валидации ───────────────────────────────────────
   document.getElementById("nameInput").addEventListener("input", validate);
   document.getElementById("nicheSelect").addEventListener("change", validate);
-  document.querySelectorAll('input[name="payMethod"]').forEach(r => r.addEventListener("change", validate));
+  // Event delegation -- fixes payMethod inside expandable blocks
+  document.addEventListener("change", function(e) {
+    if (e.target.name === "payMethod") validate();
+    if (e.target.name === "rewardType") {
+      document.getElementById("rewardValueWrap").classList.add("open");
+      validate();
+    }
+  });
 
   // ── QR код ───────────────────────────────────────────────────────
   const qrUrl = senderId
