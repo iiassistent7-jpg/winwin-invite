@@ -197,6 +197,48 @@
     /* СКРЫТИЕ ЭЛЕМЕНТОВ */
     .hidden { display: none !important; }
 
+    /* ВЫБОР МЕССЕНДЖЕРА */
+    .messenger-choice {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+      animation: pageIn 0.4s var(--ease-out) forwards;
+    }
+    .messenger-choice.visible { display: flex; }
+
+    .wa-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      border: none; border-radius: 999px;
+      color: #fff; font-family: inherit; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .wa-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+    .tg-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #2AABEE, #229ED9);
+      border: none; border-radius: 999px;
+      color: #fff; font-family: inherit; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(42,171,238,0.3);
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .tg-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+    .choice-title {
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
     .loader {
       display: inline-block;
       width: 20px;
@@ -296,6 +338,19 @@
         </button>
 
       </form>
+
+      <!-- Выбор мессенджера — показывается после успешной отправки -->
+      <div class="messenger-choice" id="messengerChoice">
+        <div class="choice-title" id="choiceTitle">Выберите мессенджер для продолжения</div>
+        <a id="waBtn" class="wa-btn" href="#">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.855L.057 23.386a.75.75 0 00.923.923l5.562-1.457A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.512-5.228-1.402l-.374-.22-3.899 1.022 1.03-3.774-.242-.389A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          WhatsApp
+        </a>
+        <a id="tgBtn" class="tg-btn" href="#">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          Telegram
+        </a>
+      </div>
     </section>
   </main>
 
@@ -320,6 +375,14 @@
         business: "Регистрация бизнеса"
       };
       document.getElementById("pageTitle").textContent = titles[role] || titles.client;
+
+      // Тексты выбора мессенджера по языку
+      const choiceTitles = {
+        ru: "Выберите мессенджер для продолжения",
+        en: "Choose messenger to continue",
+        he: "בחרו מסנג'ר להמשך",
+        ar: "اختر تطبيق المراسلة للمتابعة"
+      };
 
       if (role === 'client') {
         btnText.textContent = "Отправить контакт";
@@ -453,18 +516,33 @@
           try { respData = await response.clone().json(); } catch(e) {}
 
           if (response.ok) {
+            // Формируем тексты для WA и TG
             let waText = "Привет! 👋\nНажми отправить 👉";
+            let tgStart = "start";
+
             if (role === 'client') {
-              // Клиент — передаём ref параметры чтобы бот создал лид
               const s = urlParams.get('sender') || '';
               const r = urlParams.get('receiver') || '';
-              if (s && r) waText = "client_" + s + "_" + r;
-              else if (s) waText = "client_" + s;
+              if (s && r) { waText = "client_" + s + "_" + r; tgStart = "client_" + s + "_" + r; }
+              else if (s) { waText = "client_" + s; tgStart = "client_" + s; }
             } else if (respData.temp_key) {
-              // Агент/бизнес — передаём temp_key чтобы бот подхватил данные
               waText = "reg_" + respData.temp_key;
+              tgStart = "reg_" + respData.temp_key;
             }
-            window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+
+            // Скрываем форму, показываем выбор мессенджера
+            document.getElementById("regForm").style.display = "none";
+            const choice = document.getElementById("messengerChoice");
+            choice.classList.add("visible");
+
+            // Устанавливаем ссылки
+            document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+            document.getElementById("tgBtn").href = "https://t.me/winwin_lead_bot?start=" + encodeURIComponent(tgStart);
+
+            // Восстанавливаем кнопку на случай возврата
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            document.getElementById('btnLoader').style.display = 'none';
           } else {
             throw new Error('Server error');
           }
