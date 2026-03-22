@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Регистрация Win-Win</title>
+
+  <meta name="theme-color" content="#6c63ff" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-1: #0a0a0f;
+      --bg-2: #1a1a2e;
+      --accent-1: #6c63ff;
+      --accent-2: #00d4aa;
+      --text-main: #ffffff;
+      --text-muted: #a0a0b0;
+      --error: #ff4d4f;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --max-width: 480px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      font-family: "Inter", system-ui, sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(108, 99, 255, 0.14), transparent 35%),
+        radial-gradient(circle at 80% 10%, rgba(0, 212, 170, 0.12), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), #111122, var(--bg-1));
+      background-size: 180% 180%;
+      animation: bgShift 15s ease infinite;
+    }
+
+    body { display: flex; justify-content: center; align-items: flex-start; padding: 24px; min-height: 100vh; }
+    body.rtl { direction: rtl; }
+
+    @keyframes bgShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--max-width);
+      opacity: 0;
+      transform: translateY(12px);
+      animation: pageIn 0.6s var(--ease-out) forwards;
+    }
+
+    @keyframes pageIn { to { opacity: 1; transform: translateY(0); } }
+
+    .panel {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 30px 22px 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.4), rgba(0,212,170,0.18), rgba(255,255,255,0.05));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ШАПКА */
+    .header { text-align: center; margin-bottom: 24px; }
+    .logo {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .page-title {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ФОРМА */
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+    }
+
+    input.error, select.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.2);
+    }
+
+    select option { background: var(--bg-2); color: #fff; }
+
+    /* СЕГМЕНТИРОВАННЫЕ КНОПКИ (Radio) */
+    .segment-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .segment-label {
+      flex: 1;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      min-width: 70px;
+    }
+    .segment-label input { display: none; }
+    .segment-label:has(input:checked) {
+      background: linear-gradient(135deg, rgba(108,99,255,0.3), rgba(0,212,170,0.2));
+      border-color: rgba(108,99,255,0.5);
+      color: var(--text-main);
+    }
+    .segment-group.error .segment-label { border-color: var(--error); }
+
+    /* КНОПКА ОТПРАВКИ */
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 16px;
+      border-radius: 999px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .submit-btn:hover:not(:disabled) { transform: scale(1.02); filter: brightness(1.1); }
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      background: var(--card);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+
+    /* СКРЫТИЕ ЭЛЕМЕНТОВ */
+    .hidden { display: none !important; }
+
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="panel">
+      <header class="header">
+        <h1 class="logo">Win-Win</h1>
+        <div class="page-title" id="pageTitle">Регистрация</div>
+      </header>
+
+      <form id="regForm" novalidate>
+        
+        <div class="form-group role-client hidden">
+          <label>Имя</label>
+          <input type="text" id="clientName" name="clientName" placeholder="Ваше имя" data-req="client">
+        </div>
+        <div class="form-group role-client hidden">
+          <label>Телефон</label>
+          <input type="tel" id="clientPhone" name="clientPhone" placeholder="05XXXXXXXX" data-req="client" pattern="^\d{10,12}$">
+        </div>
+
+        <div class="form-group role-agent role-business hidden">
+          <label id="nameLabel">Имя и фамилия</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Введите данные" data-req="agent,business">
+        </div>
+
+        <div class="form-group role-business hidden">
+          <label>Ниша бизнеса</label>
+          <select id="niche" name="niche" data-req="business">
+            <option value="" disabled selected>Выберите нишу...</option>
+            <option value="💅 Красота">💅 Красота</option>
+            <option value="🏠 Недвижимость">🏠 Недвижимость</option>
+            <option value="🏥 Здоровье">⚕️ Здоровье</option>
+            <option value="🍕 Еда и рестораны">🍔 Еда</option>
+            <option value="⚖️ Юристы">⚖️ Юристы</option>
+            <option value="💰 Финансы">💰 Финансы</option>
+            <option value="🔧 Ремонт и стройка">🛠 Ремонт</option>
+            <option value="💻 IT">💻 IT</option>
+            <option value="🐾 Животные">🐾 Животные</option>
+            <option value="👗 Одежда и товары">👗 Одежда</option>
+            <option value="🎓 Обучение">🎓 Обучение</option>
+            <option value="🚗 Авто">🚗 Авто</option>
+            <option value="📦 Другое">📦 Другое</option>
+          </select>
+        </div>
+
+        <div class="form-group role-business hidden">
+          <label>Вознаграждение агенту</label>
+          <div class="segment-group" id="rewardTypeGroup">
+            <label class="segment-label"><input type="radio" name="rewardType" value="percent" data-req="business"> % от сделки</label>
+            <label class="segment-label"><input type="radio" name="rewardType" value="fixed" data-req="business"> Фикс ₪</label>
+            <label class="segment-label"><input type="radio" name="rewardType" value="gift" data-req="business"> Подарок/услуга</label>
+          </div>
+          <input type="text" id="rewardValue" name="rewardValue" placeholder="Размер вознаграждения" style="margin-top: 8px;" class="hidden" data-req="business">
+        </div>
+
+        <div class="form-group role-agent role-business hidden">
+          <label id="paymentLabel">Способ выплаты агентам</label>
+          <div class="segment-group" id="paymentMethodGroup">
+            <label class="segment-label"><input type="radio" name="paymentMethod" value="bit" data-req="agent,business"> Bit</label>
+            <label class="segment-label"><input type="radio" name="paymentMethod" value="paypal" data-req="agent,business"> PayPal</label>
+            <label class="segment-label"><input type="radio" name="paymentMethod" value="transfer" data-req="agent,business"> Перевод</label>
+            <label class="segment-label"><input type="radio" name="paymentMethod" value="cash" data-req="agent,business"> Наличные</label>
+          </div>
+        </div>
+
+        <div class="form-group role-agent role-business hidden">
+          <label>Ссылка на сайт/соцсеть (необязательно)</label>
+          <input type="text" id="socialLink" name="socialLink" placeholder="Instagram, Facebook, сайт...">
+        </div>
+
+        <div class="form-group role-agent role-business hidden">
+          <label>Язык общения</label>
+          <div class="segment-group" id="languageGroup">
+            <label class="segment-label"><input type="radio" name="language" value="en" data-req="agent,business"> 🇬🇧 EN</label>
+            <label class="segment-label"><input type="radio" name="language" value="he" data-req="agent,business"> 🇮🇱 HE</label>
+            <label class="segment-label"><input type="radio" name="language" value="ar" data-req="agent,business"> 🇸🇦 AR</label>
+            <label class="segment-label"><input type="radio" name="language" value="ru" data-req="agent,business"> 🇷🇺 RU</label>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn" disabled>
+          <span id="btnText">Зарегистрироваться</span>
+          <span class="loader" id="btnLoader"></span>
+        </button>
+
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      // Определяем роль из URL (по умолчанию client)
+      const role = urlParams.get('role') || 'client'; 
+      
+      const form = document.getElementById("regForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const btnText = document.getElementById("btnText");
+      const rewardRadios = document.querySelectorAll('input[name="rewardType"]');
+      const rewardValue = document.getElementById("rewardValue");
+      
+      // Настройка интерфейса под роль
+      document.querySelectorAll(`.role-${role}`).forEach(el => el.classList.remove('hidden'));
+      
+      const titles = {
+        client: "Оставить контакт",
+        agent: "Регистрация агента",
+        business: "Регистрация бизнеса"
+      };
+      document.getElementById("pageTitle").textContent = titles[role] || titles.client;
+
+      if (role === 'client') {
+        btnText.textContent = "Отправить контакт";
+      } else if (role === 'business') {
+        document.getElementById("nameLabel").textContent = "Название бизнеса";
+      } else if (role === 'agent') {
+        document.getElementById("nameLabel").textContent = "Имя и фамилия";
+        document.getElementById("paymentLabel").textContent = "Способ получения бонуса";
+      }
+
+      // Показ поля ввода значения вознаграждения
+      rewardRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          rewardValue.classList.remove('hidden');
+          validateForm();
+        });
+      });
+
+      // Логика валидации
+      const getRequiredElements = () => {
+        const reqEls = [];
+        // Собираем текстовые инпуты и селекты
+        form.querySelectorAll(`input[type="text"][data-req*="${role}"], input[type="tel"][data-req*="${role}"], select[data-req*="${role}"]`).forEach(el => {
+            // Исключаем rewardValue если тип не выбран
+            if(el.id === 'rewardValue' && el.classList.contains('hidden')) return;
+            reqEls.push(el);
+        });
+        // Собираем группы радио-кнопок
+        ['rewardType', 'paymentMethod', 'language'].forEach(name => {
+          const radio = form.querySelector(`input[name="${name}"][data-req*="${role}"]`);
+          if (radio) reqEls.push({ isRadioGroup: true, name: name });
+        });
+        return reqEls;
+      };
+
+      const checkValidation = () => {
+        let isValid = true;
+        const reqEls = getRequiredElements();
+
+        reqEls.forEach(el => {
+          if (el.isRadioGroup) {
+            const checked = form.querySelector(`input[name="${el.name}"]:checked`);
+            if (!checked) isValid = false;
+          } else {
+            if (!el.value.trim()) {
+              isValid = false;
+            } else if (el.type === 'tel') {
+              const regex = new RegExp(el.pattern);
+              if (!regex.test(el.value.trim())) isValid = false;
+            }
+          }
+        });
+        return isValid;
+      };
+
+      const validateForm = () => {
+        submitBtn.disabled = !checkValidation();
+      };
+
+      // Подсветка ошибок при blur (потеря фокуса)
+      form.addEventListener('focusout', (e) => {
+        const el = e.target;
+        if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+          if (el.dataset.req && el.dataset.req.includes(role)) {
+            if (!el.value.trim() || (el.type === 'tel' && !new RegExp(el.pattern).test(el.value.trim()))) {
+              el.classList.add('error');
+            } else {
+              el.classList.remove('error');
+            }
+          }
+        }
+        validateForm();
+      });
+
+      // Снятие ошибки при вводе и валидация
+      form.addEventListener('input', (e) => {
+        if(e.target.classList.contains('error')) {
+            e.target.classList.remove('error');
+        }
+        // Убираем красную рамку с групп радио-кнопок
+        if(e.target.type === 'radio') {
+            e.target.closest('.segment-group').classList.remove('error');
+        }
+        validateForm();
+      });
+
+      // Отправка формы
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Финальная проверка (на случай обхода) и подсветка пустых радио-групп
+        if (!checkValidation()) {
+            getRequiredElements().forEach(el => {
+              if (el.isRadioGroup) {
+                if (!form.querySelector(`input[name="${el.name}"]:checked`)) {
+                    document.getElementById(el.name + 'Group').classList.add('error');
+                }
+              } else if (!el.value.trim()) {
+                  el.classList.add('error');
+              }
+            });
+            return;
+        }
+
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        document.getElementById('btnLoader').style.display = 'inline-block';
+
+        // Собираем данные
+        const formData = new FormData(form);
+        const payload = { role: role };
+        
+        // Скрытые параметры
+        payload.sender = urlParams.get('sender') || '';
+        payload.receiver = urlParams.get('receiver') || '';
+        payload.type = urlParams.get('type') || '';
+
+        // Видимые поля
+        for (let [key, value] of formData.entries()) {
+          payload[key] = value;
+        }
+
+        try {
+          const response = await fetch('https://amlatsa-bot-production.up.railway.app/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          let respData = {};
+          try { respData = await response.clone().json(); } catch(e) {}
+
+          if (response.ok) {
+            let waText = "Привет! 👋\nНажми отправить 👉";
+            if (role === 'client') {
+              // Клиент — передаём ref параметры чтобы бот создал лид
+              const s = urlParams.get('sender') || '';
+              const r = urlParams.get('receiver') || '';
+              if (s && r) waText = "client_" + s + "_" + r;
+              else if (s) waText = "client_" + s;
+            } else if (respData.temp_key) {
+              // Агент/бизнес — передаём temp_key чтобы бот подхватил данные
+              waText = "reg_" + respData.temp_key;
+            }
+            window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+          } else {
+            throw new Error('Server error');
+          }
+        } catch (error) {
+          alert('Произошла ошибка при отправке данных. Пожалуйста, попробуйте позже.');
+          submitBtn.disabled = false;
+          btnText.style.display = 'inline';
+          document.getElementById('btnLoader').style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
