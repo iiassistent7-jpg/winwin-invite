@@ -135,15 +135,21 @@
     .tagline {
       margin-top: 16px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;
     }
-    .tagline strong { color: var(--text-main); font-weight: 600; }
+    .tagline strong { 
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      display: inline-block;
+      margin-top: 2px;
+    }
 
     /* ── ПОЛЯ ── */
-    .field { margin-bottom: 22px; text-align: left; }
-    body.rtl .field { text-align: right; }
+    .field { margin-bottom: 24px; }
     
     .field label {
       display: block; font-size: 0.85rem; font-weight: 600;
-      color: var(--text-muted); margin-bottom: 8px;
+      color: var(--text-muted); margin-bottom: 12px;
+      text-align: center; /* Центрируем заголовки полей */
     }
     
     .field input[type="text"],
@@ -158,6 +164,13 @@
       font-family: inherit; font-size: 1rem;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
+      text-align: left; /* Текст ввода остается слева для удобства чтения */
+    }
+    
+    body.rtl .field input[type="text"],
+    body.rtl .field input[type="url"],
+    body.rtl .field select {
+      text-align: right;
     }
     
     .field input:focus, .field select:focus {
@@ -182,7 +195,9 @@
 
     /* ── ВЫБОР РОЛИ (КАРТОЧКИ) ── */
     .role-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      display: grid; 
+      grid-template-columns: 1fr 1fr; /* ЖЕСТКАЯ ФИКСАЦИЯ В 2 КОЛОНКИ */
+      gap: 12px;
     }
     
     .role-card {
@@ -216,7 +231,7 @@
     .role-card .role-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
 
     /* ── СЕГМЕНТЫ (способ оплаты, вознаграждение) ── */
-    .seg-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .seg-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
     
     .seg {
       flex: 1; min-width: 80px; text-align: center;
@@ -319,9 +334,14 @@
     }
     .footer-note { font-size: 0.72rem; opacity: 0.8; margin-top: 4px; }
 
+    /* ── АДАПТАЦИЯ ДЛЯ УЗКИХ ЭКРАНОВ ── */
     @media (max-width: 400px) {
-      .role-grid { grid-template-columns: 1fr; }
       .panel { padding: 24px 16px; }
+      /* Уменьшаем отступы в карточках ролей, чтобы они точно влезали в 1 ряд */
+      .role-card { padding: 14px 6px 12px; }
+      .role-card .icon { font-size: 1.6rem; margin-bottom: 6px; }
+      .role-card .role-name { font-size: 0.9rem; }
+      .role-card .role-desc { font-size: 0.65rem; line-height: 1.2; }
     }
   </style>
 </head>
@@ -339,7 +359,7 @@
       <h1 class="logo">Win-Win</h1>
       <span class="logo-sub">Network</span>
     </div>
-    <p class="tagline" id="tagline">Платформа взаимовыгодных рекомендаций.<br><strong>Выигрывают все.</strong></p>
+    <p class="tagline" id="tagline">Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong></p>
   </header>
 
   <section class="panel">
@@ -350,7 +370,7 @@
     </div>
 
     <div class="field">
-      <label id="roleLabel">Кто вы?</label>
+      <label id="roleLabel">Присоединиться как:</label>
       <div class="role-grid">
         <label class="role-card" id="cardBusiness">
           <input type="radio" name="role" value="business">
@@ -405,7 +425,7 @@
 
     <div class="expandable" id="commonFields">
       <div class="field">
-        <label id="payLabel">Способ получения благодарности</label>
+        <label id="payLabel">Выберите способ получения благодарности</label>
         <div class="seg-group">
           <label class="seg"><input type="radio" name="payMethod" value="bit">Bit</label>
           <label class="seg"><input type="radio" name="payMethod" value="paypal">PayPal</label>
@@ -464,17 +484,17 @@
   const T = {
     ru: {
       dir: "ltr", lang: "ru",
-      tagline: "Платформа взаимовыгодных рекомендаций.<br><strong>Выигрывают все.</strong>",
+      tagline: "Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong>",
       nameLabel: "Ваше имя или название бизнеса",
       namePh: "Введите имя...",
-      roleLabel: "Кто вы?",
+      roleLabel: "Присоединиться как:",
       roleBizName: "Бизнес", roleBizDesc: "Хочу больше клиентов",
       roleAgentName: "Агент", roleAgentDesc: "Хочу рекомендовать и делать добро",
       nicheLabel: "Ниша бизнеса", nicheDefault: "Выберите нишу...",
       rewardLabel: "Вознаграждение агенту за клиента",
       rPct: "% от сделки", rFix: "Фикс ₪", rGift: "Подарок",
       rewardPh: "Укажите размер...",
-      payLabel: "Способ получения благодарности",
+      payLabel: "Выберите способ получения благодарности",
       payTransfer: "Перевод", payCash: "Наличные",
       socialLabel: "Ссылка на сайт / соцсеть",
       socialPh: "Instagram, Facebook, сайт...",
@@ -487,17 +507,17 @@
     },
     en: {
       dir: "ltr", lang: "en",
-      tagline: "Mutual recommendation platform.<br><strong>Everyone wins.</strong>",
+      tagline: "Mutual recommendation platform.<br><strong>Everyone wins here!</strong>",
       nameLabel: "Your name or business name",
       namePh: "Enter name...",
-      roleLabel: "Who are you?",
+      roleLabel: "Join as:",
       roleBizName: "Business", roleBizDesc: "I want more clients",
       roleAgentName: "Agent", roleAgentDesc: "I want to recommend and do good",
       nicheLabel: "Business niche", nicheDefault: "Select niche...",
       rewardLabel: "Agent reward per client",
       rPct: "% of deal", rFix: "Fixed ₪", rGift: "Gift",
       rewardPh: "Enter amount...",
-      payLabel: "How to receive your bonus",
+      payLabel: "Choose how to receive your bonus",
       payTransfer: "Transfer", payCash: "Cash",
       socialLabel: "Website / social link",
       socialPh: "Instagram, Facebook, website...",
@@ -510,17 +530,17 @@
     },
     he: {
       dir: "rtl", lang: "he",
-      tagline: "פלטפורמת המלצות הדדיות.<br><strong>כולם מרוויחים.</strong>",
+      tagline: "פלטפורמת המלצות הדדיות.<br><strong>כאן כולם מרוויחים!</strong>",
       nameLabel: "שמך או שם העסק",
       namePh: "הכניסו שם...",
-      roleLabel: "מי אתם?",
+      roleLabel: "הצטרפו כ:",
       roleBizName: "עסק", roleBizDesc: "רוצה יותר לקוחות",
       roleAgentName: "סוכן", roleAgentDesc: "רוצה להמליץ ולעשות טוב",
       nicheLabel: "תחום העסק", nicheDefault: "בחרו תחום...",
       rewardLabel: "גמול לסוכן עבור לקוח",
       rPct: "% מהעסקה", rFix: "סכום קבוע ₪", rGift: "מתנה",
       rewardPh: "הכניסו גודל...",
-      payLabel: "אופן קבלת הבונוס",
+      payLabel: "בחרו אופן קבלת תגמול",
       payTransfer: "העברה", payCash: "מזומן",
       socialLabel: "קישור לאתר / רשת חברתית",
       socialPh: "Instagram, Facebook, אתר...",
@@ -533,17 +553,17 @@
     },
     ar: {
       dir: "rtl", lang: "ar",
-      tagline: "منصة التوصيات المتبادلة.<br><strong>الجميع يربح.</strong>",
+      tagline: "منصة التوصيات المتبادلة.<br><strong>هنا الجميع يربح!</strong>",
       nameLabel: "اسمك أو اسم العمل",
       namePh: "أدخل الاسم...",
-      roleLabel: "من أنت؟",
+      roleLabel: "انضم كـ:",
       roleBizName: "شركة", roleBizDesc: "أريد المزيد من العملاء",
       roleAgentName: "وكيل", roleAgentDesc: "أريد التوصية وعمل الخير",
       nicheLabel: "مجال العمل", nicheDefault: "اختر المجال...",
       rewardLabel: "مكافأة الوكيل لكل عميل",
       rPct: "% من الصفقة", rFix: "مبلغ ثابت ₪", rGift: "هدية",
       rewardPh: "أدخل المبلغ...",
-      payLabel: "طريقة استلام المكافأة",
+      payLabel: "اختر طريقة استلام المكافأة",
       payTransfer: "تحويل", payCash: "نقداً",
       socialLabel: "رابط الموقع / الشبكة الاجتماعية",
       socialPh: "Instagram, Facebook, موقع...",
