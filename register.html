@@ -554,7 +554,7 @@
       const getRequiredElements = () => {
         const reqEls = [];
         form.querySelectorAll(`input[type="text"][data-req*="${role}"], input[type="tel"][data-req*="${role}"], select[data-req*="${role}"]`).forEach(el => {
-          if(el.id === 'rewardValue' && el.classList.contains('hidden')) return;  // скрыт = не выбран тип
+          if(el.id === 'rewardValue' && el.classList.contains('hidden')) return; // скрыт = тип не выбран, но тип сам обязателен
           reqEls.push(el);
         });
         ['rewardType', 'paymentMethod'].forEach(name => {
@@ -574,6 +574,9 @@
             else if (el.type === 'tel' && el.pattern && !new RegExp(el.pattern).test(el.value.trim())) isValid = false;
           }
         });
+        // Доп. проверка: если тип вознаграждения выбран — значение обязательно
+        const chosenType = form.querySelector('input[name="rewardType"]:checked');
+        if (chosenType && chosenType.value !== 'gift' && !rewardValue.value.trim()) isValid = false;
         return isValid;
       };
 
