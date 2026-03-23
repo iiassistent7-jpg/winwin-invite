@@ -614,6 +614,9 @@
         payload.type = urlParams.get('type') || '';
         payload.source_url = window.location.href;
         for (let [key, value] of formData.entries()) payload[key] = value;
+        // Явно передаём язык (важно для клиента — его форма скрыта)
+        const activeLangBtn = document.querySelector('.lang-btn.active');
+        if (activeLangBtn) payload.language = activeLangBtn.dataset.lang;
 
         try {
           const response = await fetch('https://amlatsa-bot-production.up.railway.app/register', {
