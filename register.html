@@ -615,14 +615,27 @@
         btnText.style.display = 'none';
         document.getElementById('btnLoader').style.display = 'inline-block';
 
-        const formData = new FormData(form);
         const payload = { role };
         payload.sender = urlParams.get('sender') || '';
         payload.receiver = urlParams.get('receiver') || '';
         payload.type = urlParams.get('type') || '';
         payload.source_url = window.location.href;
-        for (let [key, value] of formData.entries()) payload[key] = value;
-        // Явно передаём язык (важно для клиента — его форма скрыта)
+
+        // Явно собираем все поля — FormData не видит поля внутри display:none блоков
+        // Текстовые и tel поля
+        form.querySelectorAll('input[type="text"], input[type="tel"], textarea').forEach(el => {
+          if (el.name) payload[el.name] = el.value;
+        });
+        // Select поля
+        form.querySelectorAll('select').forEach(el => {
+          if (el.name) payload[el.name] = el.value;
+        });
+        // Radio — берём выбранное значение
+        ['rewardType', 'paymentMethod', 'messenger'].forEach(name => {
+          const checked = form.querySelector(`input[name="${name}"]:checked`);
+          if (checked) payload[name] = checked.value;
+        });
+        // Язык
         const activeLangBtn = document.querySelector('.lang-btn.active');
         if (activeLangBtn) payload.language = activeLangBtn.dataset.lang;
 
