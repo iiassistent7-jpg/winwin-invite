@@ -416,7 +416,7 @@
             <label class="segment-label"><input type="radio" name="rewardType" value="fixed" data-req="business"> Фикс ₪</label>
             <label class="segment-label"><input type="radio" name="rewardType" value="gift" data-req="business"> Подарок/услуга</label>
           </div>
-          <input type="text" id="rewardValue" name="rewardValue" placeholder="Размер вознаграждения" style="margin-top: 8px;" class="hidden" data-req="business">
+          <input type="text" id="rewardValue" name="rewardValue" placeholder="Например: 15 (для %) или 200 (для ₪) или описание подарка" style="margin-top: 8px;" class="hidden" data-req="business" required>
         </div>
 
         <div class="form-group role-agent role-business hidden">
@@ -541,6 +541,11 @@
       rewardRadios.forEach(radio => {
         radio.addEventListener('change', () => {
           rewardValue.classList.remove('hidden');
+          // Меняем placeholder в зависимости от типа
+          const type = document.querySelector('input[name="rewardType"]:checked')?.value;
+          if (type === 'percent') rewardValue.placeholder = 'Например: 15 (будет 15% от сделки)';
+          else if (type === 'fixed') rewardValue.placeholder = 'Например: 200 (фиксированная сумма ₪)';
+          else if (type === 'gift') rewardValue.placeholder = 'Опишите подарок: Бесплатная консультация';
           validateForm();
         });
       });
@@ -549,7 +554,7 @@
       const getRequiredElements = () => {
         const reqEls = [];
         form.querySelectorAll(`input[type="text"][data-req*="${role}"], input[type="tel"][data-req*="${role}"], select[data-req*="${role}"]`).forEach(el => {
-          if(el.id === 'rewardValue' && el.classList.contains('hidden')) return;
+          if(el.id === 'rewardValue' && el.classList.contains('hidden')) return;  // скрыт = не выбран тип
           reqEls.push(el);
         });
         ['rewardType', 'paymentMethod'].forEach(name => {
