@@ -626,7 +626,7 @@
           try { respData = await response.clone().json(); } catch(e) {}
 
           if (response.ok) {
-            let waText = "Привет! 👋\nНажми отправить 👉";
+            let waText = "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉";
             let tgStart = "start";
 
             if (role === 'client') {
@@ -645,7 +645,7 @@
               const choice = document.getElementById("messengerChoice");
               choice.classList.add("visible");
               // Подсказка для WA
-              const hints = { ru: "Нажми отправить 👉", en: "Tap send 👉", he: "👈 לחץ שלח", ar: "👈 اضغط إرسال" };
+              const hints = { ru: "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉", en: "Good day! You are completing your registration in Win-Win Network. Please tap Send 👉", he: "שלום! אתם משלימים את ההרשמה ל-Win-Win Network. לחצו שלח 👈", ar: "مرحباً! أنت تكمل تسجيلك في Win-Win Network. اضغط إرسال 👈" };
               const lang = document.documentElement.lang || "ru";
               const waTextHinted = waText + "\n" + (hints[lang] || hints.ru);
               document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waTextHinted);
