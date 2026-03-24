@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Регистрация Win-Win</title>
+  <title>Рекомендация Win-Win</title>
 
   <meta name="theme-color" content="#6c63ff" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -376,12 +376,12 @@
       <form id="regForm" novalidate>
         
         <div class="form-group role-client hidden">
-          <label>Имя</label>
-          <input type="text" id="clientName" name="clientName" placeholder="Ваше имя" data-req="client">
-        </div>
-        <div class="form-group role-client hidden">
-          <label>Телефон</label>
-          <input type="tel" id="clientPhone" name="clientPhone" placeholder="05XXXXXXXX" data-req="client" pattern="^\d{10,12}$">
+          <label id="clientNameLabel" style="display: block; text-align: center; font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.02em;">Как к Вам обращаться?</label>
+          <input type="text" id="clientName" name="clientName" placeholder="Введите имя" data-req="client" style="text-align: center; font-size: 1.1rem; padding: 16px; margin-bottom: 24px;">
+          <div style="text-align: center;">
+            <label id="clientSocialLabel" style="display: block; text-align: center; font-weight: 700; font-size: 1rem; color: #ffffff; margin-bottom: 8px;">Ссылка на соцсеть (необязательно)</label>
+            <input type="text" id="clientSocial" name="clientSocial" placeholder="Instagram, Facebook, сайт..." style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); box-shadow: none;">
+          </div>
         </div>
 
         <div class="form-group role-agent role-business hidden">
@@ -621,16 +621,13 @@
         payload.type = urlParams.get('type') || '';
         payload.source_url = window.location.href;
 
-        // Явно собираем все поля — FormData не видит поля внутри display:none блоков
-        // Текстовые и tel поля
+        // Явно собираем поля — FormData не видит hidden элементы
         form.querySelectorAll('input[type="text"], input[type="tel"], textarea').forEach(el => {
           if (el.name) payload[el.name] = el.value;
         });
-        // Select поля
         form.querySelectorAll('select').forEach(el => {
           if (el.name) payload[el.name] = el.value;
         });
-        // Radio — берём выбранное значение
         ['rewardType', 'paymentMethod', 'messenger'].forEach(name => {
           const checked = form.querySelector(`input[name="${name}"]:checked`);
           if (checked) payload[name] = checked.value;
@@ -653,14 +650,14 @@
             let waText = "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉";
             let tgStart = "start";
 
-            if (role === 'client') {
-              const s = urlParams.get('sender') || '';
-              const r = urlParams.get('receiver') || '';
-              if (s && r) { waText = "client_" + s + "_" + r; tgStart = "client_" + s + "_" + r; }
-              else if (s) { waText = "client_" + s; tgStart = "client_" + s; }
-            } else if (respData.temp_key) {
-              waText = "reg_" + respData.temp_key;
-              tgStart = "reg_" + respData.temp_key;
+            if (respData.temp_key) {
+              if (role === 'client') {
+                waText = "client_reg_" + respData.temp_key;
+                tgStart = "client_reg_" + respData.temp_key;
+              } else {
+                waText = "reg_" + respData.temp_key;
+                tgStart = "reg_" + respData.temp_key;
+              }
             }
 
             if (role === 'client') {
