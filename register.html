@@ -447,6 +447,7 @@
       <!-- Выбор мессенджера — показывается после успешной отправки -->
       <div class="messenger-choice" id="messengerChoice">
         <div class="choice-title" id="choiceTitle">Выберите мессенджер для продолжения</div>
+        <div class="wa-hint" id="waHint" style="text-align:center; font-size:0.95rem; color:#e0e0e0; margin-bottom:12px; line-height:1.5;"></div>
         <a id="waBtn" class="wa-btn" href="#">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.855L.057 23.386a.75.75 0 00.923.923l5.562-1.457A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.512-5.228-1.402l-.374-.22-3.899 1.022 1.03-3.774-.242-.389A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           WhatsApp
@@ -665,11 +666,18 @@
               form.style.display = "none";
               const choice = document.getElementById("messengerChoice");
               choice.classList.add("visible");
+              // Подсказка над кнопкой WA
+              const _lang = document.documentElement.lang || "ru";
+              const _hints = {
+                ru: "Нажмите WhatsApp, а затем кнопку Отправить 👇",
+                en: "Tap WhatsApp, then press Send 👇",
+                he: "לחצו WhatsApp ואז על שלח 👇",
+                ar: "اضغط WhatsApp ثم أرسل 👇"
+              };
+              const waHintEl = document.getElementById("waHint");
+              if (waHintEl) waHintEl.textContent = _hints[_lang] || _hints.ru;
               // Подсказка для WA
-              const hints = { ru: "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉", en: "Good day! You are completing your registration in Win-Win Network. Please tap Send 👉", he: "שלום! אתם משלימים את ההרשמה ל-Win-Win Network. לחצו שלח 👈", ar: "مرحباً! أنت تكمل تسجيلك في Win-Win Network. اضغط إرسال 👈" };
-              const lang = document.documentElement.lang || "ru";
-              const waTextHinted = waText + "\n" + (hints[lang] || hints.ru);
-              document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waTextHinted);
+              document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
               document.getElementById("tgBtn").href = "https://t.me/winwin_lead_bot?start=" + encodeURIComponent(tgStart);
             } else {
               // Агент/бизнес — редирект в заранее выбранный мессенджер
