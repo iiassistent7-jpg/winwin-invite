@@ -385,7 +385,7 @@
 
     function renderStats() {
       const s = bizData.stats || {};
-      document.getElementById('st_earned').textContent = s.total_earned === null ? '—' : `${s.total_earned} ₪`;
+      document.getElementById('st_earned').textContent = `${s.total_earned ?? 0} ₪`;
       animateValue("st_active", 0, s.active || 0, 1000);
       animateValue("st_closed", 0, s.closed || 0, 1000);
       animateValue("st_rejected", 0, s.rejected || 0, 1000);
