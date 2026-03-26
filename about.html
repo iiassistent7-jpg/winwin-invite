@@ -8,7 +8,8 @@
   <style>
     :root {
       --bg-1: #0a0a0f; --bg-2: #1a1a2e; 
-      --accent-1: #56CCF2; --accent-2: #2F80ED; 
+      --accent-1: #6c63ff; --accent-2: #00d4aa; /* Выровнял цвета шапки с index.html */
+      --text-main: #ffffff;
       --text-muted: #a0a0b0; 
       --card: rgba(255, 255, 255, 0.03); 
       --card-border: rgba(255, 255, 255, 0.08);
@@ -22,21 +23,59 @@
     
     /* Декорации */
     .glow-blob { position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0; opacity: 0.4; pointer-events: none; }
-    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(47, 128, 237, 0.3); }
-    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(86, 204, 242, 0.2); }
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(108, 99, 255, 0.2); }
+    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(0, 212, 170, 0.15); }
 
     .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
-    /* Навигация */
-    header { padding: 32px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .logo { font-size: 2rem; font-weight: 900; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; letter-spacing: -1px; }
+    /* ── ИДЕАЛЬНАЯ КОПИЯ ШАПКИ ИЗ INDEX.HTML ── */
+    .header { text-align: center; margin-bottom: 28px; padding-top: 32px; }
+
+    .lang-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
     
-    .lang-switcher { display: flex; gap: 8px; }
-    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+    .lang-btn {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-family: inherit; font-size: 0.8rem; font-weight: 600;
+      padding: 6px 14px; cursor: pointer;
+      transition: all 0.18s;
+    }
+    
+    .lang-btn:hover, .lang-btn.active {
+      background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(0,212,170,0.1));
+      border-color: rgba(108,99,255,0.5);
+      color: var(--text-main);
+    }
+
+    .logo-wrap { margin-bottom: 6px; }
+    .logo {
+      font-size: clamp(2.2rem, 8vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      line-height: 1;
+      margin: 0;
+    }
+    .logo-sub {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-muted); display: block; margin-top: 6px;
+    }
+    
+    .tagline { margin-top: 16px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
+    .tagline strong { 
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      display: inline-block;
+      margin-top: 2px;
+    }
 
     /* Hero */
-    .hero { padding: 80px 0 60px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .hero { padding: 40px 0 60px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
     .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
     .hero h1 span { color: var(--accent-1); }
     
@@ -51,7 +90,7 @@
     .hero-desc-block p + p { margin-left: 0.5em; }
 
     /* О нас / Миссия */
-    #about { padding: 40px 0; scroll-margin-top: 40px; }
+    #about { padding: 20px 0; scroll-margin-top: 40px; }
     .mission-block { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border: 1px solid var(--card-border); border-radius: 32px; padding: 48px; text-align: center; margin-bottom: 40px; position: relative; overflow: hidden; backdrop-filter: blur(20px); }
     .mission-block::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-1), transparent); }
     .mission-block h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 24px; color: var(--accent-1); }
@@ -65,7 +104,7 @@
     /* Роли */
     .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
     .role-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 40px 32px; transition: 0.3s ease; display: flex; flex-direction: column; }
-    .role-card:hover { transform: translateY(-5px); border-color: rgba(86, 204, 242, 0.3); background: rgba(255,255,255,0.05); }
+    .role-card:hover { transform: translateY(-5px); border-color: rgba(108, 99, 255, 0.3); background: rgba(255,255,255,0.05); }
     .role-icon { font-size: 3.5rem; margin-bottom: 20px; display: inline-block; }
     .role-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: #fff; }
     .role-desc { color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
@@ -98,7 +137,7 @@
     .price-card .amount .sub-amt { font-size: 1.2rem; color: var(--text-muted); display: block; margin-top: 4px; font-weight: 700; }
     
     /* Стили для тарифов */
-    .price-card.standard { border-color: rgba(86,204,242,0.2); background: linear-gradient(135deg, rgba(86,204,242,0.05), transparent); }
+    .price-card.standard { border-color: rgba(108,99,255,0.2); background: linear-gradient(135deg, rgba(108,99,255,0.05), transparent); }
     .price-card.standard .amount { color: var(--accent-1); }
     .price-card.standard .amount .sub-amt { display: inline; color: var(--text-muted); opacity: 0.8; }
     
@@ -120,8 +159,8 @@
     /* CTA Секция */
     .cta { text-align: center; padding: 60px 0 100px 0; border-top: 1px solid var(--card-border); }
     .cta h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 32px; }
-    .btn-main { display: inline-flex; align-items: center; justify-content: center; padding: 20px 48px; background: linear-gradient(135deg, var(--accent-2), var(--accent-1)); color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 700; border-radius: 20px; transition: 0.3s; box-shadow: 0 10px 30px rgba(47, 128, 237, 0.3); cursor: pointer; border: none; }
-    .btn-main:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(47, 128, 237, 0.5); }
+    .btn-main { display: inline-flex; align-items: center; justify-content: center; padding: 20px 48px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 700; border-radius: 999px; transition: 0.3s; box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3); cursor: pointer; border: none; }
+    .btn-main:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(108, 99, 255, 0.5); }
 
     @media (max-width: 768px) {
       .mission-block, .exclusive-block, .trust-block { padding: 32px 24px; }
@@ -136,14 +175,18 @@
   <div class="glow-blob blob-2"></div>
 
   <div class="container">
-    <header>
-      <div class="logo">Win-Win</div>
-      <div class="lang-switcher">
-        <button class="lang-btn" id="btn_en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" id="btn_he" onclick="setLang('he')">HE</button>
-        <button class="lang-btn" id="btn_ar" onclick="setLang('ar')">AR</button>
-        <button class="lang-btn active" id="btn_ru" onclick="setLang('ru')">RU</button>
+    <header class="header">
+      <div class="lang-bar">
+        <button class="lang-btn" id="btn_en" onclick="setLang('en')">🇬🇧 EN</button>
+        <button class="lang-btn" id="btn_he" onclick="setLang('he')">🇮🇱 עב</button>
+        <button class="lang-btn" id="btn_ar" onclick="setLang('ar')">🇸🇦 عر</button>
+        <button class="lang-btn active" id="btn_ru" onclick="setLang('ru')">🇷🇺 РУ</button>
       </div>
+      <div class="logo-wrap">
+        <h1 class="logo">Win-Win</h1>
+        <span class="logo-sub">Network</span>
+      </div>
+      <p class="tagline" id="t_tagline">Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong></p>
     </header>
 
     <section class="hero">
@@ -271,7 +314,7 @@
 
     <section class="cta">
       <h2 id="t_cta_title">Станьте частью экосистемы</h2>
-      <a href="https://winwinnetwork.pro/" class="btn-main" id="t_btn_join">Присоединиться к Win-Win</a>
+      <a href="index.html" class="btn-main" id="t_btn_join">Присоединиться к Win-Win</a>
     </section>
 
   </div>
@@ -279,7 +322,9 @@
   <script>
     const i18n = {
       ru: {
+        tagline: "Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong>",
         hero_title: "Экосистема <span>доверия</span><br>в вашем смартфоне",
+        
         hero_sub_block: "<p>Мы уже все общаемся и передаем друзьям только лучших.</p><p>Рекомендуйте ответственных и настоящих профессионалов, помогайте бизнесу, получайте честную благодарность и распоряжайтесь ею по своему усмотрению.</p>",
         
         mission_title: "Мы — не биржа лидов.",
@@ -329,6 +374,7 @@
         btn_join: "Присоединиться к Win-Win"
       },
       en: {
+        tagline: "Mutual recommendation platform.<br><strong>Everyone wins here!</strong>",
         hero_title: "Ecosystem of <span>Trust</span><br>in your smartphone",
         hero_sub_block: "<p>We already recommend only the best to our friends.</p><p>Recommend responsible experts, help businesses grow, receive honest gratitude—and use it as you see fit.</p>",
         mission_title: "We are not a lead board.",
@@ -354,11 +400,13 @@
         p1_amt: "Free",
         p1_desc: "Using the platform, recommendations, and catalog is absolutely free, always, with no hidden conditions.",
         p1_li1: "Unlimited recommendations", p1_li2: "Direct payouts from business", p1_li3: "Participation in Hall of Fame",
+        
         p2_title: "Business (Start / Standard)",
         p2_free: "🎁 10 deals free",
         p2_amt: "99 ₪ <span class='sub-amt'>/ mo</span>",
         p2_desc: "Honest test drive. You pay agents only for successfully closed deals.",
         p2_li1: "Smart Catalog profile", p2_li2: "CRM board for leads", p2_li3: "Unlimited agents",
+        
         p3_title: "Business PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ mo</span>",
         p3_desc: "For professionals who need maximum control and client flow.",
@@ -367,6 +415,7 @@
         btn_join: "Join Win-Win"
       },
       he: {
+        tagline: "פלטפורמת המלצות הדדיות.<br><strong>כאן כולם מרוויחים!</strong>",
         hero_title: "מערכת אקולוגית של <span>אמון</span><br>בסמארטפון שלך",
         hero_sub_block: "<p>כולנו כבר ממליצים לחברים רק על הטובים ביותר.</p><p>המליצו על מקצוענים, עזרו לעסקים, קבלו תגמול הוגן והשתמשו בו כראות עיניכם.</p>",
         mission_title: "אנחנו לא בורסת לידים.",
@@ -392,11 +441,13 @@
         p1_amt: "חינם",
         p1_desc: "השימוש בפלטפורמה והקטלוג בחינם לחלוטין וללא תנאים נסתרים.",
         p1_li1: "המלצות ללא הגבלה", p1_li2: "תשלום ישירות מהעסק", p1_li3: "השתתפות בדירוגים",
+        
         p2_title: "עסקים (Start / Standard)",
         p2_free: "🎁 10 עסקאות חינם",
         p2_amt: "99 ₪ <span class='sub-amt'>/ חודש</span>",
         p2_desc: "נסיעת מבחן הוגנת. משלמים עמלה רק על סגירה מוצלחת.",
         p2_li1: "פרופיל בקטלוג", p2_li2: "לוח ניהול לידים", p2_li3: "סוכנים ללא הגבלה",
+        
         p3_title: "עסקים PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ חודש</span>",
         p3_desc: "למקצוענים שרוצים שליטה מקסימלית וזרימת לקוחות.",
@@ -405,6 +456,7 @@
         btn_join: "הצטרף ל-Win-Win"
       },
       ar: {
+        tagline: "منصة التوصيات المتبادلة.<br><strong>هنا الجميع يربح!</strong>",
         hero_title: "نظام الثقة البيئي<br><span>في هاتفك</span> الذكي",
         hero_sub_block: "<p>نحن نوصي بالفعل بالأفضل لأصدقائنا.</p><p>أوصِ بالمحترفين، ساعد الشركات، واحصل على مكافأة عادلة للتصرف بها كما تشاء.</p>",
         mission_title: "نحن لسنا بورصة عملاء.",
@@ -430,11 +482,13 @@
         p1_amt: "مجاناً",
         p1_desc: "استخدام المنصة والكتالوج مجاني دائماً، بلا شروط خفية.",
         p1_li1: "توصيات غير محدودة", p1_li2: "دفع مباشر من الشركة", p1_li3: "المشاركة في قاعة المشاهير",
+        
         p2_title: "الشركات (Start / Standard)",
         p2_free: "🎁 10 صفقات مجانية",
         p2_amt: "99 ₪ <span class='sub-amt'>/ شهر</span>",
         p2_desc: "اختبار عادل. تدفع للوكلاء فقط عن الصفقات المغلقة.",
         p2_li1: "ملف في الكتالوج الذكي", p2_li2: "لوحة إدارة العملاء", p2_li3: "وكلاء بلا حدود",
+        
         p3_title: "الشركات PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ شهر</span>",
         p3_desc: "للمحترفين الذين يحتاجون لأقصى تحكم وتدفق عملاء.",
@@ -454,9 +508,13 @@
 
       const L = i18n[lang];
       
+      document.getElementById('t_tagline').innerHTML = L.tagline;
+
+      // ОбновляемHero
       document.getElementById('t_hero_title').innerHTML = L.hero_title;
       document.getElementById('t_hero_sub_block').innerHTML = L.hero_sub_block;
       
+      // Обновляем остальное
       document.getElementById('t_mission_title').textContent = L.mission_title;
       document.getElementById('t_mission_text').innerHTML = L.mission_text;
       document.getElementById('t_excl_title').textContent = L.excl_title;
@@ -505,10 +563,11 @@
       document.getElementById('t_cta_title').textContent = L.cta_title;
       document.getElementById('t_btn_join').textContent = L.btn_join;
       
-      // ВАЖНО: Ссылка ведет жестко на корень сайта, где лежит index.html
+      // Ссылка ведет жестко на корень сайта
       document.getElementById('t_btn_join').href = "https://winwinnetwork.pro/?lang=" + lang;
     }
     
+    // Парсим URL и устанавливаем нужный язык (по умолчанию русский)
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         let lang = urlParams.get('lang') || 'ru';
