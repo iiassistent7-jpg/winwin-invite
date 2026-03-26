@@ -148,9 +148,9 @@
       <canvas id="nicheChart" width="400" height="250"></canvas>
     </div>
 
-    <div class="btn-group">
-      <a href="#" class="btn btn-wa" id="btnWa">WhatsApp</a>
-      <a href="https://t.me/winwin_lead_bot" class="btn btn-tg" target="_blank">Telegram</a>
+    <div class="btn-group" id="btnGroup">
+      <a href="#" class="btn btn-wa" id="btnWa" style="display:none;">WhatsApp</a>
+      <a href="https://t.me/winwin_lead_bot" class="btn btn-tg" id="btnTg" target="_blank" style="display:none;">Telegram</a>
     </div>
   </div>
 
@@ -219,7 +219,14 @@
         dashData = await res.json();
         document.getElementById('globalLoader').style.display = 'none';
         document.getElementById('mainShell').style.display = 'block';
-        document.getElementById('btnWa').href = `https://wa.me/${dashData.bot_phone || '972534218573'}`;
+        const _phone = dashData.bot_phone || '972534218573';
+        const _channel = dashData.channel || 'whatsapp';
+        if (_channel === 'telegram') {
+          document.getElementById('btnTg').style.display = 'block';
+        } else {
+          document.getElementById('btnWa').href = `https://wa.me/${_phone}`;
+          document.getElementById('btnWa').style.display = 'block';
+        }
         document.getElementById('c_earned').textContent = dashData.currency || '₪';
         document.getElementById('c_pending').textContent = dashData.currency || '₪';
         document.getElementById('t_greeting').textContent = dashData.user_name;
