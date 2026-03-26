@@ -648,7 +648,8 @@
           try { respData = await response.clone().json(); } catch(e) {}
 
           if (response.ok) {
-            let waText = "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉";
+            let waText = "Добро пожаловать в Win-Win Network!
+Вы завершаете регистрацию. Нажмите отправить 👉";
             let tgStart = "start";
 
             if (respData.temp_key) {
@@ -661,28 +662,42 @@
               }
             }
 
+            // Hint-тексты для WA — видны пользователю в поле сообщения
+            const _wa_hints = {
+              ru: "Добро пожаловать в Win-Win Network!
+Вы завершаете регистрацию. Нажмите отправить 👉",
+              en: "Welcome to Win-Win Network!
+You are completing your registration. Please tap Send 👉",
+              he: "ברוכים הבאים ל-Win-Win Network!
+אתם משלימים את ההרשמה. לחצו שלח 👈",
+              ar: "مرحباً بك في Win-Win Network!
+أنت تكمل تسجيلك. اضغط إرسال 👈"
+            };
+            const _ui_lang = document.documentElement.lang || "ru";
+            const waTextHinted = waText + "\n" + (_wa_hints[_ui_lang] || _wa_hints.ru);
+
             if (role === 'client') {
               // Клиент выбирает мессенджер после отправки
               form.style.display = "none";
               const choice = document.getElementById("messengerChoice");
               choice.classList.add("visible");
-              // Подсказка над кнопкой WA
-              const _lang = document.documentElement.lang || "ru";
-              const _hints = {
+              // Подсказка на странице над кнопкой WA
+              const _ui_hints = {
                 ru: "Нажмите WhatsApp, а затем кнопку Отправить 👇",
                 en: "Tap WhatsApp, then press Send 👇",
                 he: "לחצו WhatsApp ואז על שלח 👇",
                 ar: "اضغط WhatsApp ثم أرسل 👇"
               };
               const waHintEl = document.getElementById("waHint");
-              if (waHintEl) waHintEl.textContent = _hints[_lang] || _hints.ru;
-              // Подсказка для WA
-              document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+              if (waHintEl) waHintEl.textContent = _ui_hints[_ui_lang] || _ui_hints.ru;
+              // В WA отправляем код + hint (бот берёт только первую строку)
+              document.getElementById("waBtn").href = "https://wa.me/972534218573?text=" + encodeURIComponent(waTextHinted);
               document.getElementById("tgBtn").href = "https://t.me/winwin_lead_bot?start=" + encodeURIComponent(tgStart);
             } else {
               // Агент/бизнес — редирект в заранее выбранный мессенджер
               if (selectedMessenger === "wa") {
-                window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waText);
+                // В WA отправляем код + hint (бот берёт только первую строку)
+                window.location.href = "https://wa.me/972534218573?text=" + encodeURIComponent(waTextHinted);
               } else {
                 window.location.href = "https://t.me/winwin_lead_bot?start=" + encodeURIComponent(tgStart);
               }
