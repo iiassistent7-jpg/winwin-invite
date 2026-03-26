@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Win-Win Business Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-1: #1a1a2e; --bg-2: #0f0f1a; 
+      --accent-1: #56CCF2; --accent-2: #2F80ED; 
+      --text-muted: #a0a0b0; 
+      --card: rgba(255, 255, 255, 0.05); 
+      --card-border: rgba(255, 255, 255, 0.1);
+      --success: #27AE60; --danger: #EB5757; --warning: #F2C94C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
+    [dir="rtl"] { text-align: right; }
+    [dir="rtl"] .list-icon { margin-left: 12px; margin-right: 0; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; padding-bottom: 80px; }
+    .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+    .header { text-align: center; margin-bottom: 24px; }
+    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
+    .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
+    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 1; padding: 12px 8px; text-align: center; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); background: transparent; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .tab-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .deals-filter { display: flex; gap: 8px; margin-bottom: 16px; }
+    .filter-btn { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+    .filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 12px; position: relative; }
+    .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .deal-client { font-size: 1.2rem; font-weight: 800; }
+    .deal-date { font-size: 0.8rem; color: var(--text-muted); }
+    .deal-info { font-size: 0.9rem; color: #e0e0e0; margin-bottom: 16px; line-height: 1.6; }
+    .deal-info span { font-weight: 600; color: #fff; }
+    .deal-wa-link { color: var(--accent-1); text-decoration: none; font-weight: 600; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
+    .st-new { background: rgba(242,201,76,0.15); color: var(--warning); border: 1px solid rgba(242,201,76,0.3); }
+    .st-progress { background: rgba(86,204,242,0.15); color: var(--accent-1); border: 1px solid rgba(86,204,242,0.3); }
+    .st-closed { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+    .st-rejected { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
+    .btn-action { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); font-weight: 600; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+    .btn-action:active { transform: scale(0.97); }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; text-align: center; }
+    .stat-box.highlight { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.05)); border-color: rgba(86,204,242,0.3); grid-column: span 2; }
+    .stat-val { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .stat-box.highlight .stat-val { color: var(--accent-1); font-size: 2.8rem; }
+    .stat-lbl { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; }
+    .chart-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; margin-bottom: 24px; }
+    .chart-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; text-align: center; }
+    .profile-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+    .prof-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .prof-row:last-child { border-bottom: none; }
+    .prof-lbl { color: var(--text-muted); font-size: 0.9rem; }
+    .prof-val { font-weight: 600; text-align: right; max-width: 60%; word-break: break-word; }
+    .btn-edit { background: var(--accent-2); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    [dir="rtl"] .form-group { text-align: right; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+    .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
+    .form-control:focus { border-color: var(--accent-1); }
+    .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s; align-items: flex-end; justify-content: center; }
+    .modal-backdrop.active { display: flex; opacity: 1; }
+    .modal-content { background: var(--bg-1); border-top: 1px solid var(--card-border); width: 100%; max-width: 600px; border-radius: 24px 24px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+    .modal-backdrop.active .modal-content { transform: translateY(0); }
+    .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
+    .modal-deal-info { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 24px; font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; border: 1px solid var(--card-border); }
+    .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+    .btn-m-close { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+    .btn-m-reject { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
+    .btn-m-back { background: transparent; color: var(--text-muted); }
+    .modal-step { display: none; }
+    .modal-step.active { display: block; animation: fadeIn 0.3s; }
+    .btn-wa-return { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 560px; text-align: center; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,211,102,0.25); z-index: 10; }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 2000; font-weight: 700; font-size: 1.2rem; color: var(--accent-1); flex-direction: column; gap: 16px; }
+    .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="globalLoader">
+    <div class="spinner"></div>
+    <div id="loaderText">Загрузка данных...</div>
+    <button id="loaderWaBtn" class="btn-action" style="display:none; width:auto; padding:8px 24px; margin-top:16px;" onclick="returnToWa()">Вернуться в WhatsApp</button>
+  </div>
+
+  <div class="shell" style="display:none;" id="mainShell">
+    <div class="lang-switcher">
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('he')">HE</button>
+      <button class="lang-btn" onclick="setLang('ar')">AR</button>
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    </div>
+    <header class="header">
+      <h1 class="logo">Win-Win</h1>
+      <div class="title" id="t_company_name">...</div>
+    </header>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('deals')" id="t_tab_deals">💼 Сделки</button>
+      <button class="tab-btn" onclick="switchTab('stats')" id="t_tab_stats">📊 Статистика</button>
+      <button class="tab-btn" onclick="switchTab('profile')" id="t_tab_profile">👤 Профиль</button>
+      <button class="tab-btn" onclick="switchTab('edit')" id="t_tab_edit">✏️ Ред.</button>
+    </div>
+
+    <div id="tab_deals" class="tab-content active">
+      <div class="deals-filter">
+        <button class="filter-btn active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
+        <button class="filter-btn" onclick="setDealFilter('history')" id="t_filt_history">История</button>
+      </div>
+      <div id="dealsContainer"></div>
+    </div>
+
+    <div id="tab_stats" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-box highlight">
+          <div class="stat-val" id="st_earned">0 ₪</div>
+          <div class="stat-lbl" id="t_st_earned">Всего заработано</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="st_active" style="color:var(--accent-1);">0</div>
+          <div class="stat-lbl" id="t_st_active">В процессе</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="st_closed" style="color:var(--success);">0</div>
+          <div class="stat-lbl" id="t_st_closed">Закрыто</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="st_rejected" style="color:var(--danger);">0</div>
+          <div class="stat-lbl" id="t_st_rejected">Отклонено</div>
+        </div>
+      </div>
+      <div class="chart-container" id="chartWrapper" style="display:none;">
+        <div class="chart-title" id="t_chart_title">Статистика</div>
+        <canvas id="nicheChart" width="400" height="250"></canvas>
+      </div>
+    </div>
+
+    <div id="tab_profile" class="tab-content">
+      <div class="profile-card">
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Комиссия</div><div class="prof-val" id="pr_comm"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ оплаты</div><div class="prof-val" id="pr_pay"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone"></div></div>
+      </div>
+      <button class="btn-edit" onclick="switchTab('edit')" id="t_btn_edit">✏️ Редактировать профиль</button>
+    </div>
+
+    <div id="tab_edit" class="tab-content">
+      <div class="form-group"><label id="t_f_name">Название бизнеса</label><input type="text" class="form-control" id="f_name"></div>
+      <div class="form-group"><label id="t_f_niche">Ниша</label><select class="form-control" id="f_niche"></select></div>
+      <div class="form-group"><label id="t_f_comm">Комиссия (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
+      <div class="form-group"><label id="t_f_pay">Способ оплаты</label><input type="text" class="form-control" id="f_pay" placeholder="Bit / PayPal / Bank..."></div>
+      <div class="form-group"><label id="t_f_link">Ссылка (Сайт / Соцсети)</label><input type="text" class="form-control" id="f_link" placeholder="https://..."></div>
+      <button class="btn-save" onclick="submitEditForm()" id="t_btn_save">💾 Сохранить изменения</button>
+    </div>
+
+    <a href="#" id="btnWaReturn" class="btn-wa-return" onclick="returnToWa()">Вернуться в WhatsApp</a>
+  </div>
+
+  <div class="modal-backdrop" id="actionModal">
+    <div class="modal-content">
+      <div class="modal-title" id="m_title">Управление сделкой</div>
+      <div class="modal-deal-info" id="m_info"></div>
+      <div class="modal-step active" id="m_step_main">
+        <button class="modal-btn btn-m-close" onclick="setModalStep('close')" id="t_m_btn_close">✅ Закрыть сделку</button>
+        <button class="modal-btn btn-m-reject" onclick="setModalStep('reject')" id="t_m_btn_reject">❌ Отклонить сделку</button>
+        <button class="modal-btn btn-m-back" onclick="closeModal()" id="t_m_btn_cancel">↩️ Назад</button>
+      </div>
+      <div class="modal-step" id="m_step_close">
+        <div class="form-group">
+          <label id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
+          <input type="number" class="form-control" id="m_amount" placeholder="Например: 1500">
+        </div>
+        <button class="btn-save" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
+        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back1">↩️ Назад</button>
+      </div>
+      <div class="modal-step" id="m_step_reject">
+        <p style="text-align:center; margin-bottom:16px;" id="t_m_reject_sure">Вы уверены, что хотите отклонить эту сделку?</p>
+        <button class="modal-btn btn-m-reject" style="background:var(--danger); color:#fff; border:none;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back2">↩️ Отмена</button>
+      </div>
+      <div class="modal-step" id="m_step_result" style="text-align:center; padding:20px 0;">
+        <div class="spinner" style="margin:0 auto 16px auto;" id="m_spinner"></div>
+        <div id="m_result_msg" style="font-weight:600;">Обработка...</div>
+        <button class="modal-btn btn-m-back" onclick="closeModal()" id="m_btn_finish" style="display:none; margin-top:16px;">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const i18n = {
+      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"💼 Сделки", tab_stats:"📊 Статистика", tab_profile:"👤 Профиль", tab_edit:"✏️ Ред.", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"⚙️ Управлять", stat_earned:"Всего заработано", stat_active:"В процессе", stat_closed:"Закрыто", stat_rej:"Отклонено", chart_title:"Статистика", pr_name:"Название", pr_niche:"Ниша", pr_comm:"Комиссия", pr_pay:"Способ оплаты", pr_phone:"Телефон", btn_edit:"✏️ Редактировать профиль", f_name:"Название бизнеса", f_niche:"Ниша", f_comm:"Комиссия (например, 10% или 500)", f_pay:"Способ оплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"💾 Сохранить изменения", wa_btn:"Вернуться в WhatsApp", m_title:"Управление сделкой", m_client:"Клиент:", m_date:"Дата:", m_close:"✅ Закрыть сделку", m_reject:"❌ Отклонить сделку", m_cancel:"↩️ Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить эту сделку?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть",
+        niches:["Красота и уход","Недвижимость","Здоровье","Еда и рестораны","Юристы","Финансы","Ремонт и стройка","IT","Животные","Одежда и товары","Обучение","Авто","Другое"] },
+      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף. בקש חדש בבוט.", err_save:"שגיאה בשמירה", success_save:"השינויים נשמרו!", tab_deals:"💼 עסקאות", tab_stats:"📊 סטטיסטיקה", tab_profile:"👤 פרופיל", tab_edit:"✏️ עריכה", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן בינתיים.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", card_agent:"סוכן:", card_contact:"צור קשר עם", card_manage:"⚙️ ניהול", stat_earned:"סך הכל", stat_active:"בתהליך", stat_closed:"נסגרו", stat_rej:"נדחו", chart_title:"סטטיסטיקה", pr_name:"שם", pr_niche:"תחום", pr_comm:"עמלה", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"✏️ עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_comm:"עמלה", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"💾 שמור", wa_btn:"חזרה ל-WhatsApp", m_title:"ניהול עסקה", m_client:"לקוח:", m_date:"תאריך:", m_close:"✅ סגור עסקה", m_reject:"❌ דחה עסקה", m_cancel:"↩️ חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע בהצלחה!", action_close:"סגור",
+        niches:["יופי וטיפוח","נדל\"ן","בריאות","אוכל ומסעדות","עורכי דין","פיננסים","שיפוץ ובנייה","IT","בעלי חיים","בגדים ומוצרים","לימודים","רכב","אחר"] },
+      en: { loading:"Loading data...", expired:"Link expired. Request a new one in the bot.", err_save:"Save error", success_save:"Changes saved!", tab_deals:"💼 Deals", tab_stats:"📊 Stats", tab_profile:"👤 Profile", tab_edit:"✏️ Edit", filt_active:"Active", filt_history:"History", empty_deals:"It's empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", card_agent:"Agent:", card_contact:"Contact client", card_manage:"⚙️ Manage", stat_earned:"Total Earned", stat_active:"In Progress", stat_closed:"Closed", stat_rej:"Rejected", chart_title:"Statistics", pr_name:"Name", pr_niche:"Niche", pr_comm:"Commission", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"✏️ Edit Profile", f_name:"Business Name", f_niche:"Niche", f_comm:"Commission (e.g. 10% or 500)", f_pay:"Payment Method", f_link:"Link (Site / Social)", btn_save:"💾 Save Changes", wa_btn:"Return to WhatsApp", m_title:"Manage Deal", m_client:"Client:", m_date:"Date:", m_close:"✅ Close Deal", m_reject:"❌ Reject Deal", m_cancel:"↩️ Back", m_lbl_amount:"Deal amount (digits only)", m_conf_close:"Confirm Close", m_sure:"Are you sure you want to reject?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Successfully completed!", action_close:"Close",
+        niches:["Beauty & Care","Real Estate","Health","Food & Restaurants","Legal","Finance","Repair & Construction","IT","Animals","Clothing & Goods","Education","Auto","Other"] },
+      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط. اطلب واحداً جديداً.", err_save:"خطأ في الحفظ", success_save:"تم الحفظ!", tab_deals:"💼 الصفقات", tab_stats:"📊 الإحصائيات", tab_profile:"👤 الملف", tab_edit:"✏️ تعديل", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", card_agent:"الوكيل:", card_contact:"الاتصال بالعميل", card_manage:"⚙️ إدارة", stat_earned:"إجمالي الأرباح", stat_active:"قيد الإجراء", stat_closed:"مغلقة", stat_rej:"مرفوضة", chart_title:"إحصائيات", pr_name:"الاسم", pr_niche:"المجال", pr_comm:"العمولة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"✏️ تعديل الملف", f_name:"اسم العمل", f_niche:"المجال", f_comm:"العمولة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"💾 حفظ", wa_btn:"العودة إلى WhatsApp", m_title:"إدارة الصفقة", m_client:"العميل:", m_date:"التاريخ:", m_close:"✅ إغلاق الصفقة", m_reject:"❌ رفض الصفقة", m_cancel:"↩️ رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري المعالجة...", action_success:"اكتمل بنجاح!", action_close:"إغلاق",
+        niches:["الجمال والعناية","العقارات","الصحة","الطعام والمطاعم","المحامون","المالية","الإصلاح والبناء","IT","الحيوانات","الملابس والبضائع","التعليم","السيارات","أخرى"] }
+    };
+
+    let currentLang = 'ru';
+    let token = new URLSearchParams(window.location.search).get('token');
+    let bizData = null;
+    let currentDealFilter = 'active';
+    let activeDealId = null;
+    let nicheChartInstance = null;
+    const API_URL = "https://amlatsa-bot-production.up.railway.app";
+
+    function init() {
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (urlLang && i18n[urlLang]) currentLang = urlLang;
+      setLang(currentLang, false);
+      if (!token) { showGlobalError(i18n[currentLang].expired); return; }
+      fetchData();
+    }
+
+    function setLang(lang, shouldRender = true) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'he' || lang === 'ar') ? 'rtl' : 'ltr';
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      const L = i18n[lang];
+      document.getElementById('loaderText').textContent = L.loading;
+      document.getElementById('t_tab_deals').textContent = L.tab_deals;
+      document.getElementById('t_tab_stats').textContent = L.tab_stats;
+      document.getElementById('t_tab_profile').textContent = L.tab_profile;
+      document.getElementById('t_tab_edit').textContent = L.tab_edit;
+      document.getElementById('t_filt_active').textContent = L.filt_active;
+      document.getElementById('t_filt_history').textContent = L.filt_history;
+      document.getElementById('t_st_earned').textContent = L.stat_earned;
+      document.getElementById('t_st_active').textContent = L.stat_active;
+      document.getElementById('t_st_closed').textContent = L.stat_closed;
+      document.getElementById('t_st_rejected').textContent = L.stat_rej;
+      document.getElementById('t_chart_title').textContent = L.chart_title;
+      document.getElementById('t_pr_name').textContent = L.pr_name;
+      document.getElementById('t_pr_niche').textContent = L.pr_niche;
+      document.getElementById('t_pr_comm').textContent = L.pr_comm;
+      document.getElementById('t_pr_pay').textContent = L.pr_pay;
+      document.getElementById('t_pr_phone').textContent = L.pr_phone;
+      document.getElementById('t_btn_edit').textContent = L.btn_edit;
+      document.getElementById('t_f_name').textContent = L.f_name;
+      document.getElementById('t_f_niche').textContent = L.f_niche;
+      document.getElementById('t_f_comm').textContent = L.f_comm;
+      document.getElementById('t_f_pay').textContent = L.f_pay;
+      document.getElementById('t_f_link').textContent = L.f_link;
+      document.getElementById('t_btn_save').textContent = L.btn_save;
+      document.getElementById('btnWaReturn').textContent = L.wa_btn;
+      document.getElementById('m_title').textContent = L.m_title;
+      document.getElementById('t_m_btn_close').textContent = L.m_close;
+      document.getElementById('t_m_btn_reject').textContent = L.m_reject;
+      document.getElementById('t_m_btn_cancel').textContent = L.m_cancel;
+      document.getElementById('t_m_lbl_amount').textContent = L.m_lbl_amount;
+      document.getElementById('t_m_btn_confirm_close').textContent = L.m_conf_close;
+      document.getElementById('t_m_btn_back1').textContent = L.m_cancel;
+      document.getElementById('t_m_reject_sure').textContent = L.m_sure;
+      document.getElementById('t_m_btn_confirm_reject').textContent = L.m_conf_reject;
+      document.getElementById('t_m_btn_back2').textContent = L.m_cancel;
+      document.getElementById('m_btn_finish').textContent = L.action_close;
+      if (shouldRender && bizData) { populateNiches(); renderAll(); }
+    }
+
+    function showGlobalError(msg) {
+      document.querySelector('.spinner').style.display = 'none';
+      document.getElementById('loaderText').textContent = msg;
+      document.getElementById('loaderWaBtn').style.display = 'block';
+    }
+
+    async function fetchData() {
+      try {
+        const res = await fetch(`${API_URL}/api/business?token=${token}`);
+        if (!res.ok) throw new Error('Auth failed');
+        bizData = await res.json();
+        document.getElementById('globalLoader').style.display = 'none';
+        document.getElementById('mainShell').style.display = 'block';
+        document.getElementById('t_company_name').textContent = bizData.name;
+        document.getElementById('btnWaReturn').href = `https://wa.me/${bizData.bot_phone || '972534218573'}`;
+        populateNiches();
+        renderAll();
+      } catch (err) {
+        showGlobalError(i18n[currentLang].expired);
+      }
+    }
+
+    function returnToWa() {
+      window.location.href = `https://wa.me/${bizData?.bot_phone || '972534218573'}`;
+    }
+
+    function renderAll() { renderDeals(); renderStats(); renderProfile(); renderEditForm(); }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab_${tabId}`).classList.add('active');
+      document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+    }
+
+    function setDealFilter(f) {
+      currentDealFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.filter-btn[onclick="setDealFilter('${f}')"]`).classList.add('active');
+      renderDeals();
+    }
+
+    function getStatusData(status) {
+      const L = i18n[currentLang];
+      if (status === 'new') return { text: L.st_new, cls: 'st-new' };
+      if (status === 'in_progress') return { text: L.st_prog, cls: 'st-progress' };
+      if (status === 'closed') return { text: L.st_closed, cls: 'st-closed' };
+      if (status === 'rejected') return { text: L.st_rej, cls: 'st-rejected' };
+      return { text: status, cls: 'st-new' };
+    }
+
+    function renderDeals() {
+      const container = document.getElementById('dealsContainer');
+      const L = i18n[currentLang];
+      const deals = bizData.deals || [];
+      const filtered = deals.filter(d => {
+        if (currentDealFilter === 'active') return ['new', 'in_progress'].includes(d.status);
+        return ['closed', 'rejected'].includes(d.status);
+      });
+      if (filtered.length === 0) { container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`; return; }
+      container.innerHTML = filtered.map(d => {
+        const st = getStatusData(d.status);
+        const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
+        const waLink = `https://wa.me/${cleanPhone}`;
+        let manageBtn = '';
+        if (currentDealFilter === 'active') {
+          manageBtn = `<button class="btn-action" onclick="openDealModal(${d.id})">${L.card_manage}</button>`;
+        }
+        return `<div class="deal-card">
+          <div class="deal-header">
+            <div><div class="deal-client">${d.client_name}</div><div class="deal-date">${d.date}</div></div>
+            <div class="status-badge ${st.cls}">${st.text}</div>
+          </div>
+          <div class="deal-info">
+            ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
+            <a href="${waLink}" class="deal-wa-link" target="_blank">${L.card_contact} ${d.client_name}: ${d.client_phone}</a>
+          </div>
+          ${manageBtn}
+        </div>`;
+      }).join('');
+    }
+
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function renderStats() {
+      const s = bizData.stats || {};
+      document.getElementById('st_earned').textContent = `${s.total_earned || 0} ₪`;
+      animateValue("st_active", 0, s.active || 0, 1000);
+      animateValue("st_closed", 0, s.closed || 0, 1000);
+      animateValue("st_rejected", 0, s.rejected || 0, 1000);
+      if (s.chart_data && s.chart_data.labels && s.chart_data.labels.length > 0) {
+        document.getElementById('chartWrapper').style.display = 'block';
+        if (nicheChartInstance) nicheChartInstance.destroy();
+        const ctx = document.getElementById('nicheChart').getContext('2d');
+        nicheChartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: { labels: s.chart_data.labels, datasets: [{ data: s.chart_data.values, backgroundColor: ['#56CCF2','#2F80ED','#9B51E0','#27AE60','#F2C94C'], borderWidth: 0, hoverOffset: 4 }] },
+          options: { responsive: true, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b0', font: { family: 'Inter' } } } } }
+        });
+      }
+    }
+
+    function populateNiches() {
+      const sel = document.getElementById('f_niche');
+      sel.innerHTML = i18n[currentLang].niches.map(n => `<option value="${n}">${n}</option>`).join('');
+    }
+
+    function renderProfile() {
+      document.getElementById('pr_name').textContent = bizData.name || '—';
+      document.getElementById('pr_niche').textContent = bizData.niche || '—';
+      document.getElementById('pr_comm').textContent = bizData.commission || '—';
+      document.getElementById('pr_pay').textContent = bizData.payment_method || '—';
+      document.getElementById('pr_phone').textContent = bizData.phone || '—';
+    }
+
+    function renderEditForm() {
+      document.getElementById('f_name').value = bizData.name || '';
+      document.getElementById('f_comm').value = bizData.commission || '';
+      document.getElementById('f_pay').value = bizData.payment_method || '';
+      document.getElementById('f_link').value = bizData.business_info || '';
+      const sel = document.getElementById('f_niche');
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === bizData.niche) { sel.selectedIndex = i; break; }
+      }
+    }
+
+    async function submitEditForm() {
+      const btn = document.getElementById('t_btn_save');
+      const origText = btn.textContent;
+      btn.textContent = i18n[currentLang].action_processing;
+      btn.style.opacity = '0.7';
+      const payload = {
+        name: document.getElementById('f_name').value,
+        niche: document.getElementById('f_niche').value,
+        commission: document.getElementById('f_comm').value,
+        payment_method: document.getElementById('f_pay').value,
+        business_info: document.getElementById('f_link').value
+      };
+      try {
+        const res = await fetch(`${API_URL}/api/business/update?token=${token}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Update failed');
+        bizData = { ...bizData, ...payload };
+        renderProfile();
+        btn.textContent = i18n[currentLang].success_save;
+        btn.style.background = 'var(--success)';
+        setTimeout(() => { btn.textContent = origText; btn.style.opacity = '1'; switchTab('profile'); }, 1500);
+      } catch(e) {
+        btn.textContent = i18n[currentLang].err_save;
+        btn.style.background = 'var(--danger)';
+        setTimeout(() => { btn.textContent = origText; btn.style.background = 'var(--success)'; btn.style.opacity = '1'; }, 2000);
+      }
+    }
+
+    function openDealModal(id) {
+      activeDealId = id;
+      const deal = bizData.deals.find(d => d.id === id);
+      if (!deal) return;
+      const L = i18n[currentLang];
+      document.getElementById('m_info').innerHTML = `
+        <strong>${L.m_client}</strong> ${deal.client_name} (${deal.client_phone})<br>
+        <strong>${L.card_agent}</strong> ${deal.agent_name || '—'}<br>
+        <strong>${L.m_date}</strong> ${deal.date}`;
+      document.getElementById('m_amount').value = '';
+      setModalStep('main');
+      document.getElementById('actionModal').classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('actionModal').classList.remove('active'); activeDealId = null; }
+
+    function setModalStep(step) {
+      document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+      document.getElementById(`m_step_${step}`).classList.add('active');
+    }
+
+    async function submitDealAction(actionType) {
+      const L = i18n[currentLang];
+      if (actionType === 'close' && !document.getElementById('m_amount').value) return;
+      setModalStep('result');
+      document.getElementById('m_spinner').style.display = 'block';
+      document.getElementById('m_result_msg').textContent = L.action_processing;
+      document.getElementById('m_result_msg').style.color = '#fff';
+      document.getElementById('m_btn_finish').style.display = 'none';
+      const payload = { token, deal_id: activeDealId, action: actionType };
+      if (actionType === 'close') payload.amount = document.getElementById('m_amount').value;
+      try {
+        const res = await fetch(`${API_URL}/api/deals/action`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('API Error');
+        document.getElementById('m_spinner').style.display = 'none';
+        document.getElementById('m_result_msg').textContent = L.action_success;
+        document.getElementById('m_result_msg').style.color = 'var(--success)';
+        document.getElementById('m_btn_finish').style.display = 'block';
+        const deal = bizData.deals.find(d => d.id === activeDealId);
+        if (deal) {
+          deal.status = actionType === 'close' ? 'closed' : 'rejected';
+          bizData.stats.active = Math.max(0, bizData.stats.active - 1);
+          if (actionType === 'close') bizData.stats.closed++;
+          else bizData.stats.rejected++;
+        }
+        renderDeals(); renderStats();
+      } catch(e) {
+        document.getElementById('m_spinner').style.display = 'none';
+        document.getElementById('m_result_msg').textContent = "Ошибка. Попробуйте ещё раз.";
+        document.getElementById('m_result_msg').style.color = 'var(--danger)';
+        document.getElementById('m_btn_finish').style.display = 'block';
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
