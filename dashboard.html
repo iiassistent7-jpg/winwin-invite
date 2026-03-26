@@ -3,282 +3,312 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win Dashboard</title>
+  <title>Win-Win Agent Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root { --bg-1: #1a1a2e; --bg-2: #0f0f1a; --accent-1: #56CCF2; --accent-2: #2F80ED; --text-muted: #a0a0b0; --card: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1); }
+    :root {
+      --bg-1: #1a1a2e; --bg-2: #0f0f1a;
+      --accent-1: #56CCF2; --accent-2: #2F80ED;
+      --text-muted: #a0a0b0;
+      --card: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1);
+      --success: #27AE60; --danger: #EB5757; --warning: #F2C94C;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
     body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
-    .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; }
-
-    .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
-    .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    [dir="rtl"] { text-align: right; }
+    [dir="rtl"] .debt-val { text-align: left; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px 40px 16px; position: relative; }
+    .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
-
     .header { text-align: center; margin-bottom: 32px; }
     .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
-    .greeting { font-size: 1.2rem; font-weight: 600; color: #fff; }
-
-    /* Главный баланс */
-    .balance-card { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.05)); border: 1px solid rgba(86,204,242,0.3); border-radius: 24px; padding: 32px 20px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
-    .balance-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(86,204,242,0.1) 0%, transparent 60%); z-index: 0; }
-    .balance-title { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; position: relative; z-index: 1; }
-    .balance-amount { font-size: 3.5rem; font-weight: 800; color: #fff; text-shadow: 0 0 20px rgba(86,204,242,0.4); margin-bottom: 16px; position: relative; z-index: 1; }
-    .btn-withdraw { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); border: none; color: #fff; font-weight: 700; font-size: 1rem; padding: 14px 32px; border-radius: 16px; cursor: pointer; transition: 0.2s; position: relative; z-index: 1; box-shadow: 0 8px 24px rgba(47,128,237,0.3); width: 100%; max-width: 250px; }
-    .btn-withdraw:active { transform: scale(0.96); }
-
-    /* Статистика 2x2 */
+    .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
+    .section-title { font-size: 1rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; margin-top: 32px; }
+    .fin-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+    .fin-card.main { background: linear-gradient(135deg, rgba(39,174,96,0.1), transparent); border-color: rgba(39,174,96,0.3); align-items: center; text-align: center; margin-bottom: 12px; }
+    .fin-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .fin-lbl { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+    .fin-val { font-size: 2rem; font-weight: 800; display: flex; align-items: baseline; gap: 4px; }
+    .fin-card.main .fin-val { font-size: 3rem; }
+    .currency { font-size: 0.6em; opacity: 0.7; font-weight: 600; }
+    .val-warning { color: var(--warning); text-shadow: 0 0 15px rgba(242,201,76,0.4); }
+    .val-accent { color: var(--accent-1); text-shadow: 0 0 15px rgba(86,204,242,0.4); }
+    .val-success { color: var(--success); text-shadow: 0 0 15px rgba(39,174,96,0.4); }
+    .debtors-list { display: flex; flex-direction: column; gap: 8px; }
+    .debtor-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .debt-info { display: flex; flex-direction: column; }
+    .debt-name { font-weight: 800; font-size: 1.05rem; }
+    .debt-niche { font-size: 0.75rem; color: var(--accent-1); }
+    .debt-val { font-weight: 800; color: var(--warning); font-size: 1.1rem; text-align: right; }
+    .empty-debts { background: rgba(39,174,96,0.1); border: 1px dashed rgba(39,174,96,0.3); color: var(--success); text-align: center; padding: 16px; border-radius: 16px; font-weight: 700; }
+    .eff-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; }
+    .eff-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+    .eff-val-container { display: flex; align-items: baseline; gap: 4px; }
+    .eff-val { font-size: 3rem; font-weight: 800; color: #fff; line-height: 1; }
+    .eff-pct-sign { font-size: 1.5rem; color: var(--text-muted); font-weight: 700; }
+    .eff-badge { padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
+    .badge-good { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+    .badge-bad { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+    .progress-track { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); border-radius: 10px; height: 12px; overflow: hidden; margin-top: 8px; }
+    .progress-fill { background: linear-gradient(90deg, var(--accent-2), var(--accent-1)); height: 100%; width: 0%; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
+    .eff-compare { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; text-align: center; }
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; text-align: center; }
-    .stat-value { font-size: 2rem; font-weight: 800; color: var(--accent-1); margin-bottom: 4px; }
-    .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-
-    /* Карточка эффективности */
-    .eff-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px 20px; margin-bottom: 24px; }
-    .eff-title { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
-    .eff-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .eff-label { font-size: 0.9rem; color: var(--text-muted); }
-    .eff-value { font-size: 1.3rem; font-weight: 800; }
-    .eff-value.good { color: #27AE60; }
-    .eff-value.neutral { color: var(--accent-1); }
-    .eff-value.low { color: #F2994A; }
-    .eff-bar-wrap { background: rgba(255,255,255,0.08); border-radius: 8px; height: 8px; overflow: hidden; margin-top: 4px; }
-    .eff-bar { height: 100%; border-radius: 8px; transition: width 1s ease; }
-    .eff-avg-line { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
-    .badge-above { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); color: #27AE60; border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
-    .badge-below { background: rgba(242,153,74,0.15); border: 1px solid rgba(242,153,74,0.4); color: #F2994A; border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
-    .badge-new { background: rgba(86,204,242,0.15); border: 1px solid rgba(86,204,242,0.4); color: var(--accent-1); border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
-
-    /* График */
-    .chart-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; margin-bottom: 24px; }
-    .chart-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; text-align: center; }
-
-    .btn-wa-return { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: #fff; text-decoration: none; font-weight: 600; font-size: 1rem; padding: 16px; border-radius: 16px; margin-top: 12px; transition: 0.2s; }
-    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 100; font-weight: 700; font-size: 1.2rem; color: var(--accent-1); }
+    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; text-align: center; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; }
+    .stat-name { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .chart-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; margin-bottom: 32px; }
+    .btn-group { display: flex; gap: 12px; }
+    .btn { flex: 1; display: block; text-align: center; color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; padding: 16px; border-radius: 16px; transition: 0.2s; border: none; cursor: pointer; }
+    .btn:active { transform: scale(0.96); }
+    .btn-wa { background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .btn-tg { background: #2F80ED; box-shadow: 0 8px 24px rgba(47,128,237,0.25); }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; padding: 20px; text-align: center; }
+    .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .err-msg { font-size: 1.1rem; font-weight: 600; color: var(--danger); margin-bottom: 24px; display: none; }
   </style>
 </head>
 <body>
+  <div class="loading-overlay" id="globalLoader">
+    <div class="spinner" id="spinner"></div>
+    <div id="loaderText" style="font-weight:600; color:var(--accent-1);">Загрузка данных...</div>
+    <div class="err-msg" id="errMsg">Ссылка устарела. Запросите новую в боте.</div>
+    <a href="#" class="btn btn-wa" id="errWaBtn" style="display:none; width:100%; max-width:300px; margin-top:16px;">WhatsApp</a>
+  </div>
 
-  <div class="loading-overlay" id="loader">🔄 Загрузка данных...</div>
-
-  <div class="shell" style="display: none;" id="mainContent">
-
+  <div class="shell" style="display:none;" id="mainShell">
     <div class="lang-switcher">
-      <button class="lang-btn" id="btn_lang_en" onclick="setLang('en', true)">GB EN</button>
-      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL עב</button>
-      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA عر</button>
-      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU РУ</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('he')">HE</button>
+      <button class="lang-btn" onclick="setLang('ar')">AR</button>
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
     </div>
-
     <header class="header">
       <h1 class="logo">Win-Win</h1>
-      <div class="greeting" id="t_greeting">Привет, Партнер!</div>
+      <div class="title" id="t_greeting">Кабинет Агента</div>
     </header>
 
-    <!-- Баланс -->
-    <div class="balance-card">
-      <div class="balance-title" id="t_balance_title">Ваш капитал</div>
-      <div class="balance-amount" id="balanceAmount">0 ₪</div>
-      <button class="btn-withdraw" id="t_btn_withdraw" onclick="requestWithdraw()">Вывести средства</button>
+    <div class="section-title" id="t_sec_fin">Финансы</div>
+    <div class="fin-card main">
+      <div class="fin-lbl" id="t_earned">Уже получено</div>
+      <div class="fin-val val-success"><span id="v_earned">0</span><span class="currency" id="c_earned">₪</span></div>
+    </div>
+    <div class="fin-row-2">
+      <div class="fin-card">
+        <div class="fin-lbl" id="t_pending">Ожидают выплаты</div>
+        <div class="fin-val val-warning"><span id="v_pending">0</span><span class="currency" id="c_pending">₪</span></div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-lbl" id="t_active_val">В работе</div>
+        <div class="fin-val val-accent"><span id="v_active_val">0</span></div>
+      </div>
+    </div>
+    <div class="fin-lbl" style="margin-bottom:12px;" id="t_who_owes">Ожидаем выплату от:</div>
+    <div class="debtors-list" id="debtorsList"></div>
+
+    <div class="section-title" id="t_sec_eff">Эффективность</div>
+    <div class="eff-card">
+      <div class="eff-header">
+        <div class="eff-val-container">
+          <div class="eff-val" id="v_eff">0</div>
+          <div class="eff-pct-sign">%</div>
+        </div>
+        <div class="eff-badge badge-good" id="v_eff_badge">Выше среднего</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="effProgressBar"></div>
+      </div>
+      <div class="eff-compare" id="t_eff_compare">Среднее по платформе: 0%</div>
     </div>
 
-    <!-- Статистика 2x2 -->
+    <div class="section-title" id="t_sec_stat">Статистика</div>
     <div class="stats-grid">
       <div class="stat-box">
-        <div class="stat-value" id="statActive">0</div>
-        <div class="stat-label" id="t_stat_active">В процессе</div>
+        <div class="stat-num" id="s_active" style="color:var(--accent-1);">0</div>
+        <div class="stat-name" id="t_s_active">Активных</div>
       </div>
       <div class="stat-box">
-        <div class="stat-value" id="statSuccess" style="color: #27AE60;">0</div>
-        <div class="stat-label" id="t_stat_success">Закрыто</div>
+        <div class="stat-num" id="s_closed" style="color:var(--success);">0</div>
+        <div class="stat-name" id="t_s_closed">Закрыто</div>
       </div>
       <div class="stat-box">
-        <div class="stat-value" id="statRejected" style="color: #F2994A;">0</div>
-        <div class="stat-label" id="t_stat_rejected">Отклонено</div>
+        <div class="stat-num" id="s_rej" style="color:var(--danger);">0</div>
+        <div class="stat-name" id="t_s_rej">Отклонено</div>
       </div>
       <div class="stat-box">
-        <div class="stat-value" id="statTotal" style="color: var(--text-muted);">0</div>
-        <div class="stat-label" id="t_stat_total">Всего лидов</div>
+        <div class="stat-num" id="s_total" style="color:#fff;">0</div>
+        <div class="stat-name" id="t_s_total">Всего</div>
       </div>
     </div>
 
-    <!-- Эффективность -->
-    <div class="eff-card" id="effCard">
-      <div class="eff-title" id="t_eff_title">Эффективность</div>
-
-      <div class="eff-row">
-        <div>
-          <div class="eff-label" id="t_eff_my">Ваш показатель</div>
-          <div class="eff-bar-wrap" style="width: 200px; margin-top: 8px;">
-            <div class="eff-bar" id="effBarMy" style="width: 0%; background: linear-gradient(90deg, #56CCF2, #2F80ED);"></div>
-          </div>
-          <div class="eff-avg-line">
-            <span id="effAvgLabel"></span>
-          </div>
-        </div>
-        <div style="text-align: right;">
-          <div class="eff-value" id="effPctValue">—</div>
-          <div style="margin-top: 6px;" id="effBadge"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- График по нишам -->
-    <div class="chart-container" id="chartWrapper" style="display: none;">
-      <div class="chart-title" id="t_chart_title">Доходы по нишам</div>
+    <div class="chart-container" id="chartWrapper" style="display:none;">
+      <div class="section-title" style="text-align:center; margin-top:0;" id="t_chart_title">Топ ниш</div>
       <canvas id="nicheChart" width="400" height="250"></canvas>
     </div>
 
-    <a href="#" id="waReturnLink" class="btn-wa-return">Вернуться в WhatsApp</a>
+    <div class="btn-group">
+      <a href="#" class="btn btn-wa" id="btnWa">WhatsApp</a>
+      <a href="https://t.me/winwin_lead_bot" class="btn btn-tg" target="_blank">Telegram</a>
+    </div>
   </div>
 
   <script>
     const i18n = {
-      ru: { greeting: "Привет, ", balance: "Ваш капитал", withdraw: "Вывести средства", active: "В процессе", success: "Закрыто", rejected: "Отклонено", total: "Всего лидов", chart: "Доходы по нишам", wa: "Вернуться в WhatsApp", loading: "🔄 Загрузка данных...", withdrawnotify: "⏳ Запрос отправлен!", eff_title: "Эффективность", eff_my: "Ваш показатель", eff_above: "✅ выше среднего", eff_below: "ниже среднего", eff_new: "накапливается", eff_avg: "Средняя по платформе: " },
-      he: { greeting: "שלום, ", balance: "ההון שלך", withdraw: "משיכת כספים", active: "בתהליך", success: "נסגרו", rejected: "נדחו", total: "סה״כ לידים", chart: "הכנסות לפי תחומים", wa: "חזרה ל-WhatsApp", loading: "🔄 טוען נתונים...", withdrawnotify: "⏳ הבקשה נשלחה!", eff_title: "יעילות", eff_my: "המדד שלך", eff_above: "✅ מעל הממוצע", eff_below: "מתחת לממוצע", eff_new: "מצטבר", eff_avg: "ממוצע פלטפורמה: " },
-      en: { greeting: "Hello, ", balance: "Your Capital", withdraw: "Withdraw Funds", active: "In Progress", success: "Closed", rejected: "Rejected", total: "Total Leads", chart: "Earnings by Niche", wa: "Return to WhatsApp", loading: "🔄 Loading...", withdrawnotify: "⏳ Request sent!", eff_title: "Efficiency", eff_my: "Your rate", eff_above: "✅ above average", eff_below: "below average", eff_new: "accumulating", eff_avg: "Platform avg: " },
-      ar: { greeting: "مرحباً، ", balance: "رأس مالك", withdraw: "سحب الأموال", active: "قيد الإجراء", success: "مغلقة", rejected: "مرفوضة", total: "إجمالي العملاء", chart: "الأرباح حسب التخصص", wa: "العودة إلى WhatsApp", loading: "🔄 جاري التحميل...", withdrawnotify: "⏳ تم الإرسال!", eff_title: "الكفاءة", eff_my: "معدلك", eff_above: "✅ فوق المتوسط", eff_below: "أقل من المتوسط", eff_new: "يتراكم", eff_avg: "متوسط المنصة: " }
+      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", greeting:"Кабинет Агента", sec_fin:"Финансы", sec_eff:"Эффективность", sec_stat:"Статистика", earned:"Уже получено", pending:"Ожидают выплаты", active_val:"Сделок в работе", who_owes:"Ожидаем выплату от:", all_paid:"Все выплаты получены ✅", eff_above:"Выше среднего", eff_below:"Ниже среднего", eff_accum:"Накапливается (нужно 3 сделки)", eff_avg:"Среднее по платформе:", s_active:"Активных", s_closed:"Закрыто", s_rej:"Отклонено", s_total:"Всего", chart_title:"Успешные ниши", btn_wa:"WhatsApp" },
+      en: { loading:"Loading data...", expired:"Link expired. Request a new one in the bot.", greeting:"Agent Dashboard", sec_fin:"Finance", sec_eff:"Efficiency", sec_stat:"Statistics", earned:"Already Earned", pending:"Pending Payout", active_val:"Active Deals", who_owes:"Pending payouts from:", all_paid:"All payouts received ✅", eff_above:"Above average", eff_below:"Below average", eff_accum:"Accumulating (need 3 deals)", eff_avg:"Platform average:", s_active:"Active", s_closed:"Closed", s_rej:"Rejected", s_total:"Total", chart_title:"Top Niches", btn_wa:"WhatsApp" },
+      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף. בקש חדש בבוט.", greeting:"לוח בקרה סוכן", sec_fin:"פיננסים", sec_eff:"יעילות", sec_stat:"סטטיסטיקה", earned:"כבר הושג", pending:"ממתין לתשלום", active_val:"עסקאות פעילות", who_owes:"ממתין לתשלום מ:", all_paid:"כל התשלומים התקבלו ✅", eff_above:"מעל הממוצע", eff_below:"מתחת לממוצע", eff_accum:"נצבר (דרושות 3 עסקאות)", eff_avg:"ממוצע פלטפורמה:", s_active:"פעילים", s_closed:"נסגרו", s_rej:"נדחו", s_total:"סה\"כ", chart_title:"תחומים מובילים", btn_wa:"WhatsApp" },
+      ar: { loading:"جاري تحميل البيانات...", expired:"انتهت صلاحية الرابط. اطلب واحداً جديداً في البوت.", greeting:"لوحة الوكيل", sec_fin:"المالية", sec_eff:"الكفاءة", sec_stat:"الإحصائيات", earned:"تم كسبه بالفعل", pending:"في انتظار الدفع", active_val:"صفقات نشطة", who_owes:"في انتظار الدفع من:", all_paid:"تم استلام جميع المدفوعات ✅", eff_above:"فوق المتوسط", eff_below:"أقل من المتوسط", eff_accum:"يتراكم (يحتاج 3 صفقات)", eff_avg:"متوسط المنصة:", s_active:"نشط", s_closed:"مغلقة", s_rej:"مرفوضة", s_total:"الإجمالي", chart_title:"أفضل المجالات", btn_wa:"WhatsApp" }
     };
 
     let currentLang = 'ru';
-    let userName = "Партнер";
-    let botPhone = "972534218573";
-
-    function setLang(lang, isManualClick = false) {
-      currentLang = lang;
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`btn_lang_${lang}`).classList.add('active');
-      const L = i18n[lang];
-      document.getElementById('t_greeting').textContent = L.greeting + userName + "!";
-      document.getElementById('t_balance_title').textContent = L.balance;
-      document.getElementById('t_btn_withdraw').textContent = L.withdraw;
-      document.getElementById('t_stat_active').textContent = L.active;
-      document.getElementById('t_stat_success').textContent = L.success;
-      document.getElementById('t_stat_rejected').textContent = L.rejected;
-      document.getElementById('t_stat_total').textContent = L.total;
-      document.getElementById('t_chart_title').textContent = L.chart;
-      document.getElementById('waReturnLink').textContent = L.wa;
-      document.getElementById('loader').textContent = L.loading;
-      document.getElementById('t_eff_title').textContent = L.eff_title;
-      document.getElementById('t_eff_my').textContent = L.eff_my;
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const paramLang = urlParams.get('lang') || 'ru';
-    setLang(paramLang);
-
+    let token = new URLSearchParams(window.location.search).get('token');
+    let dashData = null;
+    let nicheChartInstance = null;
     const API_URL = "https://amlatsa-bot-production.up.railway.app";
 
-    function animateValue(el, start, end, duration) {
+    function init() {
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (urlLang && i18n[urlLang]) currentLang = urlLang;
+      setLang(currentLang, false);
+      if (!token) { showError(i18n[currentLang].expired); return; }
+      fetchData();
+    }
+
+    function setLang(lang, render = true) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'he' || lang === 'ar') ? 'rtl' : 'ltr';
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      const L = i18n[lang];
+      document.getElementById('loaderText').textContent = L.loading;
+      document.getElementById('errMsg').textContent = L.expired;
+      document.getElementById('t_greeting').textContent = dashData?.user_name || L.greeting;
+      document.getElementById('t_sec_fin').textContent = L.sec_fin;
+      document.getElementById('t_sec_eff').textContent = L.sec_eff;
+      document.getElementById('t_sec_stat').textContent = L.sec_stat;
+      document.getElementById('t_earned').textContent = L.earned;
+      document.getElementById('t_pending').textContent = L.pending;
+      document.getElementById('t_active_val').textContent = L.active_val;
+      document.getElementById('t_who_owes').textContent = L.who_owes;
+      document.getElementById('t_s_active').textContent = L.s_active;
+      document.getElementById('t_s_closed').textContent = L.s_closed;
+      document.getElementById('t_s_rej').textContent = L.s_rej;
+      document.getElementById('t_s_total').textContent = L.s_total;
+      document.getElementById('t_chart_title').textContent = L.chart_title;
+      document.getElementById('btnWa').textContent = L.btn_wa;
+      document.getElementById('errWaBtn').textContent = L.btn_wa;
+      if (render && dashData) renderAll();
+    }
+
+    function showError(msg) {
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('loaderText').style.display = 'none';
+      document.getElementById('errMsg').style.display = 'block';
+      document.getElementById('errMsg').textContent = msg;
+      document.getElementById('errWaBtn').style.display = 'block';
+      document.getElementById('errWaBtn').href = `https://wa.me/${dashData?.bot_phone || '972534218573'}`;
+    }
+
+    async function fetchData() {
+      try {
+        const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!res.ok) throw new Error('Auth failed');
+        dashData = await res.json();
+        document.getElementById('globalLoader').style.display = 'none';
+        document.getElementById('mainShell').style.display = 'block';
+        document.getElementById('btnWa').href = `https://wa.me/${dashData.bot_phone || '972534218573'}`;
+        document.getElementById('c_earned').textContent = dashData.currency || '₪';
+        document.getElementById('c_pending').textContent = dashData.currency || '₪';
+        document.getElementById('t_greeting').textContent = dashData.user_name;
+        renderAll();
+      } catch (err) {
+        showError(i18n[currentLang].expired);
+      }
+    }
+
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
       let startTimestamp = null;
       const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        el.innerHTML = Math.floor(progress * (end - start) + start);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
         if (progress < 1) window.requestAnimationFrame(step);
       };
       window.requestAnimationFrame(step);
     }
 
-    function renderEfficiency(effPct, platformAvg) {
+    function renderAll() {
+      const d = dashData;
       const L = i18n[currentLang];
-      const valEl = document.getElementById('effPctValue');
-      const barEl = document.getElementById('effBarMy');
-      const badgeEl = document.getElementById('effBadge');
-      const avgLabelEl = document.getElementById('effAvgLabel');
 
-      if (effPct === null || effPct === undefined) {
-        valEl.textContent = "—";
-        valEl.className = "eff-value neutral";
-        badgeEl.innerHTML = `<span class="badge-new">${L.eff_new}</span>`;
-        avgLabelEl.textContent = "";
-        barEl.style.width = "0%";
-        return;
-      }
+      animateValue("v_earned",  0, d.total_earned   || 0, 1500);
+      animateValue("v_pending", 0, d.pending_payout || 0, 1000);
+      animateValue("v_active_val", 0, d.active_deals || 0, 800);
 
-      valEl.textContent = effPct + "%";
-      setTimeout(() => { barEl.style.width = Math.min(effPct, 100) + "%"; }, 100);
-
-      if (platformAvg !== null && platformAvg !== undefined) {
-        avgLabelEl.textContent = L.eff_avg + platformAvg + "%";
-        if (effPct >= platformAvg) {
-          valEl.className = "eff-value good";
-          badgeEl.innerHTML = `<span class="badge-above">${L.eff_above}</span>`;
-          barEl.style.background = "linear-gradient(90deg, #27AE60, #6FCF97)";
-        } else {
-          valEl.className = "eff-value low";
-          badgeEl.innerHTML = `<span class="badge-below">${L.eff_below}</span>`;
-          barEl.style.background = "linear-gradient(90deg, #F2994A, #F2C94C)";
-        }
+      const listDiv = document.getElementById('debtorsList');
+      if (!d.pending_businesses || d.pending_businesses.length === 0) {
+        listDiv.innerHTML = `<div class="empty-debts">${L.all_paid}</div>`;
       } else {
-        valEl.className = "eff-value neutral";
-        badgeEl.innerHTML = "";
-        avgLabelEl.textContent = "";
+        listDiv.innerHTML = d.pending_businesses.map(b => `
+          <div class="debtor-card">
+            <div class="debt-info">
+              <div class="debt-name">${b.name}</div>
+              <div class="debt-niche">${b.niche}</div>
+            </div>
+            <div class="debt-val">${b.amount} ${d.currency}</div>
+          </div>`).join('');
       }
-    }
 
-    async function loadDashboard() {
-      if (!token) { document.getElementById('loader').textContent = "⚠️ Ошибка доступа"; return; }
-      try {
-        const response = await fetch(`${API_URL}/api/dashboard?token=${token}`);
-        if (!response.ok) throw new Error('Invalid token');
-        const data = await response.json();
+      const pct = d.efficiency_pct;
+      const avg = d.platform_avg_pct || 0;
+      const effVal = document.getElementById('v_eff');
+      const effBadge = document.getElementById('v_eff_badge');
+      const effBar = document.getElementById('effProgressBar');
+      const effComp = document.getElementById('t_eff_compare');
 
-        userName = data.user_name || "Партнер";
-        if (data.bot_phone) botPhone = data.bot_phone;
-        document.getElementById('waReturnLink').href = `https://wa.me/${botPhone}`;
-        setLang(currentLang);
-
-        document.getElementById('balanceAmount').textContent = `${data.total_earned} ${data.currency || '₪'}`;
-        animateValue(document.getElementById('statActive'),   0, data.active_deals   || 0, 800);
-        animateValue(document.getElementById('statSuccess'),  0, data.success_deals  || 0, 1000);
-        animateValue(document.getElementById('statRejected'), 0, data.rejected_deals || 0, 1200);
-        const total = (data.active_deals || 0) + (data.success_deals || 0) + (data.rejected_deals || 0);
-        animateValue(document.getElementById('statTotal'), 0, total, 1400);
-
-        renderEfficiency(data.efficiency_pct, data.platform_avg_pct);
-
-        if (data.chart_data && data.chart_data.labels && data.chart_data.labels.length > 0) {
-          document.getElementById('chartWrapper').style.display = 'block';
-          const ctx = document.getElementById('nicheChart').getContext('2d');
-          new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: data.chart_data.labels,
-              datasets: [{
-                data: data.chart_data.values,
-                backgroundColor: ['#56CCF2','#2F80ED','#9B51E0','#27AE60','#F2C94C'],
-                borderWidth: 0,
-                hoverOffset: 4
-              }]
-            },
-            options: {
-              responsive: true, cutout: '75%',
-              plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b0', font: { family: 'Inter' } } } }
-            }
-          });
+      if (pct === null || pct === undefined) {
+        effVal.textContent = "—";
+        effBadge.textContent = L.eff_accum;
+        effBadge.className = "eff-badge badge-bad";
+        effBar.style.width = "0%";
+        effComp.textContent = "";
+      } else {
+        animateValue("v_eff", 0, pct, 1500);
+        setTimeout(() => { effBar.style.width = `${Math.min(pct, 100)}%`; }, 100);
+        effComp.textContent = `${L.eff_avg} ${avg}%`;
+        if (pct >= avg) {
+          effBadge.textContent = `✅ ${L.eff_above}`;
+          effBadge.className = "eff-badge badge-good";
+        } else {
+          effBadge.textContent = L.eff_below;
+          effBadge.className = "eff-badge badge-bad";
         }
+      }
 
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
+      animateValue("s_active", 0, d.active_deals   || 0, 800);
+      animateValue("s_closed", 0, d.success_deals  || 0, 1000);
+      animateValue("s_rej",    0, d.rejected_deals || 0, 1000);
+      animateValue("s_total",  0, (d.active_deals||0)+(d.success_deals||0)+(d.rejected_deals||0), 1200);
 
-      } catch (err) {
-        document.getElementById('loader').textContent = "⏳ Ссылка устарела. Запросите новую в боте.";
+      if (d.chart_data && d.chart_data.labels && d.chart_data.labels.length > 0) {
+        document.getElementById('chartWrapper').style.display = 'block';
+        if (nicheChartInstance) nicheChartInstance.destroy();
+        const ctx = document.getElementById('nicheChart').getContext('2d');
+        nicheChartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: { labels: d.chart_data.labels, datasets: [{ data: d.chart_data.values, backgroundColor: ['#56CCF2','#2F80ED','#9B51E0','#27AE60','#F2C94C'], borderWidth: 0, hoverOffset: 4 }] },
+          options: { responsive: true, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b0', font: { family: 'Inter' } } } } }
+        });
+      } else {
+        document.getElementById('chartWrapper').style.display = 'none';
       }
     }
 
-    function requestWithdraw() {
-      const btn = document.getElementById('t_btn_withdraw');
-      btn.textContent = i18n[currentLang].withdrawnotify;
-      btn.style.background = "#27AE60";
-      setTimeout(() => {
-        window.location.href = `https://wa.me/${botPhone}?text=${encodeURIComponent("Хочу вывести заработанные средства 💰")}`;
-      }, 1500);
-    }
-
-    loadDashboard();
+    window.onload = init;
   </script>
 </body>
 </html>
