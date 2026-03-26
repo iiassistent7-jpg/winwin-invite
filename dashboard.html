@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Win-Win Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root { --bg-1: #1a1a2e; --bg-2: #0f0f1a; --accent-1: #56CCF2; --accent-2: #2F80ED; --text-muted: #a0a0b0; --card: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; }
+
+    .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+    .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+
+    .header { text-align: center; margin-bottom: 32px; }
+    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
+    .greeting { font-size: 1.2rem; font-weight: 600; color: #fff; }
+
+    /* Главный баланс */
+    .balance-card { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.05)); border: 1px solid rgba(86,204,242,0.3); border-radius: 24px; padding: 32px 20px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
+    .balance-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(86,204,242,0.1) 0%, transparent 60%); z-index: 0; }
+    .balance-title { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; position: relative; z-index: 1; }
+    .balance-amount { font-size: 3.5rem; font-weight: 800; color: #fff; text-shadow: 0 0 20px rgba(86,204,242,0.4); margin-bottom: 16px; position: relative; z-index: 1; }
+    .btn-withdraw { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); border: none; color: #fff; font-weight: 700; font-size: 1rem; padding: 14px 32px; border-radius: 16px; cursor: pointer; transition: 0.2s; position: relative; z-index: 1; box-shadow: 0 8px 24px rgba(47,128,237,0.3); width: 100%; max-width: 250px; }
+    .btn-withdraw:active { transform: scale(0.96); }
+
+    /* Статистика 2x2 */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--accent-1); margin-bottom: 4px; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+    /* Карточка эффективности */
+    .eff-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px 20px; margin-bottom: 24px; }
+    .eff-title { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
+    .eff-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .eff-label { font-size: 0.9rem; color: var(--text-muted); }
+    .eff-value { font-size: 1.3rem; font-weight: 800; }
+    .eff-value.good { color: #27AE60; }
+    .eff-value.neutral { color: var(--accent-1); }
+    .eff-value.low { color: #F2994A; }
+    .eff-bar-wrap { background: rgba(255,255,255,0.08); border-radius: 8px; height: 8px; overflow: hidden; margin-top: 4px; }
+    .eff-bar { height: 100%; border-radius: 8px; transition: width 1s ease; }
+    .eff-avg-line { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
+    .badge-above { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); color: #27AE60; border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
+    .badge-below { background: rgba(242,153,74,0.15); border: 1px solid rgba(242,153,74,0.4); color: #F2994A; border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
+    .badge-new { background: rgba(86,204,242,0.15); border: 1px solid rgba(86,204,242,0.4); color: var(--accent-1); border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
+
+    /* График */
+    .chart-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; margin-bottom: 24px; }
+    .chart-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; text-align: center; }
+
+    .btn-wa-return { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: #fff; text-decoration: none; font-weight: 600; font-size: 1rem; padding: 16px; border-radius: 16px; margin-top: 12px; transition: 0.2s; }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 100; font-weight: 700; font-size: 1.2rem; color: var(--accent-1); }
+  </style>
+</head>
+<body>
+
+  <div class="loading-overlay" id="loader">🔄 Загрузка данных...</div>
+
+  <div class="shell" style="display: none;" id="mainContent">
+
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btn_lang_en" onclick="setLang('en', true)">GB EN</button>
+      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL עב</button>
+      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA عر</button>
+      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU РУ</button>
+    </div>
+
+    <header class="header">
+      <h1 class="logo">Win-Win</h1>
+      <div class="greeting" id="t_greeting">Привет, Партнер!</div>
+    </header>
+
+    <!-- Баланс -->
+    <div class="balance-card">
+      <div class="balance-title" id="t_balance_title">Ваш капитал</div>
+      <div class="balance-amount" id="balanceAmount">0 ₪</div>
+      <button class="btn-withdraw" id="t_btn_withdraw" onclick="requestWithdraw()">Вывести средства</button>
+    </div>
+
+    <!-- Статистика 2x2 -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-value" id="statActive">0</div>
+        <div class="stat-label" id="t_stat_active">В процессе</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statSuccess" style="color: #27AE60;">0</div>
+        <div class="stat-label" id="t_stat_success">Закрыто</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statRejected" style="color: #F2994A;">0</div>
+        <div class="stat-label" id="t_stat_rejected">Отклонено</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statTotal" style="color: var(--text-muted);">0</div>
+        <div class="stat-label" id="t_stat_total">Всего лидов</div>
+      </div>
+    </div>
+
+    <!-- Эффективность -->
+    <div class="eff-card" id="effCard">
+      <div class="eff-title" id="t_eff_title">Эффективность</div>
+
+      <div class="eff-row">
+        <div>
+          <div class="eff-label" id="t_eff_my">Ваш показатель</div>
+          <div class="eff-bar-wrap" style="width: 200px; margin-top: 8px;">
+            <div class="eff-bar" id="effBarMy" style="width: 0%; background: linear-gradient(90deg, #56CCF2, #2F80ED);"></div>
+          </div>
+          <div class="eff-avg-line">
+            <span id="effAvgLabel"></span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div class="eff-value" id="effPctValue">—</div>
+          <div style="margin-top: 6px;" id="effBadge"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- График по нишам -->
+    <div class="chart-container" id="chartWrapper" style="display: none;">
+      <div class="chart-title" id="t_chart_title">Доходы по нишам</div>
+      <canvas id="nicheChart" width="400" height="250"></canvas>
+    </div>
+
+    <a href="#" id="waReturnLink" class="btn-wa-return">Вернуться в WhatsApp</a>
+  </div>
+
+  <script>
+    const i18n = {
+      ru: { greeting: "Привет, ", balance: "Ваш капитал", withdraw: "Вывести средства", active: "В процессе", success: "Закрыто", rejected: "Отклонено", total: "Всего лидов", chart: "Доходы по нишам", wa: "Вернуться в WhatsApp", loading: "🔄 Загрузка данных...", withdrawnotify: "⏳ Запрос отправлен!", eff_title: "Эффективность", eff_my: "Ваш показатель", eff_above: "✅ выше среднего", eff_below: "ниже среднего", eff_new: "накапливается", eff_avg: "Средняя по платформе: " },
+      he: { greeting: "שלום, ", balance: "ההון שלך", withdraw: "משיכת כספים", active: "בתהליך", success: "נסגרו", rejected: "נדחו", total: "סה״כ לידים", chart: "הכנסות לפי תחומים", wa: "חזרה ל-WhatsApp", loading: "🔄 טוען נתונים...", withdrawnotify: "⏳ הבקשה נשלחה!", eff_title: "יעילות", eff_my: "המדד שלך", eff_above: "✅ מעל הממוצע", eff_below: "מתחת לממוצע", eff_new: "מצטבר", eff_avg: "ממוצע פלטפורמה: " },
+      en: { greeting: "Hello, ", balance: "Your Capital", withdraw: "Withdraw Funds", active: "In Progress", success: "Closed", rejected: "Rejected", total: "Total Leads", chart: "Earnings by Niche", wa: "Return to WhatsApp", loading: "🔄 Loading...", withdrawnotify: "⏳ Request sent!", eff_title: "Efficiency", eff_my: "Your rate", eff_above: "✅ above average", eff_below: "below average", eff_new: "accumulating", eff_avg: "Platform avg: " },
+      ar: { greeting: "مرحباً، ", balance: "رأس مالك", withdraw: "سحب الأموال", active: "قيد الإجراء", success: "مغلقة", rejected: "مرفوضة", total: "إجمالي العملاء", chart: "الأرباح حسب التخصص", wa: "العودة إلى WhatsApp", loading: "🔄 جاري التحميل...", withdrawnotify: "⏳ تم الإرسال!", eff_title: "الكفاءة", eff_my: "معدلك", eff_above: "✅ فوق المتوسط", eff_below: "أقل من المتوسط", eff_new: "يتراكم", eff_avg: "متوسط المنصة: " }
+    };
+
+    let currentLang = 'ru';
+    let userName = "Партнер";
+    let botPhone = "972534218573";
+
+    function setLang(lang, isManualClick = false) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn_lang_${lang}`).classList.add('active');
+      const L = i18n[lang];
+      document.getElementById('t_greeting').textContent = L.greeting + userName + "!";
+      document.getElementById('t_balance_title').textContent = L.balance;
+      document.getElementById('t_btn_withdraw').textContent = L.withdraw;
+      document.getElementById('t_stat_active').textContent = L.active;
+      document.getElementById('t_stat_success').textContent = L.success;
+      document.getElementById('t_stat_rejected').textContent = L.rejected;
+      document.getElementById('t_stat_total').textContent = L.total;
+      document.getElementById('t_chart_title').textContent = L.chart;
+      document.getElementById('waReturnLink').textContent = L.wa;
+      document.getElementById('loader').textContent = L.loading;
+      document.getElementById('t_eff_title').textContent = L.eff_title;
+      document.getElementById('t_eff_my').textContent = L.eff_my;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const paramLang = urlParams.get('lang') || 'ru';
+    setLang(paramLang);
+
+    const API_URL = "https://amlatsa-bot-production.up.railway.app";
+
+    function animateValue(el, start, end, duration) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        el.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function renderEfficiency(effPct, platformAvg) {
+      const L = i18n[currentLang];
+      const valEl = document.getElementById('effPctValue');
+      const barEl = document.getElementById('effBarMy');
+      const badgeEl = document.getElementById('effBadge');
+      const avgLabelEl = document.getElementById('effAvgLabel');
+
+      if (effPct === null || effPct === undefined) {
+        valEl.textContent = "—";
+        valEl.className = "eff-value neutral";
+        badgeEl.innerHTML = `<span class="badge-new">${L.eff_new}</span>`;
+        avgLabelEl.textContent = "";
+        barEl.style.width = "0%";
+        return;
+      }
+
+      valEl.textContent = effPct + "%";
+      setTimeout(() => { barEl.style.width = Math.min(effPct, 100) + "%"; }, 100);
+
+      if (platformAvg !== null && platformAvg !== undefined) {
+        avgLabelEl.textContent = L.eff_avg + platformAvg + "%";
+        if (effPct >= platformAvg) {
+          valEl.className = "eff-value good";
+          badgeEl.innerHTML = `<span class="badge-above">${L.eff_above}</span>`;
+          barEl.style.background = "linear-gradient(90deg, #27AE60, #6FCF97)";
+        } else {
+          valEl.className = "eff-value low";
+          badgeEl.innerHTML = `<span class="badge-below">${L.eff_below}</span>`;
+          barEl.style.background = "linear-gradient(90deg, #F2994A, #F2C94C)";
+        }
+      } else {
+        valEl.className = "eff-value neutral";
+        badgeEl.innerHTML = "";
+        avgLabelEl.textContent = "";
+      }
+    }
+
+    async function loadDashboard() {
+      if (!token) { document.getElementById('loader').textContent = "⚠️ Ошибка доступа"; return; }
+      try {
+        const response = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!response.ok) throw new Error('Invalid token');
+        const data = await response.json();
+
+        userName = data.user_name || "Партнер";
+        if (data.bot_phone) botPhone = data.bot_phone;
+        document.getElementById('waReturnLink').href = `https://wa.me/${botPhone}`;
+        setLang(currentLang);
+
+        document.getElementById('balanceAmount').textContent = `${data.total_earned} ${data.currency || '₪'}`;
+        animateValue(document.getElementById('statActive'),   0, data.active_deals   || 0, 800);
+        animateValue(document.getElementById('statSuccess'),  0, data.success_deals  || 0, 1000);
+        animateValue(document.getElementById('statRejected'), 0, data.rejected_deals || 0, 1200);
+        const total = (data.active_deals || 0) + (data.success_deals || 0) + (data.rejected_deals || 0);
+        animateValue(document.getElementById('statTotal'), 0, total, 1400);
+
+        renderEfficiency(data.efficiency_pct, data.platform_avg_pct);
+
+        if (data.chart_data && data.chart_data.labels && data.chart_data.labels.length > 0) {
+          document.getElementById('chartWrapper').style.display = 'block';
+          const ctx = document.getElementById('nicheChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: data.chart_data.labels,
+              datasets: [{
+                data: data.chart_data.values,
+                backgroundColor: ['#56CCF2','#2F80ED','#9B51E0','#27AE60','#F2C94C'],
+                borderWidth: 0,
+                hoverOffset: 4
+              }]
+            },
+            options: {
+              responsive: true, cutout: '75%',
+              plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b0', font: { family: 'Inter' } } } }
+            }
+          });
+        }
+
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+
+      } catch (err) {
+        document.getElementById('loader').textContent = "⏳ Ссылка устарела. Запросите новую в боте.";
+      }
+    }
+
+    function requestWithdraw() {
+      const btn = document.getElementById('t_btn_withdraw');
+      btn.textContent = i18n[currentLang].withdrawnotify;
+      btn.style.background = "#27AE60";
+      setTimeout(() => {
+        window.location.href = `https://wa.me/${botPhone}?text=${encodeURIComponent("Хочу вывести заработанные средства 💰")}`;
+      }, 1500);
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>
