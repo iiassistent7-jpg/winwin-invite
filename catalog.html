@@ -31,11 +31,19 @@
     .filter-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
 
     .catalog-grid { display: flex; flex-direction: column; gap: 12px; }
-    .biz-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; cursor: pointer; transition: 0.2s; }
+    .biz-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; }
     .biz-card:active { transform: scale(0.98); }
-    .biz-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    
+    /* ДИЗАЙН БЕЙДЖЕЙ ДОВЕРИЯ */
+    .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 8px; margin-bottom: 10px; }
+    .badge-leader { background: rgba(242, 201, 76, 0.15); color: #F2C94C; border: 1px solid rgba(242, 201, 76, 0.3); }
+    .badge-hot { background: rgba(235, 87, 87, 0.15); color: #EB5757; border: 1px solid rgba(235, 87, 87, 0.3); }
+    .badge-new { background: rgba(39, 174, 96, 0.15); color: #27AE60; border: 1px solid rgba(39, 174, 96, 0.3); }
+    .badge-standard { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    .biz-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
     .biz-name { font-size: 1.2rem; font-weight: 800; }
-    .biz-niche { font-size: 0.75rem; color: #56CCF2; background: rgba(86, 204, 242, 0.1); padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+    .biz-niche { font-size: 0.75rem; color: #56CCF2; background: rgba(86, 204, 242, 0.1); padding: 4px 8px; border-radius: 6px; font-weight: 700; height: fit-content; }
     .biz-reward { display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #56CCF2; }
 
     .recommend-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100%; background: var(--bg-1); padding: 24px 16px; z-index: 10; animation: slideUp 0.3s ease-out; }
@@ -45,11 +53,9 @@
     .btn-back { background: transparent; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
     .rec-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
     
-    /* УМЕНЬШЕН ПАДДИНГ ДЛЯ МОБИЛОК */
     .instruction-block { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 16px; }
     .instruction-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
     
-    /* ИСПРАВЛЕННЫЙ БЛОК ССЫЛКИ (АДАПТИВНЫЙ ПЕРЕНОС) */
     .link-box { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
     .link-input { flex: 1 1 200px; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 12px; font-size: 0.85rem; outline: none; min-width: 0; }
     .btn-copy { flex: 1 0 fit-content; min-width: 100px; background: #2F80ED; border: none; color: #fff; font-weight: 700; padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: 0.2s; text-align: center; }
@@ -108,10 +114,10 @@
 
   <script>
     const i18n = {
-      ru: { subtitle: "Экосистема доверия", mission: "Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.", instruction: "начните вводить наименование бизнеса или нишу в которой он работает", search: "Поиск бизнеса или услуги...", loading: "🔄 Загрузка списка...", error_token: "⚠️ Ошибка: Нет доступа", error_expired: "⏳ Срок действия ссылки истек. Запросите каталог в боте заново.", not_found: "🔍 Ничего не найдено", btn_back: "← Вернуться к списку", copy_link: "🔗 Скопируйте ссылку и отправьте её другу:", scan_qr: "📱 Или дайте человеку отсканировать этот код, если он рядом:", btn_copy: "Копировать", btn_copied: "✅ Скопировано", btn_wa: "Вернуться в WhatsApp", filter_all: "Все", bonus: "🎁 Бонус агенту:" },
-      he: { subtitle: "מערכת אקולוגית של אמון", mission: "מצאו עסק מוכח בקטלוג והעבירו המלצה. ההון החברתי שלכם עובד בשבילכם.", instruction: "התחילו להקליד את שם העסק או את התחום שבו הוא פועל", search: "חיפוש עסק או שירות...", loading: "🔄 טוען רשימה...", error_token: "⚠️ שגיאה: אין גישה", error_expired: "⏳ תוקף הקישור פג. בקשו קטלוג חדש בבוט.", not_found: "🔍 לא נמצא דבר", btn_back: "← חזרה לרשימה", copy_link: "🔗 העתיקו את הקישור ושלחו לחבר:", scan_qr: "📱 או תנו לאדם לסרוק את הקוד הזה, אם הוא קרוב:", btn_copy: "העתק", btn_copied: "✅ הועתק", btn_wa: "חזרה ל-WhatsApp", filter_all: "הכל", bonus: "🎁 בונוס לסוכן:" },
-      en: { subtitle: "Ecosystem of Trust", mission: "Find a proven business in the catalog and share a recommendation. Your social capital works for you.", instruction: "start typing the name of the business or the niche it operates in", search: "Search for a business or service...", loading: "🔄 Loading list...", error_token: "⚠️ Error: Access denied", error_expired: "⏳ Link expired. Request a new catalog in the bot.", not_found: "🔍 Nothing found", btn_back: "← Back to list", copy_link: "🔗 Copy the link and send it to a friend:", scan_qr: "📱 Or let the person scan this code if they are nearby:", btn_copy: "Copy", btn_copied: "✅ Copied", btn_wa: "Return to WhatsApp", filter_all: "All", bonus: "🎁 Agent bonus:" },
-      ar: { subtitle: "نظام الثقة البيئي", mission: "ابحث عن عمل موثوق في الكتالوج وشارك التوصية. رأس مالك الاجتماعي يعمل لصالحك.", instruction: "ابدأ بكتابة اسم العمل أو التخصص الذي يعمل فيه", search: "البحث عن شركة أو خدمة...", loading: "🔄 جاري تحميل القائمة...", error_token: "⚠️ خطأ: تم الرفض", error_expired: "⏳ انتهت صلاحية الرابط. اطلب كتالوج جديد من البوت.", not_found: "🔍 لم يتم العثور على شيء", btn_back: "← العودة للقائمة", copy_link: "🔗 انسخ الرابط وأرسله لصديق:", scan_qr: "📱 أو دع الشخص يمسح هذا الرمز إذا كان قريباً:", btn_copy: "نسخ", btn_copied: "✅ تم النسخ", btn_wa: "العودة إلى WhatsApp", filter_all: "الكل", bonus: "🎁 مكافأة الوكيل:" }
+      ru: { subtitle: "Экосистема доверия", mission: "Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.", instruction: "начните вводить наименование бизнеса или нишу в которой он работает", search: "Поиск бизнеса или услуги...", loading: "🔄 Загрузка списка...", error_token: "⚠️ Ошибка: Нет доступа", error_expired: "⏳ Срок действия ссылки истек. Запросите каталог в боте заново.", not_found: "🔍 Ничего не найдено", btn_back: "← Вернуться к списку", copy_link: "🔗 Скопируйте ссылку и отправьте её другу:", scan_qr: "📱 Или дайте человеку отсканировать этот код, если он рядом:", btn_copy: "Копировать", btn_copied: "✅ Скопировано", btn_wa: "Вернуться в WhatsApp", filter_all: "Все", bonus: "🎁 Бонус агенту:", badge_leader: "🏆 Лидер ниши", badge_hot: "🔥 Высокий спрос", badge_new: "🌱 Новое имя", badge_deals: "🤝 Успешных сделок:" },
+      he: { subtitle: "מערכת אקולוגית של אמון", mission: "מצאו עסק מוכח בקטלוג והעבירו המלצה. ההון החברתי שלכם עובד בשבילכם.", instruction: "התחילו להקליד את שם העסק או את התחום שבו הוא פועל", search: "חיפוש עסק או שירות...", loading: "🔄 טוען רשימה...", error_token: "⚠️ שגיאה: אין גישה", error_expired: "⏳ תוקף הקישור פג. בקשו קטלוג חדש בבוט.", not_found: "🔍 לא נמצא דבר", btn_back: "← חזרה לרשימה", copy_link: "🔗 העתיקו את הקישור ושלחו לחבר:", scan_qr: "📱 או תנו לאדם לסרוק את הקוד הזה, אם הוא קרוב:", btn_copy: "העתק", btn_copied: "✅ הועתק", btn_wa: "חזרה ל-WhatsApp", filter_all: "הכל", bonus: "🎁 בונוס לסוכן:", badge_leader: "🏆 מוביל בתחום", badge_hot: "🔥 ביקוש גבוה", badge_new: "🌱 עסק חדש", badge_deals: "🤝 עסקאות מוצלחות:" },
+      en: { subtitle: "Ecosystem of Trust", mission: "Find a proven business in the catalog and share a recommendation. Your social capital works for you.", instruction: "start typing the name of the business or the niche it operates in", search: "Search for a business or service...", loading: "🔄 Loading list...", error_token: "⚠️ Error: Access denied", error_expired: "⏳ Link expired. Request a new catalog in the bot.", not_found: "🔍 Nothing found", btn_back: "← Back to list", copy_link: "🔗 Copy the link and send it to a friend:", scan_qr: "📱 Or let the person scan this code if they are nearby:", btn_copy: "Copy", btn_copied: "✅ Copied", btn_wa: "Return to WhatsApp", filter_all: "All", bonus: "🎁 Agent bonus:", badge_leader: "🏆 Niche Leader", badge_hot: "🔥 High Demand", badge_new: "🌱 New Business", badge_deals: "🤝 Successful deals:" },
+      ar: { subtitle: "نظام الثقة البيئي", mission: "ابحث عن عمل موثوق في الكتالوج وشارك التوصية. رأس مالك الاجتماعي يعمل لصالحك.", instruction: "ابدأ بكتابة اسم العمل أو التخصص الذي يعمل فيه", search: "البحث عن شركة أو خدمة...", loading: "🔄 جاري تحميل القائمة...", error_token: "⚠️ خطأ: تم الرفض", error_expired: "⏳ انتهت صلاحية الرابط. اطلب كتالوج جديد من البوت.", not_found: "🔍 لم يتم العثور على شيء", btn_back: "← العودة للقائمة", copy_link: "🔗 انسخ الرابط وأرسله لصديق:", scan_qr: "📱 أو دع الشخص يمسح هذا الرمز إذا كان قريباً:", btn_copy: "نسخ", btn_copied: "✅ تم النسخ", btn_wa: "العودة إلى WhatsApp", filter_all: "الكل", bonus: "🎁 مكافأة الوكيل:", badge_leader: "🏆 رائد في التخصص", badge_hot: "🔥 طلب مرتفع", badge_new: "🌱 عمل جديد", badge_deals: "🤝 صفقات ناجحة:" }
     };
 
     let currentLang = 'ru';
@@ -138,14 +144,8 @@
     const token = urlParams.get('token');
     const paramLang = urlParams.get('lang');
     
-    // Автоопределение языка из URL
-    if (paramLang && i18n[paramLang]) {
-        setLang(paramLang);
-    } else {
-        setLang('ru');
-    }
+    if (paramLang && i18n[paramLang]) { setLang(paramLang); } else { setLang('ru'); }
 
-    // УКАЖИ СВОЙ API URL ТУТ:
     const API_URL = "https://amlatsa-bot-production.up.railway.app"; 
     
     let allBusinesses = [];
@@ -182,13 +182,33 @@
       });
     }
 
+    // Логика отрисовки бейджей
+    function getBadgeHTML(biz) {
+        if (!biz.badge_type) return '';
+        if (biz.badge_type === 'leader') return `<div class="badge badge-leader">${i18n[currentLang].badge_leader}</div>`;
+        if (biz.badge_type === 'hot') return `<div class="badge badge-hot">${i18n[currentLang].badge_hot}</div>`;
+        if (biz.badge_type === 'new') return `<div class="badge badge-new">${i18n[currentLang].badge_new}</div>`;
+        if (biz.badge_type === 'standard' && biz.deals_count > 0) return `<div class="badge badge-standard">${i18n[currentLang].badge_deals} ${biz.deals_count}</div>`;
+        return '';
+    }
+
     function renderCatalog() {
       const grid = document.getElementById('catalogGrid');
       const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = allBusinesses.filter(biz => {
+      
+      // Сортировка: сначала лидеры, потом hot, потом новые, потом остальные. Внутри группы - по количеству сделок.
+      const sortedBusinesses = [...allBusinesses].sort((a, b) => {
+          const rank = { 'leader': 4, 'hot': 3, 'new': 2, 'standard': 1, undefined: 0 };
+          const rankDiff = (rank[b.badge_type] || 0) - (rank[a.badge_type] || 0);
+          if (rankDiff !== 0) return rankDiff;
+          return (b.deals_count || 0) - (a.deals_count || 0);
+      });
+
+      const filtered = sortedBusinesses.filter(biz => {
         const matchesSearch = biz.name.toLowerCase().includes(query) || (biz.business_info && biz.business_info.toLowerCase().includes(query));
         return matchesSearch && (currentNiche === 'Все' || currentNiche === i18n[currentLang].filter_all || biz.niche === currentNiche);
       });
+
       grid.innerHTML = '';
       if (filtered.length === 0) { grid.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">${i18n[currentLang].not_found}</div>`; return; }
       
@@ -196,9 +216,13 @@
         const card = document.createElement('div');
         card.className = 'biz-card';
         card.onclick = () => openRecommend(biz);
+        
+        const badgeHTML = getBadgeHTML(biz);
+
         card.innerHTML = `
           <div class="biz-header"><div class="biz-name">${biz.name}</div><div class="biz-niche">${biz.niche || 'Бизнес'}</div></div>
-          <div class="biz-reward">${i18n[currentLang].bonus} ${biz.commission || '...'}</div>
+          ${badgeHTML}
+          <div><div class="biz-reward">${i18n[currentLang].bonus} ${biz.commission || '...'}</div></div>
           ${biz.business_info ? `<div style="font-size: 0.85rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top:8px;">${biz.business_info}</div>` : ''}
         `;
         grid.appendChild(card);
@@ -215,9 +239,7 @@
       document.getElementById('recBizName').textContent = biz.name;
       document.getElementById('recBizReward').textContent = `${i18n[currentLang].bonus} ${biz.commission}`;
       
-      // ИСПОЛЬЗУЕМ НОВУЮ ССЫЛКУ ОТ КЛОДА
       const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${agentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${currentLang}`;
-      
       document.getElementById('refLinkInput').value = link;
       new QRious({ element: document.getElementById('qrCanvas'), value: link, size: 200, level: 'H' });
     }
