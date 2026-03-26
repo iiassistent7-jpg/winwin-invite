@@ -648,8 +648,7 @@
           try { respData = await response.clone().json(); } catch(e) {}
 
           if (response.ok) {
-            let waText = "Добро пожаловать в Win-Win Network!
-Вы завершаете регистрацию. Нажмите отправить 👉";
+            let waText = "Добро пожаловать в Win-Win Network!\nВы завершаете регистрацию. Нажмите отправить 👉";
             let tgStart = "start";
 
             if (respData.temp_key) {
@@ -664,14 +663,10 @@
 
             // Hint-тексты для WA — видны пользователю в поле сообщения
             const _wa_hints = {
-              ru: "Добро пожаловать в Win-Win Network!
-Вы завершаете регистрацию. Нажмите отправить 👉",
-              en: "Welcome to Win-Win Network!
-You are completing your registration. Please tap Send 👉",
-              he: "ברוכים הבאים ל-Win-Win Network!
-אתם משלימים את ההרשמה. לחצו שלח 👈",
-              ar: "مرحباً بك في Win-Win Network!
-أنت تكمل تسجيلك. اضغط إرسال 👈"
+              ru: "Добро пожаловать в Win-Win Network!\nВы завершаете регистрацию. Нажмите отправить 👉",
+              en: "Welcome to Win-Win Network!\nYou are completing your registration. Please tap Send 👉",
+              he: "ברוכים הבאים ל-Win-Win Network!\nאתם משלימים את ההרשמה. לחצו שלח 👈",
+              ar: "مرحباً بك في Win-Win Network!\nأنت تكمل تسجيلك. اضغط إرسال 👈"
             };
             const _ui_lang = document.documentElement.lang || "ru";
             const waTextHinted = waText + "\n" + (_wa_hints[_ui_lang] || _wa_hints.ru);
