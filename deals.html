@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Win-Win Deals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg-1: #1a1a2e; --bg-2: #0f0f1a; --accent-1: #56CCF2; --accent-2: #2F80ED; --text-muted: #a0a0b0; --card: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; }
+    
+    .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+    .lang-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+
+    .header { text-align: center; margin-bottom: 24px; }
+    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
+    .title { font-size: 1.2rem; font-weight: 700; color: #fff; }
+
+    /* Табы (Вкладки) */
+    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); }
+    .tab-btn { flex: 1; padding: 12px 0; text-align: center; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); background: transparent; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+    /* Список сделок */
+    .deals-container { display: flex; flex-direction: column; gap: 12px; }
+    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
+    
+    .deal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .client-name { font-size: 1.2rem; font-weight: 800; }
+    .deal-date { font-size: 0.8rem; color: var(--text-muted); }
+    
+    .deal-info { font-size: 0.9rem; color: #e0e0e0; margin-bottom: 16px; line-height: 1.5; }
+    .deal-info span { color: var(--accent-1); font-weight: 600; }
+
+    /* Статусы */
+    .status-badge { display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+    .status-new { background: rgba(242, 201, 76, 0.15); color: #F2C94C; border: 1px solid rgba(242, 201, 76, 0.3); }
+    .status-progress { background: rgba(86, 204, 242, 0.15); color: #56CCF2; border: 1px solid rgba(86, 204, 242, 0.3); }
+    .status-closed { background: rgba(39, 174, 96, 0.15); color: #27AE60; border: 1px solid rgba(39, 174, 96, 0.3); }
+    .status-rejected { background: rgba(235, 87, 87, 0.15); color: #EB5757; border: 1px solid rgba(235, 87, 87, 0.3); }
+
+    .btn-manage { display: block; width: 100%; text-align: center; background: #27AE60; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; padding: 12px; border-radius: 12px; transition: 0.2s; cursor: pointer; border: none; }
+    .btn-manage:active { transform: scale(0.97); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+
+    .btn-wa-return { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: #fff; text-decoration: none; font-weight: 600; font-size: 1rem; padding: 16px; border-radius: 16px; margin-top: 24px; transition: 0.2s; }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 100; font-weight: 700; font-size: 1.2rem; color: var(--accent-1); }
+  </style>
+</head>
+<body>
+
+  <div class="loading-overlay" id="loader">🔄 Загрузка сделок...</div>
+
+  <div class="shell" style="display: none;" id="mainContent">
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btn_lang_en" onclick="setLang('en')">GB EN</button>
+      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he')">IL עב</button>
+      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar')">SA عر</button>
+      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru')">RU РУ</button>
+    </div>
+
+    <header class="header">
+      <h1 class="logo">Win-Win</h1>
+      <div class="title" id="t_title">Мои Сделки</div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tab_active" onclick="switchTab('active')">В работе</button>
+      <button class="tab-btn" id="tab_history" onclick="switchTab('history')">История</button>
+    </div>
+
+    <div class="deals-container" id="dealsGrid">
+      </div>
+
+    <a href="#" id="waReturnLink" class="btn-wa-return">Вернуться в WhatsApp</a>
+  </div>
+
+  <script>
+    const i18n = {
+      ru: { title: "Мои Сделки", tab_active: "В работе", tab_history: "История", wa: "Вернуться в WhatsApp", loading: "🔄 Загрузка сделок...", client: "Клиент", agent: "Агент", contact: "📞 Связаться", btn_manage: "⚙️ Управлять сделкой", empty: "Здесь пока пусто.", status_new: "Новая", status_progress: "В процессе", status_closed: "Успешно закрыта", status_rejected: "Отклонена" },
+      he: { title: "העסקאות שלי", tab_active: "פעילות", tab_history: "היסטוריה", wa: "חזרה ל-WhatsApp", loading: "🔄 טוען עסקאות...", client: "לקוח", agent: "סוכן", contact: "📞 צור קשר", btn_manage: "⚙️ ניהול עסקה", empty: "ריק כאן בינתיים.", status_new: "חדשה", status_progress: "בתהליך", status_closed: "נסגרה בהצלחה", status_rejected: "נדחתה" },
+      en: { title: "My Deals", tab_active: "Active", tab_history: "History", wa: "Return to WhatsApp", loading: "🔄 Loading deals...", client: "Client", agent: "Agent", contact: "📞 Contact", btn_manage: "⚙️ Manage Deal", empty: "It's empty here for now.", status_new: "New", status_progress: "In Progress", status_closed: "Closed Successfully", status_rejected: "Rejected" },
+      ar: { title: "صفقاتي", tab_active: "نشطة", tab_history: "السجل", wa: "العودة إلى WhatsApp", loading: "🔄 جاري التحميل...", client: "العميل", agent: "الوكيل", contact: "📞 اتصال", btn_manage: "⚙️ إدارة الصفقة", empty: "فارغ هنا حالياً.", status_new: "جديد", status_progress: "قيد الإجراء", status_closed: "مغلقة بنجاح", status_rejected: "مرفوضة" }
+    };
+
+    let currentLang = 'ru';
+    let botPhone = "972534488475";
+    let allDeals = [];
+    let currentTab = 'active';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn_lang_${lang}`).classList.add('active');
+      const L = i18n[lang];
+      
+      document.getElementById('t_title').textContent = L.title;
+      document.getElementById('tab_active').textContent = L.tab_active;
+      document.getElementById('tab_history').textContent = L.tab_history;
+      document.getElementById('waReturnLink').textContent = L.wa;
+      document.getElementById('loader').textContent = L.loading;
+      
+      renderDeals();
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const paramLang = urlParams.get('lang') || 'ru';
+
+    // УКАЖИ СВОЙ API URL ТУТ:
+    const API_URL = "https://amlatsa-bot-production.up.railway.app"; 
+
+    async function loadDeals() {
+      if (!token) { document.getElementById('loader').textContent = "⚠️ Ошибка доступа"; return; }
+      try {
+        const response = await fetch(`${API_URL}/api/deals?token=${token}`);
+        if (!response.ok) throw new Error('Invalid token');
+        const data = await response.json();
+
+        allDeals = data.deals || [];
+        if (data.bot_phone) botPhone = data.bot_phone;
+        
+        document.getElementById('waReturnLink').href = `https://wa.me/${botPhone}`;
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        
+        setLang(paramLang);
+      } catch (err) {
+        document.getElementById('loader').textContent = "⏳ Ссылка устарела. Запросите новую в боте.";
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab_active').classList.remove('active');
+      document.getElementById('tab_history').classList.remove('active');
+      document.getElementById(`tab_${tab}`).classList.add('active');
+      renderDeals();
+    }
+
+    function getStatusInfo(status) {
+        const L = i18n[currentLang];
+        if (status === 'new') return { text: L.status_new, css: 'status-new' };
+        if (status === 'in_progress') return { text: L.status_progress, css: 'status-progress' };
+        if (status === 'closed') return { text: L.status_closed, css: 'status-closed' };
+        if (status === 'rejected') return { text: L.status_rejected, css: 'status-rejected' };
+        return { text: status, css: 'status-standard' };
+    }
+
+    function renderDeals() {
+      const L = i18n[currentLang];
+      const grid = document.getElementById('dealsGrid');
+      
+      const filteredDeals = allDeals.filter(d => {
+          if (currentTab === 'active') return ['new', 'in_progress'].includes(d.status);
+          return ['closed', 'rejected'].includes(d.status);
+      });
+
+      grid.innerHTML = '';
+
+      if (filteredDeals.length === 0) {
+          grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div>${L.empty}</div></div>`;
+          return;
+      }
+
+      filteredDeals.forEach(deal => {
+          const card = document.createElement('div');
+          card.className = 'deal-card';
+          
+          const statusInfo = getStatusInfo(deal.status);
+          const cleanPhone = deal.client_phone.replace(/\\D/g, '');
+          const waLink = `https://wa.me/${cleanPhone}`;
+          
+          let actionBtn = '';
+          // Кнопка Управлять доступна только для активных сделок
+          if (currentTab === 'active') {
+              const manageLink = `https://wa.me/${botPhone}?text=${encodeURIComponent("Управление_сделкой_" + deal.id)}`;
+              actionBtn = `<button class="btn-manage" onclick="window.location.href='${manageLink}'">${L.btn_manage}</button>`;
+          }
+
+          card.innerHTML = `
+            <div class="deal-header">
+                <div class="client-name">${deal.client_name}</div>
+                <div class="deal-date">${deal.date}</div>
+            </div>
+            <div class="status-badge ${statusInfo.css}">${statusInfo.text}</div>
+            
+            <div class="deal-info">
+                ${L.agent}: <span>${deal.agent_name}</span><br>
+                ${L.contact}: <a href="${waLink}" style="color:var(--accent-1); text-decoration:none;">${deal.client_phone}</a>
+            </div>
+            ${actionBtn}
+          `;
+          grid.appendChild(card);
+      });
+    }
+
+    loadDeals();
+  </script>
+</body>
+</html>
