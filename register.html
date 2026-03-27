@@ -390,22 +390,28 @@
         </div>
 
         <div class="form-group role-business hidden">
-          <label>Ниша бизнеса</label>
+          <label id="nicheLabelForm">Категория бизнеса</label>
+          <select id="category" name="category" data-req="business" onchange="updateSubcategories()">
+            <option value="" disabled selected id="categoryPlaceholder">Выберите категорию...</option>
+            <option value="Красота и эстетика">Красота и эстетика</option>
+            <option value="Еда и рестораны">Еда и рестораны</option>
+            <option value="Магазины и товары">Магазины и товары</option>
+            <option value="Здоровье и медицина">Здоровье и медицина</option>
+            <option value="Юриспруденция">Юриспруденция</option>
+            <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+            <option value="Дом и ремонт">Дом и ремонт</option>
+            <option value="Автомобили">Автомобили</option>
+            <option value="Праздники и мероприятия">Праздники и мероприятия</option>
+            <option value="Обучение и спорт">Обучение и спорт</option>
+            <option value="Домашние питомцы">Домашние питомцы</option>
+            <option value="Туризм и отдых">Туризм и отдых</option>
+            <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
+          </select>
+        </div>
+        <div class="form-group role-business hidden" id="subcategoryGroup" style="display:none!important;">
+          <label id="nicheLabelSub">Специализация</label>
           <select id="niche" name="niche" data-req="business">
-            <option value="" disabled selected>Выберите нишу...</option>
-            <option value="💅 Красота">💅 Красота</option>
-            <option value="🏠 Недвижимость">🏠 Недвижимость</option>
-            <option value="🏥 Здоровье">⚕️ Здоровье</option>
-            <option value="🍕 Еда и рестораны">🍔 Еда</option>
-            <option value="⚖️ Юристы">⚖️ Юристы</option>
-            <option value="💰 Финансы">💰 Финансы</option>
-            <option value="🔧 Ремонт и стройка">🛠 Ремонт</option>
-            <option value="💻 IT">💻 IT</option>
-            <option value="🐾 Животные">🐾 Животные</option>
-            <option value="👗 Одежда и товары">👗 Одежда</option>
-            <option value="🎓 Обучение">🎓 Обучение</option>
-            <option value="🚗 Авто">🚗 Авто</option>
-            <option value="📦 Другое">📦 Другое</option>
+            <option value="" disabled selected>Сначала выберите категорию...</option>
           </select>
         </div>
 
@@ -709,6 +715,38 @@
         document.getElementById('btnLoader').style.display = 'none';
       });
     });
+
+    const SUBCATEGORIES = {
+      "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+      "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+      "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+      "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+      "Юриспруденция": ["Коммерческое право (для бизнеса)","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+      "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+      "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+      "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+      "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+      "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+      "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+      "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+      "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+    };
+
+    function updateSubcategories() {
+      const cat = document.getElementById('category').value;
+      const subGroup = document.getElementById('subcategoryGroup');
+      const subSelect = document.getElementById('niche');
+      const subs = SUBCATEGORIES[cat] || [];
+      subSelect.innerHTML = '<option value="" disabled selected>Выберите специализацию...</option>';
+      subs.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s; opt.textContent = s; subSelect.appendChild(opt);
+      });
+      if (subs.length > 0) {
+        subGroup.style.removeProperty('display');
+        subGroup.classList.remove('hidden');
+      }
+    }
   </script>
 </body>
 </html>
