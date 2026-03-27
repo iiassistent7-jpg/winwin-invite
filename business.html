@@ -489,15 +489,18 @@
 
     function renderEditForm() {
       document.getElementById('f_name').value = bizData.name || '';
-      // Категория — берём из bizData.niche (там хранится категория первого уровня или подкатегория)
       const catSel = document.getElementById('f_niche');
-      // Пробуем подобрать категорию
-      const currentCat = bizData.category || bizData.niche || '';
+      const currentCat = bizData.category || '';
       for (let i = 0; i < catSel.options.length; i++) {
         if (catSel.options[i].value === currentCat) { catSel.selectedIndex = i; break; }
       }
-      // Парсим ниши (через запятую)
-      const currentNiches = bizData.niche ? bizData.niche.split(',').map(s => s.trim()).filter(Boolean) : [];
+      // niche — массив подкатегорий из ARRAY
+      let currentNiches = [];
+      if (Array.isArray(bizData.niche)) {
+        currentNiches = bizData.niche;
+      } else if (typeof bizData.niche === 'string' && bizData.niche) {
+        currentNiches = bizData.niche.split(',').map(s => s.trim()).filter(Boolean);
+      }
       if (currentCat) updateEditSubcategories(currentNiches);
       document.getElementById('f_comm').value = bizData.commission || '';
       document.getElementById('f_link').value = bizData.business_info || '';
