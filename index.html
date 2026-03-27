@@ -10,7 +10,87 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+  const INDEX_SUBCATEGORIES = {
+    "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+    "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+    "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+    "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+    "Юриспруденция": ["Коммерческое право (для бизнеса)","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+    "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+    "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+    "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+    "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+    "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+    "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+    "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+    "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+  };
+
+  function updateIndexSubcategories() {
+    const cat = document.getElementById('nicheSelect').value;
+    const field = document.getElementById('indexSubcatField');
+    const list = document.getElementById('indexSubcatList');
+    const hidden = document.getElementById('nicheSubSelect');
+    const tags = document.getElementById('indexSubcatTags');
+    const doneBtn = document.getElementById('indexSubcatDone');
+    const editBtn = document.getElementById('indexSubcatEdit');
+    const subs = INDEX_SUBCATEGORIES[cat] || [];
+    list.innerHTML = '';
+    hidden.value = '';
+    tags.innerHTML = '';
+    tags.style.display = 'none';
+    if (doneBtn) doneBtn.style.display = 'block';
+    if (editBtn) editBtn.style.display = 'none';
+    subs.forEach(s => {
+      const item = document.createElement('label');
+      item.className = 'idx-cb-item';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.value = s;
+      cb.addEventListener('change', () => {
+        item.classList.toggle('checked', cb.checked);
+        const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+        hidden.value = checked.join(', ');
+      });
+      const span = document.createElement('span');
+      span.textContent = s;
+      item.appendChild(cb); item.appendChild(span);
+      list.appendChild(item);
+    });
+    field.style.display = subs.length > 0 ? 'block' : 'none';
+    list.style.display = 'flex';
+  }
+
+  function confirmIndexSubcat() {
+    const list = document.getElementById('indexSubcatList');
+    const tags = document.getElementById('indexSubcatTags');
+    const doneBtn = document.getElementById('indexSubcatDone');
+    const editBtn = document.getElementById('indexSubcatEdit');
+    const hidden = document.getElementById('nicheSubSelect');
+    const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+    if (checked.length === 0) return;
+    hidden.value = checked.join(', ');
+    tags.innerHTML = checked.map(s =>
+      `<span style="display:inline-block;background:rgba(86,204,242,0.15);border:1px solid rgba(86,204,242,0.4);color:#56CCF2;border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
+    ).join('');
+    tags.style.display = 'flex';
+    list.style.display = 'none';
+    doneBtn.style.display = 'none';
+    editBtn.style.display = 'block';
+  }
+
+  function editIndexSubcat() {
+    const list = document.getElementById('indexSubcatList');
+    const tags = document.getElementById('indexSubcatTags');
+    const doneBtn = document.getElementById('indexSubcatDone');
+    const editBtn = document.getElementById('indexSubcatEdit');
+    tags.style.display = 'none';
+    list.style.display = 'flex';
+    doneBtn.style.display = 'block';
+    editBtn.style.display = 'none';
+  }
+
+</script>
 
   <style>
     :root {
@@ -271,7 +351,7 @@
       transition: max-height 0.4s var(--ease-out), opacity 0.3s;
       opacity: 0;
     }
-    .expandable.open { max-height: 600px; opacity: 1; overflow: visible; }
+    .expandable.open { max-height: 2000px; opacity: 1; overflow: visible; }
 
     .reward-value-wrap {
       margin-top: 10px; max-height: 0; overflow: hidden;
@@ -356,6 +436,10 @@
       .role-card .role-name { font-size: 0.9rem; }
       .role-card .role-desc { font-size: 0.65rem; line-height: 1.2; }
     }
+    .idx-cb-item { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px 14px; cursor:pointer; transition:0.2s; }
+    .idx-cb-item.checked { background:rgba(86,204,242,0.08); border-color:rgba(86,204,242,0.4); }
+    .idx-cb-item input[type=checkbox] { width:18px; height:18px; accent-color:#56CCF2; flex-shrink:0; }
+    .idx-cb-item span { font-size:0.9rem; font-weight:600; color:#e0e0e0; }
   </style>
 </head>
 <body>
@@ -405,18 +489,30 @@
     <div class="expandable" id="bizFields">
       <div class="field">
         <label id="nicheLabel">Категория бизнеса</label>
-        <select id="nicheSelect">
+        <select id="nicheSelect" onchange="updateIndexSubcategories()">
           <option value="" disabled selected id="nicheDefault">Выберите категорию...</option>
           <option value="Красота и эстетика">Красота и эстетика</option>
-          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+          <option value="Еда и рестораны">Еда и рестораны</option>
+          <option value="Магазины и товары">Магазины и товары</option>
           <option value="Здоровье и медицина">Здоровье и медицина</option>
-          <option value="Автомобили">Автомобили</option>
-          <option value="Дом и ремонт">Дом и ремонт</option>
-          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
           <option value="Юриспруденция">Юриспруденция</option>
+          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+          <option value="Дом и ремонт">Дом и ремонт</option>
+          <option value="Автомобили">Автомобили</option>
+          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
           <option value="Обучение и спорт">Обучение и спорт</option>
-          <option value="Бизнес и услуги">Бизнес и услуги</option>
+          <option value="Домашние питомцы">Домашние питомцы</option>
+          <option value="Туризм и отдых">Туризм и отдых</option>
+          <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
         </select>
+      </div>
+      <div class="field" id="indexSubcatField" style="display:none;">
+        <label>Специализация <span style="font-size:0.75rem;opacity:0.6;">(можно выбрать несколько)</span></label>
+        <div id="indexSubcatTags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
+        <div id="indexSubcatList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;"></div>
+        <button type="button" id="indexSubcatDone" onclick="confirmIndexSubcat()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#56CCF2,#2F80ED);border:none;color:#fff;font-weight:800;font-size:1rem;border-radius:14px;cursor:pointer;box-shadow:0 4px 16px rgba(86,204,242,0.3);">✅ Подтвердить выбор</button>
+        <button type="button" id="indexSubcatEdit" onclick="editIndexSubcat()" style="display:none;width:100%;margin-top:6px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted,#a0a0b0);font-size:0.85rem;border-radius:10px;cursor:pointer;">✏️ Изменить</button>
+        <input type="hidden" id="nicheSubSelect">
       </div>
 
       <div class="field">
@@ -720,7 +816,9 @@
   // ── Ссылки ────────────────────────────────────────────────────────
   function buildPayload() {
     const name    = document.getElementById("nameInput").value.trim();
-    const niche   = document.getElementById("nicheSelect").value;
+    const _subVal = document.getElementById('nicheSubSelect') ? document.getElementById('nicheSubSelect').value : '';
+    const niche   = _subVal || document.getElementById("nicheSelect").value;
+    const category = document.getElementById("nicheSelect").value;
     const rType   = document.querySelector('input[name="rewardType"]:checked');
     const rVal    = document.getElementById("rewardValue").value.trim();
     const pay     = document.querySelector('input[name="payMethod"]:checked');
