@@ -143,13 +143,27 @@
       margin-top: 2px;
     }
 
+    /* ── КНОПКА "КАК ЭТО РАБОТАЕТ?" ── */
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 24px; margin-top: 16px;
+      background: transparent; color: var(--text-muted);
+      text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      border-radius: 999px; border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s var(--ease-out); cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.05); border-color: #fff; color: #fff;
+      transform: translateY(-2px);
+    }
+
     /* ── ПОЛЯ ── */
     .field { margin-bottom: 24px; }
     
     .field label {
       display: block; font-size: 0.85rem; font-weight: 600;
       color: var(--text-muted); margin-bottom: 12px;
-      text-align: center; /* Центрируем заголовки полей */
+      text-align: center;
     }
     
     .field input[type="text"],
@@ -164,7 +178,7 @@
       font-family: inherit; font-size: 1rem;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
-      text-align: left; /* Текст ввода остается слева для удобства чтения */
+      text-align: left;
     }
     
     body.rtl .field input[type="text"],
@@ -196,7 +210,7 @@
     /* ── ВЫБОР РОЛИ (КАРТОЧКИ) ── */
     .role-grid {
       display: grid; 
-      grid-template-columns: 1fr 1fr; /* ЖЕСТКАЯ ФИКСАЦИЯ В 2 КОЛОНКИ */
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
     
@@ -226,7 +240,7 @@
     .role-card .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
     .role-card .role-name {
       font-size: 1rem; font-weight: 700; color: var(--text-main);
-      display: block; margin-bottom: 4px;
+      display: block; margin-bottom: 4px; line-height: 1.2;
     }
     .role-card .role-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
 
@@ -337,7 +351,6 @@
     /* ── АДАПТАЦИЯ ДЛЯ УЗКИХ ЭКРАНОВ ── */
     @media (max-width: 400px) {
       .panel { padding: 24px 16px; }
-      /* Уменьшаем отступы в карточках ролей, чтобы они точно влезали в 1 ряд */
       .role-card { padding: 14px 6px 12px; }
       .role-card .icon { font-size: 1.6rem; margin-bottom: 6px; }
       .role-card .role-name { font-size: 0.9rem; }
@@ -360,6 +373,8 @@
       <span class="logo-sub">Network</span>
     </div>
     <p class="tagline" id="tagline">Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong></p>
+    
+    <a href="about.html" id="aboutLink" class="btn-outline">Как это работает?</a>
   </header>
 
   <section class="panel">
@@ -375,45 +390,41 @@
         <label class="role-card" id="cardBusiness">
           <input type="radio" name="role" value="business">
           <span class="icon">🏢</span>
-          <span class="role-name" id="roleBizName">Бизнес</span>
-          <span class="role-desc" id="roleBizDesc">Хочу больше клиентов</span>
+          <span class="role-name" id="roleBizName">Владелец бизнеса</span>
+          <span class="role-desc" id="roleBizDesc">Хочу увеличить базу клиентов</span>
         </label>
         <label class="role-card" id="cardAgent">
           <input type="radio" name="role" value="agent">
           <span class="icon">🤝</span>
-          <span class="role-name" id="roleAgentName">Агент</span>
-          <span class="role-desc" id="roleAgentDesc">Хочу рекомендовать и делать добро</span>
+          <span class="role-name" id="roleAgentName">Довольный клиент</span>
+          <span class="role-desc" id="roleAgentDesc">Хочу рекомендовать</span>
         </label>
       </div>
     </div>
 
     <div class="expandable" id="bizFields">
       <div class="field">
-        <label id="nicheLabel">Ниша бизнеса</label>
+        <label id="nicheLabel">Категория бизнеса</label>
         <select id="nicheSelect">
-          <option value="" disabled selected id="nicheDefault">Выберите нишу...</option>
-          <option value="💅 Красота и уход">💅 Красота и уход</option>
-          <option value="🏠 Недвижимость">🏠 Недвижимость</option>
-          <option value="🏥 Здоровье">🏥 Здоровье</option>
-          <option value="🍕 Еда и рестораны">🍕 Еда и рестораны</option>
-          <option value="⚖️ Юристы">⚖️ Юристы</option>
-          <option value="💰 Финансы">💰 Финансы</option>
-          <option value="🔧 Ремонт и стройка">🔧 Ремонт и стройка</option>
-          <option value="💻 IT">💻 IT</option>
-          <option value="🐾 Животные">🐾 Животные</option>
-          <option value="👗 Одежда и товары">👗 Одежда и товары</option>
-          <option value="🎓 Обучение">🎓 Обучение</option>
-          <option value="🚗 Авто">🚗 Авто</option>
-          <option value="📦 Другое">📦 Другое</option>
+          <option value="" disabled selected id="nicheDefault">Выберите категорию...</option>
+          <option value="Красота и эстетика">Красота и эстетика</option>
+          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+          <option value="Здоровье и медицина">Здоровье и медицина</option>
+          <option value="Автомобили">Автомобили</option>
+          <option value="Дом и ремонт">Дом и ремонт</option>
+          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
+          <option value="Юриспруденция">Юриспруденция</option>
+          <option value="Обучение и спорт">Обучение и спорт</option>
+          <option value="Бизнес и услуги">Бизнес и услуги</option>
         </select>
       </div>
 
       <div class="field">
-        <label id="rewardLabel">Вознаграждение агенту за клиента</label>
+        <label id="rewardLabel">Бонус за рекомендацию</label>
         <div class="seg-group">
           <label class="seg"><input type="radio" name="rewardType" value="pct"><span id="rPct">% от сделки</span></label>
           <label class="seg"><input type="radio" name="rewardType" value="fix"><span id="rFix">Фикс ₪</span></label>
-          <label class="seg"><input type="radio" name="rewardType" value="gift"><span id="rGift">Подарок</span></label>
+          <label class="seg"><input type="radio" name="rewardType" value="gift"><span id="rGift">Подарок/Услуга</span></label>
         </div>
         <div class="reward-value-wrap" id="rewardValueWrap">
           <input type="text" id="rewardValue" style="margin-top:0" placeholder="Укажите размер..." />
@@ -425,7 +436,7 @@
 
     <div class="expandable" id="commonFields">
       <div class="field">
-        <label id="payLabel">Выберите способ получения благодарности</label>
+        <label id="payLabel">Как вы предпочитаете получить бонус?</label>
         <div class="seg-group">
           <label class="seg"><input type="radio" name="payMethod" value="bit">Bit</label>
           <label class="seg"><input type="radio" name="payMethod" value="paypal">PayPal</label>
@@ -459,7 +470,9 @@
         </button>
       </div>
 
-  </section><div class="qr-section">
+  </section>
+  
+  <div class="qr-section">
     <div class="qr-section-title" id="qrTitle">Показать рядом стоящему</div>
     <div class="qr-card">
       <div id="qrcode"></div>
@@ -469,33 +482,39 @@
 
   <footer class="footer">
     <div>Win-Win Network © 2025</div>
-    <div id="footerSub" class="footer-note">Бесплатно для агентов • Эффективно для бизнеса</div>
+    <div id="footerSub" class="footer-note">Бесплатно для рекомендателей • Эффективно для бизнеса</div>
   </footer>
 
-</main><script>
+</main>
+
+<script>
 (function() {
   "use strict";
 
   // ── Параметры из URL ──────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
   const senderId = params.get("ref") || params.get("sender") || "";
+  
+  // Берем язык из URL, если он есть
+  let initialLang = params.get("lang");
 
-  // ── Тексты ───────────────────────────────────────────────────────
+  // ── Тексты с новыми, дружелюбными формулировками ──────────────────
   const T = {
     ru: {
       dir: "ltr", lang: "ru",
       tagline: "Платформа взаимовыгодных рекомендаций.<br><strong>Здесь выигрывают все!</strong>",
+      aboutLink: "Как это работает?",
       nameLabel: "Ваше имя или название бизнеса",
       namePh: "Введите имя...",
       roleLabel: "Присоединиться как:",
-      roleBizName: "Бизнес", roleBizDesc: "Хочу больше клиентов",
-      roleAgentName: "Агент", roleAgentDesc: "Хочу рекомендовать и делать добро",
-      nicheLabel: "Ниша бизнеса", nicheDefault: "Выберите нишу...",
-      rewardLabel: "Вознаграждение агенту за клиента",
-      rPct: "% от сделки", rFix: "Фикс ₪", rGift: "Подарок",
+      roleBizName: "Владелец бизнеса", roleBizDesc: "Хочу увеличить базу клиентов",
+      roleAgentName: "Довольный клиент", roleAgentDesc: "Хочу рекомендовать",
+      nicheLabel: "Категория бизнеса", nicheDefault: "Выберите категорию...",
+      rewardLabel: "Бонус за рекомендацию",
+      rPct: "% от сделки", rFix: "Фикс ₪", rGift: "Подарок/Услуга",
       rewardPh: "Укажите размер...",
-      payLabelAgent: "Выберите способ получения благодарности",
-      payLabelBiz: "Выберите способ выплаты благодарности",
+      payLabelAgent: "Как вы предпочитаете получить бонус?",
+      payLabelBiz: "Способ выплаты бонуса",
       payTransfer: "Перевод", payCash: "Наличные",
       socialLabel: "Ссылка на сайт / соцсеть",
       socialPh: "Instagram, Facebook, сайт...",
@@ -504,22 +523,23 @@
       tgLabel: "Присоединиться через Telegram",
       qrTitle: "Показать рядом стоящему",
       qrHint: "Пусть сканирует — попадёт на эту же страницу",
-      footerSub: "Бесплатно для агентов • Эффективно для бизнеса",
+      footerSub: "Бесплатно для рекомендателей • Эффективно для бизнеса",
     },
     en: {
       dir: "ltr", lang: "en",
       tagline: "Mutual recommendation platform.<br><strong>Everyone wins here!</strong>",
+      aboutLink: "How it works?",
       nameLabel: "Your name or business name",
       namePh: "Enter name...",
       roleLabel: "Join as:",
-      roleBizName: "Business", roleBizDesc: "I want more clients",
-      roleAgentName: "Agent", roleAgentDesc: "I want to recommend and do good",
-      nicheLabel: "Business niche", nicheDefault: "Select niche...",
-      rewardLabel: "Agent reward per client",
-      rPct: "% of deal", rFix: "Fixed ₪", rGift: "Gift",
+      roleBizName: "Business Owner", roleBizDesc: "I want to grow my client base",
+      roleAgentName: "Happy Client", roleAgentDesc: "I want to recommend",
+      nicheLabel: "Business Category", nicheDefault: "Select category...",
+      rewardLabel: "Recommendation Bonus",
+      rPct: "% of deal", rFix: "Fixed ₪", rGift: "Gift/Service",
       rewardPh: "Enter amount...",
-      payLabelAgent: "Choose how to receive your bonus",
-      payLabelBiz: "Choose how to pay the bonus",
+      payLabelAgent: "How do you prefer to receive the bonus?",
+      payLabelBiz: "How to pay the bonus",
       payTransfer: "Transfer", payCash: "Cash",
       socialLabel: "Website / social link",
       socialPh: "Instagram, Facebook, website...",
@@ -528,22 +548,23 @@
       tgLabel: "Join via Telegram",
       qrTitle: "Show to someone nearby",
       qrHint: "They scan it — land on this page",
-      footerSub: "Free for agents • Effective for business",
+      footerSub: "Free for referrers • Effective for business",
     },
     he: {
       dir: "rtl", lang: "he",
       tagline: "פלטפורמת המלצות הדדיות.<br><strong>כאן כולם מרוויחים!</strong>",
+      aboutLink: "איך זה עובד?",
       nameLabel: "שמך או שם העסק",
       namePh: "הכניסו שם...",
       roleLabel: "הצטרפו כ:",
-      roleBizName: "עסק", roleBizDesc: "רוצה יותר לקוחות",
-      roleAgentName: "סוכן", roleAgentDesc: "רוצה להמליץ ולעשות טוב",
-      nicheLabel: "תחום העסק", nicheDefault: "בחרו תחום...",
-      rewardLabel: "גמול לסוכן עבור לקוח",
-      rPct: "% מהעסקה", rFix: "סכום קבוע ₪", rGift: "מתנה",
+      roleBizName: "בעל עסק", roleBizDesc: "רוצה להגדיל את מאגר הלקוחות",
+      roleAgentName: "לקוח מרוצה", roleAgentDesc: "רוצה להמליץ",
+      nicheLabel: "קטגוריית עסק", nicheDefault: "בחרו קטגוריה...",
+      rewardLabel: "הטבה על המלצה",
+      rPct: "% מהעסקה", rFix: "סכום קבוע ₪", rGift: "מתנה/שירות",
       rewardPh: "הכניסו גודל...",
-      payLabelAgent: "בחרו אופן קבלת תגמול",
-      payLabelBiz: "בחרו אופן תשלום תגמול",
+      payLabelAgent: "איך תרצו לקבל את ההטבה?",
+      payLabelBiz: "איך תעדיפו לשלם את ההטבה?",
       payTransfer: "העברה", payCash: "מזומן",
       socialLabel: "קישור לאתר / רשת חברתית",
       socialPh: "Instagram, Facebook, אתר...",
@@ -552,22 +573,23 @@
       tgLabel: "הצטרפות דרך Telegram",
       qrTitle: "הראה לאדם לידך",
       qrHint: "יסרוק — יגיע לדף הזה",
-      footerSub: "חינם לסוכנים • יעיל לעסקים",
+      footerSub: "חינם לממליצים • יעיל לעסקים",
     },
     ar: {
       dir: "rtl", lang: "ar",
       tagline: "منصة التوصيات المتبادلة.<br><strong>هنا الجميع يربح!</strong>",
+      aboutLink: "كيف يعمل؟",
       nameLabel: "اسمك أو اسم العمل",
       namePh: "أدخل الاسم...",
       roleLabel: "انضم كـ:",
-      roleBizName: "شركة", roleBizDesc: "أريد المزيد من العملاء",
-      roleAgentName: "وكيل", roleAgentDesc: "أريد التوصية وعمل الخير",
-      nicheLabel: "مجال العمل", nicheDefault: "اختر المجال...",
-      rewardLabel: "مكافأة الوكيل لكل عميل",
-      rPct: "% من الصفقة", rFix: "مبلغ ثابت ₪", rGift: "هدية",
+      roleBizName: "صاحب العمل", roleBizDesc: "أريد زيادة قاعدة العملاء",
+      roleAgentName: "عميل راضٍ", roleAgentDesc: "أريد التوصية",
+      nicheLabel: "فئة العمل", nicheDefault: "اختر فئة...",
+      rewardLabel: "مكافأة التوصية",
+      rPct: "% من الصفقة", rFix: "مبلغ ثابت ₪", rGift: "هدية/خدمة",
       rewardPh: "أدخل المبلغ...",
-      payLabelAgent: "اختر طريقة استلام المكافأة",
-      payLabelBiz: "اختر طريقة دفع المكافأة",
+      payLabelAgent: "كيف تفضل استلام المكافأة؟",
+      payLabelBiz: "كيف تفضل دفع المكافأة؟",
       payTransfer: "تحويل", payCash: "نقداً",
       socialLabel: "رابط الموقع / الشبكة الاجتماعية",
       socialPh: "Instagram, Facebook, موقع...",
@@ -576,15 +598,16 @@
       tgLabel: "الانضمام عبر Telegram",
       qrTitle: "أرِ الشخص المجاور",
       qrHint: "يمسح — يصل لهذه الصفحة",
-      footerSub: "مجاني للوكلاء • فعّال للأعمال",
+      footerSub: "مجاني للموصين • فعّال للأعمال",
     },
   };
 
   // ── Языки ─────────────────────────────────────────────────────────
   let currentLang = "ru";
-  let selectedRole = null; // вынесено выше, чтобы использовать в applyLang
+  let selectedRole = null;
 
   function detectLang() {
+    if (initialLang && T[initialLang]) return initialLang;
     const n = navigator.language || "";
     if (n.startsWith("he") || n.startsWith("iw")) return "he";
     if (n.startsWith("ar")) return "ar";
@@ -600,6 +623,11 @@
     document.body.dir = t.dir;
 
     document.getElementById("tagline").innerHTML = t.tagline;
+    
+    const aboutLink = document.getElementById("aboutLink");
+    aboutLink.textContent = t.aboutLink;
+    aboutLink.href = "about.html?lang=" + lang;
+
     document.getElementById("nameLabel").textContent = t.nameLabel;
     document.getElementById("nameInput").placeholder = t.namePh;
     document.getElementById("roleLabel").textContent = t.roleLabel;
@@ -615,7 +643,6 @@
     document.getElementById("rGift").textContent = t.rGift;
     document.getElementById("rewardValue").placeholder = t.rewardPh;
     
-    // Динамический заголовок оплаты
     document.getElementById("payLabel").textContent = selectedRole === "business" ? t.payLabelBiz : t.payLabelAgent;
     
     document.getElementById("payTransfer").textContent = t.payTransfer;
@@ -646,11 +673,9 @@
       document.querySelectorAll(".role-card").forEach(c => c.classList.remove("selected"));
       radio.closest(".role-card").classList.add("selected");
 
-      // Обновляем текст лейбла оплаты при смене роли
       const t = T[currentLang] || T.ru;
       document.getElementById("payLabel").textContent = selectedRole === "business" ? t.payLabelBiz : t.payLabelAgent;
 
-      // Показываем нужные поля
       document.getElementById("bizFields").classList.toggle("open", selectedRole === "business");
       document.getElementById("commonFields").classList.add("open");
 
@@ -677,7 +702,7 @@
       const rType = document.querySelector('input[name="rewardType"]:checked');
       const rVal  = document.getElementById("rewardValue").value.trim();
       if (!niche || !rType) return false;
-      if (rType.value !== "gift" && !rVal) return false; // для подарка текст не обязателен если gift
+      if (rType.value !== "gift" && !rVal) return false; 
     }
 
     const pay = document.querySelector('input[name="payMethod"]:checked');
@@ -690,7 +715,6 @@
     const ok = isValid();
     document.getElementById("btnWa").disabled = !ok;
     document.getElementById("btnTg").disabled = !ok;
-    if (ok) updateLinks();
   }
 
   // ── Ссылки ────────────────────────────────────────────────────────
@@ -744,7 +768,6 @@
         const waText = "reg_" + respData.temp_key;
         const tgStart = "reg_" + respData.temp_key;
 
-        // Подсказка перед редиректом
         const hints = {
           ru: "Добрый день! Вы завершаете регистрацию в Win-Win Network. Нажмите отправить 👉",
           en: "Good day! You are completing your registration in Win-Win Network. Please tap Send 👉",
@@ -767,15 +790,11 @@
     }
   }
 
-  function updateLinks() {}
-
   document.getElementById("btnWa").addEventListener("click", () => handleChannelClick("wa"));
   document.getElementById("btnTg").addEventListener("click", () => handleChannelClick("tg"));
 
-  // ── Слушатели для валидации ───────────────────────────────────────
   document.getElementById("nameInput").addEventListener("input", validate);
   document.getElementById("nicheSelect").addEventListener("change", validate);
-  // Event delegation -- fixes payMethod inside expandable blocks
   document.addEventListener("change", function(e) {
     if (e.target.name === "payMethod") validate();
     if (e.target.name === "rewardType") {
