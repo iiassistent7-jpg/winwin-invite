@@ -112,15 +112,20 @@
     .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-    .deal-fin { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .fin-pill { padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
-    .fin-pill.amount { background: rgba(86,204,242,0.12); color: #56CCF2; border: 1px solid rgba(86,204,242,0.3); }
-    .fin-pill.commission { background: rgba(235,87,87,0.12); color: #EB5757; border: 1px solid rgba(235,87,87,0.3); }
-    .fin-pill.earned { background: rgba(39,174,96,0.12); color: #27AE60; border: 1px solid rgba(39,174,96,0.3); }
-    .debt-banner { background: rgba(235,87,87,0.1); border: 1px solid rgba(235,87,87,0.4); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .debt-banner .debt-label { color: #EB5757; font-size: 0.85rem; font-weight: 700; }
-    .debt-banner .debt-amount { color: #EB5757; font-size: 1.2rem; font-weight: 800; }
-    .deal-debt-tag { display: inline-block; background: rgba(235,87,87,0.12); color: #EB5757; border: 1px solid rgba(235,87,87,0.35); border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; }
+    /* Долг — баннер сверху */
+    .debt-alert { background: rgba(235,87,87,0.15); border: 1px solid rgba(235,87,87,0.3); border-radius: 16px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .debt-alert .debt-text { color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .debt-alert .debt-sum { color: var(--danger); font-weight: 800; font-size: 1.2rem; }
+    /* Карточка с долгом */
+    .deal-card.unpaid { border-color: rgba(235,87,87,0.4); box-shadow: 0 0 15px rgba(235,87,87,0.1); }
+    /* Мини-чек юнит-экономики */
+    .deal-receipt { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px dashed rgba(255,255,255,0.1); }
+    .receipt-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .receipt-line.agent { color: #fff; font-weight: 500; }
+    .receipt-line.agent .unpaid-warn { color: var(--danger); font-weight: 700; }
+    .receipt-line.agent .paid-ok { color: var(--success); font-size: 0.75rem; }
+    .receipt-line.total { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 2px; margin-bottom: 0; color: #fff; font-weight: 800; font-size: 1rem; }
+    .receipt-line.total .net-profit { color: var(--success); }
   </style>
 </head>
 <body>
@@ -148,9 +153,9 @@
     </div>
 
     <div id="tab_deals" class="tab-content active">
-      <div id="debtBanner" style="display:none;" class="debt-banner">
-        <span class="debt-label">🔴 Долг агентам:</span>
-        <span class="debt-amount" id="debtAmount">0 ₪</span>
+      <div class="debt-alert" id="debtBanner" style="display:none;">
+        <div class="debt-text" id="t_total_debt">🔴 Долг агентам:</div>
+        <div class="debt-sum" id="debtAmount">0 ₪</div>
       </div>
       <div class="deals-filter">
         <button class="filter-btn active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
@@ -432,24 +437,26 @@
         if (currentDealFilter === 'active' && !isPending) {
           manageBtn = `<button class="btn-action" onclick="openDealModal(${d.id})">${L.card_manage}</button>`;
         }
-        const debtTag = isPending && d.commission ? `<div class="deal-debt-tag">🔴 Долг: ${d.commission} ₪</div>` : '';
         const pendingNote = isPending ? `<div class="deal-pending-note">⏳ ${L.pending_note}</div>` : '';
-        return `<div class="deal-card${isPending ? ' pending' : ''}">
-          ${debtTag}
+        return `<div class="deal-card${isPending ? ' pending unpaid' : ''}">
           <div class="deal-header">
             <div><div class="deal-client">${d.client_name}</div><div class="deal-date">${d.date}</div></div>
             <div class="status-badge ${st.cls}">${st.text}</div>
           </div>
           ${pendingNote}
-          ${(d.amount || d.commission) ? `<div class="deal-fin">
-            ${d.amount ? `<span class="fin-pill amount">💵 ${d.amount} ₪</span>` : ''}
-            ${d.commission ? `<span class="fin-pill commission">🎁 -${d.commission} ₪</span>` : ''}
-            ${(d.amount && d.commission) ? `<span class="fin-pill earned">✅ ${Math.round((d.amount - d.commission) * 10) / 10} ₪</span>` : ''}
-          </div>` : ''}
-          <div class="deal-info">
+            <div class="deal-info">
             ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
             <a href="${waLink}" class="deal-wa-link" target="_blank">${L.card_contact} ${d.client_name}: ${d.client_phone}</a>
           </div>
+          ${(d.amount || d.commission) ? `
+          <div class="deal-receipt">
+            ${d.amount ? `<div class="receipt-line"><span>💵 Сумма чека:</span><span>${d.amount} ₪</span></div>` : ''}
+            <div class="receipt-line agent">
+              <span>🎁 Бонус агенту:</span>
+              ${d.commission ? (isPending ? `<span class="unpaid-warn">-${d.commission} ₪ ⚠️</span>` : `<span class="paid-ok">-${d.commission} ₪ ✅</span>`) : '<span>—</span>'}
+            </div>
+            ${(d.amount && d.commission) ? `<div class="receipt-line total"><span>✅ Заработано:</span><span class="net-profit">${Math.round((d.amount - d.commission)*10)/10} ₪</span></div>` : ''}
+          </div>` : ''}
           ${manageBtn}
         </div>`;
       }).join('');
