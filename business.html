@@ -86,6 +86,11 @@
     .pay-btns { display: flex; gap: 8px; flex-wrap: wrap; }
     .pay-btn { flex: 1; min-width: 80px; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; text-align: center; }
     .pay-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+    .niche-checkboxes { display: flex; flex-direction: column; gap: 8px; }
+    .niche-checkbox-item { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: 0.2s; }
+    .niche-checkbox-item.checked { background: rgba(86,204,242,0.08); border-color: rgba(86,204,242,0.4); }
+    .niche-checkbox-item input[type=checkbox] { width: 18px; height: 18px; accent-color: #56CCF2; flex-shrink: 0; cursor: pointer; }
+    .niche-checkbox-item span { font-size: 0.9rem; font-weight: 600; color: #e0e0e0; }
     .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
     .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; align-items: flex-end; justify-content: center; }
@@ -197,10 +202,8 @@
         </select>
       </div>
       <div class="form-group" id="f_subniche_group" style="display:none;">
-        <label id="t_f_subniche">Специализация</label>
-        <select class="form-control" id="f_subniche">
-          <option value="" disabled selected>Выберите специализацию...</option>
-        </select>
+        <label id="t_f_subniche">Специализация <span style="font-size:0.75rem; color:var(--text-muted);">(можно выбрать несколько)</span></label>
+        <div class="niche-checkboxes" id="f_subniche_list"></div>
       </div>
       <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
       <div class="form-group">
@@ -468,7 +471,14 @@
 
     function renderProfile() {
       document.getElementById('pr_name').textContent = bizData.name || '—';
-      document.getElementById('pr_niche').textContent = bizData.niche || '—';
+      // niche — массив, показываем тегами
+      const nicheEl = document.getElementById('pr_niche');
+      const niches = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
+      if (niches.length > 0) {
+        nicheEl.innerHTML = niches.map(n => `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:#56CCF2;border-radius:8px;padding:2px 8px;font-size:0.8rem;margin:2px;">${n}</span>`).join(' ');
+      } else {
+        nicheEl.textContent = '—';
+      }
       document.getElementById('pr_comm').textContent = bizData.commission || '—';
       document.getElementById('pr_pay').textContent = bizData.payment_method || '—';
       document.getElementById('pr_phone').textContent = bizData.phone || '—';
@@ -483,14 +493,9 @@
       for (let i = 0; i < catSel.options.length; i++) {
         if (catSel.options[i].value === currentCat) { catSel.selectedIndex = i; break; }
       }
-      if (currentCat) updateEditSubcategories();
-      // Если нише есть подкатегория — выбираем её
-      const subSel = document.getElementById('f_subniche');
-      if (bizData.niche && subSel) {
-        for (let i = 0; i < subSel.options.length; i++) {
-          if (subSel.options[i].value === bizData.niche) { subSel.selectedIndex = i; break; }
-        }
-      }
+      // Парсим ниши (через запятую)
+      const currentNiches = bizData.niche ? bizData.niche.split(',').map(s => s.trim()).filter(Boolean) : [];
+      if (currentCat) updateEditSubcategories(currentNiches);
       document.getElementById('f_comm').value = bizData.commission || '';
       document.getElementById('f_link').value = bizData.business_info || '';
       // Кнопки оплаты
@@ -506,11 +511,11 @@
       const origText = btn.textContent;
       btn.textContent = i18n[currentLang].action_processing;
       btn.style.opacity = '0.7';
-      const subNicheEl = document.getElementById('f_subniche');
       const catEl = document.getElementById('f_niche');
+      const selectedSubs = getSelectedSubniches();
       const payload = {
         name: document.getElementById('f_name').value,
-        niche: (subNicheEl && subNicheEl.value) ? subNicheEl.value : (catEl ? catEl.value : ''),
+        niche: selectedSubs.length > 0 ? selectedSubs : (catEl && catEl.value ? [catEl.value] : []),
         category: catEl ? catEl.value : '',
         commission: document.getElementById('f_comm').value,
         payment_method: document.getElementById('f_pay').value,
@@ -625,21 +630,34 @@
       "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
     };
 
-    function updateEditSubcategories() {
+    function updateEditSubcategories(preselected = []) {
       const cat = document.getElementById('f_niche').value;
       const group = document.getElementById('f_subniche_group');
-      const sub = document.getElementById('f_subniche');
+      const list = document.getElementById('f_subniche_list');
       const subs = EDIT_SUBCATEGORIES[cat] || [];
-      sub.innerHTML = '<option value="" disabled selected>Выберите специализацию...</option>';
-      subs.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sub.appendChild(o); });
-      // Убираем инлайн стиль и меняем видимость через класс
-      if (subs.length > 0) {
-        group.removeAttribute('style');
-        group.style.display = 'block';
-        group.style.marginTop = '0';
-      } else {
-        group.style.display = 'none';
-      }
+      list.innerHTML = '';
+      subs.forEach(s => {
+        const item = document.createElement('label');
+        item.className = 'niche-checkbox-item' + (preselected.includes(s) ? ' checked' : '');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = s;
+        cb.checked = preselected.includes(s);
+        cb.addEventListener('change', () => {
+          item.classList.toggle('checked', cb.checked);
+        });
+        const span = document.createElement('span');
+        span.textContent = s;
+        item.appendChild(cb);
+        item.appendChild(span);
+        list.appendChild(item);
+      });
+      group.style.display = subs.length > 0 ? 'block' : 'none';
+    }
+
+    function getSelectedSubniches() {
+      const checkboxes = document.querySelectorAll('#f_subniche_list input[type=checkbox]:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
     }
 
     function selectPayMethod(method) {
