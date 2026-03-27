@@ -181,15 +181,24 @@
     }
 
     function extractNiches() {
-      const niches = [i18n[currentLang].filter_all];
-      allBusinesses.forEach(biz => { if (biz.niche && biz.niche !== '—' && !niches.includes(biz.niche)) niches.push(biz.niche); });
+      const cats = [i18n[currentLang].filter_all];
+      allBusinesses.forEach(biz => { 
+        if (biz.category && biz.category !== '—' && !cats.includes(biz.category)) {
+          cats.push(biz.category); 
+        }
+      });
       const container = document.getElementById('nicheFilters');
       container.innerHTML = '';
-      niches.forEach(niche => {
+      cats.forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = `filter-btn ${niche === currentNiche || (niche === i18n[currentLang].filter_all && currentNiche === 'Все') ? 'active' : ''}`;
-        btn.textContent = niche;
-        btn.onclick = () => { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentNiche = niche === i18n[currentLang].filter_all ? 'Все' : niche; renderCatalog(); };
+        btn.className = `filter-btn ${cat === currentNiche || (cat === i18n[currentLang].filter_all && currentNiche === 'Все') ? 'active' : ''}`;
+        btn.textContent = cat;
+        btn.onclick = () => { 
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
+          btn.classList.add('active'); 
+          currentNiche = cat === i18n[currentLang].filter_all ? 'Все' : cat; 
+          renderCatalog(); 
+        };
         container.appendChild(btn);
       });
     }
@@ -197,19 +206,38 @@
     function renderCatalog() {
       const grid = document.getElementById('catalogGrid');
       const query = document.getElementById('searchInput').value.toLowerCase();
+      
       const filtered = allBusinesses.filter(biz => {
-        const matchesSearch = biz.name.toLowerCase().includes(query) || (biz.business_info && biz.business_info.toLowerCase().includes(query));
-        return matchesSearch && (currentNiche === 'Все' || currentNiche === i18n[currentLang].filter_all || biz.niche === currentNiche);
+        const matchesSearch = biz.name.toLowerCase().includes(query) 
+          || (biz.business_info && biz.business_info.toLowerCase().includes(query))
+          || (biz.category && biz.category.toLowerCase().includes(query))
+          || (biz.niche && biz.niche.toLowerCase().includes(query));
+          
+        const matchesCat = (currentNiche === 'Все' || currentNiche === i18n[currentLang].filter_all || biz.category === currentNiche);
+        
+        return matchesSearch && matchesCat;
       });
+      
       grid.innerHTML = '';
-      if (filtered.length === 0) { grid.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">${i18n[currentLang].not_found}</div>`; return; }
+      if (filtered.length === 0) { 
+        grid.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">${i18n[currentLang].not_found}</div>`; 
+        return; 
+      }
       
       filtered.forEach(biz => {
         const card = document.createElement('div');
         card.className = 'biz-card';
         card.onclick = () => openRecommend(biz);
+        
+        const displayCat = biz.category || '';
+        const displayNiche = (biz.niche && biz.niche !== '—') ? ' / ' + biz.niche : '';
+        const fullNicheText = `${displayCat}${displayNiche}`.trim() || 'Бизнес';
+
         card.innerHTML = `
-          <div class="biz-header"><div class="biz-name">${biz.name}</div><div class="biz-niche">${biz.niche || 'Бизнес'}</div></div>
+          <div class="biz-header">
+            <div class="biz-name">${biz.name}</div>
+            <div class="biz-niche">${fullNicheText}</div>
+          </div>
           <div class="biz-reward">${i18n[currentLang].bonus} ${biz.commission || '...'}</div>
           ${biz.business_info ? `<div style="font-size: 0.85rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top:8px;">${biz.business_info}</div>` : ''}
         `;
