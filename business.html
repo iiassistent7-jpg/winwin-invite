@@ -117,6 +117,10 @@
     .fin-pill.amount { background: rgba(86,204,242,0.12); color: #56CCF2; border: 1px solid rgba(86,204,242,0.3); }
     .fin-pill.commission { background: rgba(235,87,87,0.12); color: #EB5757; border: 1px solid rgba(235,87,87,0.3); }
     .fin-pill.earned { background: rgba(39,174,96,0.12); color: #27AE60; border: 1px solid rgba(39,174,96,0.3); }
+    .debt-banner { background: rgba(235,87,87,0.1); border: 1px solid rgba(235,87,87,0.4); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .debt-banner .debt-label { color: #EB5757; font-size: 0.85rem; font-weight: 700; }
+    .debt-banner .debt-amount { color: #EB5757; font-size: 1.2rem; font-weight: 800; }
+    .deal-debt-tag { display: inline-block; background: rgba(235,87,87,0.12); color: #EB5757; border: 1px solid rgba(235,87,87,0.35); border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -144,6 +148,10 @@
     </div>
 
     <div id="tab_deals" class="tab-content active">
+      <div id="debtBanner" style="display:none;" class="debt-banner">
+        <span class="debt-label">🔴 Долг агентам:</span>
+        <span class="debt-amount" id="debtAmount">0 ₪</span>
+      </div>
       <div class="deals-filter">
         <button class="filter-btn active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
         <button class="filter-btn" onclick="setDealFilter('history')" id="t_filt_history">История</button>
@@ -424,8 +432,10 @@
         if (currentDealFilter === 'active' && !isPending) {
           manageBtn = `<button class="btn-action" onclick="openDealModal(${d.id})">${L.card_manage}</button>`;
         }
+        const debtTag = isPending && d.commission ? `<div class="deal-debt-tag">🔴 Долг: ${d.commission} ₪</div>` : '';
         const pendingNote = isPending ? `<div class="deal-pending-note">⏳ ${L.pending_note}</div>` : '';
         return `<div class="deal-card${isPending ? ' pending' : ''}">
+          ${debtTag}
           <div class="deal-header">
             <div><div class="deal-client">${d.client_name}</div><div class="deal-date">${d.date}</div></div>
             <div class="status-badge ${st.cls}">${st.text}</div>
@@ -480,6 +490,18 @@
       }, 50);
       animateValue("st_agents", 0, s.agents_count || 0, 1000);
       animateValue("st_avg_deal", 0, s.avg_deal || 0, 1000, " ₪");
+
+      // Долг агентам
+      const debt = s.pending_debt || 0;
+      const banner = document.getElementById('debtBanner');
+      if (banner) {
+        if (debt > 0) {
+          banner.style.display = 'flex';
+          document.getElementById('debtAmount').textContent = debt + ' ₪';
+        } else {
+          banner.style.display = 'none';
+        }
+      }
     }
 
     function renderProfile() {
