@@ -112,6 +112,11 @@
     .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .deal-fin { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .fin-pill { padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
+    .fin-pill.amount { background: rgba(86,204,242,0.12); color: #56CCF2; border: 1px solid rgba(86,204,242,0.3); }
+    .fin-pill.commission { background: rgba(235,87,87,0.12); color: #EB5757; border: 1px solid rgba(235,87,87,0.3); }
+    .fin-pill.earned { background: rgba(39,174,96,0.12); color: #27AE60; border: 1px solid rgba(39,174,96,0.3); }
   </style>
 </head>
 <body>
@@ -426,6 +431,11 @@
             <div class="status-badge ${st.cls}">${st.text}</div>
           </div>
           ${pendingNote}
+          ${(d.amount || d.commission) ? `<div class="deal-fin">
+            ${d.amount ? `<span class="fin-pill amount">💵 ${d.amount} ₪</span>` : ''}
+            ${d.commission ? `<span class="fin-pill commission">🎁 -${d.commission} ₪</span>` : ''}
+            ${(d.amount && d.commission) ? `<span class="fin-pill earned">✅ ${Math.round((d.amount - d.commission) * 10) / 10} ₪</span>` : ''}
+          </div>` : ''}
           <div class="deal-info">
             ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
             <a href="${waLink}" class="deal-wa-link" target="_blank">${L.card_contact} ${d.client_name}: ${d.client_phone}</a>
