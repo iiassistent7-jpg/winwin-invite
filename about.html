@@ -24,138 +24,123 @@
     [dir="rtl"] { text-align: right; }
     
     /* Декорации */
-    .glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); z-index: 0; opacity: 0.35; pointer-events: none; }
-    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(108, 99, 255, 0.25); }
-    .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: rgba(0, 212, 170, 0.2); }
+    .glow-blob { position: absolute; border-radius: 50%; filter: blur(150px); z-index: 0; opacity: 0.3; pointer-events: none; }
+    .blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: rgba(108, 99, 255, 0.2); }
+    .blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: rgba(0, 212, 170, 0.15); }
 
-    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 1; }
 
-    /* ── ШАПКА ИЗ INDEX.HTML ── */
-    .header { text-align: center; margin-bottom: 28px; padding-top: 32px; }
-    .lang-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-    .lang-btn { background: var(--card); border: 1px solid var(--card-border); border-radius: 999px; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; padding: 6px 14px; cursor: pointer; transition: 0.18s; }
+    /* Шапка */
+    .header { text-align: center; margin-bottom: 16px; padding-top: 24px; }
+    .lang-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .lang-btn { background: var(--card); border: 1px solid var(--card-border); border-radius: 999px; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; cursor: pointer; transition: 0.18s; }
     .lang-btn:hover, .lang-btn.active { background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(0,212,170,0.1)); border-color: rgba(108,99,255,0.5); color: var(--text-main); }
-    .logo-wrap { margin-bottom: 6px; }
+    .logo-wrap { margin-bottom: 4px; }
     .logo { font-size: clamp(2.2rem, 8vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; margin: 0; }
-    .logo-sub { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); display: block; margin-top: 6px; }
-    .tagline { margin-top: 16px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
-    .tagline strong { font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; margin-top: 2px; }
+    .logo-sub { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); display: block; margin-top: 6px; }
+    .tagline { margin-top: 12px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
+    .tagline strong { font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
 
     /* Hero */
-    .hero { padding: 40px 0 60px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px; }
+    .hero { padding: 24px 0 40px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .hero h1 { font-size: clamp(2.3rem, 6vw, 3.8rem); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
     .hero h1 span { color: var(--accent-1); }
     
-    .hero-icons { display: flex; justify-content: center; gap: 16px; margin-bottom: 28px; }
-    .hero-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--card); border: 1px solid var(--card-border); transition: 0.3s; cursor: pointer; }
-    .hero-icon:hover { transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-    .hero-icon svg { width: 28px; height: 28px; }
+    .hero-icons { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
+    .hero-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; background: var(--card); border: 1px solid var(--card-border); transition: 0.3s; cursor: pointer; }
+    .hero-icon:hover { transform: translateY(-3px); background: rgba(255,255,255,0.05); }
+    .hero-icon svg { width: 24px; height: 24px; }
 
-    .hero-desc-block { font-size: clamp(1.05rem, 2vw, 1.2rem); color: var(--text-muted); max-width: 800px; margin: 0 auto 40px auto; line-height: 1.65; }
-    .hero-desc-block p { margin-bottom: 12px; }
+    .hero-desc-block { font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-muted); max-width: 800px; margin: 0 auto 32px auto; line-height: 1.6; }
+    .hero-desc-block p { margin-bottom: 6px; }
     .hero-desc-block p:last-child { margin-bottom: 0; }
 
-    /* О нас / Стеклянные блоки */
-    #about { padding: 20px 0; scroll-margin-top: 40px; }
-    
-    .glass-block { 
-      background: var(--glass); 
-      border: 1px solid var(--glass-border); 
-      border-radius: 32px; 
-      padding: 48px; 
-      text-align: center; 
-      margin-bottom: 40px; 
-      position: relative; 
-      overflow: hidden; 
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    .glass-block h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 24px; color: var(--accent-1); letter-spacing: -0.5px; }
-    .glass-block p { font-size: 1.1rem; color: #e0e0e0; max-width: 800px; margin: 0 auto 12px auto; font-weight: 500; }
+    /* Стеклянные блоки */
+    #about { padding: 8px 0; scroll-margin-top: 40px; }
+    .glass-block { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 28px; padding: 32px; text-align: center; margin-bottom: 16px; position: relative; overflow: hidden; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .glass-block h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; color: var(--accent-1); letter-spacing: -0.5px; }
+    .glass-block p { font-size: 1rem; color: #e0e0e0; max-width: 800px; margin: 0 auto 6px auto; font-weight: 500; }
     .glass-block p:last-child { margin-bottom: 0; }
 
-    .exclusive-block { background: rgba(242, 201, 76, 0.02); border-color: rgba(242, 201, 76, 0.15); }
+    .exclusive-block { background: rgba(242, 201, 76, 0.01); border-color: rgba(242, 201, 76, 0.1); }
     .exclusive-block h2 { color: var(--gold); }
-    .exclusive-block p { color: rgba(255,255,255,0.95); }
 
     /* Роли */
-    .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 48px; }
-    .role-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 40px 32px; transition: 0.3s ease; display: flex; flex-direction: column; height: 100%; }
-    .role-card:hover { transform: translateY(-5px); border-color: rgba(108, 99, 255, 0.25); background: rgba(255,255,255,0.03); }
-    .role-icon { font-size: 3rem; margin-bottom: 20px; display: inline-block; }
-    .role-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: #fff; letter-spacing: -0.5px; }
-    .role-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; flex-grow: 1; }
-    .role-desc p { margin-bottom: 12px; }
+    .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .role-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; transition: 0.3s ease; display: flex; flex-direction: column; }
+    .role-card:hover { border-color: rgba(108, 99, 255, 0.2); background: rgba(255,255,255,0.03); }
+    .role-icon { font-size: 2.8rem; margin-bottom: 12px; display: inline-block; }
+    .role-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 12px; color: #fff; letter-spacing: -0.5px; }
+    .role-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; flex-grow: 1; }
+    .role-desc p { margin-bottom: 6px; }
     .role-desc p:last-child { margin-bottom: 0; }
     .role-highlight { color: #fff; font-weight: 600; }
 
-    .trust-block { background: rgba(39, 174, 96, 0.02); border-color: rgba(39, 174, 96, 0.2); }
-    .trust-icon { font-size: 3rem; margin-bottom: 16px; display: inline-block; }
+    .trust-block { background: rgba(39, 174, 96, 0.01); border-color: rgba(39, 174, 96, 0.15); }
+    .trust-icon { font-size: 2.8rem; margin-bottom: 12px; display: inline-block; }
     .trust-block h2 { color: var(--success); }
 
     /* Фишки платформы */
-    .features { margin-bottom: 80px; }
-    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .feat-card { display: flex; gap: 20px; align-items: flex-start; background: linear-gradient(135deg, var(--card), transparent); border: 1px solid var(--card-border); border-radius: 24px; padding: 32px; }
-    .feat-icon { font-size: 2.2rem; flex-shrink: 0; }
-    .feat-text h4 { font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; color: var(--accent-1); letter-spacing: -0.3px; }
-    .feat-text p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.65; }
+    .features { margin-bottom: 48px; }
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .feat-card { display: flex; gap: 16px; align-items: flex-start; background: linear-gradient(135deg, var(--card), transparent); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; }
+    .feat-icon { font-size: 2rem; flex-shrink: 0; }
+    .feat-text h4 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--accent-1); letter-spacing: -0.3px; }
+    .feat-text p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
     /* Цены */
-    .pricing { margin-bottom: 80px; }
-    .pricing-header { text-align: center; margin-bottom: 48px; font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+    .pricing { margin-bottom: 48px; }
+    .pricing-header { text-align: center; margin-bottom: 24px; font-size: clamp(2rem, 5vw, 2.5rem); font-weight: 800; letter-spacing: -1px; color: var(--accent-1); text-shadow: 0 0 20px rgba(108, 99, 255, 0.3); }
     
-    .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; align-items: stretch; }
+    .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; align-items: stretch; }
     
-    .price-card { background: rgba(255,255,255,0.01); border: 1px solid var(--card-border); border-radius: 24px; padding: 40px 32px; text-align: left; position: relative; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
-    .price-card:hover { border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+    .price-card { background: rgba(255,255,255,0.01); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; text-align: left; position: relative; display: flex; flex-direction: column; transition: 0.3s; }
+    .price-card:hover { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); }
     [dir="rtl"] .price-card { text-align: right; }
     
-    .price-card h3 { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .price-card h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
     
-    .price-card .amount { font-size: 2.8rem; font-weight: 900; color: #fff; margin-bottom: 16px; line-height: 1; letter-spacing: -1px; }
-    .price-card .amount .sub-amt { font-size: 1.1rem; color: var(--text-muted); display: block; margin-top: 6px; font-weight: 600; letter-spacing: 0; text-transform: none;}
+    .price-card .amount { font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1; letter-spacing: -1px; }
+    .price-card .amount .sub-amt { font-size: 1rem; color: var(--text-muted); display: block; margin-top: 2px; font-weight: 600; letter-spacing: 0; text-transform: none;}
     
-    /* Стили для тарифов */
-    .price-card.standard { border-color: rgba(108,99,255,0.15); background: linear-gradient(135deg, rgba(108,99,255,0.03), transparent); }
+    .price-card.standard { border-color: rgba(108,99,255,0.1); background: linear-gradient(135deg, rgba(108,99,255,0.02), transparent); }
     .price-card.standard .amount { color: var(--accent-1); }
     .price-card.standard .amount .sub-amt { display: inline; color: var(--text-muted); }
     
-    /* Бейдж 10 бесплатных сделок */
-    .free-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(39, 174, 96, 0.1); color: var(--success); border: 1px solid rgba(39, 174, 96, 0.2); padding: 8px 16px; border-radius: 999px; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; }
-    .free-badge svg { width: 18px; height: 18px; fill: var(--success); }
+    .free-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(39, 174, 96, 0.1); color: var(--success); border: 1px solid rgba(39, 174, 96, 0.2); padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
+    .free-badge svg { width: 16px; height: 16px; fill: var(--success); }
     
-    .price-card.pro { border-color: rgba(155, 81, 224, 0.3); background: linear-gradient(135deg, rgba(155, 81, 224, 0.08), transparent); }
-    .price-card.pro::before { content: 'VIP'; position: absolute; top: 20px; right: 20px; background: var(--pro); color: #fff; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; letter-spacing: 1px; }
-    [dir="rtl"] .price-card.pro::before { right: auto; left: 20px; }
+    .price-card.pro { border-color: rgba(155, 81, 224, 0.25); background: linear-gradient(135deg, rgba(155, 81, 224, 0.05), transparent); }
+    .price-card.pro::before { content: 'VIP'; position: absolute; top: 16px; right: 16px; background: var(--pro); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; letter-spacing: 1px; }
+    [dir="rtl"] .price-card.pro::before { right: auto; left: 16px; }
     .price-card.pro .amount { color: #d4afff; }
     .price-card.pro .amount .sub-amt { display: inline; color: rgba(255,255,255,0.6); }
     
-    .price-card p { color: var(--text-muted); line-height: 1.65; margin-bottom: 24px; font-size: 0.95rem; flex-grow: 1;}
+    .price-card p { color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; font-size: 0.9rem; flex-grow: 1;}
     
-    .feature-list { list-style: none; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--card-border); }
-    .feature-list li { margin-bottom: 14px; font-size: 0.9rem; color: #e0e0e0; display: flex; gap: 12px; align-items: flex-start; line-height: 1.4; }
+    .feature-list { list-style: none; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--card-border); }
+    .feature-list li { margin-bottom: 8px; font-size: 0.85rem; color: #e0e0e0; display: flex; gap: 10px; align-items: flex-start; line-height: 1.4; }
     .feature-list li:last-child { margin-bottom: 0; }
     
-    /* Иконки чекбоксов */
-    .check-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: var(--success); }
-    .lock-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: var(--accent-1); }
+    .check-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: var(--success); opacity: 0.9; }
+    .lock-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: var(--text-muted); opacity: 0.6; }
+    .locked-feature { color: var(--text-muted); opacity: 0.6; }
 
     /* CTA Секция */
-    .cta { text-align: center; padding: 80px 0 120px 0; border-top: 1px solid var(--card-border); }
-    .cta h2 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; margin-bottom: 32px; letter-spacing: -1px; }
-    .btn-main { display: inline-flex; align-items: center; justify-content: center; padding: 20px 48px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 700; border-radius: 999px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3); cursor: pointer; border: none; }
+    .cta { text-align: center; padding: 48px 0 80px 0; border-top: 1px solid var(--card-border); }
+    .cta h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 900; margin-bottom: 16px; letter-spacing: -1px; }
+    .btn-main { display: inline-flex; align-items: center; justify-content: center; padding: 16px 40px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #fff; text-decoration: none; font-size: 1.1rem; font-weight: 700; border-radius: 999px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3); cursor: pointer; border: none; }
     .btn-main:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(108, 99, 255, 0.5); }
 
     @media (max-width: 768px) {
-      .glass-block, .roles-grid { padding: 32px 20px; }
-      .glass-block h2 { font-size: 1.8rem; }
-      .glass-block p { font-size: 1rem; }
-      .role-card { padding: 32px 24px; }
-      .feat-card, .price-card { padding: 24px; }
-      .price-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-      .feat-grid { grid-template-columns: 1fr; }
+      .container { padding: 0 16px; }
+      .glass-block, .roles-grid { padding: 24px 16px; }
+      .glass-block h2 { font-size: 1.7rem; }
+      .role-card { padding: 24px; }
+      .feat-card, .price-card { padding: 24px 16px; }
+      .price-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; gap: 16px; }
+      .feature-list li { gap: 8px; font-size: 0.8rem; }
+      .check-icon, .lock-icon { width: 16px; height: 16px; }
     }
   </style>
 </head>
@@ -209,13 +194,13 @@
       <div class="roles-grid">
         <div class="role-card">
           <div class="role-icon">🤝</div>
-          <h3 class="role-title" id="t_role_agent_t">Агент (Рекомендатель)</h3>
+          <h3 class="role-title" id="t_role_agent_t">Довольный клиент (Рекомендатель)</h3>
           <div class="role-desc" id="t_role_agent_d"></div>
         </div>
 
         <div class="role-card">
           <div class="role-icon">🏢</div>
-          <h3 class="role-title" id="t_role_biz_t">Бизнес (Исполнитель)</h3>
+          <h3 class="role-title" id="t_role_biz_t">Владелец бизнеса</h3>
           <div class="role-desc" id="t_role_biz_d"></div>
         </div>
 
@@ -254,7 +239,7 @@
         <div class="feat-card">
           <div class="feat-icon">🌟</div>
           <div class="feat-text">
-            <h4 id="t_f2_title">Зал Славы Агентов</h4>
+            <h4 id="t_f2_title">Зал Славы</h4>
             <div id="t_f2_desc"></div>
           </div>
         </div>
@@ -273,18 +258,25 @@
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p1_li1"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p1_li2"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p1_li3"></span></li>
+            <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p1_li4"></span></li>
+            <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p1_li5"></span></li>
           </ul>
         </div>
 
         <div class="price-card standard">
-          <h3 id="t_p2_title">Бизнес (Старт / Стандарт)</h3>
-          <div class="free-badge"><svg viewBox="0 0 24 24"><path d="M20.22 6.46 12 2 3.78 6.46a2 2 0 0 0-1 1.74v8.6a2 2 0 0 0 1 1.74L12 22l8.22-4.46a2 2 0 0 0 1-1.74v-8.6a2 2 0 0 0-1-1.74ZM12 4.13l6.54 3.63L12 11.39 5.46 7.76ZM12 20l-6.54-3.56v-6.91L12 13.1l6.54-3.57v6.91Z"/></svg><span id="t_p2_free">🎁 10 сделок бесплатно</span></div>
+          <h3 id="t_p2_title">Бизнес (Стандарт)</h3>
+          <div class="free-badge"><svg viewBox="0 0 24 24"><path d="M20.22 6.46 12 2 3.78 6.46a2 2 0 0 0-1 1.74v8.6a2 2 0 0 0 1 1.74L12 22l8.22-4.46a2 2 0 0 0 1-1.74v-8.6a2 2 0 0 0-1-1.74ZM12 4.13l6.54 3.63L12 11.39 5.46 7.76ZM12 20l-6.54-3.56v-6.91L12 13.1l6.54-3.57v6.91Z"/></svg><span id="t_p2_free"></span></div>
           <div class="amount" id="t_p2_amt">99 ₪ <span class='sub-amt'>/ мес</span></div>
           <p id="t_p2_desc"></p>
           <ul class="feature-list">
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p2_li1"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p2_li2"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p2_li3"></span></li>
+            <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p2_li4"></span></li>
+            
+            <li class="locked-feature"><svg class="lock-icon" viewBox="0 0 20 20"><path d="M15.833 7.5H14.167V5.833a4.167 4.167 0 10-8.334 0V7.5H4.167A1.667 1.667 0 002.5 9.167v6.666A1.667 1.667 0 004.167 17.5h11.666a1.667 1.667 0 001.667-1.667V9.167A1.667 1.667 0 0015.833 7.5zm-5.833 6.667a1.667 1.667 0 111.667-1.667 1.667 1.667 0 01-1.667 1.667zm2.5-6.667H7.5V5.833a2.5 2.5 0 115 0z"/></svg><span id="t_p2_li5"></span></li>
+            <li class="locked-feature"><svg class="lock-icon" viewBox="0 0 20 20"><path d="M15.833 7.5H14.167V5.833a4.167 4.167 0 10-8.334 0V7.5H4.167A1.667 1.667 0 002.5 9.167v6.666A1.667 1.667 0 004.167 17.5h11.666a1.667 1.667 0 001.667-1.667V9.167A1.667 1.667 0 0015.833 7.5zm-5.833 6.667a1.667 1.667 0 111.667-1.667 1.667 1.667 0 01-1.667 1.667zm2.5-6.667H7.5V5.833a2.5 2.5 0 115 0z"/></svg><span id="t_p2_li6"></span></li>
+            <li class="locked-feature"><svg class="lock-icon" viewBox="0 0 20 20"><path d="M15.833 7.5H14.167V5.833a4.167 4.167 0 10-8.334 0V7.5H4.167A1.667 1.667 0 002.5 9.167v6.666A1.667 1.667 0 004.167 17.5h11.666a1.667 1.667 0 001.667-1.667V9.167A1.667 1.667 0 0015.833 7.5zm-5.833 6.667a1.667 1.667 0 111.667-1.667 1.667 1.667 0 01-1.667 1.667zm2.5-6.667H7.5V5.833a2.5 2.5 0 115 0z"/></svg><span id="t_p2_li7"></span></li>
           </ul>
         </div>
 
@@ -297,7 +289,6 @@
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p3_li2"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p3_li3"></span></li>
             <li><svg class="check-icon" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1010 10A10.011 10.011 0 0010 0zm3.95 7.478l-4.929 6.16a.494.494 0 01-.385.185.5.5 0 01-.383-.183L6.05 11.31a.5.5 0 01.766-.642l1.861 2.21 4.54-5.672a.5.5 0 11.773.614z"/></svg><span id="t_p3_li4"></span></li>
-            <li style="color:var(--text-main); font-weight:600;"><svg class="lock-icon" viewBox="0 0 20 20"><path d="M15.833 7.5H14.167V5.833a4.167 4.167 0 10-8.334 0V7.5H4.167A1.667 1.667 0 002.5 9.167v6.666A1.667 1.667 0 004.167 17.5h11.666a1.667 1.667 0 001.667-1.667V9.167A1.667 1.667 0 0015.833 7.5zm-5.833 6.667a1.667 1.667 0 111.667-1.667 1.667 1.667 0 01-1.667 1.667zm2.5-6.667H7.5V5.833a2.5 2.5 0 115 0z"/></svg><span id="t_p3_li5">🔒 Эксклюзив: Доступ к топу агентов</span></li>
           </ul>
         </div>
 
@@ -324,11 +315,11 @@
         excl_title: "Это место не для всех",
         excl_text: "<p>Мы создали эту платформу исключительно для тех, кто обладает действительно качественным продуктом или сервисом.</p><p>Если вы делаете свою работу на 10/10, клиенты сами захотят вас рекомендовать.</p><p>Научите их это делать на этой платформе и они будут это делать с удовольствием.</p><p>Здесь только те, кого рекомендуют, посредственность здесь не задерживается.</p>",
         
-        role_agent_t: "Агент (Рекомендатель)",
-        role_agent_d: "<p>Знаете крутого специалиста?</p><p>Отправьте другу ссылку или покажите QR-код.</p><p>Когда сделка состоится, бизнес выплатит вам благодарность.</p><p>Вы можете забрать бонус себе, <span class='role-highlight'>сделать скидку-подарок другу</span> или отказаться от него, чтобы просто <span class='role-highlight'>поддержать бизнес</span>.</p><p>Это история про взаимопомощь.</p>",
+        role_agent_t: "Довольный клиент (Рекомендатель)",
+        role_agent_d: "<p>Знаете крутого специалиста?</p><p>Отправьте другу ссылку или покажите QR-код.</p><p>Когда сделка состоится, владелец бизнеса начислит вам бонус.</p><p>Вы можете забрать бонус себе, <span class='role-highlight'>сделать скидку-подарок другу</span> или отказаться от него, чтобы просто <span class='role-highlight'>поддержать бизнес</span>.</p><p>Это история про взаимопомощь.</p>",
         
-        role_biz_t: "Бизнес (Исполнитель)",
-        role_biz_d: "<p>Дополните свои рекламные каналы самым мощным инструментом — оцифрованным и прозрачным сарафанным радио, доступным для всех.</p><p>В Win-Win ваши лояльные клиенты становятся амбассадорами.</p><p>Вы платите комиссию (или дарите подарок) <span class='role-highlight'>только по факту успешно закрытой сделки</span> и сами устанавливаете размер и форму благодарности.</p>",
+        role_biz_t: "Владелец бизнеса",
+        role_biz_d: "<p>Дополните свои рекламные каналы самым мощным инструментом — оцифрованным и прозрачным сарафанным радио, доступным для всех.</p><p>В Win-Win ваши лояльные клиенты становятся амбассадорами.</p><p>Вы дарите бонус или скидку <span class='role-highlight'>только по факту успешно закрытой сделки</span> и сами устанавливаете размер благодарности.</p>",
         
         role_client_t: "Клиент (Гость)",
         role_client_d: "<p>Больше не нужно гадать, хороший ли это салон или компетентный ли адвокат.</p><p>В наш каталог бизнесы попадают, <span class='role-highlight'>только если их рекомендуют реальные люди</span>.</p><p>Приходя от друга-агента, вы часто получаете особое VIP-отношение и приятные бонусы.</p>",
@@ -339,28 +330,42 @@
         f1_title: "Умный рейтинг бизнесов",
         f1_desc: "<p>Рейтинги строятся не на субъективных «звёздочках» и купленных отзывах, а на сухих фактах: количестве успешно закрытых сделок внутри узкой подкатегории.</p><p>Чем больше рекомендаций — тем больше сделок.</p><p>Чем больше сделок, тем надёжнее и привлекательнее бизнес для новых рекомендаций.</p>",
         
-        f2_title: "Зал Славы Агентов",
+        f2_title: "Зал Славы",
         f2_desc: "<p>Доска почета для самых активных рекомендателей клуба.</p><p>Помогите тому бизнесу, которым довольны, развиваться и расти.</p><p>Соревнуйтесь, поднимайтесь в Топ и монетизируйте свой социальный капитал.</p>",
         
         f3_title: "Кросс-продажи (Партнерство)",
-        f3_desc: "<p>Создавайте союзы с бизнесами из смежных ниш.</p><p>Риелтор рекомендует ремонтника, ремонтник — дизайнера.</p><p>Обменивайтесь клиентами и получайте комиссию, расширяя свою сеть без затрат на рекламу.</p>",
+        f3_desc: "<p>Создавайте союзы с бизнесами из смежных ниш.</p><p>Риелтор рекомендует ремонтника, ремонтник — дизайнера.</p><p>Обменивайтесь клиентами и получайте бонус за рекомендацию, расширяя свою сеть без затрат на рекламу.</p>",
         
         price_title: "Сколько это стоит?",
+        
         p1_title: "Для агентов и клиентов",
         p1_amt: "Бесплатно",
         p1_desc: "Использование платформы, каталога и личного кабинета абсолютно бесплатно. Никаких скрытых условий.",
-        p1_li1: "Неограниченные рекомендации", p1_li2: "Вывод средств напрямую от бизнеса", p1_li3: "Участие в рейтингах и Зале Славы",
+        p1_li1: "Неограниченные рекомендации", 
+        p1_li2: "Неограниченный доступ к каталогу", 
+        p1_li3: "Доступ к рейтингу бизнесов",
+        p1_li4: "Участие в рейтингах и Зале Славы",
+        p1_li5: "Поддержка 24/7",
         
         p2_title: "Бизнес (Стандарт)",
-        p2_free: "10 сделок бесплатно",
+        p2_free: "🎁 10 сделок бесплатно",
         p2_amt: "99 ₪ <span class='sub-amt'>/ мес</span>",
-        p2_desc: "Честный тест-драйв. Вы платите комиссию агентам только за успешно закрытые сделки.",
-        p2_li1: "Карточка в умном Каталоге", p2_li2: "CRM-доска управления лидами", p2_li3: "Безлимитное количество агентов",
+        p2_desc: "Честный тест-драйв. Вы благодарите рекомендателей только за успешно закрытые сделки.",
+        p2_li1: "Карточка в умном Каталоге", 
+        p2_li2: "CRM-доска управления лидами", 
+        p2_li3: "Безлимитное количество агентов",
+        p2_li4: "Поддержка Винса 24/7",
+        p2_li5: "Расширенная аналитика и экспорт базы",
+        p2_li6: "Нативные рекомендации от ИИ-консьержа",
+        p2_li7: "Эксклюзив: Доступ к топу агентов",
         
         p3_title: "Бизнес PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ мес</span>",
         p3_desc: "Для профессионалов, которым нужен максимальный контроль и поток клиентов.",
-        p3_li1: "Всё из тарифа Стандарт", p3_li2: "Расширенная аналитика и экспорт базы", p3_li3: "Нативные рекомендации от ИИ Винса", p3_li4: "Приоритетная поддержка 24/7", p3_li5: "🔒 Эксклюзив: Доступ к топу агентов",
+        p3_li1: "Всё из тарифа Стандарт", 
+        p3_li2: "Расширенная аналитика и экспорт базы", 
+        p3_li3: "Нативные рекомендации от ИИ-консьержа", 
+        p3_li4: "Эксклюзив: Доступ к топу агентов", 
         
         cta_title: "Станьте частью экосистемы",
         btn_join: "Присоединиться к Win-Win"
@@ -373,34 +378,51 @@
         mission_text: "<p>Our mission is to give a voice to true professionals.</p><p>In a world where ratings are manipulated and ads cost a fortune, we return value to the most sincere format: human-to-human recommendation.</p><p>No cold sales.</p><p>Just an honest Win-Win.</p>",
         excl_title: "This place is not for everyone",
         excl_text: "<p>We created this platform exclusively for those with a truly high-quality product or service.</p><p>If you do your job 10/10, clients will want to recommend you.</p><p>Teach them to do it here, and they will do it gladly.</p><p>Mediocrity doesn't last here.</p>",
-        role_agent_t: "Agent (Referrer)",
-        role_agent_d: "<p>Know a great specialist?</p><p>Send a friend a link or show a QR code.</p><p>When the deal happens, the business rewards you.</p><p>You can keep the bonus, <span class='role-highlight'>give it as a discount to a friend</span>, or decline it just to <span class='role-highlight'>support the business</span>.</p><p>It's a story of mutual help.</p>",
-        role_biz_t: "Business (Provider)",
-        role_biz_d: "<p>Complement your ad channels with the most powerful tool — digitized, transparent word-of-mouth.</p><p>In Win-Win, loyal clients become ambassadors.</p><p>You pay a commission (or gift) <span class='role-highlight'>only for a successfully closed deal</span> and set the reward yourself.</p>",
+        role_agent_t: "Happy Client (Referrer)",
+        role_agent_d: "<p>Know a great specialist?</p><p>Send a friend a link or show a QR code.</p><p>When the deal happens, the business owner will reward you.</p><p>You can keep the bonus, <span class='role-highlight'>give it as a discount to a friend</span>, or decline it just to <span class='role-highlight'>support the business</span>.</p><p>It's a story of mutual help.</p>",
+        role_biz_t: "Business Owner",
+        role_biz_d: "<p>Complement your ad channels with the most powerful tool — digitized, transparent word-of-mouth.</p><p>In Win-Win, loyal clients become ambassadors.</p><p>You give a bonus or gift <span class='role-highlight'>only for a successfully closed deal</span> and set the reward yourself.</p>",
         role_client_t: "Client (Guest)",
         role_client_d: "<p>No more guessing if a salon is good or a lawyer is competent.</p><p>Businesses enter our catalog <span class='role-highlight'>only if real people recommend them</span>.</p><p>Coming from an agent friend often gets you special VIP treatment and bonuses.</p>",
         trust_title: "We do not touch your money",
         trust_text: "<p>The platform does not pass your money through itself.</p><p>All payments for services and bonus payouts happen strictly directly between the business, client, and agent.</p><p>Our task is to give you a convenient tool for tracking recommendations. And our guarantee is strict control.</p><p>Anyone who decides to deceive a partner permanently loses access to the catalog and the flow of new clients.</p>",
         f1_title: "Smart Business Rating",
         f1_desc: "<p>Ratings rely on hard facts: the number of successfully closed deals within a specific subcategory.</p><p>More recommendations = more deals.</p><p>More deals make the business more reliable and attractive for new referrals.</p>",
-        f2_title: "Agents Hall of Fame",
+        f2_title: "Hall of Fame",
         f2_desc: "<p>An honor board for the club's most active referrers.</p><p>Help businesses you like grow.</p><p>Compete, rise to the Top, and monetize your social capital.</p>",
         f3_title: "Cross-Selling (Partnership)",
-        f3_desc: "<p>Form alliances with businesses in related niches.</p><p>A realtor recommends a repairman, a repairman recommends a designer.</p><p>Exchange clients and earn commissions.</p>",
+        f3_desc: "<p>Form alliances with businesses in related niches.</p><p>A realtor recommends a repairman, a repairman recommends a designer.</p><p>Exchange clients and earn bonuses.</p>",
         price_title: "How much does it cost?",
-        p1_title: "For Agents and Clients",
+        
+        p1_title: "For Clients and Referrers",
         p1_amt: "Free",
-        p1_desc: "Using the platform, catalog and dashboard is absolutely free. No hidden conditions.",
-        p1_li1: "Unlimited recommendations", p1_li2: "Direct payouts from business", p1_li3: "Participation in Hall of Fame",
+        p1_desc: "Using the platform, catalog and personal account is absolutely free. No hidden conditions.",
+        p1_li1: "Unlimited recommendations", 
+        p1_li2: "Unlimited catalog access", 
+        p1_li3: "Access to business ratings",
+        p1_li4: "Participation in Hall of Fame",
+        p1_li5: "24/7 Support",
+        
         p2_title: "Business (Standard)",
-        p2_free: "10 deals free",
+        p2_free: "🎁 10 deals free",
         p2_amt: "99 ₪ <span class='sub-amt'>/ mo</span>",
-        p2_desc: "Honest test drive. You pay agents only for successfully closed deals.",
-        p2_li1: "Smart Catalog profile", p2_li2: "CRM board for leads", p2_li3: "Unlimited agents",
+        p2_desc: "Honest test drive. You reward referrers only for successfully closed deals.",
+        p2_li1: "Smart Catalog profile", 
+        p2_li2: "CRM board for leads", 
+        p2_li3: "Unlimited referrers",
+        p2_li4: "Vince Support 24/7",
+        p2_li5: "Extended analytics and export",
+        p2_li6: "Native AI-concierge recommendations",
+        p2_li7: "Exclusive: Access to Top Referrers",
+        
         p3_title: "Business PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ mo</span>",
         p3_desc: "For professionals who need maximum control and client flow.",
-        p3_li1: "Everything in Standard", p3_li2: "Extended analytics and export", p3_li3: "Native AI recommendations", p3_li4: "Priority 24/7 support", p3_li5: "🔒 Exclusive: Access to Top Agents",
+        p3_li1: "Everything in Standard", 
+        p3_li2: "Extended analytics and data export", 
+        p3_li3: "Native AI-concierge recommendations", 
+        p3_li4: "Exclusive: Access to Top Referrers", 
+        
         cta_title: "Join the ecosystem",
         btn_join: "Join Win-Win"
       },
@@ -412,35 +434,60 @@
         mission_text: "<p>המשימה שלנו לתת קול למקצוענים אמיתיים.</p><p>בעולם של דירוגים מזויפים ופרסומות יקרות, אנו מחזירים ערך לפורמט הכנה ביותר: המלצה מאדם לאדם.</p><p>בלי מכירות קרות.</p><p>רק Win-Win אמיתי.</p>",
         excl_title: "המקום הזה אינו לכולם",
         excl_text: "<p>הפלטפורמה נוצרה אך ורק עבור בעלי שירות או מוצר איכותי באמת.</p><p>אם העבודה שלך היא 10/10, הלקוחות ירצו להמליץ עליך בעצמם.</p><p>למדו אותם לעשות זאת כאן והם יעשו זאת בשמחה.</p><p>בינוניות לא מחזיקה כאן מעמד.</p>",
-        role_agent_t: "סוכן (ממליץ)",
-        role_agent_d: "<p>מכירים מומחה?</p><p>שלחו קישור או הראו קוד QR.</p><p>כשהעסקה נסגרת, העסק משלם תגמול.</p><p>אפשר לשמור, <span class='role-highlight'>להעניק הנחה לחבר</span> או לוותר כדי <span class='role-highlight'>לתמוך בעסק</span>.</p><p>זה סיפור על עזרה הדדית.</p>",
-        role_biz_t: "עסק (מבצע)",
-        role_biz_d: "<p>השלימו את ערוצי הפרסום עם מפה לאוזן דיגיטלי ושקוף.</p><p>ב-Win-Win הלקוחות הופכים לשגרירים.</p><p>משלמים <span class='role-highlight'>רק על עסקה שנסגרה בהצלחה</span> ואתם קובעים את התגמול.</p>",
+        
+        role_agent_t: "לקוח מרוצה (ממליץ)",
+        role_agent_d: "<p>מכירים מומחה?</p><p>שלחו קישור או הראו קוד QR.</p><p>כשהעסקה נסגרת, בעל העסק מעניק לכם הטבה על המלצה.</p><p>אפשר לשמור את ההטבה, <span class='role-highlight'>להעניק הנחה לחבר</span> או לוותר כדי <span class='role-highlight'>לתמוך בעסק</span>.</p><p>זה סיפור על עזרה הדדית.</p>",
+        
+        role_biz_t: "בעל עסק",
+        role_biz_d: "<p>השלימו את ערוצי הפרסום עם מפה לאוזן דיגיטלי ושקוף.</p><p>ב-Win-Win הלקוחות הופכים לשגרירים.</p><p>אתם מעניקים הטבה על המלצה (או מתנה) <span class='role-highlight'>רק על עסקה שנסגרה בהצלחה</span> ואתם קובעים את גובה ההטבה.</p>",
+        
         role_client_t: "לקוח (אורח)",
         role_client_d: "<p>לא צריך יותר לנחש.</p><p>עסקים נכנסים לקטלוג שלנו <span class='role-highlight'>רק אם אנשים אמיתיים ממליצים עליהם</span>.</p><p>כשמגיעים דרך חבר, לרוב מקבלים יחס VIP ובונוסים.</p>",
+        
         trust_title: "אנחנו לא נוגעים בכסף שלכם",
-        trust_text: "<p>הפלטפורמה לא מעבירה את הכסף שלכם דרכה.</p><p>כל התשלומים ותשלומי הבונוסים מתבצעים ישירות בין העסק, הלקוח והסוכן.</p><p>המשימה שלנו היא לתת כלי למעקב אחר המלצות. והאחריות שלנו היא בקרה קפדנית.</p><p>מי שמרמה שותף, מאבד לצמיתות את הגישה ללקוחות חדשים.</p>",
+        trust_text: "<p>הפלטפורמה לא מעבירה את הכסף שלכם דרכה.</p><p>כל התשלומים וההטבות מתבצעים ישירות בין העסק, הלקוח והממליץ.</p><p>המשימה שלנו היא לתת כלי למעקב אחר המלצות. והאחריות שלנו היא בקרה קפדנית.</p><p>מי שמרמה שותף, מאבד לצמיתות את הגישה לקטלוג.</p>",
+
         f1_title: "דירוג עסקים חכם",
         f1_desc: "<p>הדירוג מבוסס על עובדות: עסקאות שנסגרו בהצלחה בתת-קטגוריה ספציפית.</p><p>יותר המלצות = יותר עסקאות.</p><p>יותר עסקאות = עסק אמין ואטרקטיבי יותר.</p>",
-        f2_title: "היכל התהילה לסוכנים",
+        
+        f2_title: "היכל התהילה",
         f2_desc: "<p>לוח כבוד לממליצים הפעילים ביותר.</p><p>עזרו לעסקים שאתם אוהבים לצמוח.</p><p>התחרו, עקפו אחרים והרוויחו מההון החברתי שלכם.</p>",
+        
         f3_title: "מכירות צולבות (שותפות)",
-        f3_desc: "<p>צרו בריתות עם עסקים משיקים.</p><p>מתווך ממליץ על שיפוצניק, ושיפוצניק על מעצב.</p><p>החליפו לקוחות וקבלו עמלות ללא הוצאות פרסום.</p>",
+        f3_desc: "<p>צרו בריתות עם עסקים משיקים.</p><p>מתווך ממליץ על שיפוצניק, ושיפוצניק על מעצב.</p><p>החליפו לקוחות וקבלו הטבות ללא הוצאות פרסום.</p>",
+        
         price_title: "כמה זה עולה?",
-        p1_title: "לסוכנים ולקוחות",
+        
+        p1_title: "ללקוחות וממליצים",
         p1_amt: "חינם",
-        p1_desc: "השימוש בפלטפורמה, בקטלוג ובלוח הבקרה הוא בחינם לחלוטין. ללא תנאים נסתרים.",
-        p1_li1: "המלצות ללא הגבלה", p1_li2: "תשלום ישירות מהעסק", p1_li3: "השתתפות בדירוגים",
+        p1_desc: "השימוש בפלטפורמה, בקטלוג ובחשבון האישי הוא בחינם לחלוטין. ללא תנאים נסתרים.",
+        p1_li1: "המלצות ללא הגבלה", 
+        p1_li2: "גישה חופשית לקטלוג", 
+        p1_li3: "גישה לדירוג העסקים",
+        p1_li4: "השתתפות בהיכל התהילה",
+        p1_li5: "תמיכה 24/7",
+        
         p2_title: "עסקים (Standard)",
-        p2_free: "10 עסקאות חינם",
+        p2_free: "🎁 10 עסקאות חינם",
         p2_amt: "99 ₪ <span class='sub-amt'>/ חודש</span>",
-        p2_desc: "נסיעת מבחן הוגנת. משלמים עמלה רק על סגירה מוצלחת.",
-        p2_li1: "פרופיל בקטלוג החכם", p2_li2: "לוח ניהול לידים CRM", p2_li3: "סוכנים ללא הגבלה",
+        p2_desc: "נסיעת מבחן הוגנת. מתגמלים ממליצים רק על סגירה מוצלחת.",
+        p2_li1: "פרופיל בקטלוג החכם", 
+        p2_li2: "לוח ניהול לידים CRM", 
+        p2_li3: "לקוחות ממליצים ללא הגבלה",
+        p2_li4: "תמיכה מווינס 24/7",
+        p2_li5: "אנליטיקה מתקדמת וייצוא",
+        p2_li6: "המלצות טבעיות מסוכן ה-AI",
+        p2_li7: "בלעדי: גישה לטופ הממליצים",
+        
         p3_title: "עסקים PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ חודש</span>",
         p3_desc: "למקצוענים שרוצים שליטה מקסימלית וזרימת לקוחות.",
-        p3_li1: "כל הפיצ'רים מהסטנדרט", p3_li2: "אנליטיקה מתקדמת וייצוא", p3_li3: "המלצות בינה מלאכותית", p3_li4: "תמיכה מועדפת 24/7", p3_li5: "🔒 בלעדי: גישה לסוכנים המובילים",
-        cta_title: "הפכו לחלק מהמערכת",
+        p3_li1: "כל הפיצ'רים מהסטנדרט", 
+        p3_li2: "אנליטיקה מתקדמת וייצוא נתונים", 
+        p3_li3: "המלצות טבעיות מסוכן ה-AI", 
+        p3_li4: "בלעדי: גישה לטופ הממליצים", 
+        
+        cta_title: "הפכו לחלק מהמערכת האקולוגית",
         btn_join: "הצטרף ל-Win-Win"
       },
       ar: {
@@ -451,34 +498,51 @@
         mission_text: "<p>مهمتنا إعطاء صوت للمحترفين الحقيقيين.</p><p>في عالم يتم فيه التلاعب بالتقييمات، نعيد القيمة للتوصية الصادقة من إنسان لإنسان.</p><p>لا مبيعات باردة.</p><p>فقط Win-Win عادل.</p>",
         excl_title: "هذا المكان ليس للجميع",
         excl_text: "<p>تم إنشاء المنصة حصريًا لأصحاب المنتجات أو الخدمات العالية الجودة.</p><p>إذا كان عملك 10/10، سيرغب العملاء في التوصية بك.</p><p>علّمهم القيام بذلك هنا، وسيفعلون ذلك بكل سرور.</p><p>لا مكان للرداءة هنا.</p>",
-        role_agent_t: "الوكيل (الموصي)",
-        role_agent_d: "<p>تعرف خبيراً؟</p><p>أرسل رابطاً أو اعرض رمز QR.</p><p>عند إتمام الصفقة، تدفع لك الشركة مكافأة.</p><p>يمكنك أخذها، <span class='role-highlight'>أو إهداؤها كخصم لصديق</span>، أو التنازل <span class='role-highlight'>لدعم الشركة</span>.</p><p>إنها قصة مساعدة متبادلة.</p>",
-        role_biz_t: "الشركة (المنفذ)",
-        role_biz_d: "<p>أكمل إعلاناتك بأقوى أداة — التسويق الشفهي الرقمي والشفاف.</p><p>يصبح عملاؤك سفراء لك في Win-Win.</p><p>تدفع <span class='role-highlight'>فقط عند إغلاق الصفقة بنجاح</span>، وتحدد أنت شكل المكافأة.</p>",
+        role_agent_t: "عميل راضٍ (موصي)",
+        role_agent_d: "<p>تعرف خبيراً؟</p><p>أرسل رابطاً أو اعرض رمز QR.</p><p>عند إتمام الصفقة، سيكافئك صاحب العمل.</p><p>يمكنك أخذ المكافأة، <span class='role-highlight'>أو إهداؤها كخصم لصديق</span>، أو التنازل <span class='role-highlight'>لدعم الشركة</span>.</p><p>إنها قصة مساعدة متبادلة.</p>",
+        role_biz_t: "صاحب العمل",
+        role_biz_d: "<p>أكمل إعلاناتك بأقوى أداة — التسويق الشفهي الرقمي والشفاف.</p><p>يصبح عملاؤك سفراء لك في Win-Win.</p><p>تقدم مكافأة أو هدية <span class='role-highlight'>فقط عند إغلاق الصفقة بنجاح</span>، وتحدد أنت قيمتها.</p>",
         role_client_t: "العميل (الضيف)",
         role_client_d: "<p>لا مزيد من التخمين.</p><p>تدخل الشركات في كتالوجنا <span class='role-highlight'>فقط إذا أوصى بها أشخاص حقيقيون</span>.</p><p>القدوم من صديق يمنحك غالباً معاملة VIP ومكافآت.</p>",
         trust_title: "نحن لا نلمس أموالك",
-        trust_text: "<p>المنصة لا تمرر أموالك من خلالها.</p><p>تتم جميع المدفوعات والمكافآت مباشرة بين الشركة والعميل والوكيل.</p><p>مهمتنا تزويدك بأداة مريحة لتتبع التوصيات. وضمانتنا هي الرقابة الصارمة.</p><p>من يخادع شريكه يفقد الوصول إلى الكتالوج للأبد.</p>",
+        trust_text: "<p>المنصة لا تمرر أموالك من خلالها.</p><p>تتم جميع المدفوعات والمكافآت مباشرة بين الشركة والعميل والموصي.</p><p>مهمتنا تزويدك بأداة مريحة لتتبع التوصيات. وضمانتنا هي الرقابة الصارمة.</p><p>من يخادع شريكه يفقد الوصول إلى الكتالوج للأبد.</p>",
         f1_title: "تصنيف الأعمال الذكي",
         f1_desc: "<p>التصنيف مبني على الحقائق: الصفقات المغلقة.</p><p>توصيات أكثر = صفقات أكثر.</p><p>مما يجعل الشركة أكثر موثوقية وجاذبية لتوصيات جديدة.</p>",
-        f2_title: "قاعة المشاهير للوكلاء",
+        f2_title: "قاعة المشاهير",
         f2_desc: "<p>لوحة شرف لأنشط الموصين.</p><p>ساعد الشركات التي تعجبك على النمو.</p><p>تنافس، واربح من رأس مالك الاجتماعي.</p>",
         f3_title: "البيع المتقاطع (الشراكة)",
-        f3_desc: "<p>كوّن تحالفات مع أعمال مكملة.</p><p>السمسار يوصي بمقاول، والمقاول بمصمم.</p><p>تبادل العملاء واحصل على عمولات دون تكاليف إعلانية.</p>",
+        f3_desc: "<p>كوّن تحالفات مع أعمال مكملة.</p><p>السمسار يوصي بمقاول، والمقاول بمصمم.</p><p>تبادل العملاء واحصل على مكافآت دون تكاليف إعلانية.</p>",
         price_title: "كم التكلفة؟",
-        p1_title: "للوكلاء والعملاء",
+        
+        p1_title: "للعملاء والموصين",
         p1_amt: "مجاناً",
-        p1_desc: "استخدام المنصة والكتالوج ولوحة التحكم مجاني تماماً. لا توجد شروط خفية.",
-        p1_li1: "توصيات غير محدودة", p1_li2: "دفع مباشر من الشركة", p1_li3: "المشاركة في قاعة المشاهير",
+        p1_desc: "استخدام المنصة والكتالوج والحساب الشخصي مجاني تماماً. لا توجد شروط خفية.",
+        p1_li1: "توصيات غير محدودة", 
+        p1_li2: "وصول غير محدود للكتالوج", 
+        p1_li3: "الوصول إلى تقييمات الأعمال",
+        p1_li4: "المشاركة في قاعة المشاهير",
+        p1_li5: "دعم على مدار الساعة 24/7",
+        
         p2_title: "الشركات (Standard)",
-        p2_free: "10 صفقات مجانية",
+        p2_free: "🎁 10 صفقات مجانية",
         p2_amt: "99 ₪ <span class='sub-amt'>/ شهر</span>",
-        p2_desc: "اختبار عادل. تدفع للوكلاء فقط عن الصفقات المغلقة.",
-        p2_li1: "ملف في الكتالوج الذكي", p2_li2: "لوحة إدارة العملاء CRM", p2_li3: "وكلاء بلا حدود",
+        p2_desc: "اختبار عادل. تكافئ الموصين فقط عن الصفقات المغلقة.",
+        p2_li1: "ملف في الكتالوج الذكي", 
+        p2_li2: "لوحة إدارة العملاء CRM", 
+        p2_li3: "موصون بلا حدود",
+        p2_li4: "دعم فينس 24/7",
+        p2_li5: "تحليلات متقدمة وتصدير",
+        p2_li6: "توصيات أصلية من الذكاء الاصطناعي",
+        p2_li7: "حصري: الوصول لأفضل الموصين",
+        
         p3_title: "الشركات PRO",
         p3_amt: "149 ₪ <span class='sub-amt'>/ شهر</span>",
         p3_desc: "للمحترفين الذين يحتاجون لأقصى تحكم وتدفق عملاء.",
-        p3_li1: "كل ميزات Standard", p3_li2: "تحليلات متقدمة وتصدير", p3_li3: "توصيات الذكاء الاصطناعي", p3_li4: "دعم فني أولوية 24/7", p3_li5: "🔒 حصري: الوصول إلى أفضل الوكلاء",
+        p3_li1: "كل ميزات Standard", 
+        p3_li2: "تحليلات متقدمة وتصدير البيانات", 
+        p3_li3: "توصيات أصلية من الذكاء الاصطناعي", 
+        p3_li4: "حصري: الوصول لأفضل الموصين", 
+        
         cta_title: "كن جزءاً من النظام البيئي",
         btn_join: "الانضمام إلى Win-Win"
       }
@@ -495,9 +559,12 @@
       const L = i18n[lang];
       
       document.getElementById('t_tagline').innerHTML = L.tagline;
+
+      // ОбновляемHero
       document.getElementById('t_hero_title').innerHTML = L.hero_title;
       document.getElementById('t_hero_sub_block').innerHTML = L.hero_sub_block;
       
+      // Обновляем остальное
       document.getElementById('t_mission_title').textContent = L.mission_title;
       document.getElementById('t_mission_text').innerHTML = L.mission_text;
       document.getElementById('t_excl_title').textContent = L.excl_title;
@@ -521,12 +588,15 @@
       document.getElementById('t_f3_desc').innerHTML = L.f3_desc;
 
       document.getElementById('t_price_title').textContent = L.price_title;
+      
       document.getElementById('t_p1_title').textContent = L.p1_title;
       document.getElementById('t_p1_amt').innerHTML = L.p1_amt;
       document.getElementById('t_p1_desc').textContent = L.p1_desc;
       document.getElementById('t_p1_li1').textContent = L.p1_li1;
       document.getElementById('t_p1_li2').textContent = L.p1_li2;
       document.getElementById('t_p1_li3').textContent = L.p1_li3;
+      document.getElementById('t_p1_li4').textContent = L.p1_li4;
+      document.getElementById('t_p1_li5').textContent = L.p1_li5;
       
       document.getElementById('t_p2_title').textContent = L.p2_title;
       document.getElementById('t_p2_free').innerHTML = L.p2_free;
@@ -535,6 +605,10 @@
       document.getElementById('t_p2_li1').textContent = L.p2_li1;
       document.getElementById('t_p2_li2').textContent = L.p2_li2;
       document.getElementById('t_p2_li3').textContent = L.p2_li3;
+      document.getElementById('t_p2_li4').textContent = L.p2_li4;
+      document.getElementById('t_p2_li5').textContent = L.p2_li5;
+      document.getElementById('t_p2_li6').textContent = L.p2_li6;
+      document.getElementById('t_p2_li7').textContent = L.p2_li7;
 
       document.getElementById('t_p3_title').textContent = L.p3_title;
       document.getElementById('t_p3_amt').innerHTML = L.p3_amt;
@@ -543,14 +617,15 @@
       document.getElementById('t_p3_li2').textContent = L.p3_li2;
       document.getElementById('t_p3_li3').textContent = L.p3_li3;
       document.getElementById('t_p3_li4').textContent = L.p3_li4;
-      document.getElementById('t_p3_li5').textContent = L.p3_li5;
 
       document.getElementById('t_cta_title').textContent = L.cta_title;
       document.getElementById('t_btn_join').textContent = L.btn_join;
       
+      // Ссылка ведет жестко на корень сайта
       document.getElementById('t_btn_join').href = "https://winwinnetwork.pro/?lang=" + lang;
     }
     
+    // Парсим URL и устанавливаем нужный язык (по умолчанию русский)
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         let lang = urlParams.get('lang') || 'ru';
