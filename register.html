@@ -739,6 +739,15 @@
       "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
     };
 
+    // Надёжный триггер для Android нативного пикера
+    document.addEventListener('DOMContentLoaded', function() {
+      var catSel = document.getElementById('category');
+      if (catSel) {
+        catSel.addEventListener('change', updateSubcategories);
+        catSel.addEventListener('input', updateSubcategories);
+      }
+    });
+
     function updateSubcategories() {
       const cat = document.getElementById('category').value;
       const subGroup = document.getElementById('subcategoryGroup');
