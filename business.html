@@ -17,16 +17,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
     body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
     [dir="rtl"] { text-align: right; }
-    [dir="rtl"] .list-icon { margin-left: 12px; margin-right: 0; }
-    .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; padding-bottom: 80px; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px 80px 16px; position: relative; }
     .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
     .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
     .header { text-align: center; margin-bottom: 24px; }
     .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
     .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
-    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); overflow-x: auto; scrollbar-width: none; }
-    .tabs::-webkit-scrollbar { display: none; }
+    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); overflow-x: auto; }
     .tab-btn { flex: 1; padding: 12px 8px; text-align: center; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); background: transparent; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
     .tab-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .tab-content { display: none; animation: fadeIn 0.3s ease; }
@@ -35,7 +33,7 @@
     .deals-filter { display: flex; gap: 8px; margin-bottom: 16px; }
     .filter-btn { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; }
     .filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
-    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 12px; position: relative; }
+    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 12px; }
     .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
     .deal-client { font-size: 1.2rem; font-weight: 800; }
     .deal-date { font-size: 0.8rem; color: var(--text-muted); }
@@ -48,45 +46,26 @@
     .st-closed { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
     .st-rejected { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
     .btn-action { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); font-weight: 600; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-    .btn-action:active { transform: scale(0.97); }
-
-    /* Новые стили для вкладки Статистика */
     .stats-section-title { font-size: 0.95rem; font-weight: 700; margin: 24px 0 16px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;}
-    .stats-section-title:first-child { margin-top: 0; }
-    
     .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
     .stats-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-    
     .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px 8px; text-align: center; }
     .stats-grid-2 .stat-box { padding: 20px; border-radius: 20px; }
-    
     .stat-val { font-weight: 800; color: #fff; margin-bottom: 4px; }
     .stats-grid-3 .stat-val { font-size: 1.15rem; }
     .stats-grid-2 .stat-val { font-size: 2rem; }
-    
-    .stat-lbl { color: var(--text-muted); font-weight: 500; line-height: 1.2; }
-    .stats-grid-3 .stat-lbl { font-size: 0.65rem; text-transform: uppercase; }
-    .stats-grid-2 .stat-lbl { font-size: 0.8rem; text-transform: uppercase; margin-top: 4px; }
-
-    /* Воронка конверсии */
+    .stat-lbl { color: var(--text-muted); font-weight: 500; line-height: 1.2; font-size: 0.65rem; text-transform: uppercase; }
+    .stats-grid-2 .stat-lbl { font-size: 0.8rem; margin-top: 4px; }
     .funnel-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
     .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; font-size: 0.95rem; }
     .funnel-header span span { color: var(--text-muted); font-weight: 500; margin-right: 4px;}
-    [dir="rtl"] .funnel-header span span { margin-right: 0; margin-left: 4px; }
     .funnel-conv { color: var(--success); background: rgba(39,174,96,0.15); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; }
-    
     .f-bar-wrap { display: flex; align-items: center; margin-bottom: 14px; gap: 12px; }
-    .f-bar-wrap:last-child { margin-bottom: 0; }
     .f-lbl { width: 85px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); flex-shrink: 0; text-transform: uppercase;}
     .f-bar-bg { flex: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; position: relative; }
     .f-bar { height: 100%; border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1); }
-    .f-active { background: var(--accent-1); }
-    .f-closed { background: var(--success); }
-    .f-rejected { background: var(--danger); }
+    .f-active { background: var(--accent-1); } .f-closed { background: var(--success); } .f-rejected { background: var(--danger); }
     .f-val { width: 35px; text-align: right; font-weight: 700; font-size: 0.9rem; }
-    [dir="rtl"] .f-lbl { text-align: right; }
-    [dir="rtl"] .f-val { text-align: left; }
-
     .profile-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
     .prof-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .prof-row:last-child { border-bottom: none; }
@@ -99,19 +78,19 @@
     .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
     .form-control:focus { border-color: var(--accent-1); }
     .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s; align-items: flex-end; justify-content: center; }
+    .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; align-items: flex-end; justify-content: center; }
     .modal-backdrop.active { display: flex; opacity: 1; }
-    .modal-content { background: var(--bg-1); border-top: 1px solid var(--card-border); width: 100%; max-width: 600px; border-radius: 24px 24px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+    .modal-content { background: var(--bg-1); border-top: 1px solid var(--card-border); width: 100%; max-width: 600px; border-radius: 24px 24px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s; max-height: 90vh; overflow-y: auto; }
     .modal-backdrop.active .modal-content { transform: translateY(0); }
     .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
     .modal-deal-info { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 24px; font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; border: 1px solid var(--card-border); }
-    .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+    .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; }
     .btn-m-close { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
     .btn-m-reject { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
     .btn-m-back { background: transparent; color: var(--text-muted); }
     .modal-step { display: none; }
     .modal-step.active { display: block; animation: fadeIn 0.3s; }
-    .btn-wa-return { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 560px; text-align: center; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,211,102,0.25); z-index: 10; }
     .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 2000; font-weight: 700; font-size: 1.2rem; color: var(--accent-1); flex-direction: column; gap: 16px; }
     .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -122,7 +101,6 @@
   <div class="loading-overlay" id="globalLoader">
     <div class="spinner"></div>
     <div id="loaderText">Загрузка данных...</div>
-    <button id="loaderWaBtn" class="btn-action" style="display:none; width:auto; padding:8px 24px; margin-top:16px;" onclick="returnToWa()">Вернуться в WhatsApp</button>
   </div>
 
   <div class="shell" style="display:none;" id="mainShell">
@@ -136,12 +114,12 @@
       <h1 class="logo">Win-Win</h1>
       <div class="title" id="t_company_name">...</div>
     </header>
+    
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('deals')" id="t_tab_deals">💼 Сделки</button>
       <button class="tab-btn" onclick="switchTab('stats')" id="t_tab_stats">📊 Статистика</button>
       <button class="tab-btn" onclick="switchTab('profile')" id="t_tab_profile">👤 Профиль</button>
-      <button class="tab-btn" onclick="switchTab('edit')" id="t_tab_edit">✏️ Ред.</button>
-    </div>
+      </div>
 
     <div id="tab_deals" class="tab-content active">
       <div class="deals-filter">
@@ -152,21 +130,11 @@
     </div>
 
     <div id="tab_stats" class="tab-content">
-      
       <div class="stats-section-title" id="t_st_fin_title">Финансы</div>
       <div class="stats-grid-3">
-        <div class="stat-box">
-          <div class="stat-val" id="st_revenue">0 ₪</div>
-          <div class="stat-lbl" id="t_st_revenue">Оборот</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="st_commission" style="color:var(--danger);">0 ₪</div>
-          <div class="stat-lbl" id="t_st_commission">Выплаты</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="st_net_income" style="color:var(--success);">0 ₪</div>
-          <div class="stat-lbl" id="t_st_net">Чистый доход</div>
-        </div>
+        <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--danger);">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_net_income" style="color:var(--success);">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
       </div>
 
       <div class="stats-section-title" id="t_st_funnel_title">Воронка конверсии</div>
@@ -175,43 +143,23 @@
            <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:#fff;">0</span></div>
            <div class="funnel-conv" id="st_conversion">0%</div>
         </div>
-        
-        <div class="f-bar-wrap">
-          <div class="f-lbl" id="t_st_f_active">В процессе</div>
-          <div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div>
-          <div class="f-val" id="st_f_active">0</div>
-        </div>
-        <div class="f-bar-wrap">
-          <div class="f-lbl" id="t_st_f_closed">Закрыто</div>
-          <div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div>
-          <div class="f-val" id="st_f_closed">0</div>
-        </div>
-        <div class="f-bar-wrap">
-          <div class="f-lbl" id="t_st_f_rejected">Отклонено</div>
-          <div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div>
-          <div class="f-val" id="st_f_rejected">0</div>
-        </div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_active">В процессе</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
       </div>
 
       <div class="stats-grid-2">
-        <div class="stat-box">
-          <div class="stat-val" id="st_agents" style="color:var(--accent-1);">0</div>
-          <div class="stat-lbl" id="t_st_agents">Агенты</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="st_avg_deal" style="color:var(--warning);">0 ₪</div>
-          <div class="stat-lbl" id="t_st_avg_deal">Средний чек</div>
-        </div>
+        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent-1);">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--warning);">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
       </div>
-
     </div>
 
     <div id="tab_profile" class="tab-content">
       <div class="profile-card">
         <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name"></div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche"></div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Комиссия</div><div class="prof-val" id="pr_comm"></div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ оплаты</div><div class="prof-val" id="pr_pay"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Вознаграждение</div><div class="prof-val" id="pr_comm"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay"></div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone"></div></div>
       </div>
       <button class="btn-edit" onclick="switchTab('edit')" id="t_btn_edit">✏️ Редактировать профиль</button>
@@ -219,16 +167,12 @@
 
     <div id="tab_edit" class="tab-content">
       <div class="form-group"><label id="t_f_name">Название бизнеса</label><input type="text" class="form-control" id="f_name"></div>
-      <div class="form-group"><label id="t_f_niche">Ниша</label><select class="form-control" id="f_niche"></select></div>
-      <div class="form-group"><label id="t_f_comm">Комиссия (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
-      <div class="form-group"><label id="t_f_pay">Способ оплаты</label><input type="text" class="form-control" id="f_pay" placeholder="Bit / PayPal / Bank..."></div>
+      <div class="form-group"><label id="t_f_niche">Ниша</label><input type="text" class="form-control" id="f_niche" disabled style="opacity: 0.5;"></div>
+      <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
+      <div class="form-group"><label id="t_f_pay">Способ выплаты</label><input type="text" class="form-control" id="f_pay" placeholder="Bit / PayPal / Bank..."></div>
       <div class="form-group"><label id="t_f_link">Ссылка (Сайт / Соцсети)</label><input type="text" class="form-control" id="f_link" placeholder="https://..."></div>
       <button class="btn-save" onclick="submitEditForm()" id="t_btn_save">💾 Сохранить изменения</button>
-    </div>
-
-    <div style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:560px; z-index:10;">
-      <a href="#" id="btnWaReturn" onclick="returnToWa()" style="display:none; width:100%; text-align:center; background:#25D366; color:#fff; text-decoration:none; font-weight:700; font-size:0.95rem; padding:16px; border-radius:16px; box-shadow:0 8px 24px rgba(37,211,102,0.25);">WhatsApp</a>
-      <a href="https://t.me/winwin_lead_bot" id="btnTgReturn" target="_blank" style="display:none; width:100%; text-align:center; background:#2F80ED; color:#fff; text-decoration:none; font-weight:700; font-size:0.95rem; padding:16px; border-radius:16px; box-shadow:0 8px 24px rgba(47,128,237,0.25);">Telegram</a>
+      <button class="btn-cancel" onclick="switchTab('profile')" id="t_btn_cancel">Отмена</button>
     </div>
   </div>
 
@@ -264,25 +208,18 @@
 
   <script>
     const i18n = {
-      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"💼 Сделки", tab_stats:"📊 Статистика", tab_profile:"👤 Профиль", tab_edit:"✏️ Ред.", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"⚙️ Управлять", 
+      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"💼 Сделки", tab_stats:"📊 Статистика", tab_profile:"👤 Профиль", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"⚙️ Управлять", 
       st_fin_title: "Финансы", st_revenue: "Оборот", st_commission: "Выплаты", st_net: "Чистый доход", st_funnel_title: "Воронка конверсии", st_total_leads: "Всего лидов:", st_f_active: "В процессе", st_f_closed: "Закрыто", st_f_rejected: "Отклонено", st_agents: "Уник. агенты", st_avg_deal: "Средний чек",
-      pr_name:"Название", pr_niche:"Ниша", pr_comm:"Комиссия", pr_pay:"Способ оплаты", pr_phone:"Телефон", btn_edit:"✏️ Редактировать профиль", f_name:"Название бизнеса", f_niche:"Ниша", f_comm:"Комиссия (например, 10% или 500)", f_pay:"Способ оплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"💾 Сохранить изменения", wa_btn:"Вернуться в WhatsApp", m_title:"Управление сделкой", m_client:"Клиент:", m_date:"Дата:", m_close:"✅ Закрыть сделку", m_reject:"❌ Отклонить сделку", m_cancel:"↩️ Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить эту сделку?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть",
-        niches:["Красота и уход","Недвижимость","Здоровье","Еда и рестораны","Юристы","Финансы","Ремонт и стройка","IT","Животные","Одежда и товары","Обучение","Авто","Другое"] },
-      
-      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף. בקש חדש בבוט.", err_save:"שגיאה בשמירה", success_save:"השינויים נשמרו!", tab_deals:"💼 עסקאות", tab_stats:"📊 סטטיסטיקה", tab_profile:"👤 פרופיל", tab_edit:"✏️ עריכה", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן בינתיים.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", card_agent:"סוכן:", card_contact:"צור קשר עם", card_manage:"⚙️ ניהול", 
+      pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон", btn_edit:"✏️ Редактировать профиль", f_name:"Название бизнеса", f_niche:"Ниша", f_comm:"Вознаграждение (например, 10% или 500)", f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"💾 Сохранить изменения", btn_cancel:"Отмена", m_title:"Управление сделкой", m_client:"Клиент:", m_date:"Дата:", m_close:"✅ Закрыть сделку", m_reject:"❌ Отклонить сделку", m_cancel:"↩️ Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить эту сделку?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть" },
+      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף.", err_save:"שגיאה", success_save:"נשמר!", tab_deals:"💼 עסקאות", tab_stats:"📊 סטטיסטיקה", tab_profile:"👤 פרופיל", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן בינתיים.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", card_agent:"סוכן:", card_contact:"צור קשר עם", card_manage:"⚙️ ניהול", 
       st_fin_title: "פיננסים", st_revenue: "הכנסות", st_commission: "תשלומים", st_net: "רווח נקי", st_funnel_title: "משפך המרות", st_total_leads: "סה״כ לידים:", st_f_active: "בתהליך", st_f_closed: "נסגרו", st_f_rejected: "נדחו", st_agents: "סוכנים", st_avg_deal: "עסקה ממוצעת",
-      pr_name:"שם", pr_niche:"תחום", pr_comm:"עמלה", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"✏️ עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_comm:"עמלה", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"💾 שמור", wa_btn:"חזרה ל-WhatsApp", m_title:"ניהול עסקה", m_client:"לקוח:", m_date:"תאריך:", m_close:"✅ סגור עסקה", m_reject:"❌ דחה עסקה", m_cancel:"↩️ חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע בהצלחה!", action_close:"סגור",
-        niches:["יופי וטיפוח","נדל\"ן","בריאות","אוכל ומסעדות","עורכי דין","פיננסים","שיפוץ ובנייה","IT","בעלי חיים","בגדים ומוצרים","לימודים","רכב","אחר"] },
-      
-      en: { loading:"Loading data...", expired:"Link expired. Request a new one in the bot.", err_save:"Save error", success_save:"Changes saved!", tab_deals:"💼 Deals", tab_stats:"📊 Stats", tab_profile:"👤 Profile", tab_edit:"✏️ Edit", filt_active:"Active", filt_history:"History", empty_deals:"It's empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", card_agent:"Agent:", card_contact:"Contact client", card_manage:"⚙️ Manage", 
+      pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"✏️ עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_comm:"תגמול", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"💾 שמור", btn_cancel:"ביטול", m_title:"ניהול עסקה", m_client:"לקוח:", m_date:"תאריך:", m_close:"✅ סגור עסקה", m_reject:"❌ דחה עסקה", m_cancel:"↩️ חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע בהצלחה!", action_close:"סגור" },
+      en: { loading:"Loading data...", expired:"Link expired.", err_save:"Save error", success_save:"Changes saved!", tab_deals:"💼 Deals", tab_stats:"📊 Stats", tab_profile:"👤 Profile", filt_active:"Active", filt_history:"History", empty_deals:"It's empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", card_agent:"Agent:", card_contact:"Contact client", card_manage:"⚙️ Manage", 
       st_fin_title: "Finance", st_revenue: "Revenue", st_commission: "Payouts", st_net: "Net Income", st_funnel_title: "Conversion Funnel", st_total_leads: "Total Leads:", st_f_active: "In Progress", st_f_closed: "Closed", st_f_rejected: "Rejected", st_agents: "Unique Agents", st_avg_deal: "Avg Deal",
-      pr_name:"Name", pr_niche:"Niche", pr_comm:"Commission", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"✏️ Edit Profile", f_name:"Business Name", f_niche:"Niche", f_comm:"Commission (e.g. 10% or 500)", f_pay:"Payment Method", f_link:"Link (Site / Social)", btn_save:"💾 Save Changes", wa_btn:"Return to WhatsApp", m_title:"Manage Deal", m_client:"Client:", m_date:"Date:", m_close:"✅ Close Deal", m_reject:"❌ Reject Deal", m_cancel:"↩️ Back", m_lbl_amount:"Deal amount (digits only)", m_conf_close:"Confirm Close", m_sure:"Are you sure you want to reject?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Successfully completed!", action_close:"Close",
-        niches:["Beauty & Care","Real Estate","Health","Food & Restaurants","Legal","Finance","Repair & Construction","IT","Animals","Clothing & Goods","Education","Auto","Other"] },
-      
-      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط. اطلب واحداً جديداً.", err_save:"خطأ في الحفظ", success_save:"تم الحفظ!", tab_deals:"💼 الصفقات", tab_stats:"📊 الإحصائيات", tab_profile:"👤 الملف", tab_edit:"✏️ تعديل", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", card_agent:"الوكيل:", card_contact:"الاتصال بالعميل", card_manage:"⚙️ إدارة", 
-      st_fin_title: "المالية", st_revenue: "الإيرادات", st_commission: "المدفوعات", st_net: "صافي الدخل", st_funnel_title: "مسار التحويل", st_total_leads: "إجمالي العملاء:", st_f_active: "قيد الإجراء", st_f_closed: "مغلقة", st_f_rejected: "مرفوضة", st_agents: "وكلاء فريدون", st_avg_deal: "متوسط الصفقة",
-      pr_name:"الاسم", pr_niche:"المجال", pr_comm:"العمولة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"✏️ تعديل الملف", f_name:"اسم العمل", f_niche:"المجال", f_comm:"العمولة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"💾 حفظ", wa_btn:"العودة إلى WhatsApp", m_title:"إدارة الصفقة", m_client:"العميل:", m_date:"التاريخ:", m_close:"✅ إغلاق الصفقة", m_reject:"❌ رفض الصفقة", m_cancel:"↩️ رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري المعالجة...", action_success:"اكتمل بنجاح!", action_close:"إغلاق",
-        niches:["الجمال والعناية","العقارات","الصحة","الطعام والمطاعم","المحامون","المالية","الإصلاح والبناء","IT","الحيوانات","الملابس والبضائع","التعليم","السيارات","أخرى"] }
+      pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"✏️ Edit Profile", f_name:"Business Name", f_niche:"Niche", f_comm:"Reward", f_pay:"Payment Method", f_link:"Link", btn_save:"💾 Save Changes", btn_cancel:"Cancel", m_title:"Manage Deal", m_client:"Client:", m_date:"Date:", m_close:"✅ Close Deal", m_reject:"❌ Reject Deal", m_cancel:"↩️ Back", m_lbl_amount:"Deal amount", m_conf_close:"Confirm Close", m_sure:"Are you sure?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Successfully completed!", action_close:"Close" },
+      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط.", err_save:"خطأ", success_save:"تم الحفظ!", tab_deals:"💼 الصفقات", tab_stats:"📊 الإحصائيات", tab_profile:"👤 الملف", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", card_agent:"الوكيل:", card_contact:"الاتصال", card_manage:"⚙️ إدارة", 
+      st_fin_title: "المالية", st_revenue: "الإيرادات", st_commission: "المدفوعات", st_net: "صافي الدخل", st_funnel_title: "مسار التحويل", st_total_leads: "إجمالي العملاء:", st_f_active: "قيد الإجراء", st_f_closed: "مغلقة", st_f_rejected: "مرفوضة", st_agents: "وكلاء", st_avg_deal: "متوسط الصفقة",
+      pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"✏️ تعديل الملف", f_name:"اسم العمل", f_niche:"المجال", f_comm:"مكافأة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"💾 حفظ", btn_cancel:"إلغاء", m_title:"إدارة الصفقة", m_client:"العميل:", m_date:"التاريخ:", m_close:"✅ إغلاق الصفقة", m_reject:"❌ رفض الصفقة", m_cancel:"↩️ رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري المعالجة...", action_success:"اكتمل بنجاح!", action_close:"إغلاق" }
     };
 
     let currentLang = 'ru';
@@ -311,7 +248,6 @@
       document.getElementById('t_tab_deals').textContent = L.tab_deals;
       document.getElementById('t_tab_stats').textContent = L.tab_stats;
       document.getElementById('t_tab_profile').textContent = L.tab_profile;
-      document.getElementById('t_tab_edit').textContent = L.tab_edit;
       document.getElementById('t_filt_active').textContent = L.filt_active;
       document.getElementById('t_filt_history').textContent = L.filt_history;
       
@@ -341,7 +277,7 @@
       document.getElementById('t_f_pay').textContent = L.f_pay;
       document.getElementById('t_f_link').textContent = L.f_link;
       document.getElementById('t_btn_save').textContent = L.btn_save;
-      document.getElementById('btnWaReturn').textContent = L.wa_btn;
+      document.getElementById('t_btn_cancel').textContent = L.btn_cancel;
       document.getElementById('m_title').textContent = L.m_title;
       document.getElementById('t_m_btn_close').textContent = L.m_close;
       document.getElementById('t_m_btn_reject').textContent = L.m_reject;
@@ -353,13 +289,12 @@
       document.getElementById('t_m_btn_confirm_reject').textContent = L.m_conf_reject;
       document.getElementById('t_m_btn_back2').textContent = L.m_cancel;
       document.getElementById('m_btn_finish').textContent = L.action_close;
-      if (shouldRender && bizData) { populateNiches(); renderAll(); }
+      if (shouldRender && bizData) { renderAll(); }
     }
 
     function showGlobalError(msg) {
       document.querySelector('.spinner').style.display = 'none';
       document.getElementById('loaderText').textContent = msg;
-      document.getElementById('loaderWaBtn').style.display = 'block';
     }
 
     async function fetchData() {
@@ -370,27 +305,9 @@
         document.getElementById('globalLoader').style.display = 'none';
         document.getElementById('mainShell').style.display = 'block';
         document.getElementById('t_company_name').textContent = bizData.name;
-        updateReturnBtns();
-        populateNiches();
         renderAll();
       } catch (err) {
         showGlobalError(i18n[currentLang].expired);
-      }
-    }
-
-    function returnToWa() {
-      window.location.href = `https://wa.me/${bizData?.bot_phone || '972534218573'}`;
-    }
-
-    function updateReturnBtns() {
-      const phone = bizData?.bot_phone || '972534218573';
-      const channel = bizData?.channel || 'whatsapp';
-      if (channel === 'telegram') {
-        document.getElementById('btnTgReturn').style.display = 'block';
-      } else {
-        const wa = document.getElementById('btnWaReturn');
-        wa.href = `https://wa.me/${phone}`;
-        wa.style.display = 'block';
       }
     }
 
@@ -400,7 +317,9 @@
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(`tab_${tabId}`).classList.add('active');
-      document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+      // Кнопки для edit нет, поэтому активируем только если есть кнопка
+      const btn = document.querySelector(`[onclick="switchTab('${tabId}')"].tab-btn`);
+      if (btn) btn.classList.add('active');
     }
 
     function setDealFilter(f) {
@@ -465,18 +384,15 @@
 
     function renderStats() {
       const s = bizData.stats || {};
-      
       const active = s.active || 0;
       const closed = s.closed || 0;
       const rejected = s.rejected || 0;
       const totalLeads = active + closed + rejected;
 
-      // 1. Финансы
       animateValue("st_revenue", 0, s.total_revenue || 0, 1000, " ₪");
       animateValue("st_commission", 0, s.total_commission || 0, 1000, " ₪");
       animateValue("st_net_income", 0, s.total_earned || 0, 1000, " ₪");
 
-      // 2. Воронка конверсии
       document.getElementById('st_total_leads').textContent = totalLeads;
       const convRate = totalLeads > 0 ? Math.round((closed / totalLeads) * 100) : 0;
       document.getElementById('st_conversion').textContent = convRate + "%";
@@ -491,14 +407,8 @@
         document.getElementById('bar_rejected').style.width = (totalLeads > 0 ? (rejected / totalLeads) * 100 : 0) + "%";
       }, 50);
 
-      // 3. Агенты и средний чек
       animateValue("st_agents", 0, s.agents_count || 0, 1000);
       animateValue("st_avg_deal", 0, s.avg_deal || 0, 1000, " ₪");
-    }
-
-    function populateNiches() {
-      const sel = document.getElementById('f_niche');
-      sel.innerHTML = i18n[currentLang].niches.map(n => `<option value="${n}">${n}</option>`).join('');
     }
 
     function renderProfile() {
@@ -514,10 +424,7 @@
       document.getElementById('f_comm').value = bizData.commission || '';
       document.getElementById('f_pay').value = bizData.payment_method || '';
       document.getElementById('f_link').value = bizData.business_info || '';
-      const sel = document.getElementById('f_niche');
-      for (let i = 0; i < sel.options.length; i++) {
-        if (sel.options[i].value === bizData.niche) { sel.selectedIndex = i; break; }
-      }
+      document.getElementById('f_niche').value = bizData.niche || '';
     }
 
     async function submitEditForm() {
@@ -527,7 +434,6 @@
       btn.style.opacity = '0.7';
       const payload = {
         name: document.getElementById('f_name').value,
-        niche: document.getElementById('f_niche').value,
         commission: document.getElementById('f_comm').value,
         payment_method: document.getElementById('f_pay').value,
         business_info: document.getElementById('f_link').value
@@ -591,19 +497,8 @@
         const resData = await res.json().catch(() => ({}));
 
         if (actionType === 'close' && resData.message === 'agent_notified') {
-          // Сделка НЕ закрыта окончательно — ждём агента
-          const agentName = resData.agent_name || '—';
-          const commStr = resData.comm_str || '—';
-          const waitMsgs = {
-            ru: `⏳ Отлично! Мы уведомили агента ${agentName} о закрытии сделки.\n\nОжидаем его решения по бонусу ${commStr} ₪.\n\nАгент может:\n💰 Получить деньги себе\n🎁 Передать бонус клиенту\n🙏 Отказаться от бонуса\n\nКак только он решит — вы получите уведомление в WhatsApp.`,
-            he: `⏳ מצוין! הודענו לסוכן ${agentName} על סגירת העסקה.\n\nממתינים להחלטתו לגבי הבונוס ${commStr} ₪.\n\nהסוכן יכול:\n💰 לקחת לעצמו\n🎁 להעביר ללקוח\n🙏 לוותר על הבונוס\n\nברגע שיחליט — תקבלו הודעה בWhatsApp.`,
-            en: `⏳ Done! We notified agent ${agentName} about the deal.\n\nWaiting for their decision on the ${commStr} ₪ bonus.\n\nAgent can:\n💰 Take the money\n🎁 Pass bonus to client\n🙏 Decline the bonus\n\nYou'll get a WhatsApp notification once decided.`,
-            ar: `⏳ تم! أبلغنا الوكيل ${agentName} بإغلاق الصفقة.\n\nننتظر قراره بشأن مكافأة ${commStr} ₪.\n\nالوكيل يمكنه:\n💰 أخذ المال\n🎁 تمرير المكافأة للعميل\n🙏 التنازل عن المكافأة\n\nستتلقى إشعاراً على WhatsApp.`,
-          };
-          document.getElementById('m_result_msg').textContent = waitMsgs[currentLang] || waitMsgs.ru;
-          document.getElementById('m_result_msg').style.color = 'var(--accent-1)';
-          document.getElementById('m_result_msg').style.whiteSpace = 'pre-line';
-          // Сделка остаётся в статусе in_progress до решения агента
+          document.getElementById('m_result_msg').textContent = L.action_success + " (Ожидаем агента)";
+          document.getElementById('m_result_msg').style.color = 'var(--success)';
         } else {
           document.getElementById('m_result_msg').textContent = L.action_success;
           document.getElementById('m_result_msg').style.color = 'var(--success)';
