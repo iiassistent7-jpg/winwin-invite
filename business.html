@@ -203,7 +203,10 @@
       </div>
       <div class="form-group" id="f_subniche_group" style="display:none;">
         <label id="t_f_subniche">Специализация <span style="font-size:0.75rem; color:var(--text-muted);">(можно выбрать несколько)</span></label>
+        <div id="f_subniche_tags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
         <div class="niche-checkboxes" id="f_subniche_list"></div>
+        <button type="button" onclick="confirmBizSubcat()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#56CCF2,#2F80ED);border:none;color:#fff;font-weight:800;font-size:1rem;border-radius:14px;cursor:pointer;box-shadow:0 4px 16px rgba(86,204,242,0.3);" id="bizSubcatDone">✅ Подтвердить выбор</button>
+        <button type="button" onclick="editBizSubcat()" style="display:none;width:100%;margin-top:6px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:0.85rem;border-radius:10px;cursor:pointer;" id="bizSubcatEdit">✏️ Изменить</button>
       </div>
       <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
       <div class="form-group">
@@ -665,6 +668,33 @@
       document.querySelectorAll('.pay-btn').forEach(b => {
         b.classList.toggle('active', b.textContent.includes(method));
       });
+    }
+
+    function confirmBizSubcat() {
+      const list = document.getElementById('f_subniche_list');
+      const tags = document.getElementById('f_subniche_tags');
+      const doneBtn = document.getElementById('bizSubcatDone');
+      const editBtn = document.getElementById('bizSubcatEdit');
+      const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+      if (checked.length === 0) return;
+      tags.innerHTML = checked.map(s =>
+        `<span style="display:inline-block;background:rgba(86,204,242,0.15);border:1px solid rgba(86,204,242,0.4);color:#56CCF2;border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
+      ).join('');
+      tags.style.display = 'flex';
+      list.style.display = 'none';
+      doneBtn.style.display = 'none';
+      editBtn.style.display = 'block';
+    }
+
+    function editBizSubcat() {
+      const list = document.getElementById('f_subniche_list');
+      const tags = document.getElementById('f_subniche_tags');
+      const doneBtn = document.getElementById('bizSubcatDone');
+      const editBtn = document.getElementById('bizSubcatEdit');
+      tags.style.display = 'none';
+      list.style.display = 'flex';
+      doneBtn.style.display = 'block';
+      editBtn.style.display = 'none';
     }
 
     window.onload = init;
