@@ -11,35 +11,42 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
     body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
     .shell { width: 100%; max-width: 600px; padding: 24px 16px; position: relative; }
+    
     .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
     .lang-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .lang-btn.active { background: rgba(76, 161, 175, 0.2); border-color: var(--accent-1); color: #fff; }
+
     .header { text-align: center; margin-bottom: 32px; }
     .logo { font-size: 2.8rem; font-weight: 800; background: linear-gradient(90deg, #56CCF2, #2F80ED); -webkit-background-clip: text; color: transparent; margin-bottom: -4px; }
     .logo-sub { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.45em; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; margin-left: 0.45em; }
     .subtitle { font-size: 1.15rem; font-weight: 700; color: #56CCF2; margin-bottom: 12px; }
     .mission { font-size: 0.95rem; color: #e0e0e0; line-height: 1.5; max-width: 95%; margin: 0 auto 16px auto; font-weight: 500; }
     .instruction-small { font-size: 0.8rem; color: var(--text-muted); max-width: 80%; margin: 0 auto; }
+
     .search-box { margin-top: 24px; }
     .search-box input { width: 100%; background: var(--card); border: 1px solid var(--card-border); color: #fff; padding: 16px 20px; border-radius: 16px; font-size: 1rem; outline: none; transition: 0.2s; }
     .search-box input:focus { border-color: #56CCF2; }
     .filters { display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; }
     .filter-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; white-space: nowrap; font-weight: 600; }
     .filter-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+
     .catalog-grid { display: flex; flex-direction: column; gap: 12px; }
     .biz-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; cursor: pointer; transition: 0.2s; }
     .biz-card:active { transform: scale(0.98); }
     .biz-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .biz-name { font-size: 1.2rem; font-weight: 800; }
-    .biz-niche { font-size: 0.75rem; color: #56CCF2; background: rgba(86, 204, 242, 0.1); padding: 4px 8px; border-radius: 6px; font-weight: 700; max-width: 55%; text-align: right; }
+    .biz-niche { font-size: 0.75rem; color: #56CCF2; background: rgba(86, 204, 242, 0.1); padding: 4px 8px; border-radius: 6px; font-weight: 700; }
     .biz-reward { display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #56CCF2; }
+
     .recommend-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100%; background: var(--bg-1); padding: 24px 16px; z-index: 10; animation: slideUp 0.3s ease-out; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .recommend-screen.active { display: block; }
+    
     .btn-back { background: transparent; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
     .rec-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
     .instruction-block { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
     .instruction-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
+    
     .link-box { display: flex; gap: 8px; }
     .link-input { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 12px; font-size: 0.85rem; outline: none; }
     .btn-copy { background: #2F80ED; border: none; color: #fff; font-weight: 700; padding: 0 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
@@ -50,75 +57,98 @@
 </head>
 <body>
   <div class="shell">
+    
     <div class="lang-switcher">
       <button class="lang-btn" id="btn_lang_en" onclick="setLang('en', true)">GB EN</button>
-      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL \u05e2\u05d1</button>
-      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA \u0639\u0631</button>
-      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU \u0420\u0423</button>
+      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL עב</button>
+      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA عر</button>
+      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU РУ</button>
     </div>
+
     <div id="catalogView">
       <header class="header">
         <h1 class="logo">Win-Win</h1>
         <div class="logo-sub">N e t w o r k</div>
-        <div class="subtitle" id="t_subtitle">\u042d\u043a\u043e\u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u044f</div>
-        <p class="mission" id="t_mission">\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0439 \u0431\u0438\u0437\u043d\u0435\u0441 \u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0435 \u0438 \u043f\u0435\u0440\u0435\u0434\u0430\u0439\u0442\u0435 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044e.</p>
-        <p class="instruction-small" id="t_instruction">\u043d\u0430\u0447\u043d\u0438\u0442\u0435 \u0432\u0432\u043e\u0434\u0438\u0442\u044c \u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u0430</p>
+        <div class="subtitle" id="t_subtitle">Экосистема доверия</div>
+        <p class="mission" id="t_mission">Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.</p>
+        <p class="instruction-small" id="t_instruction">начните вводить наименование бизнеса или нишу в которой он работает</p>
       </header>
-      <div class="search-box"><input type="text" id="searchInput" placeholder="\u041f\u043e\u0438\u0441\u043a..."></div>
+      <div class="search-box"><input type="text" id="searchInput" placeholder="Поиск бизнеса или услуги..."></div>
       <div class="filters" id="nicheFilters"></div>
-      <div class="catalog-grid" id="catalogGrid"><div style="text-align:center; padding:40px; color:var(--text-muted);" id="t_loading">\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...</div></div>
+      <div class="catalog-grid" id="catalogGrid"><div style="text-align:center; padding:40px; color:var(--text-muted);" id="t_loading">🔄 Загрузка списка...</div></div>
     </div>
+
     <div id="recommendView" class="recommend-screen">
-      <button class="btn-back" onclick="closeRecommend()" id="t_btn_back">\u2190</button>
-      <div class="rec-title" id="recBizName"></div>
-      <div class="biz-reward" id="recBizReward" style="margin-bottom: 32px;"></div>
+      <button class="btn-back" onclick="closeRecommend()" id="t_btn_back">← Вернуться к списку</button>
+      <div class="rec-title" id="recBizName">Название Бизнеса</div>
+      <div class="biz-reward" id="recBizReward" style="margin-bottom: 32px;">🎁 Бонус</div>
+
       <div class="instruction-block">
-        <div class="instruction-text" id="t_copy_link"></div>
+        <div class="instruction-text" id="t_copy_link">🔗 Скопируйте ссылку и отправьте её другу:</div>
         <div class="link-box">
           <input type="text" id="refLinkInput" class="link-input" readonly>
-          <button class="btn-copy" id="copyBtn" onclick="copyLink()"></button>
+          <button class="btn-copy" id="copyBtn" onclick="copyLink()">Копировать</button>
         </div>
       </div>
+
       <div class="instruction-block" style="text-align: center;">
-        <div class="instruction-text" id="t_scan_qr"></div>
-        <div class="qr-container"><canvas id="qrCanvas"></canvas></div>
+        <div class="instruction-text" id="t_scan_qr">📱 Или дайте человеку отсканировать этот код, если он рядом:</div>
+        <div class="qr-container">
+          <canvas id="qrCanvas"></canvas>
+        </div>
       </div>
-      <a href="#" id="waReturnLink" class="btn-wa-return"></a>
+      <a href="#" id="waReturnLink" class="btn-wa-return" id="t_btn_wa">Вернуться в WhatsApp</a>
     </div>
+
   </div>
+
   <script>
     const i18n = {
-      ru: { subtitle: "\u042d\u043a\u043e\u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u044f", mission: "\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0439 \u0431\u0438\u0437\u043d\u0435\u0441 \u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0435 \u0438 \u043f\u0435\u0440\u0435\u0434\u0430\u0439\u0442\u0435 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044e. \u0412\u0430\u0448 \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0439 \u043a\u0430\u043f\u0438\u0442\u0430\u043b \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 \u0432\u0430\u0441.", instruction: "\u043d\u0430\u0447\u043d\u0438\u0442\u0435 \u0432\u0432\u043e\u0434\u0438\u0442\u044c \u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u0430 \u0438\u043b\u0438 \u043d\u0438\u0448\u0443", search: "\u041f\u043e\u0438\u0441\u043a \u0431\u0438\u0437\u043d\u0435\u0441\u0430 \u0438\u043b\u0438 \u0443\u0441\u043b\u0443\u0433\u0438...", loading: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...", error_token: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0434\u043e\u0441\u0442\u0443\u043f\u0430", error_expired: "\u0421\u0441\u044b\u043b\u043a\u0430 \u0443\u0441\u0442\u0430\u0440\u0435\u043b\u0430. \u0417\u0430\u043f\u0440\u043e\u0441\u0438\u0442\u0435 \u043a\u0430\u0442\u0430\u043b\u043e\u0433 \u0432 \u0431\u043e\u0442\u0435.", not_found: "\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", btn_back: "\u2190 \u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043a \u0441\u043f\u0438\u0441\u043a\u0443", copy_link: "\u0421\u043a\u043e\u043f\u0438\u0440\u0443\u0439\u0442\u0435 \u0441\u0441\u044b\u043b\u043a\u0443:", scan_qr: "\u0418\u043b\u0438 \u043e\u0442\u0441\u043a\u0430\u043d\u0438\u0440\u0443\u0439\u0442\u0435 QR:", btn_copy: "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c", btn_copied: "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u2705", btn_wa: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u0432 WhatsApp", filter_all: "\u0412\u0441\u0435", bonus: "\ud83c\udf81 \u0411\u043e\u043d\u0443\u0441 \u0430\u0433\u0435\u043d\u0442\u0443:", refresh_btn: "\ud83d\udd04 \u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043a\u0430\u0442\u0430\u043b\u043e\u0433", refresh_hint: "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u2014 \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f WhatsApp" },
-      he: { subtitle: "\u05de\u05e2\u05e8\u05db\u05ea \u05d0\u05e7\u05d5\u05dc\u05d5\u05d2\u05d9\u05ea \u05e9\u05dc \u05d0\u05de\u05d5\u05df", mission: "\u05de\u05e6\u05d0\u05d5 \u05e2\u05e1\u05e7 \u05de\u05d5\u05db\u05d7 \u05d1\u05e7\u05d8\u05dc\u05d5\u05d2 \u05d5\u05d4\u05e2\u05d1\u05d9\u05e8\u05d5 \u05d4\u05de\u05dc\u05e6\u05d4.", instruction: "\u05d4\u05ea\u05d7\u05d9\u05dc\u05d5 \u05dc\u05d4\u05e7\u05dc\u05d9\u05d3 \u05e9\u05dd \u05e2\u05e1\u05e7", search: "\u05d7\u05d9\u05e4\u05d5\u05e9...", loading: "\u05d8\u05d5\u05e2\u05df...", error_token: "\u05e9\u05d2\u05d9\u05d0\u05d4", error_expired: "\u05d4\u05e7\u05d9\u05e9\u05d5\u05e8 \u05e4\u05d2 \u05ea\u05d5\u05e7\u05e3.", not_found: "\u05dc\u05d0 \u05e0\u05de\u05e6\u05d0", btn_back: "\u2190 \u05d7\u05d6\u05e8\u05d4", copy_link: "\u05d4\u05e2\u05ea\u05d9\u05e7\u05d5 \u05d0\u05ea \u05d4\u05e7\u05d9\u05e9\u05d5\u05e8:", scan_qr: "\u05d0\u05d5 \u05e1\u05e8\u05e7\u05d5 QR:", btn_copy: "\u05d4\u05e2\u05ea\u05e7", btn_copied: "\u05d4\u05d5\u05e2\u05ea\u05e7 \u2705", btn_wa: "\u05d7\u05d6\u05e8\u05d4 \u05dc-WhatsApp", filter_all: "\u05d4\u05db\u05dc", bonus: "\ud83c\udf81 \u05d1\u05d5\u05e0\u05d5\u05e1:", refresh_btn: "\ud83d\udd04 \u05e8\u05e2\u05e0\u05df", refresh_hint: "\u05dc\u05d7\u05e6\u05d5" },
-      en: { subtitle: "Ecosystem of Trust", mission: "Find a proven business in the catalog and share a recommendation.", instruction: "start typing business name or niche", search: "Search...", loading: "Loading...", error_token: "Access denied", error_expired: "Link expired. Request new catalog in bot.", not_found: "Nothing found", btn_back: "\u2190 Back", copy_link: "Copy the link:", scan_qr: "Or scan QR:", btn_copy: "Copy", btn_copied: "Copied \u2705", btn_wa: "Return to WhatsApp", filter_all: "All", bonus: "\ud83c\udf81 Agent bonus:", refresh_btn: "\ud83d\udd04 Refresh", refresh_hint: "Tap to refresh" },
-      ar: { subtitle: "\u0646\u0638\u0627\u0645 \u0627\u0644\u062b\u0642\u0629", mission: "\u0627\u0628\u062d\u062b \u0639\u0646 \u0639\u0645\u0644 \u0645\u0648\u062b\u0648\u0642 \u0648\u0634\u0627\u0631\u0643 \u062a\u0648\u0635\u064a\u0629.", instruction: "\u0627\u0628\u062f\u0623 \u0628\u0643\u062a\u0627\u0628\u0629 \u0627\u0633\u0645 \u0627\u0644\u0639\u0645\u0644", search: "\u0628\u062d\u062b...", loading: "\u062c\u0627\u0631\u064a...", error_token: "\u062e\u0637\u0623", error_expired: "\u0627\u0646\u062a\u0647\u062a \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629.", not_found: "\u0644\u0645 \u064a\u0648\u062c\u062f", btn_back: "\u2190 \u0631\u062c\u0648\u0639", copy_link: "\u0627\u0646\u0633\u062e \u0627\u0644\u0631\u0627\u0628\u0637:", scan_qr: "\u0623\u0648 \u0627\u0645\u0633\u062d QR:", btn_copy: "\u0646\u0633\u062e", btn_copied: "\u062a\u0645 \u2705", btn_wa: "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 WhatsApp", filter_all: "\u0627\u0644\u0643\u0644", bonus: "\ud83c\udf81 \u0645\u0643\u0627\u0641\u0623\u0629:", refresh_btn: "\ud83d\udd04 \u062a\u062d\u062f\u064a\u062b", refresh_hint: "\u0627\u0636\u063a\u0637" }
+      ru: { refresh_btn: "🔄 Обновить каталог", refresh_hint: "Нажмите — откроется WhatsApp с командой обновления", subtitle: "Экосистема доверия", mission: "Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.", instruction: "начните вводить наименование бизнеса или нишу в которой он работает", search: "Поиск бизнеса или услуги...", loading: "🔄 Загрузка списка...", error_token: "⚠️ Ошибка: Нет доступа", error_expired: "⏳ Срок действия ссылки истек. Запросите каталог в боте заново.", not_found: "🔍 Ничего не найдено", btn_back: "← Вернуться к списку", copy_link: "🔗 Скопируйте ссылку и отправьте её другу:", scan_qr: "📱 Или дайте человеку отсканировать этот код, если он рядом:", btn_copy: "Копировать", btn_copied: "✅ Скопировано", btn_wa: "Вернуться в WhatsApp", filter_all: "Все", bonus: "🎁 Бонус агенту:" },
+      he: { refresh_btn: "🔄 רענן קטלוג", refresh_hint: "לחצו — יפתח WhatsApp עם פקודת עדכון", subtitle: "מערכת אקולוגית של אמון", mission: "מצאו עסק מוכח בקטלוג והעבירו המלצה. ההון החברתי שלכם עובד בשבילכם.", instruction: "התחילו להקליד את שם העסק או את התחום שבו הוא פועל", search: "חיפוש עסק או שירות...", loading: "🔄 טוען רשימה...", error_token: "⚠️ שגיאה: אין גישה", error_expired: "⏳ תוקף הקישור פג. בקשו קטלוג חדש בבוט.", not_found: "🔍 לא נמצא דבר", btn_back: "← חזרה לרשימה", copy_link: "🔗 העתיקו את הקישור ושלחו לחבר:", scan_qr: "📱 או תנו לאדם לסרוק את הקוד הזה, אם הוא קרוב:", btn_copy: "העתק", btn_copied: "✅ הועתק", btn_wa: "חזרה ל-WhatsApp", filter_all: "הכל", bonus: "🎁 בונוס לסוכן:" },
+      en: { refresh_btn: "🔄 Refresh Catalog", refresh_hint: "Tap — WhatsApp will open with update command", subtitle: "Ecosystem of Trust", mission: "Find a proven business in the catalog and share a recommendation. Your social capital works for you.", instruction: "start typing the name of the business or the niche it operates in", search: "Search for a business or service...", loading: "🔄 Loading list...", error_token: "⚠️ Error: Access denied", error_expired: "⏳ Link expired. Request a new catalog in the bot.", not_found: "🔍 Nothing found", btn_back: "← Back to list", copy_link: "🔗 Copy the link and send it to a friend:", scan_qr: "📱 Or let the person scan this code if they are nearby:", btn_copy: "Copy", btn_copied: "✅ Copied", btn_wa: "Return to WhatsApp", filter_all: "All", bonus: "🎁 Agent bonus:" },
+      ar: { refresh_btn: "🔄 تحديث الكتالوج", refresh_hint: "اضغط — سيفتح WhatsApp بأمر التحديث", subtitle: "نظام الثقة البيئي", mission: "ابحث عن عمل موثوق في الكتالوج وشارك التوصية. رأس مالك الاجتماعي يعمل لصالحك.", instruction: "ابدأ بكتابة اسم العمل أو التخصص الذي يعمل فيه", search: "البحث عن شركة أو خدمة...", loading: "🔄 جاري تحميل القائمة...", error_token: "⚠️ خطأ: تم الرفض", error_expired: "⏳ انتهت صلاحية الرابط. اطلب كتالوج جديد من البوت.", not_found: "🔍 لم يتم العثور على شيء", btn_back: "← العودة للقائمة", copy_link: "🔗 انسخ الرابط وأرسله لصديق:", scan_qr: "📱 أو دع الشخص يمسح هذا الرمز إذا كان قريباً:", btn_copy: "نسخ", btn_copied: "✅ تم النسخ", btn_wa: "العودة إلى WhatsApp", filter_all: "الكل", bonus: "🎁 مكافأة الوكيل:" }
     };
+
     let currentLang = 'ru';
+
     function setLang(lang, isManualClick = false) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
       document.getElementById(`btn_lang_${lang}`).classList.add('active');
-      const L = i18n[lang];
-      document.getElementById('t_subtitle').textContent = L.subtitle;
-      document.getElementById('t_mission').textContent = L.mission;
-      document.getElementById('t_instruction').textContent = L.instruction;
-      document.getElementById('searchInput').placeholder = L.search;
-      document.getElementById('t_btn_back').textContent = L.btn_back;
-      document.getElementById('t_copy_link').textContent = L.copy_link;
-      document.getElementById('t_scan_qr').textContent = L.scan_qr;
-      document.getElementById('copyBtn').textContent = L.btn_copy;
-      document.getElementById('waReturnLink').textContent = L.btn_wa;
+
+      document.getElementById('t_subtitle').textContent = i18n[lang].subtitle;
+      document.getElementById('t_mission').textContent = i18n[lang].mission;
+      document.getElementById('t_instruction').textContent = i18n[lang].instruction;
+      document.getElementById('searchInput').placeholder = i18n[lang].search;
+      document.getElementById('t_btn_back').textContent = i18n[lang].btn_back;
+      document.getElementById('t_copy_link').textContent = i18n[lang].copy_link;
+      document.getElementById('t_scan_qr').textContent = i18n[lang].scan_qr;
+      document.getElementById('copyBtn').textContent = i18n[lang].btn_copy;
+      document.getElementById('waReturnLink').textContent = i18n[lang].btn_wa;
+      
       if (isManualClick) { extractNiches(); renderCatalog(); }
     }
+
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const paramLang = urlParams.get('lang');
-    if (paramLang && i18n[paramLang]) { setLang(paramLang); } else { setLang('ru'); }
-    const API_URL = "https://amlatsa-bot-production.up.railway.app";
+    
+    // Автоопределение языка из URL
+    if (paramLang && i18n[paramLang]) {
+        setLang(paramLang);
+    } else {
+        setLang('ru');
+    }
+
+    // УКАЖИ СВОЙ API URL ТУТ:
+    const API_URL = "https://amlatsa-bot-production.up.railway.app"; 
+    
     let allBusinesses = [];
     let agentId = null;
-    let botPhone = "972534488475";
+    let botPhone = "972534488475"; 
     let currentNiche = 'Все';
+
     async function loadCatalog() {
       if (!token) { document.getElementById('catalogGrid').innerHTML = `<div style="text-align:center; padding:40px;">${i18n[currentLang].error_token}</div>`; return; }
       try {
@@ -128,26 +158,34 @@
         allBusinesses = data.businesses || [];
         agentId = data.agent_id;
         if (data.bot_phone) botPhone = data.bot_phone;
+        
         document.getElementById('waReturnLink').href = `https://wa.me/${botPhone}`;
         extractNiches(); renderCatalog();
       } catch (err) {
+        const botPhone = "972534218573";
         const refreshText = encodeURIComponent("1");
         const waRefreshUrl = `https://wa.me/${botPhone}?text=${refreshText}`;
         document.getElementById('catalogGrid').innerHTML = `
           <div style="text-align:center; padding:40px;">
             <div style="font-size:2rem; margin-bottom:16px;">⏳</div>
             <div style="color:var(--text-muted); margin-bottom:24px;">${i18n[currentLang].error_expired}</div>
-            <a href="${waRefreshUrl}" style="display:inline-block; background:#25D366; color:#fff; font-weight:700; font-size:1rem; padding:14px 28px; border-radius:16px; text-decoration:none;">
-              ${i18n[currentLang].refresh_btn}
+            <a href="${waRefreshUrl}" 
+               style="display:inline-block; background:#25D366; color:#fff; font-weight:700; font-size:1rem; padding:14px 28px; border-radius:16px; text-decoration:none; box-shadow:0 8px 24px rgba(37,211,102,0.25);">
+              ${i18n[currentLang].refresh_btn || '🔄 Обновить каталог'}
             </a>
-            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:12px;">${i18n[currentLang].refresh_hint}</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:12px;">
+              ${i18n[currentLang].refresh_hint || 'Нажмите — откроется WhatsApp с командой обновления'}
+            </div>
           </div>`;
       }
     }
+
     function extractNiches() {
       const cats = [i18n[currentLang].filter_all];
-      allBusinesses.forEach(biz => {
-        if (biz.category && biz.category !== '—' && !cats.includes(biz.category)) cats.push(biz.category);
+      allBusinesses.forEach(biz => { 
+        if (biz.category && biz.category !== '—' && !cats.includes(biz.category)) {
+          cats.push(biz.category); 
+        }
       });
       const container = document.getElementById('nicheFilters');
       container.innerHTML = '';
@@ -155,50 +193,60 @@
         const btn = document.createElement('button');
         btn.className = `filter-btn ${cat === currentNiche || (cat === i18n[currentLang].filter_all && currentNiche === 'Все') ? 'active' : ''}`;
         btn.textContent = cat;
-        btn.onclick = () => {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentNiche = cat === i18n[currentLang].filter_all ? 'Все' : cat;
-          renderCatalog();
+        btn.onclick = () => { 
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
+          btn.classList.add('active'); 
+          currentNiche = cat === i18n[currentLang].filter_all ? 'Все' : cat; 
+          renderCatalog(); 
         };
         container.appendChild(btn);
       });
     }
+
     function renderCatalog() {
       const grid = document.getElementById('catalogGrid');
       const query = document.getElementById('searchInput').value.toLowerCase();
+      
       const filtered = allBusinesses.filter(biz => {
-        const matchesSearch = biz.name.toLowerCase().includes(query)
+        const matchesSearch = biz.name.toLowerCase().includes(query) 
           || (biz.business_info && biz.business_info.toLowerCase().includes(query))
           || (biz.category && biz.category.toLowerCase().includes(query))
           || (biz.niche && biz.niche.toLowerCase().includes(query));
+          
         const matchesCat = (currentNiche === 'Все' || currentNiche === i18n[currentLang].filter_all || biz.category === currentNiche);
+        
         return matchesSearch && matchesCat;
       });
+      
       grid.innerHTML = '';
-      if (filtered.length === 0) {
-        grid.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">${i18n[currentLang].not_found}</div>`;
-        return;
+      if (filtered.length === 0) { 
+        grid.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">${i18n[currentLang].not_found}</div>`; 
+        return; 
       }
+      
       filtered.forEach(biz => {
         const card = document.createElement('div');
         card.className = 'biz-card';
         card.onclick = () => openRecommend(biz);
+        
         const displayCat = biz.category || '';
         const displayNiche = (biz.niche && biz.niche !== '—') ? ' / ' + biz.niche : '';
         const fullNicheText = `${displayCat}${displayNiche}`.trim() || 'Бизнес';
+
         card.innerHTML = `
           <div class="biz-header">
             <div class="biz-name">${biz.name}</div>
             <div class="biz-niche">${fullNicheText}</div>
           </div>
           <div class="biz-reward">${i18n[currentLang].bonus} ${biz.commission || '...'}</div>
-          ${biz.business_info ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${biz.business_info}</div>` : ''}
+          ${biz.business_info ? `<div style="font-size: 0.85rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top:8px;">${biz.business_info}</div>` : ''}
         `;
         grid.appendChild(card);
       });
     }
+
     document.getElementById('searchInput').addEventListener('input', renderCatalog);
+
     function openRecommend(biz) {
       document.getElementById('catalogView').style.display = 'none';
       const recView = document.getElementById('recommendView');
@@ -210,6 +258,7 @@
       document.getElementById('refLinkInput').value = link;
       new QRious({ element: document.getElementById('qrCanvas'), value: link, size: 200, level: 'H' });
     }
+
     function closeRecommend() {
       document.getElementById('recommendView').classList.remove('active');
       document.getElementById('catalogView').style.display = 'block';
@@ -217,6 +266,7 @@
       copyBtn.textContent = i18n[currentLang].btn_copy;
       copyBtn.classList.remove('copied');
     }
+
     function copyLink() {
       const input = document.getElementById('refLinkInput');
       input.select();
@@ -225,6 +275,7 @@
       btn.textContent = i18n[currentLang].btn_copied;
       btn.classList.add('copied');
     }
+
     loadCatalog();
   </script>
 </body>
