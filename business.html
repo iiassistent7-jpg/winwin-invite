@@ -83,6 +83,9 @@
     .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
     .form-control:focus { border-color: var(--accent-1); }
     .form-control:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pay-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pay-btn { flex: 1; min-width: 80px; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; text-align: center; }
+    .pay-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
     .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
     .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; align-items: flex-end; justify-content: center; }
@@ -174,9 +177,42 @@
 
     <div id="tab_edit" class="tab-content">
       <div class="form-group"><label id="t_f_name">Название бизнеса</label><input type="text" class="form-control" id="f_name"></div>
-      <div class="form-group"><label id="t_f_niche">Ниша</label><input type="text" class="form-control" id="f_niche" disabled></div>
+      <div class="form-group">
+        <label id="t_f_niche">Категория бизнеса</label>
+        <select class="form-control" id="f_niche" onchange="updateEditSubcategories()">
+          <option value="" disabled>Выберите категорию...</option>
+          <option value="Красота и эстетика">Красота и эстетика</option>
+          <option value="Еда и рестораны">Еда и рестораны</option>
+          <option value="Магазины и товары">Магазины и товары</option>
+          <option value="Здоровье и медицина">Здоровье и медицина</option>
+          <option value="Юриспруденция">Юриспруденция</option>
+          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+          <option value="Дом и ремонт">Дом и ремонт</option>
+          <option value="Автомобили">Автомобили</option>
+          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
+          <option value="Обучение и спорт">Обучение и спорт</option>
+          <option value="Домашние питомцы">Домашние питомцы</option>
+          <option value="Туризм и отдых">Туризм и отдых</option>
+          <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
+        </select>
+      </div>
+      <div class="form-group" id="f_subniche_group" style="display:none;">
+        <label id="t_f_subniche">Специализация</label>
+        <select class="form-control" id="f_subniche">
+          <option value="" disabled selected>Выберите специализацию...</option>
+        </select>
+      </div>
       <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
-      <div class="form-group"><label id="t_f_pay">Способ выплаты</label><input type="text" class="form-control" id="f_pay" placeholder="Bit / PayPal / Bank..."></div>
+      <div class="form-group">
+        <label id="t_f_pay">Способ выплаты</label>
+        <div class="pay-btns">
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Bit')">💳 Bit</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('PayPal')">🅿️ PayPal</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Bank')">🏦 Bank</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Cash')">💵 Cash</button>
+        </div>
+        <input type="hidden" id="f_pay">
+      </div>
       <div class="form-group"><label id="t_f_link">Ссылка (Сайт / Соцсети)</label><input type="text" class="form-control" id="f_link" placeholder="https://..."></div>
       <button class="btn-save" onclick="submitEditForm()" id="t_btn_save">💾 Сохранить изменения</button>
       <button class="btn-cancel" onclick="switchTab('profile')" id="t_btn_cancel">Отмена</button>
@@ -440,10 +476,29 @@
 
     function renderEditForm() {
       document.getElementById('f_name').value = bizData.name || '';
-      document.getElementById('f_niche').value = bizData.niche || '';
+      // Категория — берём из bizData.niche (там хранится категория первого уровня или подкатегория)
+      const catSel = document.getElementById('f_niche');
+      // Пробуем подобрать категорию
+      const currentCat = bizData.category || bizData.niche || '';
+      for (let i = 0; i < catSel.options.length; i++) {
+        if (catSel.options[i].value === currentCat) { catSel.selectedIndex = i; break; }
+      }
+      if (currentCat) updateEditSubcategories();
+      // Если нише есть подкатегория — выбираем её
+      const subSel = document.getElementById('f_subniche');
+      if (bizData.niche && subSel) {
+        for (let i = 0; i < subSel.options.length; i++) {
+          if (subSel.options[i].value === bizData.niche) { subSel.selectedIndex = i; break; }
+        }
+      }
       document.getElementById('f_comm').value = bizData.commission || '';
-      document.getElementById('f_pay').value = bizData.payment_method || '';
       document.getElementById('f_link').value = bizData.business_info || '';
+      // Кнопки оплаты
+      const pm = bizData.payment_method || '';
+      document.getElementById('f_pay').value = pm;
+      document.querySelectorAll('.pay-btn').forEach(b => {
+        b.classList.toggle('active', pm && b.textContent.includes(pm));
+      });
     }
 
     async function submitEditForm() {
@@ -451,8 +506,12 @@
       const origText = btn.textContent;
       btn.textContent = i18n[currentLang].action_processing;
       btn.style.opacity = '0.7';
+      const subNicheEl = document.getElementById('f_subniche');
+      const catEl = document.getElementById('f_niche');
       const payload = {
         name: document.getElementById('f_name').value,
+        niche: (subNicheEl && subNicheEl.value) ? subNicheEl.value : (catEl ? catEl.value : ''),
+        category: catEl ? catEl.value : '',
         commission: document.getElementById('f_comm').value,
         payment_method: document.getElementById('f_pay').value,
         business_info: document.getElementById('f_link').value
@@ -548,6 +607,39 @@
         document.getElementById('m_result_msg').style.color = 'var(--danger)';
         document.getElementById('m_btn_finish').style.display = 'block';
       }
+    }
+
+    const EDIT_SUBCATEGORIES = {
+      "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+      "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+      "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+      "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+      "Юриспруденция": ["Коммерческое право (для бизнеса)","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+      "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+      "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+      "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+      "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+      "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+      "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+      "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+      "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+    };
+
+    function updateEditSubcategories() {
+      const cat = document.getElementById('f_niche').value;
+      const group = document.getElementById('f_subniche_group');
+      const sub = document.getElementById('f_subniche');
+      const subs = EDIT_SUBCATEGORIES[cat] || [];
+      sub.innerHTML = '<option value="" disabled selected>Выберите специализацию...</option>';
+      subs.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sub.appendChild(o); });
+      group.style.display = subs.length > 0 ? 'block' : 'none';
+    }
+
+    function selectPayMethod(method) {
+      document.getElementById('f_pay').value = method;
+      document.querySelectorAll('.pay-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.includes(method));
+      });
     }
 
     window.onload = init;
