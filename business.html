@@ -632,7 +632,14 @@
       const subs = EDIT_SUBCATEGORIES[cat] || [];
       sub.innerHTML = '<option value="" disabled selected>Выберите специализацию...</option>';
       subs.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sub.appendChild(o); });
-      group.style.display = subs.length > 0 ? 'block' : 'none';
+      // Убираем инлайн стиль и меняем видимость через класс
+      if (subs.length > 0) {
+        group.removeAttribute('style');
+        group.style.display = 'block';
+        group.style.marginTop = '0';
+      } else {
+        group.style.display = 'none';
+      }
     }
 
     function selectPayMethod(method) {
