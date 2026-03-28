@@ -8,6 +8,55 @@
   <style>
     /* ── Themes ─────────────────────────────────────────────────────── */
     :root {
+      --bg:        #0F0F1A;
+      --bg2:       #16162A;
+      --bg3:       #1E1E30;
+      --surface:   rgba(255,255,255,0.03);
+      --surface2:  rgba(255,255,255,0.05);
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.04);
+      --text:      #FFFFFF;
+      --text2:     #A0A0B0;
+      --text3:     #606070;
+      --accent:    #56CCF2;
+      --accent2:   #2F80ED;
+      --accentbg:  rgba(86,204,242,0.12);
+      --green:     #27AE60;
+      --greenbg:   rgba(39,174,96,0.12);
+      --gold:      #F2C94C;
+      --goldbg:    rgba(242,201,76,0.12);
+      --blue:      #2F80ED;
+      --bluebg:    rgba(47,128,237,0.12);
+      --shadow:    0 2px 16px rgba(0,0,0,0.4);
+      --shadow2:   0 8px 32px rgba(0,0,0,0.6);
+      --radius:    24px;
+      --radius-sm: 14px;
+      --nav-h:     72px;
+    }
+    [data-theme="dark"] {
+      --bg:        #0F0F1A;
+      --bg2:       #16162A;
+      --bg3:       #1E1E30;
+      --surface:   rgba(255,255,255,0.03);
+      --surface2:  rgba(255,255,255,0.05);
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.04);
+      --text:      #FFFFFF;
+      --text2:     #A0A0B0;
+      --text3:     #606070;
+      --accent:    #56CCF2;
+      --accent2:   #2F80ED;
+      --accentbg:  rgba(86,204,242,0.12);
+      --green:     #27AE60;
+      --greenbg:   rgba(39,174,96,0.12);
+      --gold:      #F2C94C;
+      --goldbg:    rgba(242,201,76,0.12);
+      --blue:      #2F80ED;
+      --bluebg:    rgba(47,128,237,0.12);
+      --shadow:    0 2px 16px rgba(0,0,0,0.4);
+      --shadow2:   0 8px 32px rgba(0,0,0,0.6);
+    }
+    [data-theme="light"] {
       --bg:        #FAFAF8;
       --bg2:       #F2F1EE;
       --bg3:       #E8E6E1;
@@ -19,42 +68,16 @@
       --text2:     #6B6560;
       --text3:     #9B9490;
       --accent:    #FF5A5F;
-      --accent2:   #FF7E82;
+      --accent2:   #E84393;
       --accentbg:  rgba(255,90,95,0.1);
       --green:     #00A699;
       --greenbg:   rgba(0,166,153,0.1);
       --gold:      #E8A838;
       --goldbg:    rgba(232,168,56,0.1);
-      --blue:      #4A6CF7;
-      --bluebg:    rgba(74,108,247,0.1);
+      --blue:      #2F80ED;
+      --bluebg:    rgba(47,128,237,0.1);
       --shadow:    0 2px 16px rgba(0,0,0,0.06);
       --shadow2:   0 8px 32px rgba(0,0,0,0.10);
-      --radius:    20px;
-      --radius-sm: 12px;
-      --nav-h:     72px;
-    }
-    [data-theme="dark"] {
-      --bg:        #111110;
-      --bg2:       #1A1918;
-      --bg3:       #242220;
-      --surface:   #1E1D1B;
-      --surface2:  #252320;
-      --border:    rgba(255,255,255,0.08);
-      --border2:   rgba(255,255,255,0.04);
-      --text:      #F5F3EF;
-      --text2:     #A09890;
-      --text3:     #6B6560;
-      --accent:    #FF5A5F;
-      --accent2:   #FF7E82;
-      --accentbg:  rgba(255,90,95,0.12);
-      --green:     #00C4B4;
-      --greenbg:   rgba(0,196,180,0.12);
-      --gold:      #F0B840;
-      --goldbg:    rgba(240,184,64,0.12);
-      --blue:      #6B8DFF;
-      --bluebg:    rgba(107,141,255,0.12);
-      --shadow:    0 2px 16px rgba(0,0,0,0.3);
-      --shadow2:   0 8px 32px rgba(0,0,0,0.4);
     }
 
     /* ── Reset ──────────────────────────────────────────────────────── */
@@ -640,10 +663,10 @@
   // ── i18n ──────────────────────────────────────────────────────────
   const i18n = {
     ru: {
-      greeting: "Привет,", earned: "Уже получено ₪", h_earned: "Заработано ₪",
+      greeting: "Привет,", earned: "Ценность рекомендаций ₪", h_earned: "Заработано ₪",
       h_deals: "Сделок", h_pending: "Ждут ₪",
       pending_lbl: "Ждут выплаты ₪", active_lbl: "Сделок в работе",
-      finances: "Финансы", awaiting: "Ожидаем выплату от:",
+      finances: "Ваш капитал", awaiting: "Ожидаем выплату от:",
       all_paid: "✅ Все выплаты получены",
       funnel: "Воронка конверсии",
       f_progress: "В работе", f_closed: "Закрыто", f_rejected: "Отклонено",
@@ -731,7 +754,7 @@
 
   // ── State ─────────────────────────────────────────────────────────
   let lang = 'ru';
-  let theme = localStorage.getItem('ww_theme') || 'light';
+  let theme = localStorage.getItem('ww_theme') || 'dark';
   let dashData = null;
   let chartInstance = null;
   const API_URL = "https://amlatsa-bot-production.up.railway.app";
