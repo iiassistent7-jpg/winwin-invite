@@ -322,7 +322,7 @@
                 <div class="instruction-text" id="t_scan_qr_inv">📱 Или дайте отсканировать QR-код:</div>
                 <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
             </div>
-            <button onclick="closeInviteScreen()" class="btn-primary" style="margin-top:16px;background:transparent;border:1px solid var(--border);color:var(--text2);">← Назад к каталогу</button>
+            <button onclick="closeInviteScreen()" class="btn-primary btn-accent" style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;"><i data-feather="arrow-left" style="width:16px;height:16px;"></i> Назад к каталогу</button>
         </div>
     </div>
 
@@ -347,7 +347,7 @@
                 <div class="qr-container"><canvas id="qrCanvas"></canvas></div>
             </div>
             <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">Вернуться в WhatsApp</a>
-            <button onclick="closeRecommend()" class="btn-primary" style="margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--text2);" id="t_btn_back_rec">← Назад к каталогу</button>
+            <button onclick="closeRecommend()" class="btn-primary btn-accent" style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;" id="t_btn_back_rec"><i data-feather="arrow-left" style="width:16px;height:16px;"></i> Назад к каталогу</button>
         </div>
     </div>
 
@@ -369,9 +369,11 @@
             <button class="btn-back" onclick="closeBizReg()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_biz">Назад</span></button>
             <div class="rec-header-card">
                 <div class="rec-title" id="t_biz_reg_title" style="font-size:1.3rem;margin-bottom:20px;">Зарегистрировать бизнес</div>
+
                 <label class="input-label">Название бизнеса</label>
                 <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
-                <label class="input-label">Категория / ниша</label>
+
+                <label class="input-label">Категория</label>
                 <select class="custom-input native-select" id="bizRegCat" onchange="updateBizSubcats(this.value)">
                     <option value="" disabled selected>Выберите категорию...</option>
                     <option value="beauty">💅 Красота и эстетика</option>
@@ -383,15 +385,40 @@
                     <option value="finance">💼 Финансы</option>
                     <option value="food">🍕 Ресторанный бизнес</option>
                 </select>
-                <label class="input-label" id="lbl_bizRegNiche" style="display:none;">Подкатегория / специализация</label>
+
+                <label class="input-label" id="lbl_bizRegNiche" style="display:none;">Специализация</label>
                 <select class="custom-input native-select" id="bizRegNiche" style="display:none;">
-                    <option value="" disabled selected>Выберите подкатегорию...</option>
+                    <option value="" disabled selected>Выберите специализацию...</option>
                 </select>
-                <label class="input-label">Комиссия агенту (%)</label>
-                <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10">
+
+                <label class="input-label" style="margin-top:4px;">Тип вознаграждения агенту</label>
+                <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+                    <button class="pay-btn" onclick="selectReward('pct',this)" id="rewardPct">% от сделки</button>
+                    <button class="pay-btn" onclick="selectReward('fix',this)" id="rewardFix">Фикс сумма</button>
+                    <button class="pay-btn" onclick="selectReward('gift',this)" id="rewardGift">🎁 Подарок</button>
+                </div>
+                <input type="hidden" id="bizRewardType">
+                <div id="bizRewardPctBlock" style="display:none;">
+                    <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10 (%)">
+                </div>
+                <div id="bizRewardFixBlock" style="display:none;">
+                    <input class="custom-input" id="bizRegCommFix" type="number" placeholder="Например: 200 (₪)">
+                </div>
+                <div id="bizRewardGiftBlock" style="display:none;">
+                    <textarea class="custom-input" id="bizRegGiftDesc" rows="3" placeholder="Опишите подарок или бонус для клиента..." style="resize:none;height:auto;"></textarea>
+                </div>
+
                 <label class="input-label">Способ выплаты агентам</label>
-                <input class="custom-input" id="bizRegPay" type="text" placeholder="Bit / Наличные / Перевод">
-                <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:16px;" id="t_biz_reg_submit">Зарегистрировать</button>
+                <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+                    <button class="pay-btn" onclick="selectBizPay('Bit',this)">Bit</button>
+                    <button class="pay-btn" onclick="selectBizPay('Paybox',this)">Paybox</button>
+                    <button class="pay-btn" onclick="selectBizPay('PayPal',this)">PayPal</button>
+                    <button class="pay-btn" onclick="selectBizPay('Наличные',this)">Наличные</button>
+                    <button class="pay-btn" onclick="selectBizPay('Перевод',this)">Перевод</button>
+                </div>
+                <input type="hidden" id="bizRegPay">
+
+                <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:8px;" id="t_biz_reg_submit">Зарегистрировать</button>
             </div>
         </div>
     </div>
@@ -1088,6 +1115,22 @@ function updateBizInfoLink(link) {
 }
 
 
+// ── Biz reward type selector ─────────────────────────────────────────────
+function selectReward(type, btnEl) {
+    document.getElementById('bizRewardType').value = type;
+    document.querySelectorAll('[id^="reward"]').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    // Показываем нужный блок
+    ['Pct','Fix','Gift'].forEach(t => {
+        document.getElementById('bizReward'+t+'Block').style.display = (type.toLowerCase()===t.toLowerCase() || (type==='pct'&&t==='Pct') || (type==='fix'&&t==='Fix') || (type==='gift'&&t==='Gift')) ? 'block' : 'none';
+    });
+}
+function selectBizPay(method, btnEl) {
+    document.getElementById('bizRegPay').value = method;
+    document.querySelectorAll('[onclick^="selectBizPay"]').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+}
+
 // ── Subcategories for biz registration ───────────────────────────────────
 const bizSubcats = {
     beauty: ['💆 Косметология','💅 Маникюр / педикюр','💇 Парикмахерская','✨ Лазерная эпиляция','🧖 СПА / массаж','🦷 Зубная эстетика','👁️ Перманентный макияж'],
@@ -1122,17 +1165,43 @@ function updateBizSubcats(catVal) {
 function openBizReg() { openFullscreen('bizRegScreen'); }
 function closeBizReg() { closeFullscreen('bizRegScreen'); }
 async function submitBizReg() {
-    const name=document.getElementById('bizRegName').value.trim();
-    const cat=document.getElementById('bizRegCat').value;
-    const subcat=document.getElementById('bizRegNiche').value;
-    const niche = subcat || cat;
-    const commVal=document.getElementById('bizRegComm').value.trim(), pay=document.getElementById('bizRegPay').value.trim();
-    if (!name||!niche) return;
-    const commission = commVal ? `${commVal}%` : null;
-    const btn=document.getElementById('t_biz_reg_submit'); btn.textContent='...'; btn.disabled=true;
+    const name    = document.getElementById('bizRegName').value.trim();
+    const cat     = document.getElementById('bizRegCat').value;
+    const subcat  = document.getElementById('bizRegNiche').value;
+    const niche   = subcat || cat;
+    const pay     = document.getElementById('bizRegPay').value.trim();
+    const rwType  = document.getElementById('bizRewardType').value;
+
+    if (!name || !niche) { alert('Укажите название и категорию'); return; }
+
+    // Собираем вознаграждение в зависимости от типа
+    let commission = null, rewardValue = '', rewardDesc = '';
+    if (rwType === 'pct') {
+        rewardValue = document.getElementById('bizRegComm').value.trim();
+        commission = rewardValue ? `${rewardValue}%` : null;
+    } else if (rwType === 'fix') {
+        rewardValue = document.getElementById('bizRegCommFix').value.trim();
+        commission = rewardValue ? `${rewardValue} ₪` : null;
+    } else if (rwType === 'gift') {
+        rewardDesc = document.getElementById('bizRegGiftDesc').value.trim();
+        commission = rewardDesc || 'Подарок';
+    }
+
+    const btn = document.getElementById('t_biz_reg_submit');
+    btn.textContent='...'; btn.disabled=true;
     try {
-        const res = await fetch(`${API_URL}/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'business',name,niche:[niche],commission,pay_pref:pay,lang,sender:catalogAgentId,rewardType:commission?'pct':'',rewardValue:commVal})});
-        if (res.ok) { closeBizReg(); alert('Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.'); }
+        const res = await fetch(`${API_URL}/register`, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                role:'business', name, niche:[niche],
+                commission, pay_pref:pay, lang, sender:catalogAgentId,
+                rewardType:rwType, rewardValue: rewardValue||rewardDesc,
+            })
+        });
+        if (res.ok) {
+            closeBizReg();
+            alert('Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.');
+        }
     } catch(e){}
     btn.textContent=(i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled=false;
 }
