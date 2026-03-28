@@ -275,8 +275,18 @@
         <div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
         <div class="loader-err" id="loaderErr">
             <div class="loader-err-title">Ссылка устарела</div>
-            <div class="loader-err-sub">Запросите новую ссылку в боте</div>
-            <a href="#" class="btn-primary btn-wa" id="errBtn" style="max-width:240px;margin:0 auto;display:block;text-decoration:none;text-align:center;">WhatsApp</a>
+            <div class="loader-err-sub">Нажмите кнопку ниже, затем отправьте сообщение</div>
+            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 16px;margin:0 auto 12px;max-width:280px;text-align:left;">
+                <div style="font-size:.7rem;color:#A0A0B0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Сообщение для отправки:</div>
+                <div style="font-size:.95rem;font-weight:600;color:#fff;">Снова войти в личный кабинет</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+                <span style="font-size:.82rem;color:#A0A0B0;">нажмите</span>
+                <span style="font-size:1.4rem;">👇</span>
+                <span style="font-size:.82rem;color:#A0A0B0;">и отправьте</span>
+                <span style="font-size:1.4rem;">➡️</span>
+            </div>
+            <a href="#" class="btn-primary btn-wa" id="errBtn" style="max-width:280px;margin:0 auto;display:block;text-decoration:none;text-align:center;">Открыть WhatsApp</a>
         </div>
     </div>
 
@@ -360,16 +370,20 @@
                 <label class="input-label">Название бизнеса</label>
                 <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
                 <label class="input-label">Категория / ниша</label>
-                <select class="custom-input" id="bizRegNiche">
-                    <option value="" disabled selected>Выберите...</option>
-                    <option>💅 Красота и эстетика</option>
-                    <option>🏥 Здоровье и медицина</option>
-                    <option>🏠 Дом и ремонт</option>
-                    <option>⚖️ Юриспруденция</option>
-                    <option>🚗 Автомобили</option>
-                    <option>📚 Образование</option>
-                    <option>💼 Финансы</option>
-                    <option>🍕 Ресторанный бизнес</option>
+                <select class="custom-input" id="bizRegCat" onchange="updateBizSubcats(this.value)">
+                    <option value="" disabled selected>Выберите категорию...</option>
+                    <option value="beauty">💅 Красота и эстетика</option>
+                    <option value="health">🏥 Здоровье и медицина</option>
+                    <option value="home">🏠 Дом и ремонт</option>
+                    <option value="law">⚖️ Юриспруденция</option>
+                    <option value="auto">🚗 Автомобили</option>
+                    <option value="edu">📚 Образование</option>
+                    <option value="finance">💼 Финансы</option>
+                    <option value="food">🍕 Ресторанный бизнес</option>
+                </select>
+                <label class="input-label" id="lbl_bizRegNiche" style="display:none;">Подкатегория / специализация</label>
+                <select class="custom-input" id="bizRegNiche" style="display:none;">
+                    <option value="" disabled selected>Выберите подкатегорию...</option>
                 </select>
                 <label class="input-label">Комиссия агенту (%)</label>
                 <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10">
@@ -451,11 +465,11 @@
         <div class="cat-filter-drop">
             <select id="catFilterSelect" onchange="currentNiche=this.value;renderCatalog()"></select>
         </div>
+        <div style="margin-bottom:12px;">
+            <button class="btn-outline" onclick="openInviteScreen()" id="t_invite_btn">Не можете найти тех, кого хотите порекомендовать?</button>
+        </div>
         <div class="cat-grid" id="catGrid">
             <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
-        </div>
-        <div style="text-align:center;margin-bottom:24px;">
-            <button class="btn-outline" onclick="openInviteScreen()" id="t_invite_btn">Не можете найти тех, кого хотите порекомендовать?</button>
         </div>
     </div>
 
@@ -586,24 +600,28 @@
         <div id="statSheetContent"></div>
     </div>
 
-    <!-- Sheet: Profile edit -->
-    <div class="bottom-sheet" id="profileSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_edit_profile">Редактировать профиль</div>
-        <label class="input-label" id="t_edit_name">Имя</label>
-        <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
-        <label class="input-label" id="t_edit_payment">Способ получения</label>
-        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-            <button class="pay-btn" onclick="selectPay('Bit',this)">Bit</button>
-            <button class="pay-btn" onclick="selectPay('Paybox',this)">Paybox</button>
-            <button class="pay-btn" onclick="selectPay('PayPal',this)">PayPal</button>
-            <button class="pay-btn" onclick="selectPay('Наличные',this)" id="t_pay_cash">Наличные</button>
-            <button class="pay-btn" onclick="selectPay('Перевод',this)" id="t_pay_bank">Перевод</button>
+    <!-- Fullscreen: Profile edit -->
+    <div class="fullscreen" id="profileScreen">
+        <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+            <button class="btn-back" onclick="closeProfileEdit()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_profile">Назад</span></button>
+            <div class="rec-header-card">
+                <div class="rec-title" id="t_edit_profile" style="font-size:1.3rem;margin-bottom:20px;">Редактировать профиль</div>
+                <label class="input-label" id="t_edit_name">Имя</label>
+                <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
+                <label class="input-label" id="t_edit_payment">Способ получения</label>
+                <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+                    <button class="pay-btn" onclick="selectPay('Bit',this)">Bit</button>
+                    <button class="pay-btn" onclick="selectPay('Paybox',this)">Paybox</button>
+                    <button class="pay-btn" onclick="selectPay('PayPal',this)">PayPal</button>
+                    <button class="pay-btn" onclick="selectPay('Наличные',this)" id="t_pay_cash">Наличные</button>
+                    <button class="pay-btn" onclick="selectPay('Перевод',this)" id="t_pay_bank">Перевод</button>
+                </div>
+                <input type="hidden" id="editPayment">
+                <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
+                <input class="custom-input" id="editLink" type="url" placeholder="https://...">
+            </div>
+            <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:4px;">Сохранить</button>
         </div>
-        <input type="hidden" id="editPayment">
-        <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
-        <input class="custom-input" id="editLink" type="url" placeholder="https://...">
-        <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:10px;">Сохранить</button>
     </div>
 
     <!-- Sheet: Niche (PRO) -->
@@ -965,7 +983,13 @@ async function openLeaderboard() {
     if (!leaderboardData) {
         box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2);">...</div>`;
         try {
-            const res = await fetch(`${API_URL}/api/leaderboard?token=${token}`);
+            // Получаем leaderboard-токен по agent_id из dashData
+            const agentId = dashData?.agent_id;
+            if (!agentId) throw new Error('no agent_id');
+            const lbTokRes = await fetch(`${API_URL}/api/leaderboard/token?agent_id=${agentId}`);
+            if (!lbTokRes.ok) throw new Error('token error');
+            const lbTok = (await lbTokRes.json()).token;
+            const res = await fetch(`${API_URL}/api/leaderboard?token=${lbTok}`);
             if (res.ok) { leaderboardData = await res.json(); renderLeaderboardUI(); }
             else box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка загрузки.</div>`;
         } catch(e) { box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка сети.</div>`; }
@@ -1039,8 +1063,9 @@ function openProfileEdit() {
     document.getElementById('editPayment').value = pay;
     document.querySelectorAll('.pay-btn').forEach(b => b.classList.toggle('active', !!pay && b.textContent.trim().toLowerCase()===pay.toLowerCase()));
     document.getElementById('editLink').value = dashData.business_info||'';
-    openSheet('profileSheet');
+    openFullscreen('profileScreen');
 }
+function closeProfileEdit() { closeFullscreen('profileScreen'); }
 async function saveProfile() {
     const name=document.getElementById('editName').value.trim(), payment=document.getElementById('editPayment').value.trim(), link=document.getElementById('editLink').value.trim();
     const btn=document.getElementById('saveProfileBtn'); btn.textContent='...'; btn.disabled=true;
@@ -1050,7 +1075,7 @@ async function saveProfile() {
             if (name){dashData.user_name=name;document.getElementById('t_name').textContent=name;document.getElementById('profileName').textContent=name;document.getElementById('profileAvatar').textContent=name[0].toUpperCase();}
             if (payment){dashData.payment_method=payment;document.getElementById('v_pay_method').textContent=payment;}
             if (link){dashData.business_info=link;document.getElementById('bizInfoRow').style.display='flex';updateBizInfoLink(link);}
-            closeAllSheets();
+            closeFullscreen('profileScreen');
         }
     } catch(e){}
     btn.textContent=(i18n[lang]||i18n.ru).save; btn.disabled=false;
@@ -1060,11 +1085,38 @@ function updateBizInfoLink(link) {
     el.innerHTML = (link&&link.startsWith('http')) ? `<a href="${link}" target="_blank">${link}</a>` : link||'—';
 }
 
+
+// ── Subcategories for biz registration ───────────────────────────────────
+const bizSubcats = {
+    beauty: ['💆 Косметология','💅 Маникюр / педикюр','💇 Парикмахерская','✨ Лазерная эпиляция','🧖 СПА / массаж','🦷 Зубная эстетика','👁️ Перманентный макияж'],
+    health: ['🩺 Семейный врач','🧠 Психология / коучинг','💊 Аптека','🏋️ Фитнес / тренер','🌿 Натуропатия','👶 Педиатрия','🦴 Ортопедия / хиропрактика'],
+    home:   ['🔨 Ремонт и строительство','🛋️ Дизайн интерьера','🌿 Ландшафтный дизайн','🪟 Окна и двери','🏡 Клининг','🔧 Сантехника / электрика','🛁 Ванные комнаты'],
+    law:    ['⚖️ Семейное право','🏠 Недвижимость','💼 Бизнес-право','🛂 Иммиграция','📋 Налоги','🚗 ДТП и страхование'],
+    auto:   ['🔧 СТО / ремонт','🚗 Продажа авто','🔑 Автопрокат','🛡️ Страхование','🚿 Автомойка','🎓 Автошкола'],
+    edu:    ['📐 Репетитор','💻 IT / программирование','🎨 Творческие курсы','🌍 Иностранные языки','👶 Детское развитие','📊 Бизнес-образование'],
+    finance:['💳 Бухгалтерия','📈 Инвестиции','🏦 Ипотека / кредиты','💰 Страхование жизни','🪙 Крипто-консультации'],
+    food:   ['🍕 Пиццерия','🍣 Суши / японская кухня','☕ Кафе','🥩 Стейк-хаус','🥗 Здоровое питание','🎂 Кондитерская','🚗 Доставка еды'],
+};
+
+function updateBizSubcats(catVal) {
+    const subs = bizSubcats[catVal] || [];
+    const sel = document.getElementById('bizRegNiche');
+    const lbl = document.getElementById('lbl_bizRegNiche');
+    if (!subs.length) { sel.style.display='none'; lbl.style.display='none'; return; }
+    sel.innerHTML = '<option value="" disabled selected>Выберите подкатегорию...</option>';
+    subs.forEach(s => { const o=document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
+    sel.style.display = 'block';
+    lbl.style.display = 'block';
+    sel.value = '';
+}
 // ── Biz registration ──────────────────────────────────────────────────────
 function openBizReg() { openFullscreen('bizRegScreen'); }
 function closeBizReg() { closeFullscreen('bizRegScreen'); }
 async function submitBizReg() {
-    const name=document.getElementById('bizRegName').value.trim(), niche=document.getElementById('bizRegNiche').value;
+    const name=document.getElementById('bizRegName').value.trim();
+    const cat=document.getElementById('bizRegCat').value;
+    const subcat=document.getElementById('bizRegNiche').value;
+    const niche = subcat || cat;
     const commVal=document.getElementById('bizRegComm').value.trim(), pay=document.getElementById('bizRegPay').value.trim();
     if (!name||!niche) return;
     const commission = commVal ? `${commVal}%` : null;
@@ -1080,11 +1132,19 @@ async function submitBizReg() {
 async function loadCatalog() {
     if (!dashData?.agent_id) return;
     catalogAgentId=dashData.agent_id; catalogBotPhone=dashData.bot_phone||'972534218573';
+    document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
+    // Кэш в sessionStorage — не грузим повторно в рамках одной сессии
+    const cacheKey = `catalog_${catalogAgentId}`;
     try {
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            allBusinesses = JSON.parse(cached);
+            extractNiches(); renderCatalog(); return;
+        }
         const tok = await fetch(`${API_URL}/api/catalog/token?agent_id=${catalogAgentId}`).then(r=>r.json()).then(d=>d.token);
         const catData = await fetch(`${API_URL}/api/catalog?token=${tok}`).then(r=>r.json());
         allBusinesses = catData.businesses||[];
-        document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
+        try { sessionStorage.setItem(cacheKey, JSON.stringify(allBusinesses)); } catch(e){}
         extractNiches(); renderCatalog();
     } catch(e) {
         document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">Каталог недоступен. Откройте WhatsApp и напишите "1".</div>`;
@@ -1218,7 +1278,8 @@ function renderAll() {
     // CTA
     const phone=d.bot_phone||'972534218573', waUrl=`https://wa.me/${phone}`;
     ['ctaBtnHome','ctaBtnProfile'].forEach(id=>{const btn=document.getElementById(id);if(!btn)return;btn.style.display='block';btn.href=waUrl;if(d.channel==='telegram'){btn.className='btn-primary btn-tg';btn.textContent='Telegram';}else btn.textContent=L.wa_btn;});
-    document.getElementById('errBtn').href=waUrl;
+    const errMsg = encodeURIComponent('Снова войти в личный кабинет');
+    document.getElementById('errBtn').href = `https://wa.me/972534218573?text=${errMsg}`;
     feather.replace();
 }
 
@@ -1250,8 +1311,42 @@ function showError() {
     document.getElementById('loaderDots').style.display='none';
     document.getElementById('loaderSub').style.display='none';
     document.getElementById('loaderErr').style.display='block';
-    document.getElementById('errBtn').href='https://wa.me/972534218573';
+    document.getElementById('errBtn').href=`https://wa.me/972534218573?text=${encodeURIComponent('Снова войти в личный кабинет')}`;
 }
+
+// ── Swipe между вкладками ─────────────────────────────────────────────────
+(function() {
+    const tabs = ['home','catalog','history','wallet','profile'];
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+
+    function currentTabIndex() {
+        return tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+    }
+
+    document.querySelector('.app').addEventListener('touchstart', e => {
+        // Не перехватываем если внутри fullscreen или bottom-sheet
+        if (document.querySelector('.fullscreen.active') || document.querySelector('.bottom-sheet.active')) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }, {passive: true});
+
+    document.querySelector('.app').addEventListener('touchend', e => {
+        if (document.querySelector('.fullscreen.active') || document.querySelector('.bottom-sheet.active')) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+        // Горизонтальный свайп: быстрый (< 400ms), длинный (> 60px), горизонтальнее вертикального
+        if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            const cur = currentTabIndex();
+            const next = dx < 0 ? cur + 1 : cur - 1;
+            if (next >= 0 && next < tabs.length) {
+                const navBtns = document.querySelectorAll('.nav-item');
+                switchTab(tabs[next], navBtns[next]);
+            }
+        }
+    }, {passive: true});
+})();
 window.onload = init;
 </script>
 </body>
