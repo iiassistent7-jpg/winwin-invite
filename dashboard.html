@@ -1,346 +1,1010 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win Agent Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Win-Win · Кабинет</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
+    /* ── Themes ─────────────────────────────────────────────────────── */
     :root {
-      --bg-1: #1a1a2e; --bg-2: #0f0f1a;
-      --accent-1: #56CCF2; --accent-2: #2F80ED;
-      --text-muted: #a0a0b0;
-      --card: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1);
-      --success: #27AE60; --danger: #EB5757; --warning: #F2C94C;
+      --bg:        #FAFAF8;
+      --bg2:       #F2F1EE;
+      --bg3:       #E8E6E1;
+      --surface:   #FFFFFF;
+      --surface2:  #F7F6F3;
+      --border:    rgba(0,0,0,0.08);
+      --border2:   rgba(0,0,0,0.05);
+      --text:      #1A1714;
+      --text2:     #6B6560;
+      --text3:     #9B9490;
+      --accent:    #FF5A5F;
+      --accent2:   #FF7E82;
+      --accentbg:  rgba(255,90,95,0.1);
+      --green:     #00A699;
+      --greenbg:   rgba(0,166,153,0.1);
+      --gold:      #E8A838;
+      --goldbg:    rgba(232,168,56,0.1);
+      --blue:      #4A6CF7;
+      --bluebg:    rgba(74,108,247,0.1);
+      --shadow:    0 2px 16px rgba(0,0,0,0.06);
+      --shadow2:   0 8px 32px rgba(0,0,0,0.10);
+      --radius:    20px;
+      --radius-sm: 12px;
+      --nav-h:     72px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
-    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
-    [dir="rtl"] { text-align: right; }
-    [dir="rtl"] .debt-val { text-align: left; }
-    .shell { width: 100%; max-width: 600px; padding: 24px 16px 40px 16px; position: relative; }
-    .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
-    .header { text-align: center; margin-bottom: 32px; }
-    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
-    .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
-    .section-title { font-size: 1rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; margin-top: 32px; }
-    .fin-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
-    .fin-card.main { background: linear-gradient(135deg, rgba(39,174,96,0.1), transparent); border-color: rgba(39,174,96,0.3); align-items: center; text-align: center; margin-bottom: 12px; }
-    .fin-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-    .fin-lbl { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
-    .fin-val { font-size: 2rem; font-weight: 800; display: flex; align-items: baseline; gap: 4px; }
-    .fin-card.main .fin-val { font-size: 3rem; }
-    .currency { font-size: 0.6em; opacity: 0.7; font-weight: 600; }
-    .val-warning { color: var(--warning); text-shadow: 0 0 15px rgba(242,201,76,0.4); }
-    .val-accent { color: var(--accent-1); text-shadow: 0 0 15px rgba(86,204,242,0.4); }
-    .val-success { color: var(--success); text-shadow: 0 0 15px rgba(39,174,96,0.4); }
-    .debtors-list { display: flex; flex-direction: column; gap: 8px; }
-    .debtor-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .debt-info { display: flex; flex-direction: column; }
-    .debt-name { font-weight: 800; font-size: 1.05rem; }
-    .debt-niche { font-size: 0.75rem; color: var(--accent-1); }
-    .debt-val { font-weight: 800; color: var(--warning); font-size: 1.1rem; text-align: right; }
-    .empty-debts { background: rgba(39,174,96,0.1); border: 1px dashed rgba(39,174,96,0.3); color: var(--success); text-align: center; padding: 16px; border-radius: 16px; font-weight: 700; }
-    .funnel-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-    .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; font-size: 0.95rem; }
-    .funnel-conv { color: var(--success); background: rgba(39,174,96,0.15); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; }
-    .f-bar-wrap { display: flex; align-items: center; margin-bottom: 14px; gap: 12px; }
-    .f-bar-wrap:last-child { margin-bottom: 0; }
-    .f-lbl { width: 85px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); flex-shrink: 0; text-transform: uppercase; }
-    .f-bar-bg { flex: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; }
-    .f-bar { height: 100%; border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.25,1,0.5,1); }
-    .f-active { background: var(--accent-1); }
-    .f-closed { background: var(--success); }
-    .f-rejected { background: var(--danger); }
-    .f-val { width: 35px; text-align: right; font-weight: 700; font-size: 0.9rem; }
-    [dir="rtl"] .f-lbl { text-align: right; }
-    [dir="rtl"] .f-val { text-align: left; }
-    .wide-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 32px; display: flex; flex-direction: column; align-items: center; }
-    .wide-card .stat-num { font-size: 2.8rem; font-weight: 800; color: var(--success); display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; text-shadow: 0 0 15px rgba(39,174,96,0.3); }
-    .wide-card .stat-name { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .eff-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; margin-bottom: 32px; }
-    .eff-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
-    .eff-val-container { display: flex; align-items: baseline; gap: 4px; }
-    .eff-val { font-size: 3rem; font-weight: 800; color: #fff; line-height: 1; }
-    .eff-pct-sign { font-size: 1.5rem; color: var(--text-muted); font-weight: 700; }
-    .eff-badge { padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
-    .badge-good { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
-    .badge-bad { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
-    .progress-track { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); border-radius: 10px; height: 12px; overflow: hidden; margin-top: 8px; }
-    .progress-fill { background: linear-gradient(90deg, var(--accent-2), var(--accent-1)); height: 100%; width: 0%; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
-    .eff-compare { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; text-align: center; }
-    .chart-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; margin-bottom: 32px; }
-    .btn-group { display: flex; gap: 12px; }
-    .btn { flex: 1; display: block; text-align: center; color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; padding: 16px; border-radius: 16px; transition: 0.2s; border: none; cursor: pointer; }
-    .btn:active { transform: scale(0.96); }
-    .btn-wa { background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
-    .btn-tg { background: #2F80ED; box-shadow: 0 8px 24px rgba(47,128,237,0.25); }
-    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; padding: 20px; text-align: center; }
-    .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .err-msg { font-size: 1.1rem; font-weight: 600; color: var(--danger); margin-bottom: 24px; display: none; }
+    [data-theme="dark"] {
+      --bg:        #111110;
+      --bg2:       #1A1918;
+      --bg3:       #242220;
+      --surface:   #1E1D1B;
+      --surface2:  #252320;
+      --border:    rgba(255,255,255,0.08);
+      --border2:   rgba(255,255,255,0.04);
+      --text:      #F5F3EF;
+      --text2:     #A09890;
+      --text3:     #6B6560;
+      --accent:    #FF5A5F;
+      --accent2:   #FF7E82;
+      --accentbg:  rgba(255,90,95,0.12);
+      --green:     #00C4B4;
+      --greenbg:   rgba(0,196,180,0.12);
+      --gold:      #F0B840;
+      --goldbg:    rgba(240,184,64,0.12);
+      --blue:      #6B8DFF;
+      --bluebg:    rgba(107,141,255,0.12);
+      --shadow:    0 2px 16px rgba(0,0,0,0.3);
+      --shadow2:   0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    /* ── Reset ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s;
+      overscroll-behavior: none;
+    }
+    .shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+    .loader {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    .loader-logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.2rem; font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .loader-sub { font-size: 0.85rem; color: var(--text3); margin-bottom: 32px; }
+    .loader-dots { display: flex; gap: 8px; }
+    .loader-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .loader-dot:nth-child(2) { animation-delay: 0.2s; background: var(--green); }
+    .loader-dot:nth-child(3) { animation-delay: 0.4s; background: var(--blue); }
+    @keyframes bounce {
+      0%,80%,100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .loader-err { display: none; text-align: center; padding: 0 24px; }
+    .loader-err-title { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+    .loader-err-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 24px; }
+
+    /* ── Top Bar ────────────────────────────────────────────────────── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px 8px;
+      position: sticky; top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    .topbar-brand {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.3rem; font-weight: 800;
+      color: var(--accent);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.2s;
+    }
+    .theme-btn:active { transform: scale(0.9); }
+    .lang-pills { display: flex; gap: 4px; }
+    .lang-pill {
+      padding: 4px 8px; border-radius: 8px;
+      font-size: 0.7rem; font-weight: 700;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text3);
+      cursor: pointer; transition: 0.2s;
+    }
+    .lang-pill.active {
+      background: var(--accent);
+      color: #fff; border-color: var(--accent);
+    }
+
+    /* ── Hero Card ──────────────────────────────────────────────────── */
+    .hero {
+      margin: 8px 16px 0;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accentbg) 0%, transparent 70%);
+    }
+    .hero-greeting { font-size: 0.8rem; color: var(--text3); font-weight: 500; margin-bottom: 4px; }
+    .hero-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem; font-weight: 800;
+      color: var(--text); margin-bottom: 20px;
+    }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem; font-weight: 800;
+    }
+    .hero-stat-val.green { color: var(--green); }
+    .hero-stat-val.gold { color: var(--gold); }
+    .hero-stat-val.blue { color: var(--blue); }
+    .hero-stat-lbl { font-size: 0.7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Tabs ───────────────────────────────────────────────────────── */
+    .tabs-wrap {
+      display: flex; gap: 8px;
+      padding: 16px 16px 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-wrap::-webkit-scrollbar { display: none; }
+    .tab-pill {
+      flex-shrink: 0;
+      padding: 8px 16px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer; transition: 0.2s;
+      white-space: nowrap;
+    }
+    .tab-pill.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* ── Sections ───────────────────────────────────────────────────── */
+    .content { flex: 1; padding: 0 16px calc(var(--nav-h) + 16px); }
+    .section { display: none; }
+    .section.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .sec-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin: 20px 0 12px;
+    }
+
+    /* ── Cards ──────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .card-sm {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+    /* ── Stat chips ─────────────────────────────────────────────────── */
+    .stat-chip { display: flex; flex-direction: column; gap: 4px; }
+    .stat-chip-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem; font-weight: 800; color: var(--text);
+    }
+    .stat-chip-lbl { font-size: 0.7rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Big earned ─────────────────────────────────────────────────── */
+    .earned-block {
+      text-align: center; padding: 8px 0;
+    }
+    .earned-block .big-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 3.2rem; font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+    .earned-block .big-lbl { font-size: 0.8rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+    /* ── Funnel ─────────────────────────────────────────────────────── */
+    .funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .funnel-row:last-child { margin-bottom: 0; }
+    .funnel-lbl { width: 80px; font-size: 0.72rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
+    .funnel-track { flex: 1; height: 10px; background: var(--bg2); border-radius: 5px; overflow: hidden; }
+    .funnel-fill { height: 100%; border-radius: 5px; width: 0; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); }
+    .fill-blue  { background: var(--blue); }
+    .fill-green { background: var(--green); }
+    .fill-red   { background: var(--accent); }
+    .funnel-num { width: 28px; text-align: right; font-weight: 700; font-size: 0.85rem; color: var(--text); }
+    .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .conv-badge {
+      background: var(--greenbg); color: var(--green);
+      font-size: 0.75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+    }
+
+    /* ── Efficiency ─────────────────────────────────────────────────── */
+    .eff-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+    .eff-big {
+      font-family: 'Sora', sans-serif;
+      font-size: 3rem; font-weight: 800; line-height: 1;
+    }
+    .eff-badge {
+      font-size: 0.75rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .eff-badge.good { background: var(--greenbg); color: var(--green); }
+    .eff-badge.neutral { background: var(--bg2); color: var(--text3); }
+    .eff-track { height: 8px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
+    .eff-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--accent)); border-radius: 4px; width: 0; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
+    .eff-compare { font-size: 0.75rem; color: var(--text3); margin-top: 8px; text-align: center; }
+
+    /* ── Deal cards ─────────────────────────────────────────────────── */
+    .deal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .deal-card:active { transform: scale(0.98); box-shadow: var(--shadow2); }
+    .deal-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .deal-client { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
+    .deal-biz { font-size: 0.8rem; color: var(--text2); font-weight: 500; margin-top: 2px; }
+    .deal-status {
+      font-size: 0.7rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+      flex-shrink: 0; margin-left: 8px;
+    }
+    .status-new       { background: var(--bluebg);   color: var(--blue); }
+    .status-in_progress { background: var(--goldbg); color: var(--gold); }
+    .status-closed    { background: var(--greenbg);  color: var(--green); }
+    .status-confirmed { background: var(--greenbg);  color: var(--green); }
+    .status-rejected  { background: var(--accentbg); color: var(--accent); }
+    .deal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border2); }
+    .deal-date { font-size: 0.75rem; color: var(--text3); }
+    .deal-comm {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.9rem; font-weight: 700; color: var(--green);
+    }
+    .deal-comm.pending { color: var(--gold); }
+
+    /* ── Empty state ────────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 40px 24px;
+      color: var(--text3);
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
+    .empty-sub { font-size: 0.82rem; line-height: 1.5; }
+
+    /* ── Pending payouts ────────────────────────────────────────────── */
+    .payout-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border2);
+    }
+    .payout-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .payout-name { font-weight: 600; font-size: 0.9rem; }
+    .payout-niche { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+    .payout-amt { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: var(--gold); }
+
+    /* ── Profile ────────────────────────────────────────────────────── */
+    .profile-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff;
+      margin: 0 auto 16px; flex-shrink: 0;
+    }
+    .profile-name-big {
+      font-family: 'Sora', sans-serif;
+      text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 4px;
+    }
+    .profile-phone { text-align: center; font-size: 0.85rem; color: var(--text3); margin-bottom: 24px; }
+    .profile-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid var(--border2);
+    }
+    .profile-row:last-child { border-bottom: none; }
+    .profile-row-lbl { font-size: 0.82rem; color: var(--text3); font-weight: 600; }
+    .profile-row-val { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+
+    /* ── Bottom CTA button ──────────────────────────────────────────── */
+    .cta-btn {
+      display: block; width: 100%;
+      padding: 16px; border-radius: var(--radius);
+      background: #25D366; color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      text-align: center; text-decoration: none;
+      border: none; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(37,211,102,0.3);
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-top: 12px;
+    }
+    .cta-btn:active { transform: scale(0.97); }
+    .cta-btn.tg { background: #2F80ED; box-shadow: 0 6px 20px rgba(47,128,237,0.3); }
+
+    /* ── Bottom Navigation ──────────────────────────────────────────── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      height: var(--nav-h);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 8px;
+      z-index: 200;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; cursor: pointer;
+      padding: 8px 4px;
+      border-radius: 12px;
+      transition: 0.2s;
+      background: transparent; border: none;
+    }
+    .nav-item.active .nav-icon { background: var(--accentbg); color: var(--accent); }
+    .nav-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      color: var(--text3);
+      transition: 0.2s;
+    }
+    .nav-lbl { font-size: 0.62rem; font-weight: 700; color: var(--text3); transition: 0.2s; }
+    .nav-item.active .nav-lbl { color: var(--accent); }
+
+    /* ── Chart ──────────────────────────────────────────────────────── */
+    .chart-wrap { position: relative; height: 180px; margin: 8px 0; }
+
+    /* ── Divider ────────────────────────────────────────────────────── */
+    .divider { height: 1px; background: var(--border); margin: 4px 0 16px; }
+
+    /* ── Pill badge ─────────────────────────────────────────────────── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .pill-green { background: var(--greenbg); color: var(--green); }
+    .pill-gold  { background: var(--goldbg);  color: var(--gold); }
+    .pill-blue  { background: var(--bluebg);  color: var(--blue); }
+    .pill-red   { background: var(--accentbg); color: var(--accent); }
   </style>
 </head>
 <body>
-  <div class="loading-overlay" id="globalLoader">
-    <div class="spinner" id="spinner"></div>
-    <div id="loaderText" style="font-weight:600; color:var(--accent-1);">Загрузка данных...</div>
-    <div class="err-msg" id="errMsg">Ссылка устарела. Запросите новую в боте.</div>
-    <a href="#" class="btn btn-wa" id="errWaBtn" style="display:none; width:100%; max-width:300px; margin-top:16px;">WhatsApp</a>
+<div class="shell">
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-logo">Win-Win</div>
+    <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
+    <div class="loader-dots" id="loaderDots">
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+    </div>
+    <div class="loader-err" id="loaderErr">
+      <div class="loader-err-title" id="errTitle">Ссылка устарела</div>
+      <div class="loader-err-sub" id="errSub">Запросите новую ссылку в боте</div>
+      <a href="#" class="cta-btn" id="errBtn" style="max-width:260px; margin: 0 auto;">WhatsApp</a>
+    </div>
   </div>
 
-  <div class="shell" style="display:none;" id="mainShell">
-    <div class="lang-switcher">
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('he')">HE</button>
-      <button class="lang-btn" onclick="setLang('ar')">AR</button>
-      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">Win-Win</div>
+    <div class="topbar-right">
+      <div class="lang-pills" id="langPills">
+        <button class="lang-pill" onclick="setLang('en')">EN</button>
+        <button class="lang-pill" onclick="setLang('he')">HE</button>
+        <button class="lang-pill" onclick="setLang('ar')">AR</button>
+        <button class="lang-pill active" onclick="setLang('ru')">RU</button>
+      </div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
     </div>
-    <header class="header">
-      <h1 class="logo">Win-Win</h1>
-      <div class="title" id="t_greeting">Кабинет Агента</div>
-    </header>
+  </div>
 
-    <div class="section-title" id="t_sec_fin">Финансы</div>
-    <div class="fin-card main">
-      <div class="fin-lbl" id="t_earned">Уже получено</div>
-      <div class="fin-val val-success"><span id="v_earned">0</span><span class="currency" id="c_earned">₪</span></div>
-    </div>
-    <div class="fin-row-2">
-      <div class="fin-card">
-        <div class="fin-lbl" id="t_pending">Ожидают выплаты</div>
-        <div class="fin-val val-warning"><span id="v_pending">0</span><span class="currency" id="c_pending">₪</span></div>
+  <!-- Hero -->
+  <div class="hero" id="heroBlock">
+    <div class="hero-greeting" id="t_greeting_label">Привет,</div>
+    <div class="hero-name" id="t_name">—</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val green" id="h_earned">0</div>
+        <div class="hero-stat-lbl" id="t_h_earned">Заработано ₪</div>
       </div>
-      <div class="fin-card">
-        <div class="fin-lbl" id="t_active_val">В работе</div>
-        <div class="fin-val val-accent"><span id="v_active_val">0</span></div>
+      <div class="hero-stat">
+        <div class="hero-stat-val blue" id="h_deals">0</div>
+        <div class="hero-stat-lbl" id="t_h_deals">Сделок</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val gold" id="h_pending">0</div>
+        <div class="hero-stat-lbl" id="t_h_pending">Ждут ₪</div>
       </div>
     </div>
-    <div class="fin-lbl" style="margin-bottom:12px;" id="t_who_owes">Ожидаем выплату от:</div>
-    <div class="debtors-list" id="debtorsList"></div>
+  </div>
 
-    <div class="section-title" id="t_sec_funnel">Воронка конверсии</div>
-    <div class="funnel-container">
-      <div class="funnel-header">
-        <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:#fff;">0</span></div>
-        <div class="funnel-conv" id="st_conversion">0%</div>
-      </div>
-      <div class="f-bar-wrap">
-        <div class="f-lbl" id="t_st_f_active">В процессе</div>
-        <div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div>
-        <div class="f-val" id="st_f_active">0</div>
-      </div>
-      <div class="f-bar-wrap">
-        <div class="f-lbl" id="t_st_f_closed">Закрыто</div>
-        <div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div>
-        <div class="f-val" id="st_f_closed">0</div>
-      </div>
-      <div class="f-bar-wrap">
-        <div class="f-lbl" id="t_st_f_rejected">Отклонено</div>
-        <div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div>
-        <div class="f-val" id="st_f_rejected">0</div>
-      </div>
-    </div>
+  <!-- Section tabs -->
+  <div class="tabs-wrap" id="tabsWrap">
+    <button class="tab-pill active" onclick="showTab('overview')" id="tab_overview">Обзор</button>
+    <button class="tab-pill" onclick="showTab('deals')" id="tab_deals">Сделки</button>
+    <button class="tab-pill" onclick="showTab('stats')" id="tab_stats">Статистика</button>
+    <button class="tab-pill" onclick="showTab('profile')" id="tab_profile">Профиль</button>
+  </div>
 
-    <div class="section-title" id="t_sec_earnings">Заработок</div>
-    <div class="wide-card">
-      <div class="stat-num"><span id="v_avg_earned">0</span><span class="currency" id="c_avg">₪</span></div>
-      <div class="stat-name" id="t_avg_earned">Средний заработок на сделку</div>
-    </div>
+  <!-- Content -->
+  <div class="content">
 
-    <div class="section-title" id="t_sec_eff">Эффективность</div>
-    <div class="eff-card">
-      <div class="eff-header">
-        <div class="eff-val-container">
-          <div class="eff-val" id="v_eff">0</div>
-          <div class="eff-pct-sign">%</div>
+    <!-- ── Overview ── -->
+    <div class="section active" id="sec_overview">
+
+      <div class="sec-title" id="t_finances">Финансы</div>
+      <div class="card" style="text-align:center;">
+        <div class="earned-block">
+          <div class="big-num" id="v_earned">0</div>
+          <div class="big-lbl" id="t_earned_lbl">Уже получено ₪</div>
         </div>
-        <div class="eff-badge badge-good" id="v_eff_badge">Выше среднего</div>
       </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="effProgressBar"></div>
+
+      <div class="grid-2">
+        <div class="card-sm">
+          <div class="stat-chip">
+            <div class="stat-chip-val" style="color:var(--gold)" id="v_pending">0</div>
+            <div class="stat-chip-lbl" id="t_pending_lbl">Ждут выплаты ₪</div>
+          </div>
+        </div>
+        <div class="card-sm">
+          <div class="stat-chip">
+            <div class="stat-chip-val" style="color:var(--blue)" id="v_active">0</div>
+            <div class="stat-chip-lbl" id="t_active_lbl">Сделок в работе</div>
+          </div>
+        </div>
       </div>
-      <div class="eff-compare" id="t_eff_compare">Среднее по платформе: 0%</div>
+
+      <!-- Pending payouts -->
+      <div id="pendingBlock">
+        <div class="sec-title" id="t_awaiting">Ожидаем выплату от:</div>
+        <div class="card" id="pendingList"></div>
+      </div>
+
+      <!-- Funnel -->
+      <div class="sec-title" id="t_funnel">Воронка конверсии</div>
+      <div class="card">
+        <div class="funnel-header">
+          <span id="t_total_leads">Всего лидов: 0</span>
+          <span class="conv-badge" id="v_conv">0%</span>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-lbl" id="t_f_progress">В работе</div>
+          <div class="funnel-track"><div class="funnel-fill fill-blue" id="bar_active"></div></div>
+          <div class="funnel-num" id="st_active">0</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-lbl" id="t_f_closed">Закрыто</div>
+          <div class="funnel-track"><div class="funnel-fill fill-green" id="bar_closed"></div></div>
+          <div class="funnel-num" id="st_closed">0</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-lbl" id="t_f_rejected">Отклонено</div>
+          <div class="funnel-track"><div class="funnel-fill fill-red" id="bar_rejected"></div></div>
+          <div class="funnel-num" id="st_rejected">0</div>
+        </div>
+      </div>
+
+      <!-- WhatsApp button -->
+      <a href="#" class="cta-btn" id="ctaBtn" style="display:none;">WhatsApp</a>
     </div>
 
-    <div class="chart-container" id="chartWrapper" style="display:none;">
-      <div class="section-title" style="text-align:center; margin-top:0;" id="t_chart_title">Топ ниш</div>
-      <canvas id="nicheChart" width="400" height="250"></canvas>
+    <!-- ── Deals ── -->
+    <div class="section" id="sec_deals">
+      <div class="sec-title" id="t_my_deals">Мои сделки</div>
+      <div id="dealsList"></div>
     </div>
 
-    <div class="btn-group" id="btnGroup">
-      <a href="#" class="btn btn-wa" id="btnWa" style="display:none;">WhatsApp</a>
-      <a href="https://t.me/winwin_lead_bot" class="btn btn-tg" id="btnTg" target="_blank" style="display:none;">Telegram</a>
+    <!-- ── Stats ── -->
+    <div class="section" id="sec_stats">
+
+      <div class="sec-title" id="t_avg_title">Средний заработок</div>
+      <div class="card" style="text-align:center;">
+        <div class="big-num" style="color:var(--blue)" id="v_avg">0</div>
+        <div style="font-size:0.75rem; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-top:4px;" id="t_per_deal">на сделку ₪</div>
+      </div>
+
+      <div class="sec-title" id="t_eff_title">Эффективность</div>
+      <div class="card">
+        <div class="eff-row">
+          <div>
+            <div class="eff-big" id="v_eff">—</div>
+            <div style="font-size:0.75rem; color:var(--text3); margin-top:2px;" id="t_eff_sub">% закрытых сделок</div>
+          </div>
+          <div class="eff-badge neutral" id="eff_badge">Накапливается</div>
+        </div>
+        <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
+        <div class="eff-compare" id="eff_compare"></div>
+      </div>
+
+      <div class="sec-title" id="t_chart_title" style="display:none;">По нишам</div>
+      <div class="card" id="chartCard" style="display:none;">
+        <div class="chart-wrap"><canvas id="nicheChart"></canvas></div>
+      </div>
+
     </div>
+
+    <!-- ── Profile ── -->
+    <div class="section" id="sec_profile">
+      <div style="padding: 8px 0;">
+        <div class="profile-avatar" id="profileAvatar">W</div>
+        <div class="profile-name-big" id="profileName">—</div>
+        <div class="profile-phone" id="profilePhone">—</div>
+      </div>
+      <div class="card">
+        <div class="profile-row">
+          <div class="profile-row-lbl" id="t_pay_method">Способ получения</div>
+          <div class="profile-row-val" id="v_pay_method">—</div>
+        </div>
+        <div class="profile-row" id="bizInfoRow" style="display:none;">
+          <div class="profile-row-lbl" id="t_biz_info">Ссылка</div>
+          <div class="profile-row-val" id="v_biz_info" style="font-size:0.78rem; max-width:60%; text-align:right; word-break:break-all; color:var(--blue);">—</div>
+        </div>
+      </div>
+      <a href="#" class="cta-btn" id="profileBtn" style="display:none;">WhatsApp</a>
+    </div>
+
   </div>
 
-  <script>
-    const i18n = {
-      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", greeting:"Кабинет Агента", sec_fin:"Финансы", sec_eff:"Эффективность", earned:"Уже получено", pending:"Ожидают выплаты", active_val:"Сделок в работе", who_owes:"Ожидаем выплату от:", all_paid:"Все выплаты получены ✅", eff_above:"Выше среднего", eff_below:"Ниже среднего", eff_accum:"Накапливается (нужно 3 сделки)", eff_avg:"Среднее по платформе:", sec_funnel:"Воронка конверсии", total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено", sec_earnings:"Заработок", avg_earned:"Средний заработок на сделку", chart_title:"Успешные ниши", btn_wa:"WhatsApp" },
-      en: { loading:"Loading data...", expired:"Link expired. Request a new one in the bot.", greeting:"Agent Dashboard", sec_fin:"Finance", sec_eff:"Efficiency", earned:"Already Earned", pending:"Pending Payout", active_val:"Active Deals", who_owes:"Pending payouts from:", all_paid:"All payouts received ✅", eff_above:"Above average", eff_below:"Below average", eff_accum:"Accumulating (need 3 deals)", eff_avg:"Platform average:", sec_funnel:"Conversion Funnel", total_leads:"Total Leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected", sec_earnings:"Earnings", avg_earned:"Average earnings per deal", chart_title:"Top Niches", btn_wa:"WhatsApp" },
-      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף. בקש חדש בבוט.", greeting:"לוח בקרה סוכן", sec_fin:"פיננסים", sec_eff:"יעילות", earned:"כבר הושג", pending:"ממתין לתשלום", active_val:"עסקאות פעילות", who_owes:"ממתין לתשלום מ:", all_paid:"כל התשלומים התקבלו ✅", eff_above:"מעל הממוצע", eff_below:"מתחת לממוצע", eff_accum:"נצבר (דרושות 3 עסקאות)", eff_avg:"ממוצע פלטפורמה:", sec_funnel:"משפך המרות", total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו", sec_earnings:"הכנסות", avg_earned:"הכנסה ממוצעת לעסקה", chart_title:"תחומים מובילים", btn_wa:"WhatsApp" },
-      ar: { loading:"جاري تحميل البيانات...", expired:"انتهت صلاحية الرابط. اطلب واحداً جديداً في البوت.", greeting:"لوحة الوكيل", sec_fin:"المالية", sec_eff:"الكفاءة", earned:"تم كسبه بالفعل", pending:"في انتظار الدفع", active_val:"صفقات نشطة", who_owes:"في انتظار الدفع من:", all_paid:"تم استلام جميع المدفوعات ✅", eff_above:"فوق المتوسط", eff_below:"أقل من المتوسط", eff_accum:"يتراكم (يحتاج 3 صفقات)", eff_avg:"متوسط المنصة:", sec_funnel:"مسار التحويل", total_leads:"إجمالي العملاء:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة", sec_earnings:"الأرباح", avg_earned:"متوسط الربح لكل صفقة", chart_title:"أفضل المجالات", btn_wa:"WhatsApp" }
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav_overview" onclick="showSection('overview')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-lbl" id="t_nav_home">Обзор</div>
+    </button>
+    <button class="nav-item" id="nav_deals" onclick="showSection('deals')">
+      <div class="nav-icon">🤝</div>
+      <div class="nav-lbl" id="t_nav_deals">Сделки</div>
+    </button>
+    <button class="nav-item" id="nav_stats" onclick="showSection('stats')">
+      <div class="nav-icon">📊</div>
+      <div class="nav-lbl" id="t_nav_stats">Статистика</div>
+    </button>
+    <button class="nav-item" id="nav_profile" onclick="showSection('profile')">
+      <div class="nav-icon">👤</div>
+      <div class="nav-lbl" id="t_nav_profile">Профиль</div>
+    </button>
+  </nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // ── i18n ──────────────────────────────────────────────────────────
+  const i18n = {
+    ru: {
+      greeting: "Привет,", earned: "Уже получено ₪", h_earned: "Заработано ₪",
+      h_deals: "Сделок", h_pending: "Ждут ₪",
+      pending_lbl: "Ждут выплаты ₪", active_lbl: "Сделок в работе",
+      finances: "Финансы", awaiting: "Ожидаем выплату от:",
+      all_paid: "✅ Все выплаты получены",
+      funnel: "Воронка конверсии",
+      f_progress: "В работе", f_closed: "Закрыто", f_rejected: "Отклонено",
+      my_deals: "Мои сделки", avg_title: "Средний заработок", per_deal: "на сделку ₪",
+      eff_title: "Эффективность", eff_sub: "% закрытых сделок",
+      eff_accum: "Накапливается (нужно 3 сделки)",
+      eff_above: "Выше среднего", eff_below: "Ниже среднего",
+      eff_avg: "Среднее по платформе:",
+      chart_title: "Заработок по нишам",
+      pay_method: "Способ получения", biz_info: "Ссылка",
+      nav_home: "Обзор", nav_deals: "Сделки", nav_stats: "Статистика", nav_profile: "Профиль",
+      tab_overview: "Обзор", tab_deals: "Сделки", tab_stats: "Статистика", tab_profile: "Профиль",
+      status_new: "Новый", status_in_progress: "В работе", status_closed: "Закрыто",
+      status_confirmed: "Завершено", status_rejected: "Отклонён",
+      no_deals: "Пока нет сделок", no_deals_sub: "Откройте каталог и сделайте первую рекомендацию",
+      commission: "Бонус", wa_btn: "Открыть WhatsApp", total_leads: "Всего лидов:",
+    },
+    he: {
+      greeting: "שלום,", earned: "כבר התקבל ₪", h_earned: "הרוויחו ₪",
+      h_deals: "עסקאות", h_pending: "ממתין ₪",
+      pending_lbl: "ממתין לתשלום ₪", active_lbl: "עסקאות בעבודה",
+      finances: "פיננסים", awaiting: "ממתינים לתשלום מ:",
+      all_paid: "✅ כל התשלומים התקבלו",
+      funnel: "משפך המרה",
+      f_progress: "בעבודה", f_closed: "סגור", f_rejected: "נדחה",
+      my_deals: "העסקאות שלי", avg_title: "הכנסה ממוצעת", per_deal: "לעסקה ₪",
+      eff_title: "יעילות", eff_sub: "% עסקאות שנסגרו",
+      eff_accum: "מצטבר (צריך 3 עסקאות)",
+      eff_above: "מעל הממוצע", eff_below: "מתחת לממוצע",
+      eff_avg: "ממוצע פלטפורמה:",
+      chart_title: "הכנסות לפי נישה",
+      pay_method: "אופן קבלה", biz_info: "קישור",
+      nav_home: "סקירה", nav_deals: "עסקאות", nav_stats: "סטטיסטיקה", nav_profile: "פרופיל",
+      tab_overview: "סקירה", tab_deals: "עסקאות", tab_stats: "סטטיסטיקה", tab_profile: "פרופיל",
+      status_new: "חדש", status_in_progress: "בעבודה", status_closed: "סגור",
+      status_confirmed: "הושלם", status_rejected: "נדחה",
+      no_deals: "אין עסקאות עדיין", no_deals_sub: "פתחו את הקטלוג וקחו המלצה ראשונה",
+      commission: "בונוס", wa_btn: "פתח WhatsApp", total_leads: "סה\"כ לידים:",
+    },
+    en: {
+      greeting: "Hello,", earned: "Already received ₪", h_earned: "Earned ₪",
+      h_deals: "Deals", h_pending: "Pending ₪",
+      pending_lbl: "Pending payout ₪", active_lbl: "Deals in progress",
+      finances: "Finances", awaiting: "Awaiting payment from:",
+      all_paid: "✅ All payouts received",
+      funnel: "Conversion funnel",
+      f_progress: "In progress", f_closed: "Closed", f_rejected: "Rejected",
+      my_deals: "My deals", avg_title: "Average earnings", per_deal: "per deal ₪",
+      eff_title: "Efficiency", eff_sub: "% deals closed",
+      eff_accum: "Accumulating (need 3 deals)",
+      eff_above: "Above average", eff_below: "Below average",
+      eff_avg: "Platform average:",
+      chart_title: "Earnings by niche",
+      pay_method: "Payment method", biz_info: "Link",
+      nav_home: "Overview", nav_deals: "Deals", nav_stats: "Stats", nav_profile: "Profile",
+      tab_overview: "Overview", tab_deals: "Deals", tab_stats: "Stats", tab_profile: "Profile",
+      status_new: "New", status_in_progress: "In progress", status_closed: "Closed",
+      status_confirmed: "Completed", status_rejected: "Rejected",
+      no_deals: "No deals yet", no_deals_sub: "Open the catalog and make your first recommendation",
+      commission: "Bonus", wa_btn: "Open WhatsApp", total_leads: "Total leads:",
+    },
+    ar: {
+      greeting: "مرحباً,", earned: "تم استلامه ₪", h_earned: "ربحت ₪",
+      h_deals: "صفقات", h_pending: "معلق ₪",
+      pending_lbl: "في انتظار الدفع ₪", active_lbl: "صفقات جارية",
+      finances: "المالية", awaiting: "في انتظار الدفع من:",
+      all_paid: "✅ تم استلام جميع المدفوعات",
+      funnel: "مسار التحويل",
+      f_progress: "جارٍ", f_closed: "مغلق", f_rejected: "مرفوض",
+      my_deals: "صفقاتي", avg_title: "متوسط الأرباح", per_deal: "لكل صفقة ₪",
+      eff_title: "الكفاءة", eff_sub: "% من الصفقات المغلقة",
+      eff_accum: "يتراكم (يحتاج 3 صفقات)",
+      eff_above: "فوق المتوسط", eff_below: "دون المتوسط",
+      eff_avg: "متوسط المنصة:",
+      chart_title: "الأرباح حسب النيش",
+      pay_method: "طريقة الاستلام", biz_info: "رابط",
+      nav_home: "نظرة عامة", nav_deals: "الصفقات", nav_stats: "إحصاء", nav_profile: "الملف",
+      tab_overview: "نظرة عامة", tab_deals: "الصفقات", tab_stats: "إحصاء", tab_profile: "الملف",
+      status_new: "جديد", status_in_progress: "جارٍ", status_closed: "مغلق",
+      status_confirmed: "مكتمل", status_rejected: "مرفوض",
+      no_deals: "لا صفقات بعد", no_deals_sub: "افتح الكتالوج وقدم أول توصية",
+      commission: "مكافأة", wa_btn: "فتح WhatsApp", total_leads: "إجمالي العملاء:",
+    },
+  };
+
+  // ── State ─────────────────────────────────────────────────────────
+  let lang = 'ru';
+  let theme = localStorage.getItem('ww_theme') || 'light';
+  let dashData = null;
+  let chartInstance = null;
+  const API_URL = "https://amlatsa-bot-production.up.railway.app";
+  const token = new URLSearchParams(window.location.search).get('token');
+
+  // ── Theme ─────────────────────────────────────────────────────────
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('ww_theme', theme);
+  }
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+  }
+
+  // ── Language ──────────────────────────────────────────────────────
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.lang-pill[onclick="setLang('${l}')"]`)?.classList.add('active');
+    document.documentElement.dir = l === 'he' || l === 'ar' ? 'rtl' : 'ltr';
+    applyLang();
+    if (dashData) renderAll();
+  }
+  function applyLang() {
+    const L = i18n[lang];
+    const map = {
+      't_greeting_label': 'greeting', 't_h_earned': 'h_earned', 't_h_deals': 'h_deals',
+      't_h_pending': 'h_pending', 't_earned_lbl': 'earned', 't_pending_lbl': 'pending_lbl',
+      't_active_lbl': 'active_lbl', 't_finances': 'finances', 't_awaiting': 'awaiting',
+      't_funnel': 'funnel', 't_f_progress': 'f_progress', 't_f_closed': 'f_closed',
+      't_f_rejected': 'f_rejected', 't_my_deals': 'my_deals', 't_avg_title': 'avg_title',
+      't_per_deal': 'per_deal', 't_eff_title': 'eff_title', 't_eff_sub': 'eff_sub',
+      't_chart_title': 'chart_title', 't_pay_method': 'pay_method', 't_biz_info': 'biz_info',
+      't_nav_home': 'nav_home', 't_nav_deals': 'nav_deals', 't_nav_stats': 'nav_stats',
+      't_nav_profile': 'nav_profile', 'tab_overview': 'tab_overview', 'tab_deals': 'tab_deals',
+      'tab_stats': 'tab_stats', 'tab_profile': 'tab_profile',
     };
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el && L[key]) el.textContent = L[key];
+    }
+  }
 
-    let currentLang = 'ru';
-    let token = new URLSearchParams(window.location.search).get('token');
-    let dashData = null;
-    let nicheChartInstance = null;
-    const API_URL = "https://amlatsa-bot-production.up.railway.app";
+  // ── Navigation ────────────────────────────────────────────────────
+  let currentSection = 'overview';
+  function showSection(name) {
+    showTab(name);
+  }
+  function showTab(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('sec_' + name)?.classList.add('active');
+    document.getElementById('tab_' + name)?.classList.add('active');
+    document.getElementById('nav_' + name)?.classList.add('active');
+    currentSection = name;
+    window.scrollTo(0, 0);
+  }
 
-    function init() {
-      const urlLang = new URLSearchParams(window.location.search).get('lang');
-      if (urlLang && i18n[urlLang]) currentLang = urlLang;
-      setLang(currentLang, false);
-      if (!token) { showError(i18n[currentLang].expired); return; }
-      fetchData();
+  // ── Animate number ────────────────────────────────────────────────
+  function animNum(id, to, dur = 1200) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const start = performance.now();
+    const from = 0;
+    const step = ts => {
+      const p = Math.min((ts - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (to - from) * ease);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // ── Status helpers ────────────────────────────────────────────────
+  function statusClass(s) {
+    const m = { new: 'status-new', in_progress: 'status-in_progress', closed: 'status-closed', confirmed: 'status-confirmed', rejected: 'status-rejected' };
+    return m[s] || 'status-new';
+  }
+  function statusLabel(s) {
+    const L = i18n[lang];
+    const m = { new: L.status_new, in_progress: L.status_in_progress, closed: L.status_closed, confirmed: L.status_confirmed, rejected: L.status_rejected };
+    return m[s] || s;
+  }
+
+  // ── Render ────────────────────────────────────────────────────────
+  function renderAll() {
+    const d = dashData;
+    const L = i18n[lang];
+    const curr = d.currency || '₪';
+
+    // Hero
+    document.getElementById('t_name').textContent = d.user_name || '—';
+    animNum('h_earned', Math.round(d.total_earned || 0));
+    animNum('h_deals', (d.active_deals || 0) + (d.success_deals || 0));
+    animNum('h_pending', Math.round(d.pending_payout || 0));
+
+    // Overview financials
+    animNum('v_earned', Math.round(d.total_earned || 0));
+    animNum('v_pending', Math.round(d.pending_payout || 0));
+    animNum('v_active', d.active_deals || 0);
+
+    // Pending payouts
+    const pendBlock = document.getElementById('pendingBlock');
+    const pendList = document.getElementById('pendingList');
+    if (!d.pending_businesses || d.pending_businesses.length === 0) {
+      pendList.innerHTML = `<div style="color:var(--green); font-weight:700; text-align:center; padding:4px 0;">${L.all_paid}</div>`;
+    } else {
+      pendList.innerHTML = d.pending_businesses.map(b => `
+        <div class="payout-row">
+          <div><div class="payout-name">${b.name}</div><div class="payout-niche">${Array.isArray(b.niche) ? b.niche[0] : b.niche || '—'}</div></div>
+          <div class="payout-amt">${b.amount} ${curr}</div>
+        </div>`).join('');
     }
 
-    function setLang(lang, render = true) {
-      currentLang = lang;
-      document.documentElement.lang = lang;
-      document.documentElement.dir = (lang === 'he' || lang === 'ar') ? 'rtl' : 'ltr';
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
-      const L = i18n[lang];
-      document.getElementById('loaderText').textContent = L.loading;
-      document.getElementById('errMsg').textContent = L.expired;
-      document.getElementById('t_greeting').textContent = dashData?.user_name || L.greeting;
-      document.getElementById('t_sec_fin').textContent = L.sec_fin;
-      document.getElementById('t_earned').textContent = L.earned;
-      document.getElementById('t_pending').textContent = L.pending;
-      document.getElementById('t_active_val').textContent = L.active_val;
-      document.getElementById('t_who_owes').textContent = L.who_owes;
-      document.getElementById('t_sec_funnel').textContent = L.sec_funnel;
-      document.getElementById('t_st_total_leads').textContent = L.total_leads;
-      document.getElementById('t_st_f_active').textContent = L.f_active;
-      document.getElementById('t_st_f_closed').textContent = L.f_closed;
-      document.getElementById('t_st_f_rejected').textContent = L.f_rejected;
-      document.getElementById('t_sec_earnings').textContent = L.sec_earnings;
-      document.getElementById('t_avg_earned').textContent = L.avg_earned;
-      document.getElementById('t_sec_eff').textContent = L.sec_eff;
-      document.getElementById('t_chart_title').textContent = L.chart_title;
-      document.getElementById('btnWa').textContent = L.btn_wa;
-      document.getElementById('errWaBtn').textContent = L.btn_wa;
-      if (render && dashData) renderAll();
+    // Funnel
+    const active = d.active_deals || 0;
+    const closed = d.success_deals || 0;
+    const rejected = d.rejected_deals || 0;
+    const total = active + closed + rejected;
+    document.getElementById('t_total_leads').textContent = `${L.total_leads} ${total}`;
+    const conv = total > 0 ? Math.round(closed / total * 100) : 0;
+    document.getElementById('v_conv').textContent = conv + '%';
+    animNum('st_active', active);
+    animNum('st_closed', closed);
+    animNum('st_rejected', rejected);
+    setTimeout(() => {
+      document.getElementById('bar_active').style.width   = (total > 0 ? active   / total * 100 : 0) + '%';
+      document.getElementById('bar_closed').style.width   = (total > 0 ? closed   / total * 100 : 0) + '%';
+      document.getElementById('bar_rejected').style.width = (total > 0 ? rejected / total * 100 : 0) + '%';
+    }, 80);
+
+    // Deals list
+    const dealsList = document.getElementById('dealsList');
+    if (!d.leads || d.leads.length === 0) {
+      dealsList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🤝</div>
+          <div class="empty-title">${L.no_deals}</div>
+          <div class="empty-sub">${L.no_deals_sub}</div>
+        </div>`;
+    } else {
+      dealsList.innerHTML = d.leads.map(lead => {
+        const hasComm = lead.commission != null;
+        const commClass = lead.status === 'closed' ? 'pending' : '';
+        return `
+        <div class="deal-card">
+          <div class="deal-card-top">
+            <div>
+              <div class="deal-client">${lead.client_name}</div>
+              <div class="deal-biz">🏢 ${lead.biz_name}</div>
+            </div>
+            <span class="deal-status ${statusClass(lead.status)}">${statusLabel(lead.status)}</span>
+          </div>
+          <div class="deal-footer">
+            <div class="deal-date">📅 ${lead.date}</div>
+            ${hasComm ? `<div class="deal-comm ${commClass}">+${lead.commission} ${curr}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
     }
 
-    function showError(msg) {
-      document.getElementById('spinner').style.display = 'none';
-      document.getElementById('loaderText').style.display = 'none';
-      document.getElementById('errMsg').style.display = 'block';
-      document.getElementById('errMsg').textContent = msg;
-      document.getElementById('errWaBtn').style.display = 'block';
-      document.getElementById('errWaBtn').href = `https://wa.me/${dashData?.bot_phone || '972534218573'}`;
+    // Stats — avg
+    const avgEarned = closed > 0 ? Math.round((d.total_earned || 0) / closed) : 0;
+    animNum('v_avg', avgEarned);
+
+    // Efficiency
+    const pct = d.efficiency_pct;
+    const avg = d.platform_avg_pct || 0;
+    if (pct == null) {
+      document.getElementById('v_eff').textContent = '—';
+      document.getElementById('eff_badge').textContent = L.eff_accum;
+      document.getElementById('eff_badge').className = 'eff-badge neutral';
+    } else {
+      animNum('v_eff', Math.round(pct));
+      setTimeout(() => { document.getElementById('eff_bar').style.width = Math.min(pct, 100) + '%'; }, 100);
+      document.getElementById('eff_compare').textContent = `${L.eff_avg} ${avg}%`;
+      if (pct >= avg) {
+        document.getElementById('eff_badge').textContent = `✅ ${L.eff_above}`;
+        document.getElementById('eff_badge').className = 'eff-badge good';
+      } else {
+        document.getElementById('eff_badge').textContent = L.eff_below;
+        document.getElementById('eff_badge').className = 'eff-badge neutral';
+      }
     }
 
-    async function fetchData() {
-      try {
-        const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
-        if (!res.ok) throw new Error('Auth failed');
-        dashData = await res.json();
-        document.getElementById('globalLoader').style.display = 'none';
-        document.getElementById('mainShell').style.display = 'block';
-        const _phone = dashData.bot_phone || '972534218573';
-        const _channel = dashData.channel || 'whatsapp';
-        if (_channel === 'telegram') {
-          document.getElementById('btnTg').style.display = 'block';
-        } else {
-          document.getElementById('btnWa').href = `https://wa.me/${_phone}`;
-          document.getElementById('btnWa').style.display = 'block';
+    // Chart
+    if (d.chart_data && d.chart_data.labels && d.chart_data.labels.length > 0) {
+      document.getElementById('chartCard').style.display = 'block';
+      document.getElementById('t_chart_title').style.display = 'block';
+      if (chartInstance) chartInstance.destroy();
+      const isDark = theme === 'dark';
+      chartInstance = new Chart(document.getElementById('nicheChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: d.chart_data.labels,
+          datasets: [{
+            data: d.chart_data.values,
+            backgroundColor: ['#FF5A5F','#00A699','#4A6CF7','#E8A838','#9B51E0'],
+            borderWidth: 0, hoverOffset: 6,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '72%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: isDark ? '#A09890' : '#6B6560', font: { family: 'DM Sans', size: 12 }, padding: 16 } }
+          }
         }
-        const curr = dashData.currency || '₪';
-        document.getElementById('c_earned').textContent = curr;
-        document.getElementById('c_pending').textContent = curr;
-        document.getElementById('c_avg').textContent = curr;
-        document.getElementById('t_greeting').textContent = dashData.user_name;
-        renderAll();
-      } catch (err) {
-        showError(i18n[currentLang].expired);
-      }
+      });
     }
 
-    function animateValue(id, start, end, duration) {
-      const obj = document.getElementById(id);
-      if (!obj) return;
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = Math.floor(progress * (end - start) + start);
-        if (progress < 1) window.requestAnimationFrame(step);
-      };
-      window.requestAnimationFrame(step);
+    // Profile
+    const name = d.user_name || '—';
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('profilePhone').textContent = d.phone || '—';
+    document.getElementById('profileAvatar').textContent = name[0]?.toUpperCase() || 'W';
+    document.getElementById('v_pay_method').textContent = d.payment_method || '—';
+    if (d.business_info) {
+      document.getElementById('bizInfoRow').style.display = 'flex';
+      document.getElementById('v_biz_info').textContent = d.business_info;
     }
 
-    function renderAll() {
-      const d = dashData;
-      const L = i18n[currentLang];
-      animateValue("v_earned",  0, d.total_earned   || 0, 1500);
-      animateValue("v_pending", 0, d.pending_payout || 0, 1000);
-      animateValue("v_active_val", 0, d.active_deals || 0, 800);
-      const listDiv = document.getElementById('debtorsList');
-      if (!d.pending_businesses || d.pending_businesses.length === 0) {
-        listDiv.innerHTML = `<div class="empty-debts">${L.all_paid}</div>`;
+    // CTA buttons
+    const phone = d.bot_phone || '972534218573';
+    const channel = d.channel || 'whatsapp';
+    const waUrl = `https://wa.me/${phone}`;
+    ['ctaBtn', 'profileBtn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      btn.style.display = 'block';
+      if (channel === 'telegram') {
+        btn.className = 'cta-btn tg';
+        btn.textContent = 'Telegram';
       } else {
-        listDiv.innerHTML = d.pending_businesses.map(b => `
-          <div class="debtor-card">
-            <div class="debt-info"><div class="debt-name">${b.name}</div><div class="debt-niche">${b.niche}</div></div>
-            <div class="debt-val">${b.amount} ${d.currency || '₪'}</div>
-          </div>`).join('');
+        btn.href = waUrl;
+        btn.textContent = L.wa_btn;
       }
-      const active = d.active_deals || 0;
-      const closed = d.success_deals || 0;
-      const rejected = d.rejected_deals || 0;
-      const totalLeads = active + closed + rejected;
-      document.getElementById('st_total_leads').textContent = totalLeads;
-      const convRate = totalLeads > 0 ? Math.round((closed / totalLeads) * 100) : 0;
-      document.getElementById('st_conversion').textContent = convRate + "%";
-      animateValue("st_f_active",   0, active,   1000);
-      animateValue("st_f_closed",   0, closed,   1000);
-      animateValue("st_f_rejected", 0, rejected, 1000);
-      setTimeout(() => {
-        document.getElementById('bar_active').style.width   = (totalLeads > 0 ? (active / totalLeads) * 100 : 0) + "%";
-        document.getElementById('bar_closed').style.width   = (totalLeads > 0 ? (closed / totalLeads) * 100 : 0) + "%";
-        document.getElementById('bar_rejected').style.width = (totalLeads > 0 ? (rejected / totalLeads) * 100 : 0) + "%";
-      }, 50);
-      const avgEarned = closed > 0 ? Math.round(d.total_earned / closed) : 0;
-      animateValue("v_avg_earned", 0, avgEarned, 1000);
-      const pct = d.efficiency_pct;
-      const avg = d.platform_avg_pct || 0;
-      const effVal = document.getElementById('v_eff');
-      const effBadge = document.getElementById('v_eff_badge');
-      const effBar = document.getElementById('effProgressBar');
-      const effComp = document.getElementById('t_eff_compare');
-      if (pct === null || pct === undefined) {
-        effVal.textContent = "—";
-        effBadge.textContent = L.eff_accum;
-        effBadge.className = "eff-badge badge-bad";
-        effBar.style.width = "0%";
-        effComp.textContent = "";
-      } else {
-        animateValue("v_eff", 0, pct, 1500);
-        setTimeout(() => { effBar.style.width = `${Math.min(pct, 100)}%`; }, 100);
-        effComp.textContent = `${L.eff_avg} ${avg}%`;
-        if (pct >= avg) { effBadge.textContent = `✅ ${L.eff_above}`; effBadge.className = "eff-badge badge-good"; }
-        else { effBadge.textContent = L.eff_below; effBadge.className = "eff-badge badge-bad"; }
-      }
-      if (d.chart_data && d.chart_data.labels && d.chart_data.labels.length > 0) {
-        document.getElementById('chartWrapper').style.display = 'block';
-        if (nicheChartInstance) nicheChartInstance.destroy();
-        const ctx = document.getElementById('nicheChart').getContext('2d');
-        nicheChartInstance = new Chart(ctx, {
-          type: 'doughnut',
-          data: { labels: d.chart_data.labels, datasets: [{ data: d.chart_data.values, backgroundColor: ['#56CCF2','#2F80ED','#9B51E0','#27AE60','#F2C94C'], borderWidth: 0, hoverOffset: 4 }] },
-          options: { responsive: true, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b0', font: { family: 'Inter' } } } } }
-        });
-      } else {
-        document.getElementById('chartWrapper').style.display = 'none';
-      }
+    });
+    document.getElementById('errBtn').href = waUrl;
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────
+  async function init() {
+    applyTheme();
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang && i18n[urlLang]) setLang(urlLang);
+    else applyLang();
+
+    if (!token) { showError(); return; }
+    try {
+      const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+      if (!res.ok) throw new Error('auth');
+      dashData = await res.json();
+      renderAll();
+      // Hide loader with fade
+      const loader = document.getElementById('loader');
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 400);
+    } catch (e) {
+      showError();
     }
-    window.onload = init;
-  </script>
+  }
+
+  function showError() {
+    document.getElementById('loaderDots').style.display = 'none';
+    document.getElementById('loaderSub').style.display = 'none';
+    document.getElementById('loaderErr').style.display = 'block';
+    document.getElementById('errBtn').href = `https://wa.me/972534218573`;
+  }
+
+  window.onload = init;
+</script>
 </body>
 </html>
