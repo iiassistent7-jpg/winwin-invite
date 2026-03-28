@@ -1,880 +1,957 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Win-Win · Кабинет</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    /* ── Themes ─────────────────────────────────────────────────────── */
-    :root {
-      --bg:        #0F0F1A;
-      --bg2:       #16162A;
-      --bg3:       #1E1E30;
-      --surface:   rgba(255,255,255,0.03);
-      --surface2:  rgba(255,255,255,0.05);
-      --border:    rgba(255,255,255,0.08);
-      --border2:   rgba(255,255,255,0.04);
-      --text:      #FFFFFF;
-      --text2:     #A0A0B0;
-      --text3:     #606070;
-      --accent:    #56CCF2;
-      --accent2:   #2F80ED;
-      --accentbg:  rgba(86,204,242,0.12);
-      --green:     #27AE60;
-      --greenbg:   rgba(39,174,96,0.12);
-      --gold:      #F2C94C;
-      --goldbg:    rgba(242,201,76,0.12);
-      --blue:      #2F80ED;
-      --bluebg:    rgba(47,128,237,0.12);
-      --shadow:    0 2px 16px rgba(0,0,0,0.4);
-      --shadow2:   0 8px 32px rgba(0,0,0,0.6);
-      --radius:    24px;
-      --radius-sm: 14px;
-      --nav-h:     72px;
-    }
-    [data-theme="dark"] {
-      --bg:        #0F0F1A;
-      --bg2:       #16162A;
-      --bg3:       #1E1E30;
-      --surface:   rgba(255,255,255,0.03);
-      --surface2:  rgba(255,255,255,0.05);
-      --border:    rgba(255,255,255,0.08);
-      --border2:   rgba(255,255,255,0.04);
-      --text:      #FFFFFF;
-      --text2:     #A0A0B0;
-      --text3:     #606070;
-      --accent:    #56CCF2;
-      --accent2:   #2F80ED;
-      --accentbg:  rgba(86,204,242,0.12);
-      --green:     #27AE60;
-      --greenbg:   rgba(39,174,96,0.12);
-      --gold:      #F2C94C;
-      --goldbg:    rgba(242,201,76,0.12);
-      --blue:      #2F80ED;
-      --bluebg:    rgba(47,128,237,0.12);
-      --shadow:    0 2px 16px rgba(0,0,0,0.4);
-      --shadow2:   0 8px 32px rgba(0,0,0,0.6);
-    }
-    [data-theme="light"] {
-      --bg:        #FAFAF8;
-      --bg2:       #F2F1EE;
-      --bg3:       #E8E6E1;
-      --surface:   #FFFFFF;
-      --surface2:  #F7F6F3;
-      --border:    rgba(0,0,0,0.08);
-      --border2:   rgba(0,0,0,0.05);
-      --text:      #1A1714;
-      --text2:     #6B6560;
-      --text3:     #9B9490;
-      --accent:    #FF5A5F;
-      --accent2:   #E84393;
-      --accentbg:  rgba(255,90,95,0.1);
-      --green:     #00A699;
-      --greenbg:   rgba(0,166,153,0.1);
-      --gold:      #E8A838;
-      --goldbg:    rgba(232,168,56,0.1);
-      --blue:      #2F80ED;
-      --bluebg:    rgba(47,128,237,0.1);
-      --shadow:    0 2px 16px rgba(0,0,0,0.06);
-      --shadow2:   0 8px 32px rgba(0,0,0,0.10);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Win-Win · Кабинет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ── Светлая тема (по умолчанию) ───────────────────────────── */
+        :root {
+            --bg:        #F7F7F9;
+            --surface:   #FFFFFF;
+            --text:      #1A1A2E;
+            --text2:     #8A8D9F;
+            --border:    rgba(0,0,0,0.06);
+            --shadow:    0 4px 20px rgba(0,0,0,0.06);
+            --shadow2:   0 8px 32px rgba(0,0,0,0.10);
+            --accent1:   #56CCF2;
+            --accent2:   #2F80ED;
+            --green:     #27AE60;
+            --gold:      #F2C94C;
+            --red:       #EB5757;
+            --radius:    20px;
+            --radius-sm: 12px;
+        }
+        /* ── Фирменная тёмная тема Win-Win ──────────────────────────── */
+        body.brand-theme {
+            --bg:      #0F0F1A;
+            --surface: rgba(255,255,255,0.04);
+            --text:    #FFFFFF;
+            --text2:   #A0A0B0;
+            --border:  rgba(255,255,255,0.07);
+            --shadow:  0 4px 24px rgba(0,0,0,0.3);
+            --shadow2: 0 8px 40px rgba(0,0,0,0.5);
+        }
 
-    /* ── Reset ──────────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      transition: background 0.3s, color 0.3s;
-      overscroll-behavior: none;
-    }
-    .shell {
-      width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
+        /* ── Base ───────────────────────────────────────────────────── */
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html { -webkit-text-size-adjust:100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            overscroll-behavior: none;
+        }
+        .app {
+            width: 100%; max-width: 430px;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 90px;
+            overflow-x: hidden;
+        }
 
-    /* ── Loading ────────────────────────────────────────────────────── */
-    .loader {
-      position: fixed; inset: 0;
-      background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.4s;
-    }
-    .loader-logo {
-      font-family: 'Sora', sans-serif;
-      font-size: 2.2rem; font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .loader-sub { font-size: 0.85rem; color: var(--text3); margin-bottom: 32px; }
-    .loader-dots { display: flex; gap: 8px; }
-    .loader-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent);
-      animation: bounce 1.2s infinite ease-in-out;
-    }
-    .loader-dot:nth-child(2) { animation-delay: 0.2s; background: var(--green); }
-    .loader-dot:nth-child(3) { animation-delay: 0.4s; background: var(--blue); }
-    @keyframes bounce {
-      0%,80%,100% { transform: scale(0.6); opacity: 0.4; }
-      40% { transform: scale(1); opacity: 1; }
-    }
-    .loader-err { display: none; text-align: center; padding: 0 24px; }
-    .loader-err-title { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
-    .loader-err-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 24px; }
+        /* ── Loader ─────────────────────────────────────────────────── */
+        .loader {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.4s;
+        }
+        .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
+        .loader-sub { font-size:0.82rem; color:var(--text2); margin-bottom:32px; }
+        .loader-dots { display:flex; gap:8px; }
+        .loader-dot { width:8px; height:8px; border-radius:50%; background:var(--accent2); animation:bounce 1.2s infinite ease-in-out; }
+        .loader-dot:nth-child(2){animation-delay:.2s; background:var(--green);}
+        .loader-dot:nth-child(3){animation-delay:.4s; background:var(--gold);}
+        @keyframes bounce { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
+        .loader-err { display:none; text-align:center; padding:0 24px; }
+        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--red); margin-bottom:8px; }
+        .loader-err-sub { font-size:0.85rem; color:var(--text2); margin-bottom:24px; }
 
-    /* ── Top Bar ────────────────────────────────────────────────────── */
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px 8px;
-      position: sticky; top: 0;
-      background: var(--bg);
-      z-index: 100;
-    }
-    .topbar-brand {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.3rem; font-weight: 800;
-      color: var(--accent);
-    }
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
-    .theme-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      cursor: pointer; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: 0.2s;
-    }
-    .theme-btn:active { transform: scale(0.9); }
-    .lang-pills { display: flex; gap: 4px; }
-    .lang-pill {
-      padding: 4px 8px; border-radius: 8px;
-      font-size: 0.7rem; font-weight: 700;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text3);
-      cursor: pointer; transition: 0.2s;
-    }
-    .lang-pill.active {
-      background: var(--accent);
-      color: #fff; border-color: var(--accent);
-    }
+        /* ── Header ─────────────────────────────────────────────────── */
+        .header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 20px 12px;
+            position: sticky; top: 0;
+            background: var(--bg);
+            z-index: 50;
+        }
+        .header-left .greeting { font-size: 0.82rem; color: var(--text2); font-weight: 500; margin-bottom: 3px; }
+        .header-left .name { font-family: 'Sora', sans-serif; font-size: 1.3rem; font-weight: 800; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .icon-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: var(--shadow); transition: .2s;
+        }
+        .icon-btn:active { transform: scale(.92); }
+        .lang-row { display: flex; gap: 4px; }
+        .lang-btn {
+            padding: 4px 7px; border-radius: 8px;
+            font-size: 0.65rem; font-weight: 700;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--text2);
+            cursor: pointer; transition: .2s;
+        }
+        .lang-btn.active { background: var(--accent2); color: #fff; border-color: var(--accent2); }
 
-    /* ── Hero Card ──────────────────────────────────────────────────── */
-    .hero {
-      margin: 8px 16px 0;
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 24px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; top: -40px; right: -40px;
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accentbg) 0%, transparent 70%);
-    }
-    .hero-greeting { font-size: 0.8rem; color: var(--text3); font-weight: 500; margin-bottom: 4px; }
-    .hero-name {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      color: var(--text); margin-bottom: 20px;
-    }
-    .hero-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
-    .hero-stat-val {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.4rem; font-weight: 800;
-    }
-    .hero-stat-val.green { color: var(--green); }
-    .hero-stat-val.gold { color: var(--gold); }
-    .hero-stat-val.blue { color: var(--blue); }
-    .hero-stat-lbl { font-size: 0.7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* ── Views ──────────────────────────────────────────────────── */
+        .view { display: none; padding: 0 16px; animation: fadeUp .3s ease; }
+        .view.active { display: block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-    /* ── Tabs ───────────────────────────────────────────────────────── */
-    .tabs-wrap {
-      display: flex; gap: 8px;
-      padding: 16px 16px 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .tabs-wrap::-webkit-scrollbar { display: none; }
-    .tab-pill {
-      flex-shrink: 0;
-      padding: 8px 16px; border-radius: 999px;
-      font-size: 0.8rem; font-weight: 700;
-      border: 1.5px solid var(--border);
-      background: transparent;
-      color: var(--text2);
-      cursor: pointer; transition: 0.2s;
-      white-space: nowrap;
-    }
-    .tab-pill.active {
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
-    }
+        /* ── Cards ──────────────────────────────────────────────────── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow);
+        }
 
-    /* ── Sections ───────────────────────────────────────────────────── */
-    .content { flex: 1; padding: 0 16px calc(var(--nav-h) + 16px); }
-    .section { display: none; }
-    .section.active { display: block; animation: fadeUp 0.3s ease; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .sec-title {
-      font-family: 'Sora', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      color: var(--text); margin: 20px 0 12px;
-    }
+        /* ── Balance card (gradient) ─────────────────────────────────── */
+        .balance-card {
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            color: #fff; border: none;
+            box-shadow: 0 8px 32px rgba(47,128,237,0.25);
+        }
+        .balance-label { font-size: 0.82rem; opacity: .85; font-weight: 600; margin-bottom: 6px; }
+        .balance-amount {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.4rem; font-weight: 800; margin-bottom: 18px; line-height: 1;
+        }
+        .balance-stats { display: flex; gap: 12px; border-top: 1px solid rgba(255,255,255,.2); padding-top: 16px; }
+        .balance-stat { flex: 1; }
+        .balance-stat-val { font-size: 1.05rem; font-weight: 700; }
+        .balance-stat-lbl { font-size: 0.72rem; opacity: .8; margin-top: 2px; }
 
-    /* ── Cards ──────────────────────────────────────────────────────── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-    }
-    .card-sm {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        /* ── Action card ─────────────────────────────────────────────── */
+        .action-card {
+            display: flex; align-items: center; gap: 16px;
+            cursor: pointer; transition: .2s;
+            border: 2px dashed var(--border);
+            background: transparent;
+        }
+        .action-card:active { transform: scale(.98); background: var(--surface); }
+        .action-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: rgba(47,128,237,.1); color: var(--accent2);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .action-title { font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
+        .action-sub { font-size: .78rem; color: var(--text2); line-height: 1.4; }
 
-    /* ── Stat chips ─────────────────────────────────────────────────── */
-    .stat-chip { display: flex; flex-direction: column; gap: 4px; }
-    .stat-chip-val {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.6rem; font-weight: 800; color: var(--text);
-    }
-    .stat-chip-lbl { font-size: 0.7rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+        /* ── Section title ───────────────────────────────────────────── */
+        .sec-title {
+            font-size: 1rem; font-weight: 700;
+            margin: 20px 0 12px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sec-badge { font-size: .75rem; font-weight: 600; color: var(--text2); }
 
-    /* ── Big earned ─────────────────────────────────────────────────── */
-    .earned-block {
-      text-align: center; padding: 8px 0;
-    }
-    .earned-block .big-num {
-      font-family: 'Sora', sans-serif;
-      font-size: 3.2rem; font-weight: 800;
-      color: var(--green);
-      line-height: 1;
-    }
-    .earned-block .big-lbl { font-size: 0.8rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        /* ── Activity items ──────────────────────────────────────────── */
+        .activity-item {
+            display: flex; gap: 12px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .act-icon {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .act-title { font-size: .92rem; font-weight: 600; margin-bottom: 2px; }
+        .act-sub { font-size: .78rem; color: var(--text2); }
+        .act-right { margin-left: auto; text-align: right; flex-shrink: 0; }
+        .act-amount { font-size: .92rem; font-weight: 700; }
+        .act-date { font-size: .72rem; color: var(--text2); margin-top: 2px; }
 
-    /* ── Funnel ─────────────────────────────────────────────────────── */
-    .funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .funnel-row:last-child { margin-bottom: 0; }
-    .funnel-lbl { width: 80px; font-size: 0.72rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
-    .funnel-track { flex: 1; height: 10px; background: var(--bg2); border-radius: 5px; overflow: hidden; }
-    .funnel-fill { height: 100%; border-radius: 5px; width: 0; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); }
-    .fill-blue  { background: var(--blue); }
-    .fill-green { background: var(--green); }
-    .fill-red   { background: var(--accent); }
-    .funnel-num { width: 28px; text-align: right; font-weight: 700; font-size: 0.85rem; color: var(--text); }
-    .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .conv-badge {
-      background: var(--greenbg); color: var(--green);
-      font-size: 0.75rem; font-weight: 700;
-      padding: 4px 10px; border-radius: 8px;
-    }
+        /* ── Status pills ────────────────────────────────────────────── */
+        .pill {
+            display: inline-flex; align-items: center;
+            padding: 3px 9px; border-radius: 999px;
+            font-size: .7rem; font-weight: 700;
+        }
+        .pill-blue   { background: rgba(47,128,237,.12);  color: var(--accent2); }
+        .pill-gold   { background: rgba(242,201,76,.15);  color: #B8861A; }
+        .pill-green  { background: rgba(39,174,96,.12);   color: var(--green); }
+        .pill-red    { background: rgba(235,87,87,.12);   color: var(--red); }
 
-    /* ── Efficiency ─────────────────────────────────────────────────── */
-    .eff-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
-    .eff-big {
-      font-family: 'Sora', sans-serif;
-      font-size: 3rem; font-weight: 800; line-height: 1;
-    }
-    .eff-badge {
-      font-size: 0.75rem; font-weight: 700;
-      padding: 4px 10px; border-radius: 8px;
-    }
-    .eff-badge.good { background: var(--greenbg); color: var(--green); }
-    .eff-badge.neutral { background: var(--bg2); color: var(--text3); }
-    .eff-track { height: 8px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
-    .eff-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--accent)); border-radius: 4px; width: 0; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
-    .eff-compare { font-size: 0.75rem; color: var(--text3); margin-top: 8px; text-align: center; }
+        /* ── Funnel ──────────────────────────────────────────────────── */
+        .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
+        .funnel-row:last-child { margin-bottom:0; }
+        .funnel-lbl { width:78px; font-size:.72rem; font-weight:700; color:var(--text2); text-transform:uppercase; flex-shrink:0; }
+        .funnel-track { flex:1; height:9px; background:var(--bg); border-radius:5px; overflow:hidden; border:1px solid var(--border); }
+        .funnel-fill { height:100%; border-radius:5px; width:0; transition:width 1.2s cubic-bezier(.25,1,.5,1); }
+        .fill-blue  { background:var(--accent2); }
+        .fill-green { background:var(--green); }
+        .fill-red   { background:var(--red); }
+        .funnel-num { width:28px; text-align:right; font-weight:700; font-size:.85rem; }
+        .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-weight:700; font-size:.9rem; }
+        .conv-pill { background:rgba(39,174,96,.12); color:var(--green); font-size:.75rem; font-weight:700; padding:3px 9px; border-radius:8px; }
 
-    /* ── Deal cards ─────────────────────────────────────────────────── */
-    .deal-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .deal-card:active { transform: scale(0.98); box-shadow: var(--shadow2); }
-    .deal-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .deal-client { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
-    .deal-biz { font-size: 0.8rem; color: var(--text2); font-weight: 500; margin-top: 2px; }
-    .deal-status {
-      font-size: 0.7rem; font-weight: 700;
-      padding: 4px 10px; border-radius: 8px;
-      flex-shrink: 0; margin-left: 8px;
-    }
-    .status-new       { background: var(--bluebg);   color: var(--blue); }
-    .status-in_progress { background: var(--goldbg); color: var(--gold); }
-    .status-closed    { background: var(--greenbg);  color: var(--green); }
-    .status-confirmed { background: var(--greenbg);  color: var(--green); }
-    .status-rejected  { background: var(--accentbg); color: var(--accent); }
-    .deal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border2); }
-    .deal-date { font-size: 0.75rem; color: var(--text3); }
-    .deal-comm {
-      font-family: 'Sora', sans-serif;
-      font-size: 0.9rem; font-weight: 700; color: var(--green);
-    }
-    .deal-comm.pending { color: var(--gold); }
+        /* ── Efficiency ──────────────────────────────────────────────── */
+        .eff-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px; }
+        .eff-num { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; line-height:1; }
+        .eff-badge { font-size:.73rem; font-weight:700; padding:4px 10px; border-radius:8px; }
+        .eff-good { background:rgba(39,174,96,.12); color:var(--green); }
+        .eff-neutral { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
+        .eff-track { height:8px; background:var(--bg); border-radius:4px; overflow:hidden; border:1px solid var(--border); }
+        .eff-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent1)); border-radius:4px; width:0; transition:width 1.5s cubic-bezier(.22,1,.36,1); }
+        .eff-compare { font-size:.73rem; color:var(--text2); margin-top:8px; text-align:center; }
 
-    /* ── Empty state ────────────────────────────────────────────────── */
-    .empty-state {
-      text-align: center; padding: 40px 24px;
-      color: var(--text3);
-    }
-    .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .empty-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
-    .empty-sub { font-size: 0.82rem; line-height: 1.5; }
+        /* ── Avg display ─────────────────────────────────────────────── */
+        .avg-display {
+            padding: 28px 20px; text-align: center;
+            background: linear-gradient(135deg, rgba(86,204,242,.07), rgba(47,128,237,.07));
+            border-radius: var(--radius);
+            border: 1px solid rgba(47,128,237,.2);
+            margin-bottom: 14px;
+        }
+        .avg-num { font-family:'Sora',sans-serif; font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; }
+        .avg-lbl { font-size:.78rem; color:var(--text2); margin-top:8px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
 
-    /* ── Pending payouts ────────────────────────────────────────────── */
-    .payout-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border2);
-    }
-    .payout-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .payout-name { font-weight: 600; font-size: 0.9rem; }
-    .payout-niche { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
-    .payout-amt { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; color: var(--gold); }
+        /* ── Chart ───────────────────────────────────────────────────── */
+        .chart-wrap { position:relative; height:180px; }
 
-    /* ── Profile ────────────────────────────────────────────────────── */
-    .profile-avatar {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--gold));
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff;
-      margin: 0 auto 16px; flex-shrink: 0;
-    }
-    .profile-name-big {
-      font-family: 'Sora', sans-serif;
-      text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 4px;
-    }
-    .profile-phone { text-align: center; font-size: 0.85rem; color: var(--text3); margin-bottom: 24px; }
-    .profile-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 0; border-bottom: 1px solid var(--border2);
-    }
-    .profile-row:last-child { border-bottom: none; }
-    .profile-row-lbl { font-size: 0.82rem; color: var(--text3); font-weight: 600; }
-    .profile-row-val { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+        /* ── PRO card ────────────────────────────────────────────────── */
+        .pro-card {
+            background: linear-gradient(135deg, #F2C94C, #F2994A);
+            border: none;
+            color: #1A1A2E;
+            position: relative; overflow: hidden;
+        }
+        .pro-card::before {
+            content:''; position:absolute; top:-24px; right:-24px;
+            width:110px; height:110px; background:rgba(255,255,255,.18); border-radius:50%;
+        }
+        .pro-card-inner { position:relative; z-index:1; }
+        .pro-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+        .pro-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
+        .pro-badge { background:rgba(0,0,0,.15); padding:4px 9px; border-radius:8px; font-size:.72rem; font-weight:700; display:flex; align-items:center; gap:4px; }
+        .pro-desc { font-size:.82rem; font-weight:500; opacity:.95; line-height:1.45; margin-bottom:16px; }
+        .pro-progress-wrap { background:rgba(0,0,0,.08); padding:12px 14px; border-radius:12px; }
+        .pro-progress-header { display:flex; justify-content:space-between; font-size:.78rem; font-weight:700; margin-bottom:8px; }
+        .pro-bar-bg { height:6px; background:rgba(255,255,255,.2); border-radius:3px; overflow:hidden; }
+        .pro-bar-fill { height:100%; background:#fff; width:0; border-radius:3px; transition:width 1.5s ease-in-out; }
 
-    /* ── Bottom CTA button ──────────────────────────────────────────── */
-    .cta-btn {
-      display: block; width: 100%;
-      padding: 16px; border-radius: var(--radius);
-      background: #25D366; color: #fff;
-      font-family: 'Sora', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      text-align: center; text-decoration: none;
-      border: none; cursor: pointer;
-      box-shadow: 0 6px 20px rgba(37,211,102,0.3);
-      transition: transform 0.15s, box-shadow 0.15s;
-      margin-top: 12px;
-    }
-    .cta-btn:active { transform: scale(0.97); }
-    .cta-btn.tg { background: #2F80ED; box-shadow: 0 6px 20px rgba(47,128,237,0.3); }
+        /* PRO unlocked extras */
+        .pro-rate-row {
+            display:flex; justify-content:space-between; align-items:center;
+            background:rgba(255,255,255,.22); padding:11px 14px;
+            border-radius:11px; margin-bottom:8px;
+        }
+        .pro-niche-item {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:8px 0; border-bottom:1px solid rgba(255,255,255,.2);
+        }
+        .pro-niche-item:last-child { border-bottom:none; }
+        .pro-add-btn {
+            width:100%; padding:10px; background:rgba(0,0,0,.14);
+            color:#1A1A2E; border:none; border-radius:10px;
+            font-weight:700; font-size:.88rem;
+            display:flex; justify-content:center; align-items:center; gap:6px;
+            cursor:pointer; margin-top:10px;
+        }
 
-    /* ── Bottom Navigation ──────────────────────────────────────────── */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: 480px;
-      height: var(--nav-h);
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center;
-      padding: 0 8px;
-      z-index: 200;
-    }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 4px; cursor: pointer;
-      padding: 8px 4px;
-      border-radius: 12px;
-      transition: 0.2s;
-      background: transparent; border: none;
-    }
-    .nav-item.active .nav-icon { background: var(--accentbg); color: var(--accent); }
-    .nav-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      color: var(--text3);
-      transition: 0.2s;
-    }
-    .nav-lbl { font-size: 0.62rem; font-weight: 700; color: var(--text3); transition: 0.2s; }
-    .nav-item.active .nav-lbl { color: var(--accent); }
+        /* ── Profile settings list ───────────────────────────────────── */
+        .settings-list .settings-row {
+            padding:15px 18px; display:flex; align-items:center; gap:12px;
+            border-bottom:1px solid var(--border); cursor:pointer; transition:.15s;
+        }
+        .settings-list .settings-row:last-child { border-bottom:none; }
+        .settings-list .settings-row:active { background:var(--bg); }
+        .settings-row-label { font-size:.9rem; font-weight:500; }
+        .settings-row-value { margin-left:auto; font-size:.85rem; color:var(--text2); }
 
-    /* ── Chart ──────────────────────────────────────────────────────── */
-    .chart-wrap { position: relative; height: 180px; margin: 8px 0; }
+        /* ── Profile avatar ──────────────────────────────────────────── */
+        .profile-header { display:flex; align-items:center; gap:14px; }
+        .profile-avatar {
+            width:58px; height:58px; border-radius:50%;
+            background:linear-gradient(135deg, var(--accent1), var(--accent2));
+            color:#fff; font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+            text-transform:uppercase;
+        }
+        .profile-name { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:2px; }
+        .profile-phone { font-size:.85rem; color:var(--text2); }
+        .profile-edit { margin-left:auto; color:var(--text2); background:var(--bg); width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:1px solid var(--border); }
 
-    /* ── Divider ────────────────────────────────────────────────────── */
-    .divider { height: 1px; background: var(--border); margin: 4px 0 16px; }
+        /* ── Empty state ─────────────────────────────────────────────── */
+        .empty-state { text-align:center; padding:36px 16px; }
+        .empty-icon { color:var(--border); margin:0 auto 14px; }
+        .empty-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
+        .empty-sub { font-size:.82rem; color:var(--text2); line-height:1.5; margin-bottom:20px; }
+        .btn-primary {
+            background:var(--text); color:var(--bg);
+            border:none; padding:13px 22px; border-radius:13px;
+            font-weight:700; font-size:.9rem; width:100%; cursor:pointer; transition:.2s;
+        }
+        .btn-primary:active { transform:scale(.97); }
+        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
+        .btn-tg { background:#2F80ED; color:#fff; }
 
-    /* ── Pill badge ─────────────────────────────────────────────────── */
-    .pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: 999px;
-      font-size: 0.72rem; font-weight: 700;
-    }
-    .pill-green { background: var(--greenbg); color: var(--green); }
-    .pill-gold  { background: var(--goldbg);  color: var(--gold); }
-    .pill-blue  { background: var(--bluebg);  color: var(--blue); }
-    .pill-red   { background: var(--accentbg); color: var(--accent); }
-  </style>
+        /* ── Bottom nav ──────────────────────────────────────────────── */
+        .bottom-nav {
+            position: fixed; bottom: 0;
+            width: 100%; max-width: 430px;
+            background: var(--surface);
+            display: flex; justify-content: space-between;
+            padding: 10px 20px 22px;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-item {
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            color:var(--text2); cursor:pointer; transition:.2s;
+            background:transparent; border:none; padding:2px 6px;
+        }
+        .nav-item.active { color:var(--accent2); }
+        .nav-item span { font-size:.6rem; font-weight:700; }
+        .nav-item svg { transition:.2s; }
+        .nav-item.active svg { transform:translateY(-2px); }
+
+        /* ── Bottom sheet ────────────────────────────────────────────── */
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; opacity:0; pointer-events:none; transition:.3s; }
+        .modal-overlay.active { opacity:1; pointer-events:all; }
+        .bottom-sheet {
+            position:fixed; bottom:-100%; left:50%; transform:translateX(-50%);
+            width:100%; max-width:430px;
+            background:var(--surface); border-radius:24px 24px 0 0;
+            padding:24px; z-index:1000;
+            transition:.35s cubic-bezier(.175,.885,.32,1.275);
+            box-shadow:0 -10px 40px rgba(0,0,0,.12);
+        }
+        .bottom-sheet.active { bottom:0; }
+        .sheet-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
+        .custom-input {
+            width:100%; padding:13px 15px; border:1px solid var(--border); border-radius:11px;
+            background:var(--bg); color:var(--text); font-size:.95rem; margin-bottom:13px;
+            outline:none; font-family:inherit; transition:.2s;
+        }
+        .custom-input:focus { border-color:var(--accent2); }
+        .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
+    </style>
 </head>
 <body>
-<div class="shell">
 
-  <!-- Loader -->
-  <div class="loader" id="loader">
-    <div class="loader-logo">Win-Win</div>
-    <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
-    <div class="loader-dots" id="loaderDots">
-      <div class="loader-dot"></div>
-      <div class="loader-dot"></div>
-      <div class="loader-dot"></div>
-    </div>
-    <div class="loader-err" id="loaderErr">
-      <div class="loader-err-title" id="errTitle">Ссылка устарела</div>
-      <div class="loader-err-sub" id="errSub">Запросите новую ссылку в боте</div>
-      <a href="#" class="cta-btn" id="errBtn" style="max-width:260px; margin: 0 auto;">WhatsApp</a>
-    </div>
-  </div>
+<div class="app">
 
-  <!-- Top bar -->
-  <div class="topbar">
-    <div class="topbar-brand">Win-Win</div>
-    <div class="topbar-right">
-      <div class="lang-pills" id="langPills">
-        <button class="lang-pill" onclick="setLang('en')">EN</button>
-        <button class="lang-pill" onclick="setLang('he')">HE</button>
-        <button class="lang-pill" onclick="setLang('ar')">AR</button>
-        <button class="lang-pill active" onclick="setLang('ru')">RU</button>
-      </div>
-      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
-    </div>
-  </div>
-
-  <!-- Hero -->
-  <div class="hero" id="heroBlock">
-    <div class="hero-greeting" id="t_greeting_label">Привет,</div>
-    <div class="hero-name" id="t_name">—</div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-val green" id="h_earned">0</div>
-        <div class="hero-stat-lbl" id="t_h_earned">Заработано ₪</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val blue" id="h_deals">0</div>
-        <div class="hero-stat-lbl" id="t_h_deals">Сделок</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val gold" id="h_pending">0</div>
-        <div class="hero-stat-lbl" id="t_h_pending">Ждут ₪</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section tabs -->
-  <div class="tabs-wrap" id="tabsWrap">
-    <button class="tab-pill active" onclick="showTab('overview')" id="tab_overview">Обзор</button>
-    <button class="tab-pill" onclick="showTab('deals')" id="tab_deals">Сделки</button>
-    <button class="tab-pill" onclick="showTab('stats')" id="tab_stats">Статистика</button>
-    <button class="tab-pill" onclick="showTab('profile')" id="tab_profile">Профиль</button>
-  </div>
-
-  <!-- Content -->
-  <div class="content">
-
-    <!-- ── Overview ── -->
-    <div class="section active" id="sec_overview">
-
-      <div class="sec-title" id="t_finances">Финансы</div>
-      <div class="card" style="text-align:center;">
-        <div class="earned-block">
-          <div class="big-num" id="v_earned">0</div>
-          <div class="big-lbl" id="t_earned_lbl">Уже получено ₪</div>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-brand">Win-Win</div>
+        <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
+        <div class="loader-dots" id="loaderDots">
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
         </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card-sm">
-          <div class="stat-chip">
-            <div class="stat-chip-val" style="color:var(--gold)" id="v_pending">0</div>
-            <div class="stat-chip-lbl" id="t_pending_lbl">Ждут выплаты ₪</div>
-          </div>
+        <div class="loader-err" id="loaderErr">
+            <div class="loader-err-title">Ссылка устарела</div>
+            <div class="loader-err-sub">Запросите новую ссылку в боте</div>
+            <a href="#" class="btn-primary btn-wa" id="errBtn" style="max-width:240px;margin:0 auto;display:block;text-decoration:none;text-align:center;">WhatsApp</a>
         </div>
-        <div class="card-sm">
-          <div class="stat-chip">
-            <div class="stat-chip-val" style="color:var(--blue)" id="v_active">0</div>
-            <div class="stat-chip-lbl" id="t_active_lbl">Сделок в работе</div>
-          </div>
-        </div>
-      </div>
+    </div>
 
-      <!-- Pending payouts -->
-      <div id="pendingBlock">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="greeting" id="t_greeting">С возвращением,</div>
+            <div class="name" id="t_name">—</div>
+        </div>
+        <div class="header-right">
+            <div class="lang-row" id="langRow">
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+                <button class="lang-btn" onclick="setLang('he')">HE</button>
+                <button class="lang-btn" onclick="setLang('ar')">AR</button>
+                <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+            </div>
+            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()">
+                <i data-feather="moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── View: Home ────────────────────────────────────────────────── -->
+    <div id="view-home" class="view active">
+
+        <!-- Balance card -->
+        <div class="card balance-card">
+            <div class="balance-label" id="t_balance_label">Социальный капитал</div>
+            <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
+            <div class="balance-stats">
+                <div class="balance-stat">
+                    <div class="balance-stat-val" id="v_deals">0</div>
+                    <div class="balance-stat-lbl" id="t_deals_lbl">Сделок</div>
+                </div>
+                <div class="balance-stat">
+                    <div class="balance-stat-val" id="v_pending">0 ₪</div>
+                    <div class="balance-stat-lbl" id="t_pending_lbl">Ожидает</div>
+                </div>
+                <div class="balance-stat">
+                    <div class="balance-stat-val" id="v_active">0</div>
+                    <div class="balance-stat-lbl" id="t_active_lbl">В работе</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA action -->
+        <div class="card action-card" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
+            <div class="action-icon"><i data-feather="heart"></i></div>
+            <div>
+                <div class="action-title" id="t_action_title">Помогите любимому бизнесу</div>
+                <div class="action-sub" id="t_action_sub">Откройте каталог и сделайте первую рекомендацию</div>
+            </div>
+        </div>
+
+        <!-- Recent activity -->
+        <h2 class="sec-title">
+            <span id="t_events">Последние события</span>
+        </h2>
+        <div class="card" style="padding:0 16px;" id="activityList">
+            <!-- filled by JS -->
+        </div>
+
+        <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none; text-decoration:none; text-align:center; margin-top:4px;">WhatsApp</a>
+    </div>
+
+    <!-- ── View: Catalog ─────────────────────────────────────────────── -->
+    <div id="view-catalog" class="view">
+        <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнеса</h2>
+        <div class="card action-card" style="cursor:default;">
+            <div class="action-icon"><i data-feather="info"></i></div>
+            <div>
+                <div class="action-title" id="t_catalog_info">Веб-каталог</div>
+                <div class="action-sub" id="t_catalog_sub">Полный каталог доступен в боте. Напишите "1" в WhatsApp.</div>
+            </div>
+        </div>
+        <a href="#" class="btn-primary btn-wa" id="ctaBtnCatalog" style="display:none; text-decoration:none; text-align:center;">WhatsApp</a>
+    </div>
+
+    <!-- ── View: History ─────────────────────────────────────────────── -->
+    <div id="view-history" class="view">
+        <h2 class="sec-title" style="margin-top:4px;">
+            <span id="t_history_title">Мои рекомендации</span>
+        </h2>
+
+        <div class="sec-title" style="color:var(--accent2); margin-top:4px;" id="t_active_sec">🕒 В процессе</div>
+        <div id="list_active"></div>
+
+        <div class="sec-title" style="color:#B8861A; margin-top:16px;" id="t_debt_sec">💰 Ожидают выплаты</div>
+        <div id="list_debt"></div>
+
+        <div class="sec-title" style="margin-top:16px;" id="t_done_sec">✅ История</div>
+        <div id="list_history"></div>
+    </div>
+
+    <!-- ── View: Wallet ──────────────────────────────────────────────── -->
+    <div id="view-wallet" class="view">
+        <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Финансы</h2>
+
+        <!-- Avg display -->
+        <div class="avg-display">
+            <div class="avg-num" id="v_avg">0</div>
+            <div class="avg-lbl" id="t_avg_lbl">Средний заработок на сделку ₪</div>
+        </div>
+
+        <!-- Efficiency -->
+        <div class="card" id="effCard">
+            <div class="eff-top">
+                <div>
+                    <div class="eff-num" id="v_eff">—</div>
+                    <div style="font-size:.72rem; color:var(--text2); margin-top:2px;" id="t_eff_sub">% закрытых сделок</div>
+                </div>
+                <div class="eff-badge eff-neutral" id="eff_badge">Накапливается</div>
+            </div>
+            <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
+            <div class="eff-compare" id="eff_compare"></div>
+        </div>
+
+        <!-- Funnel -->
+        <div class="sec-title" id="t_funnel">Воронка</div>
+        <div class="card">
+            <div class="funnel-header">
+                <span id="t_total_leads">Всего: 0</span>
+                <span class="conv-pill" id="v_conv">0%</span>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-lbl" id="t_f_active">В работе</div>
+                <div class="funnel-track"><div class="funnel-fill fill-blue" id="bar_active"></div></div>
+                <div class="funnel-num" id="st_active">0</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-lbl" id="t_f_closed">Закрыто</div>
+                <div class="funnel-track"><div class="funnel-fill fill-green" id="bar_closed"></div></div>
+                <div class="funnel-num" id="st_closed">0</div>
+            </div>
+            <div class="funnel-row">
+                <div class="funnel-lbl" id="t_f_rejected">Отклонено</div>
+                <div class="funnel-track"><div class="funnel-fill fill-red" id="bar_rejected"></div></div>
+                <div class="funnel-num" id="st_rejected">0</div>
+            </div>
+        </div>
+
+        <!-- Pending payouts -->
         <div class="sec-title" id="t_awaiting">Ожидаем выплату от:</div>
         <div class="card" id="pendingList"></div>
-      </div>
 
-      <!-- Funnel -->
-      <div class="sec-title" id="t_funnel">Воронка конверсии</div>
-      <div class="card">
-        <div class="funnel-header">
-          <span id="t_total_leads">Всего лидов: 0</span>
-          <span class="conv-badge" id="v_conv">0%</span>
+        <!-- Niche chart -->
+        <div class="sec-title" id="t_chart_title" style="display:none;">По нишам</div>
+        <div class="card" id="chartCard" style="display:none;">
+            <div class="chart-wrap"><canvas id="nicheChart"></canvas></div>
         </div>
-        <div class="funnel-row">
-          <div class="funnel-lbl" id="t_f_progress">В работе</div>
-          <div class="funnel-track"><div class="funnel-fill fill-blue" id="bar_active"></div></div>
-          <div class="funnel-num" id="st_active">0</div>
-        </div>
-        <div class="funnel-row">
-          <div class="funnel-lbl" id="t_f_closed">Закрыто</div>
-          <div class="funnel-track"><div class="funnel-fill fill-green" id="bar_closed"></div></div>
-          <div class="funnel-num" id="st_closed">0</div>
-        </div>
-        <div class="funnel-row">
-          <div class="funnel-lbl" id="t_f_rejected">Отклонено</div>
-          <div class="funnel-track"><div class="funnel-fill fill-red" id="bar_rejected"></div></div>
-          <div class="funnel-num" id="st_rejected">0</div>
-        </div>
-      </div>
-
-      <!-- WhatsApp button -->
-      <a href="#" class="cta-btn" id="ctaBtn" style="display:none;">WhatsApp</a>
     </div>
 
-    <!-- ── Deals ── -->
-    <div class="section" id="sec_deals">
-      <div class="sec-title" id="t_my_deals">Мои сделки</div>
-      <div id="dealsList"></div>
+    <!-- ── View: Profile ─────────────────────────────────────────────── -->
+    <div id="view-profile" class="view">
+        <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">Профиль</h2>
+
+        <!-- Avatar card -->
+        <div class="card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">W</div>
+                <div>
+                    <div class="profile-name" id="profileName">—</div>
+                    <div class="profile-phone" id="profilePhone">—</div>
+                </div>
+                <div class="profile-edit"><i data-feather="edit-2" style="width:15px; height:15px;"></i></div>
+            </div>
+        </div>
+
+        <!-- PRO locked -->
+        <div class="card pro-card" id="pro-locked">
+            <div class="pro-card-inner">
+                <div class="pro-top">
+                    <div class="pro-title">🌟 PRO-Агент</div>
+                    <div class="pro-badge">
+                        <i data-feather="lock" style="width:11px; height:11px;"></i>
+                        <span id="t_pro_locked">Закрыто</span>
+                    </div>
+                </div>
+                <div class="pro-desc" id="t_pro_desc">Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки для бизнеса.</div>
+                <div class="pro-progress-wrap">
+                    <div class="pro-progress-header">
+                        <span id="t_pro_progress_lbl">Ваш прогресс</span>
+                        <span id="pro_progress_txt">0 / 50</span>
+                    </div>
+                    <div class="pro-bar-bg"><div class="pro-bar-fill" id="proBar"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRO unlocked (hidden by default) -->
+        <div class="card pro-card" id="pro-unlocked" style="display:none;">
+            <div class="pro-card-inner">
+                <div class="pro-top">
+                    <div class="pro-title">🌟 PRO-Агент</div>
+                    <div class="pro-badge" id="t_pro_influencer">Инфлюенсер</div>
+                </div>
+                <div class="pro-desc" id="t_pro_unlocked_desc">Вы устанавливаете свои правила игры.</div>
+                <div class="pro-rate-row">
+                    <span style="font-weight:600; font-size:.88rem;" id="t_base_rate">Базовая ставка (для всех)</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-weight:800; font-size:1rem;" id="v_base_rate">—</span>
+                        <i data-feather="edit-2" style="width:13px; height:13px; opacity:.8;"></i>
+                    </div>
+                </div>
+                <button class="pro-add-btn" onclick="openNicheModal()">
+                    <i data-feather="plus" style="width:15px; height:15px;"></i>
+                    <span id="t_add_niche">Добавить нишу</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <h3 class="sec-title" style="font-size:.9rem; margin-top:20px;" id="t_settings">Настройки</h3>
+        <div class="card settings-list" style="padding:0;">
+            <div class="settings-row">
+                <i data-feather="credit-card" style="color:var(--text2); flex-shrink:0;"></i>
+                <span class="settings-row-label" id="t_pay_method">Реквизиты</span>
+                <span class="settings-row-value" id="v_pay_method">—</span>
+            </div>
+            <div class="settings-row" id="bizInfoRow" style="display:none;">
+                <i data-feather="link" style="color:var(--text2); flex-shrink:0;"></i>
+                <span class="settings-row-label" id="t_biz_info">Ссылка</span>
+                <span class="settings-row-value" id="v_biz_info" style="max-width:55%; text-align:right; font-size:.78rem; word-break:break-all;">—</span>
+            </div>
+        </div>
+
+        <!-- Business CTA -->
+        <div class="card action-card" style="margin-top:8px;">
+            <div class="action-icon"><i data-feather="briefcase"></i></div>
+            <div>
+                <div class="action-title" id="t_biz_cta">У вас есть свой бизнес?</div>
+                <div class="action-sub" id="t_biz_cta_sub">Добавьте услуги в каталог Win-Win и превратите клиентов в агентов.</div>
+            </div>
+        </div>
+
+        <a href="#" class="btn-primary btn-wa" id="ctaBtnProfile" style="display:none; text-decoration:none; text-align:center; margin-top:4px;">WhatsApp</a>
     </div>
 
-    <!-- ── Stats ── -->
-    <div class="section" id="sec_stats">
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home', this)">
+            <i data-feather="home"></i>
+            <span id="t_nav_home">Главная</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('catalog', this)">
+            <i data-feather="search"></i>
+            <span id="t_nav_catalog">Каталог</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('history', this)">
+            <i data-feather="list"></i>
+            <span id="t_nav_history">История</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('wallet', this)">
+            <i data-feather="gift"></i>
+            <span id="t_nav_wallet">Кошелёк</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('profile', this)">
+            <i data-feather="user"></i>
+            <span id="t_nav_profile">Профиль</span>
+        </button>
+    </nav>
 
-      <div class="sec-title" id="t_avg_title">Средний заработок</div>
-      <div class="card" style="text-align:center;">
-        <div class="big-num" style="color:var(--blue)" id="v_avg">0</div>
-        <div style="font-size:0.75rem; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-top:4px;" id="t_per_deal">на сделку ₪</div>
-      </div>
-
-      <div class="sec-title" id="t_eff_title">Эффективность</div>
-      <div class="card">
-        <div class="eff-row">
-          <div>
-            <div class="eff-big" id="v_eff">—</div>
-            <div style="font-size:0.75rem; color:var(--text3); margin-top:2px;" id="t_eff_sub">% закрытых сделок</div>
-          </div>
-          <div class="eff-badge neutral" id="eff_badge">Накапливается</div>
-        </div>
-        <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
-        <div class="eff-compare" id="eff_compare"></div>
-      </div>
-
-      <div class="sec-title" id="t_chart_title" style="display:none;">По нишам</div>
-      <div class="card" id="chartCard" style="display:none;">
-        <div class="chart-wrap"><canvas id="nicheChart"></canvas></div>
-      </div>
-
+    <!-- Bottom sheet: add niche -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeNicheModal()"></div>
+    <div class="bottom-sheet" id="nicheSheet">
+        <div class="sheet-handle"></div>
+        <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:18px;" id="t_sheet_title">Добавить спец-условие</h3>
+        <label class="input-label" id="t_sheet_cat">Категория бизнеса</label>
+        <select class="custom-input">
+            <option value="" disabled selected>Выберите категорию...</option>
+            <option>💅 Красота и эстетика</option>
+            <option>🏥 Здоровье и медицина</option>
+            <option>🏠 Дом и ремонт</option>
+            <option>⚖️ Юриспруденция</option>
+            <option>🚗 Автомобили</option>
+        </select>
+        <label class="input-label" id="t_sheet_rate">Ваша ставка (%)</label>
+        <input type="number" class="custom-input" placeholder="Например, 15">
+        <button class="btn-primary" onclick="closeNicheModal()" style="margin-top:4px;" id="t_sheet_save">Сохранить условие</button>
     </div>
-
-    <!-- ── Profile ── -->
-    <div class="section" id="sec_profile">
-      <div style="padding: 8px 0;">
-        <div class="profile-avatar" id="profileAvatar">W</div>
-        <div class="profile-name-big" id="profileName">—</div>
-        <div class="profile-phone" id="profilePhone">—</div>
-      </div>
-      <div class="card">
-        <div class="profile-row">
-          <div class="profile-row-lbl" id="t_pay_method">Способ получения</div>
-          <div class="profile-row-val" id="v_pay_method">—</div>
-        </div>
-        <div class="profile-row" id="bizInfoRow" style="display:none;">
-          <div class="profile-row-lbl" id="t_biz_info">Ссылка</div>
-          <div class="profile-row-val" id="v_biz_info" style="font-size:0.78rem; max-width:60%; text-align:right; word-break:break-all; color:var(--blue);">—</div>
-        </div>
-      </div>
-      <a href="#" class="cta-btn" id="profileBtn" style="display:none;">WhatsApp</a>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" id="nav_overview" onclick="showSection('overview')">
-      <div class="nav-icon">🏠</div>
-      <div class="nav-lbl" id="t_nav_home">Обзор</div>
-    </button>
-    <button class="nav-item" id="nav_deals" onclick="showSection('deals')">
-      <div class="nav-icon">🤝</div>
-      <div class="nav-lbl" id="t_nav_deals">Сделки</div>
-    </button>
-    <button class="nav-item" id="nav_stats" onclick="showSection('stats')">
-      <div class="nav-icon">📊</div>
-      <div class="nav-lbl" id="t_nav_stats">Статистика</div>
-    </button>
-    <button class="nav-item" id="nav_profile" onclick="showSection('profile')">
-      <div class="nav-icon">👤</div>
-      <div class="nav-lbl" id="t_nav_profile">Профиль</div>
-    </button>
-  </nav>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // ── i18n ──────────────────────────────────────────────────────────
-  const i18n = {
-    ru: {
-      greeting: "Привет,", earned: "Ценность рекомендаций ₪", h_earned: "Заработано ₪",
-      h_deals: "Сделок", h_pending: "Ждут ₪",
-      pending_lbl: "Ждут выплаты ₪", active_lbl: "Сделок в работе",
-      finances: "Ваш капитал", awaiting: "Ожидаем выплату от:",
-      all_paid: "✅ Все выплаты получены",
-      funnel: "Воронка конверсии",
-      f_progress: "В работе", f_closed: "Закрыто", f_rejected: "Отклонено",
-      my_deals: "Мои сделки", avg_title: "Средний заработок", per_deal: "на сделку ₪",
-      eff_title: "Эффективность", eff_sub: "% закрытых сделок",
-      eff_accum: "Накапливается (нужно 3 сделки)",
-      eff_above: "Выше среднего", eff_below: "Ниже среднего",
-      eff_avg: "Среднее по платформе:",
-      chart_title: "Заработок по нишам",
-      pay_method: "Способ получения", biz_info: "Ссылка",
-      nav_home: "Обзор", nav_deals: "Сделки", nav_stats: "Статистика", nav_profile: "Профиль",
-      tab_overview: "Обзор", tab_deals: "Сделки", tab_stats: "Статистика", tab_profile: "Профиль",
-      status_new: "Новый", status_in_progress: "В работе", status_closed: "Закрыто",
-      status_confirmed: "Завершено", status_rejected: "Отклонён",
-      no_deals: "Пока нет сделок", no_deals_sub: "Откройте каталог и сделайте первую рекомендацию",
-      commission: "Бонус", wa_btn: "Открыть WhatsApp", total_leads: "Всего лидов:",
-    },
-    he: {
-      greeting: "שלום,", earned: "כבר התקבל ₪", h_earned: "הרוויחו ₪",
-      h_deals: "עסקאות", h_pending: "ממתין ₪",
-      pending_lbl: "ממתין לתשלום ₪", active_lbl: "עסקאות בעבודה",
-      finances: "פיננסים", awaiting: "ממתינים לתשלום מ:",
-      all_paid: "✅ כל התשלומים התקבלו",
-      funnel: "משפך המרה",
-      f_progress: "בעבודה", f_closed: "סגור", f_rejected: "נדחה",
-      my_deals: "העסקאות שלי", avg_title: "הכנסה ממוצעת", per_deal: "לעסקה ₪",
-      eff_title: "יעילות", eff_sub: "% עסקאות שנסגרו",
-      eff_accum: "מצטבר (צריך 3 עסקאות)",
-      eff_above: "מעל הממוצע", eff_below: "מתחת לממוצע",
-      eff_avg: "ממוצע פלטפורמה:",
-      chart_title: "הכנסות לפי נישה",
-      pay_method: "אופן קבלה", biz_info: "קישור",
-      nav_home: "סקירה", nav_deals: "עסקאות", nav_stats: "סטטיסטיקה", nav_profile: "פרופיל",
-      tab_overview: "סקירה", tab_deals: "עסקאות", tab_stats: "סטטיסטיקה", tab_profile: "פרופיל",
-      status_new: "חדש", status_in_progress: "בעבודה", status_closed: "סגור",
-      status_confirmed: "הושלם", status_rejected: "נדחה",
-      no_deals: "אין עסקאות עדיין", no_deals_sub: "פתחו את הקטלוג וקחו המלצה ראשונה",
-      commission: "בונוס", wa_btn: "פתח WhatsApp", total_leads: "סה\"כ לידים:",
-    },
-    en: {
-      greeting: "Hello,", earned: "Already received ₪", h_earned: "Earned ₪",
-      h_deals: "Deals", h_pending: "Pending ₪",
-      pending_lbl: "Pending payout ₪", active_lbl: "Deals in progress",
-      finances: "Finances", awaiting: "Awaiting payment from:",
-      all_paid: "✅ All payouts received",
-      funnel: "Conversion funnel",
-      f_progress: "In progress", f_closed: "Closed", f_rejected: "Rejected",
-      my_deals: "My deals", avg_title: "Average earnings", per_deal: "per deal ₪",
-      eff_title: "Efficiency", eff_sub: "% deals closed",
-      eff_accum: "Accumulating (need 3 deals)",
-      eff_above: "Above average", eff_below: "Below average",
-      eff_avg: "Platform average:",
-      chart_title: "Earnings by niche",
-      pay_method: "Payment method", biz_info: "Link",
-      nav_home: "Overview", nav_deals: "Deals", nav_stats: "Stats", nav_profile: "Profile",
-      tab_overview: "Overview", tab_deals: "Deals", tab_stats: "Stats", tab_profile: "Profile",
-      status_new: "New", status_in_progress: "In progress", status_closed: "Closed",
-      status_confirmed: "Completed", status_rejected: "Rejected",
-      no_deals: "No deals yet", no_deals_sub: "Open the catalog and make your first recommendation",
-      commission: "Bonus", wa_btn: "Open WhatsApp", total_leads: "Total leads:",
-    },
-    ar: {
-      greeting: "مرحباً,", earned: "تم استلامه ₪", h_earned: "ربحت ₪",
-      h_deals: "صفقات", h_pending: "معلق ₪",
-      pending_lbl: "في انتظار الدفع ₪", active_lbl: "صفقات جارية",
-      finances: "المالية", awaiting: "في انتظار الدفع من:",
-      all_paid: "✅ تم استلام جميع المدفوعات",
-      funnel: "مسار التحويل",
-      f_progress: "جارٍ", f_closed: "مغلق", f_rejected: "مرفوض",
-      my_deals: "صفقاتي", avg_title: "متوسط الأرباح", per_deal: "لكل صفقة ₪",
-      eff_title: "الكفاءة", eff_sub: "% من الصفقات المغلقة",
-      eff_accum: "يتراكم (يحتاج 3 صفقات)",
-      eff_above: "فوق المتوسط", eff_below: "دون المتوسط",
-      eff_avg: "متوسط المنصة:",
-      chart_title: "الأرباح حسب النيش",
-      pay_method: "طريقة الاستلام", biz_info: "رابط",
-      nav_home: "نظرة عامة", nav_deals: "الصفقات", nav_stats: "إحصاء", nav_profile: "الملف",
-      tab_overview: "نظرة عامة", tab_deals: "الصفقات", tab_stats: "إحصاء", tab_profile: "الملف",
-      status_new: "جديد", status_in_progress: "جارٍ", status_closed: "مغلق",
-      status_confirmed: "مكتمل", status_rejected: "مرفوض",
-      no_deals: "لا صفقات بعد", no_deals_sub: "افتح الكتالوج وقدم أول توصية",
-      commission: "مكافأة", wa_btn: "فتح WhatsApp", total_leads: "إجمالي العملاء:",
-    },
-  };
+// ── i18n ──────────────────────────────────────────────────────────────────
+const i18n = {
+  ru: {
+    greeting:"С возвращением,", balance_label:"Социальный капитал",
+    deals_lbl:"Сделок", pending_lbl:"Ожидает", active_lbl:"В работе",
+    action_title:"Помогите любимому бизнесу", action_sub:"Откройте каталог и сделайте первую рекомендацию",
+    events:"Последние события",
+    catalog_title:"Каталог бизнеса", catalog_info:"Веб-каталог", catalog_sub:"Полный каталог доступен в боте. Напишите '1' в WhatsApp.",
+    history_title:"Мои рекомендации", active_sec:"🕒 В процессе", debt_sec:"💰 Ожидают выплаты", done_sec:"✅ История",
+    wallet_title:"Финансы", avg_lbl:"Средний заработок на сделку ₪",
+    eff_sub:"% закрытых сделок", eff_accum:"Накапливается (нужно 3)", eff_above:"Выше среднего", eff_below:"Ниже среднего", eff_avg:"Среднее по платформе:",
+    funnel:"Воронка", f_active:"В работе", f_closed:"Закрыто", f_rejected:"Отклонено",
+    total_leads:"Всего:", awaiting:"Ожидаем выплату от:", all_paid:"✅ Все выплаты получены",
+    chart_title:"По нишам",
+    profile_title:"Профиль", settings:"Настройки", pay_method:"Реквизиты", biz_info:"Ссылка",
+    biz_cta:"У вас есть свой бизнес?", biz_cta_sub:"Добавьте услуги в каталог Win-Win и превратите клиентов в агентов.",
+    pro_locked:"Закрыто", pro_desc:"Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки для бизнеса.",
+    pro_progress_lbl:"Ваш прогресс", pro_influencer:"Инфлюенсер", pro_unlocked_desc:"Вы устанавливаете свои правила игры.",
+    base_rate:"Базовая ставка (для всех)", add_niche:"Добавить нишу",
+    sheet_title:"Добавить спец-условие", sheet_cat:"Категория бизнеса", sheet_rate:"Ваша ставка (%)", sheet_save:"Сохранить условие",
+    nav_home:"Главная", nav_catalog:"Каталог", nav_history:"История", nav_wallet:"Кошелёк", nav_profile:"Профиль",
+    status_new:"Новый", status_in_progress:"В работе", status_closed:"Должны", status_confirmed:"Готово", status_rejected:"Отклонён",
+    no_deals:"Пока пусто", no_deals_sub:"Порекомендуйте проверенный бизнес другу — и создайте первую сделку.",
+    wa_btn:"Открыть WhatsApp",
+  },
+  he: {
+    greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך",
+    deals_lbl:"עסקאות", pending_lbl:"ממתין", active_lbl:"בעבודה",
+    action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
+    events:"אירועים אחרונים",
+    catalog_title:"קטלוג עסקים", catalog_info:"קטלוג אינטרנטי", catalog_sub:"הקטלוג המלא זמין בבוט. כתבו '1' ב-WhatsApp.",
+    history_title:"ההמלצות שלי", active_sec:"🕒 בתהליך", debt_sec:"💰 ממתינות לתשלום", done_sec:"✅ היסטוריה",
+    wallet_title:"פיננסים", avg_lbl:"הכנסה ממוצעת לעסקה ₪",
+    eff_sub:"% עסקאות שנסגרו", eff_accum:"מצטבר (נדרשות 3)", eff_above:"מעל הממוצע", eff_below:"מתחת לממוצע", eff_avg:"ממוצע פלטפורמה:",
+    funnel:"משפך", f_active:"בעבודה", f_closed:"סגור", f_rejected:"נדחה",
+    total_leads:"סה\"כ:", awaiting:"ממתינים לתשלום מ:", all_paid:"✅ כל התשלומים התקבלו",
+    chart_title:"לפי נישה",
+    profile_title:"פרופיל", settings:"הגדרות", pay_method:"פרטי תשלום", biz_info:"קישור",
+    biz_cta:"יש לכם עסק משלכם?", biz_cta_sub:"הוסיפו שירותים לקטלוג Win-Win.",
+    pro_locked:"נעול", pro_desc:"הגיעו ל-50 המלצות מוצלחות כדי לפתוח את סטטוס האינפלואנסר.",
+    pro_progress_lbl:"ההתקדמות שלך", pro_influencer:"אינפלואנסר", pro_unlocked_desc:"אתה קובע את החוקים שלך.",
+    base_rate:"ריבית בסיסית (לכולם)", add_niche:"הוסף נישה",
+    sheet_title:"הוסף תנאי מיוחד", sheet_cat:"קטגוריית עסק", sheet_rate:"הריבית שלך (%)", sheet_save:"שמור תנאי",
+    nav_home:"ראשי", nav_catalog:"קטלוג", nav_history:"היסטוריה", nav_wallet:"ארנק", nav_profile:"פרופיל",
+    status_new:"חדש", status_in_progress:"בעבודה", status_closed:"חייב", status_confirmed:"הושלם", status_rejected:"נדחה",
+    no_deals:"עדיין ריק", no_deals_sub:"המליצו לחבר על עסק מוכח — וצרו עסקה ראשונה.",
+    wa_btn:"פתח WhatsApp",
+  },
+  en: {
+    greeting:"Welcome back,", balance_label:"Your Social Capital",
+    deals_lbl:"Deals", pending_lbl:"Pending", active_lbl:"Active",
+    action_title:"Help a business you love", action_sub:"Open the catalog and make your first recommendation",
+    events:"Recent events",
+    catalog_title:"Business Catalog", catalog_info:"Web Catalog", catalog_sub:"Full catalog is available in the bot. Send '1' in WhatsApp.",
+    history_title:"My Recommendations", active_sec:"🕒 In progress", debt_sec:"💰 Awaiting payment", done_sec:"✅ History",
+    wallet_title:"Finances", avg_lbl:"Average earnings per deal ₪",
+    eff_sub:"% of deals closed", eff_accum:"Accumulating (need 3)", eff_above:"Above average", eff_below:"Below average", eff_avg:"Platform average:",
+    funnel:"Funnel", f_active:"Active", f_closed:"Closed", f_rejected:"Rejected",
+    total_leads:"Total:", awaiting:"Awaiting payment from:", all_paid:"✅ All payouts received",
+    chart_title:"By niche",
+    profile_title:"Profile", settings:"Settings", pay_method:"Payment method", biz_info:"Link",
+    biz_cta:"Do you have your own business?", biz_cta_sub:"Add services to the Win-Win catalog and turn clients into agents.",
+    pro_locked:"Locked", pro_desc:"Reach 50 successful recommendations to unlock Influencer status and set your own rates.",
+    pro_progress_lbl:"Your progress", pro_influencer:"Influencer", pro_unlocked_desc:"You set the rules of the game.",
+    base_rate:"Base rate (for everyone)", add_niche:"Add niche",
+    sheet_title:"Add special condition", sheet_cat:"Business category", sheet_rate:"Your rate (%)", sheet_save:"Save condition",
+    nav_home:"Home", nav_catalog:"Catalog", nav_history:"History", nav_wallet:"Wallet", nav_profile:"Profile",
+    status_new:"New", status_in_progress:"Active", status_closed:"Owed", status_confirmed:"Done", status_rejected:"Rejected",
+    no_deals:"Still empty", no_deals_sub:"Recommend a trusted business to a friend — and create your first deal.",
+    wa_btn:"Open WhatsApp",
+  },
+  ar: {
+    greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي",
+    deals_lbl:"صفقات", pending_lbl:"معلق", active_lbl:"نشط",
+    action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم أول توصية",
+    events:"الأحداث الأخيرة",
+    catalog_title:"كتالوج الأعمال", catalog_info:"الكتالوج الإلكتروني", catalog_sub:"الكتالوج الكامل متاح في البوت. اكتب '1' في WhatsApp.",
+    history_title:"توصياتي", active_sec:"🕒 قيد التنفيذ", debt_sec:"💰 ينتظر الدفع", done_sec:"✅ السجل",
+    wallet_title:"المالية", avg_lbl:"متوسط الأرباح لكل صفقة ₪",
+    eff_sub:"% من الصفقات المغلقة", eff_accum:"يتراكم (يحتاج 3)", eff_above:"فوق المتوسط", eff_below:"دون المتوسط", eff_avg:"متوسط المنصة:",
+    funnel:"المسار", f_active:"نشط", f_closed:"مغلق", f_rejected:"مرفوض",
+    total_leads:"المجموع:", awaiting:"في انتظار الدفع من:", all_paid:"✅ تم استلام جميع المدفوعات",
+    chart_title:"حسب النيش",
+    profile_title:"الملف الشخصي", settings:"الإعدادات", pay_method:"طريقة الدفع", biz_info:"رابط",
+    biz_cta:"هل لديك عمل خاص بك?", biz_cta_sub:"أضف خدمات إلى كتالوج Win-Win.",
+    pro_locked:"مقفل", pro_desc:"حقق 50 توصية ناجحة لفتح حالة المؤثر وتحديد معدلاتك الخاصة.",
+    pro_progress_lbl:"تقدمك", pro_influencer:"مؤثر", pro_unlocked_desc:"أنت تضع قواعد اللعبة.",
+    base_rate:"المعدل الأساسي (للجميع)", add_niche:"إضافة نيش",
+    sheet_title:"إضافة شرط خاص", sheet_cat:"فئة العمل", sheet_rate:"معدلك (%)", sheet_save:"حفظ الشرط",
+    nav_home:"الرئيسية", nav_catalog:"الكتالوج", nav_history:"السجل", nav_wallet:"المحفظة", nav_profile:"الملف",
+    status_new:"جديد", status_in_progress:"نشط", status_closed:"مدين", status_confirmed:"منجز", status_rejected:"مرفوض",
+    no_deals:"لا يزال فارغاً", no_deals_sub:"أوصِ بعمل موثوق لصديق — وأنشئ أول صفقة.",
+    wa_btn:"فتح WhatsApp",
+  },
+};
 
-  // ── State ─────────────────────────────────────────────────────────
-  let lang = 'ru';
-  let theme = localStorage.getItem('ww_theme') || 'dark';
-  let dashData = null;
-  let chartInstance = null;
-  const API_URL = "https://amlatsa-bot-production.up.railway.app";
-  const token = new URLSearchParams(window.location.search).get('token');
+// ── State ─────────────────────────────────────────────────────────────────
+const API_URL = "https://amlatsa-bot-production.up.railway.app";
+const token   = new URLSearchParams(window.location.search).get('token');
+let lang      = new URLSearchParams(window.location.search).get('lang') || 'ru';
+let dashData  = null;
+let chartInst = null;
 
-  // ── Theme ─────────────────────────────────────────────────────────
-  function applyTheme() {
-    document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
-    localStorage.setItem('ww_theme', theme);
-  }
-  function toggleTheme() {
-    theme = theme === 'dark' ? 'light' : 'dark';
-    applyTheme();
-  }
+// ── Theme ─────────────────────────────────────────────────────────────────
+function applyTheme() {
+    const saved = localStorage.getItem('winwin_theme');
+    if (saved === 'brand') {
+        document.body.classList.add('brand-theme');
+        document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
+    }
+    feather.replace();
+}
+function toggleTheme() {
+    document.body.classList.toggle('brand-theme');
+    const isBrand = document.body.classList.contains('brand-theme');
+    document.querySelector('#themeBtn').innerHTML = isBrand ? '<i data-feather="sun"></i>' : '<i data-feather="moon"></i>';
+    localStorage.setItem('winwin_theme', isBrand ? 'brand' : 'light');
+    feather.replace();
+}
 
-  // ── Language ──────────────────────────────────────────────────────
-  function setLang(l) {
+// ── Lang ──────────────────────────────────────────────────────────────────
+function setLang(l) {
     lang = l;
-    document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
-    document.querySelector(`.lang-pill[onclick="setLang('${l}')"]`)?.classList.add('active');
-    document.documentElement.dir = l === 'he' || l === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
+    document.documentElement.lang = l;
+    document.documentElement.dir  = (l === 'he' || l === 'ar') ? 'rtl' : 'ltr';
     applyLang();
     if (dashData) renderAll();
-  }
-  function applyLang() {
-    const L = i18n[lang];
+}
+function applyLang() {
+    const L = i18n[lang] || i18n.ru;
     const map = {
-      't_greeting_label': 'greeting', 't_h_earned': 'h_earned', 't_h_deals': 'h_deals',
-      't_h_pending': 'h_pending', 't_earned_lbl': 'earned', 't_pending_lbl': 'pending_lbl',
-      't_active_lbl': 'active_lbl', 't_finances': 'finances', 't_awaiting': 'awaiting',
-      't_funnel': 'funnel', 't_f_progress': 'f_progress', 't_f_closed': 'f_closed',
-      't_f_rejected': 'f_rejected', 't_my_deals': 'my_deals', 't_avg_title': 'avg_title',
-      't_per_deal': 'per_deal', 't_eff_title': 'eff_title', 't_eff_sub': 'eff_sub',
-      't_chart_title': 'chart_title', 't_pay_method': 'pay_method', 't_biz_info': 'biz_info',
-      't_nav_home': 'nav_home', 't_nav_deals': 'nav_deals', 't_nav_stats': 'nav_stats',
-      't_nav_profile': 'nav_profile', 'tab_overview': 'tab_overview', 'tab_deals': 'tab_deals',
-      'tab_stats': 'tab_stats', 'tab_profile': 'tab_profile',
+        't_greeting':'greeting','t_balance_label':'balance_label',
+        't_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl',
+        't_action_title':'action_title','t_action_sub':'action_sub','t_events':'events',
+        't_catalog_title':'catalog_title','t_catalog_info':'catalog_info','t_catalog_sub':'catalog_sub',
+        't_history_title':'history_title','t_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec',
+        't_wallet_title':'wallet_title','t_avg_lbl':'avg_lbl','t_eff_sub':'eff_sub',
+        't_funnel':'funnel','t_f_active':'f_active','t_f_closed':'f_closed','t_f_rejected':'f_rejected',
+        't_total_leads':'total_leads','t_awaiting':'awaiting','t_chart_title':'chart_title',
+        't_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method','t_biz_info':'biz_info',
+        't_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub',
+        't_pro_locked':'pro_locked','t_pro_desc':'pro_desc','t_pro_progress_lbl':'pro_progress_lbl',
+        't_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc',
+        't_base_rate':'base_rate','t_add_niche':'add_niche',
+        't_sheet_title':'sheet_title','t_sheet_cat':'sheet_cat','t_sheet_rate':'sheet_rate','t_sheet_save':'sheet_save',
+        't_nav_home':'nav_home','t_nav_catalog':'nav_catalog','t_nav_history':'nav_history',
+        't_nav_wallet':'nav_wallet','t_nav_profile':'nav_profile',
     };
     for (const [id, key] of Object.entries(map)) {
-      const el = document.getElementById(id);
-      if (el && L[key]) el.textContent = L[key];
+        const el = document.getElementById(id);
+        if (el && L[key]) el.textContent = L[key];
     }
-  }
+}
 
-  // ── Navigation ────────────────────────────────────────────────────
-  let currentSection = 'overview';
-  function showSection(name) {
-    showTab(name);
-  }
-  function showTab(name) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('sec_' + name)?.classList.add('active');
-    document.getElementById('tab_' + name)?.classList.add('active');
-    document.getElementById('nav_' + name)?.classList.add('active');
-    currentSection = name;
+// ── Navigation ────────────────────────────────────────────────────────────
+function switchTab(tabId, btnEl) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + tabId)?.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
     window.scrollTo(0, 0);
-  }
+}
 
-  // ── Animate number ────────────────────────────────────────────────
-  function animNum(id, to, dur = 1200) {
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openNicheModal()  { document.getElementById('modalOverlay').classList.add('active'); document.getElementById('nicheSheet').classList.add('active'); }
+function closeNicheModal() { document.getElementById('modalOverlay').classList.remove('active'); document.getElementById('nicheSheet').classList.remove('active'); }
+
+// ── Animate number ────────────────────────────────────────────────────────
+function animNum(id, to, dur = 1200) {
     const el = document.getElementById(id);
     if (!el) return;
     const start = performance.now();
-    const from = 0;
     const step = ts => {
-      const p = Math.min((ts - start) / dur, 1);
-      const ease = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(from + (to - from) * ease);
-      if (p < 1) requestAnimationFrame(step);
+        const p = Math.min((ts - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(to * ease);
+        if (p < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }
+}
 
-  // ── Status helpers ────────────────────────────────────────────────
-  function statusClass(s) {
-    const m = { new: 'status-new', in_progress: 'status-in_progress', closed: 'status-closed', confirmed: 'status-confirmed', rejected: 'status-rejected' };
-    return m[s] || 'status-new';
-  }
-  function statusLabel(s) {
-    const L = i18n[lang];
-    const m = { new: L.status_new, in_progress: L.status_in_progress, closed: L.status_closed, confirmed: L.status_confirmed, rejected: L.status_rejected };
-    return m[s] || s;
-  }
+// ── Status helpers ────────────────────────────────────────────────────────
+function statusPill(s) {
+    const L = i18n[lang] || i18n.ru;
+    const map = {
+        new:         ['pill-blue',  L.status_new],
+        in_progress: ['pill-gold',  L.status_in_progress],
+        closed:      ['pill-gold',  L.status_closed],
+        confirmed:   ['pill-green', L.status_confirmed],
+        rejected:    ['pill-red',   L.status_rejected],
+    };
+    const [cls, label] = map[s] || ['pill-blue', s];
+    return `<span class="pill ${cls}">${label}</span>`;
+}
+function iconForStatus(s) {
+    const map = { new:'clock', in_progress:'clock', closed:'alert-circle', confirmed:'check-circle', rejected:'x-circle' };
+    const colors = { new:'var(--accent2)', in_progress:'var(--gold)', closed:'var(--gold)', confirmed:'var(--green)', rejected:'var(--red)' };
+    return `<i data-feather="${map[s]||'circle'}" style="color:${colors[s]||'var(--text2)'}; width:20px; height:20px;"></i>`;
+}
 
-  // ── Render ────────────────────────────────────────────────────────
-  function renderAll() {
+// ── Deal card HTML ────────────────────────────────────────────────────────
+function dealCardHtml(lead) {
+    const curr = dashData?.currency || '₪';
+    const hasComm = lead.commission != null;
+    const commColor = lead.status === 'closed' ? 'var(--gold)' : 'var(--green)';
+    return `
+    <div class="activity-item">
+        <div class="act-icon">${iconForStatus(lead.status)}</div>
+        <div style="flex:1; min-width:0;">
+            <div class="act-title">${lead.biz_name}</div>
+            <div class="act-sub">👤 ${lead.client_name}</div>
+        </div>
+        <div class="act-right">
+            ${statusPill(lead.status)}
+            <div class="act-date">${lead.date}</div>
+            ${hasComm ? `<div class="act-amount" style="color:${commColor}; margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
+        </div>
+    </div>`;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function renderAll() {
     const d = dashData;
-    const L = i18n[lang];
+    const L = i18n[lang] || i18n.ru;
     const curr = d.currency || '₪';
 
-    // Hero
+    // Header
     document.getElementById('t_name').textContent = d.user_name || '—';
-    animNum('h_earned', Math.round(d.total_earned || 0));
-    animNum('h_deals', (d.active_deals || 0) + (d.success_deals || 0));
-    animNum('h_pending', Math.round(d.pending_payout || 0));
 
-    // Overview financials
+    // Balance card
     animNum('v_earned', Math.round(d.total_earned || 0));
-    animNum('v_pending', Math.round(d.pending_payout || 0));
-    animNum('v_active', d.active_deals || 0);
+    document.getElementById('v_deals').textContent = d.success_deals || 0;
+    document.getElementById('v_pending').textContent = Math.round(d.pending_payout || 0) + ' ₪';
+    document.getElementById('v_active').textContent = d.active_deals || 0;
 
-    // Pending payouts
-    const pendBlock = document.getElementById('pendingBlock');
-    const pendList = document.getElementById('pendingList');
-    if (!d.pending_businesses || d.pending_businesses.length === 0) {
-      pendList.innerHTML = `<div style="color:var(--green); font-weight:700; text-align:center; padding:4px 0;">${L.all_paid}</div>`;
+    // PRO progress
+    const proProgress = Math.min(((d.success_deals || 0) / 50) * 100, 100);
+    const isPro = (d.success_deals || 0) >= 50;
+    document.getElementById('pro_progress_txt').textContent = `${d.success_deals || 0} / 50`;
+    setTimeout(() => { const b = document.getElementById('proBar'); if (b) b.style.width = proProgress + '%'; }, 300);
+    if (isPro) {
+        document.getElementById('pro-locked').style.display = 'none';
+        document.getElementById('pro-unlocked').style.display = 'block';
+    }
+
+    // Recent activity (last 5 leads)
+    const actList = document.getElementById('activityList');
+    if (!d.leads || d.leads.length === 0) {
+        actList.innerHTML = `<div class="empty-state"><i data-feather="inbox" class="empty-icon" style="width:48px;height:48px;display:block;margin:0 auto 12px;"></i><h3 class="empty-title">${L.no_deals}</h3><p class="empty-sub">${L.no_deals_sub}</p></div>`;
     } else {
-      pendList.innerHTML = d.pending_businesses.map(b => `
-        <div class="payout-row">
-          <div><div class="payout-name">${b.name}</div><div class="payout-niche">${Array.isArray(b.niche) ? b.niche[0] : b.niche || '—'}</div></div>
-          <div class="payout-amt">${b.amount} ${curr}</div>
-        </div>`).join('');
+        actList.innerHTML = d.leads.slice(0, 6).map(dealCardHtml).join('');
+    }
+
+    // History — 3 lists
+    const listActive  = document.getElementById('list_active');
+    const listDebt    = document.getElementById('list_debt');
+    const listHistory = document.getElementById('list_history');
+    if (listActive && listDebt && listHistory) {
+        listActive.innerHTML = ''; listDebt.innerHTML = ''; listHistory.innerHTML = '';
+        const emptyRow = `<div class="card" style="text-align:center; color:var(--text2); padding:16px; font-size:.85rem;">—</div>`;
+        if (!d.leads || d.leads.length === 0) {
+            listActive.innerHTML = `<div class="empty-state"><p class="empty-sub">${L.no_deals_sub}</p></div>`;
+        } else {
+            d.leads.forEach(lead => {
+                const html = `<div class="card" style="padding:0 16px;">${dealCardHtml(lead)}</div>`;
+                if (lead.status === 'new' || lead.status === 'in_progress') listActive.innerHTML += html;
+                else if (lead.status === 'closed') listDebt.innerHTML += html;
+                else listHistory.innerHTML += html;
+            });
+        }
+        if (!listActive.innerHTML)  listActive.innerHTML  = emptyRow;
+        if (!listDebt.innerHTML)    listDebt.innerHTML    = emptyRow;
+        if (!listHistory.innerHTML) listHistory.innerHTML = emptyRow;
+    }
+
+    // Wallet — avg
+    const closed = d.success_deals || 0;
+    const avgEarned = closed > 0 ? Math.round((d.total_earned || 0) / closed) : 0;
+    document.getElementById('v_avg').textContent = avgEarned;
+
+    // Efficiency
+    const pct = d.efficiency_pct;
+    const avg = d.platform_avg_pct || 0;
+    if (pct == null) {
+        document.getElementById('v_eff').textContent = '—';
+        document.getElementById('eff_badge').textContent = L.eff_accum;
+        document.getElementById('eff_badge').className = 'eff-badge eff-neutral';
+    } else {
+        animNum('v_eff', Math.round(pct));
+        setTimeout(() => { document.getElementById('eff_bar').style.width = Math.min(pct, 100) + '%'; }, 100);
+        document.getElementById('eff_compare').textContent = `${L.eff_avg} ${avg}%`;
+        if (pct >= avg) {
+            document.getElementById('eff_badge').textContent = `✅ ${L.eff_above}`;
+            document.getElementById('eff_badge').className = 'eff-badge eff-good';
+        } else {
+            document.getElementById('eff_badge').textContent = L.eff_below;
+            document.getElementById('eff_badge').className = 'eff-badge eff-neutral';
+        }
     }
 
     // Funnel
-    const active = d.active_deals || 0;
-    const closed = d.success_deals || 0;
+    const active  = d.active_deals || 0;
     const rejected = d.rejected_deals || 0;
     const total = active + closed + rejected;
     document.getElementById('t_total_leads').textContent = `${L.total_leads} ${total}`;
@@ -884,150 +961,96 @@
     animNum('st_closed', closed);
     animNum('st_rejected', rejected);
     setTimeout(() => {
-      document.getElementById('bar_active').style.width   = (total > 0 ? active   / total * 100 : 0) + '%';
-      document.getElementById('bar_closed').style.width   = (total > 0 ? closed   / total * 100 : 0) + '%';
-      document.getElementById('bar_rejected').style.width = (total > 0 ? rejected / total * 100 : 0) + '%';
+        document.getElementById('bar_active').style.width   = (total > 0 ? active   / total * 100 : 0) + '%';
+        document.getElementById('bar_closed').style.width   = (total > 0 ? closed   / total * 100 : 0) + '%';
+        document.getElementById('bar_rejected').style.width = (total > 0 ? rejected / total * 100 : 0) + '%';
     }, 80);
 
-    // Deals list
-    const dealsList = document.getElementById('dealsList');
-    if (!d.leads || d.leads.length === 0) {
-      dealsList.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">🤝</div>
-          <div class="empty-title">${L.no_deals}</div>
-          <div class="empty-sub">${L.no_deals_sub}</div>
-        </div>`;
+    // Pending payouts
+    const pendList = document.getElementById('pendingList');
+    if (!d.pending_businesses || d.pending_businesses.length === 0) {
+        pendList.innerHTML = `<div style="color:var(--green); font-weight:700; text-align:center; padding:4px 0;">${L.all_paid}</div>`;
     } else {
-      dealsList.innerHTML = d.leads.map(lead => {
-        const hasComm = lead.commission != null;
-        const commClass = lead.status === 'closed' ? 'pending' : '';
-        return `
-        <div class="deal-card">
-          <div class="deal-card-top">
-            <div>
-              <div class="deal-client">${lead.client_name}</div>
-              <div class="deal-biz">🏢 ${lead.biz_name}</div>
-            </div>
-            <span class="deal-status ${statusClass(lead.status)}">${statusLabel(lead.status)}</span>
-          </div>
-          <div class="deal-footer">
-            <div class="deal-date">📅 ${lead.date}</div>
-            ${hasComm ? `<div class="deal-comm ${commClass}">+${lead.commission} ${curr}</div>` : ''}
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    // Stats — avg
-    const avgEarned = closed > 0 ? Math.round((d.total_earned || 0) / closed) : 0;
-    animNum('v_avg', avgEarned);
-
-    // Efficiency
-    const pct = d.efficiency_pct;
-    const avg = d.platform_avg_pct || 0;
-    if (pct == null) {
-      document.getElementById('v_eff').textContent = '—';
-      document.getElementById('eff_badge').textContent = L.eff_accum;
-      document.getElementById('eff_badge').className = 'eff-badge neutral';
-    } else {
-      animNum('v_eff', Math.round(pct));
-      setTimeout(() => { document.getElementById('eff_bar').style.width = Math.min(pct, 100) + '%'; }, 100);
-      document.getElementById('eff_compare').textContent = `${L.eff_avg} ${avg}%`;
-      if (pct >= avg) {
-        document.getElementById('eff_badge').textContent = `✅ ${L.eff_above}`;
-        document.getElementById('eff_badge').className = 'eff-badge good';
-      } else {
-        document.getElementById('eff_badge').textContent = L.eff_below;
-        document.getElementById('eff_badge').className = 'eff-badge neutral';
-      }
+        pendList.innerHTML = d.pending_businesses.map(b => `
+            <div class="activity-item">
+                <div class="act-icon"><i data-feather="clock" style="color:var(--gold); width:18px; height:18px;"></i></div>
+                <div><div class="act-title">${b.name}</div><div class="act-sub">${Array.isArray(b.niche) ? b.niche[0] : b.niche || '—'}</div></div>
+                <div class="act-right"><div class="act-amount" style="color:var(--gold);">${b.amount} ${curr}</div></div>
+            </div>`).join('');
     }
 
     // Chart
     if (d.chart_data && d.chart_data.labels && d.chart_data.labels.length > 0) {
-      document.getElementById('chartCard').style.display = 'block';
-      document.getElementById('t_chart_title').style.display = 'block';
-      if (chartInstance) chartInstance.destroy();
-      const isDark = theme === 'dark';
-      chartInstance = new Chart(document.getElementById('nicheChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: d.chart_data.labels,
-          datasets: [{
-            data: d.chart_data.values,
-            backgroundColor: ['#FF5A5F','#00A699','#4A6CF7','#E8A838','#9B51E0'],
-            borderWidth: 0, hoverOffset: 6,
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, cutout: '72%',
-          plugins: {
-            legend: { position: 'bottom', labels: { color: isDark ? '#A09890' : '#6B6560', font: { family: 'DM Sans', size: 12 }, padding: 16 } }
-          }
-        }
-      });
+        document.getElementById('chartCard').style.display = 'block';
+        document.getElementById('t_chart_title').style.display = 'flex';
+        if (chartInst) chartInst.destroy();
+        const isDark = document.body.classList.contains('brand-theme');
+        chartInst = new Chart(document.getElementById('nicheChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: d.chart_data.labels,
+                datasets: [{ data: d.chart_data.values, backgroundColor: ['#56CCF2','#27AE60','#2F80ED','#F2C94C','#9B51E0'], borderWidth: 0, hoverOffset: 6 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, cutout: '72%',
+                plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#A0A0B0' : '#8A8D9F', font: { family: 'Inter', size: 12 }, padding: 14 } } }
+            }
+        });
     }
 
     // Profile
     const name = d.user_name || '—';
     document.getElementById('profileName').textContent = name;
     document.getElementById('profilePhone').textContent = d.phone || '—';
-    document.getElementById('profileAvatar').textContent = name[0]?.toUpperCase() || 'W';
+    document.getElementById('profileAvatar').textContent = (name[0] || 'W').toUpperCase();
     document.getElementById('v_pay_method').textContent = d.payment_method || '—';
     if (d.business_info) {
-      document.getElementById('bizInfoRow').style.display = 'flex';
-      document.getElementById('v_biz_info').textContent = d.business_info;
+        document.getElementById('bizInfoRow').style.display = 'flex';
+        document.getElementById('v_biz_info').textContent = d.business_info;
     }
 
     // CTA buttons
     const phone = d.bot_phone || '972534218573';
     const channel = d.channel || 'whatsapp';
     const waUrl = `https://wa.me/${phone}`;
-    ['ctaBtn', 'profileBtn'].forEach(id => {
-      const btn = document.getElementById(id);
-      if (!btn) return;
-      btn.style.display = 'block';
-      if (channel === 'telegram') {
-        btn.className = 'cta-btn tg';
-        btn.textContent = 'Telegram';
-      } else {
-        btn.href = waUrl;
-        btn.textContent = L.wa_btn;
-      }
+    ['ctaBtnHome', 'ctaBtnCatalog', 'ctaBtnProfile'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.style.display = 'block';
+        if (channel === 'telegram') { btn.className = 'btn-primary btn-tg'; btn.textContent = 'Telegram'; }
+        else { btn.href = waUrl; btn.textContent = L.wa_btn; }
     });
     document.getElementById('errBtn').href = waUrl;
-  }
 
-  // ── Init ──────────────────────────────────────────────────────────
-  async function init() {
+    feather.replace();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+async function init() {
     applyTheme();
-    const urlLang = new URLSearchParams(window.location.search).get('lang');
-    if (urlLang && i18n[urlLang]) setLang(urlLang);
-    else applyLang();
+    if (i18n[lang]) setLang(lang);
+    else { lang = 'ru'; applyLang(); }
 
     if (!token) { showError(); return; }
     try {
-      const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
-      if (!res.ok) throw new Error('auth');
-      dashData = await res.json();
-      renderAll();
-      // Hide loader with fade
-      const loader = document.getElementById('loader');
-      loader.style.opacity = '0';
-      setTimeout(() => loader.style.display = 'none', 400);
-    } catch (e) {
-      showError();
-    }
-  }
+        const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!res.ok) throw new Error('auth');
+        dashData = await res.json();
+        renderAll();
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+    } catch(e) { showError(); }
+}
 
-  function showError() {
+function showError() {
     document.getElementById('loaderDots').style.display = 'none';
     document.getElementById('loaderSub').style.display = 'none';
     document.getElementById('loaderErr').style.display = 'block';
-    document.getElementById('errBtn').href = `https://wa.me/972534218573`;
-  }
+    document.getElementById('errBtn').href = 'https://wa.me/972534218573';
+}
 
-  window.onload = init;
+window.onload = init;
 </script>
 </body>
 </html>
