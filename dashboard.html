@@ -9,326 +9,270 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <style>
-        /* ── Light theme ────────────────────────────────────────────── */
         :root {
-            --bg:        #F7F7F9;
-            --surface:   #FFFFFF;
-            --surface2:  #F2F2F5;
-            --text:      #1A1A2E;
-            --text2:     #8A8D9F;
-            --border:    rgba(0,0,0,0.06);
-            --shadow:    0 4px 20px rgba(0,0,0,0.06);
-            --shadow2:   0 8px 32px rgba(0,0,0,0.12);
-            --accent1:   #56CCF2;
-            --accent2:   #2F80ED;
-            --green:     #27AE60;
-            --gold:      #E8A838;
-            --red:       #EB5757;
-            --radius:    20px;
-            --radius-sm: 12px;
-            --nav-bg:    rgba(255,255,255,0.82);
+            --bg:#F7F7F9; --surface:#FFFFFF; --surface2:#F2F2F5;
+            --text:#1A1A2E; --text2:#8A8D9F; --border:rgba(0,0,0,0.06);
+            --shadow:0 4px 20px rgba(0,0,0,0.06); --shadow2:0 8px 32px rgba(0,0,0,0.12);
+            --accent1:#56CCF2; --accent2:#2F80ED; --green:#27AE60;
+            --gold:#E8A838; --red:#EB5757; --radius:20px; --radius-sm:12px;
+            --nav-bg:rgba(255,255,255,0.82);
         }
-        /* ── Brand dark theme ───────────────────────────────────────── */
         body.brand-theme {
-            --bg:        #0F0F1A;
-            --surface:   rgba(255,255,255,0.04);
-            --surface2:  rgba(255,255,255,0.07);
-            --text:      #FFFFFF;
-            --text2:     #A0A0B0;
-            --border:    rgba(255,255,255,0.07);
-            --shadow:    0 4px 24px rgba(0,0,0,0.35);
-            --shadow2:   0 8px 40px rgba(0,0,0,0.55);
-            --nav-bg:    rgba(15,15,26,0.85);
+            --bg:#0F0F1A; --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+            --text:#FFFFFF; --text2:#A0A0B0; --border:rgba(255,255,255,0.07);
+            --shadow:0 4px 24px rgba(0,0,0,0.35); --shadow2:0 8px 40px rgba(0,0,0,0.55);
+            --nav-bg:rgba(15,15,26,0.85);
         }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        html{-webkit-text-size-adjust:100%}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;transition:background .3s,color .3s;overscroll-behavior:none}
+        .app{width:100%;max-width:430px;min-height:100vh;position:relative;padding-bottom:90px;overflow-x:hidden}
 
-        /* ── Reset ──────────────────────────────────────────────────── */
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        html { -webkit-text-size-adjust:100%; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex; justify-content: center;
-            min-height: 100vh;
-            transition: background .3s, color .3s;
-            overscroll-behavior: none;
-        }
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
+        /* Loader */
+        .loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+        .loader-brand{font-family:'Sora',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent;margin-bottom:8px}
+        .loader-sub{font-size:.82rem;color:var(--text2);margin-bottom:32px}
+        .loader-dots{display:flex;gap:8px}
+        .loader-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:bounce 1.2s infinite ease-in-out}
+        .loader-dot:nth-child(2){animation-delay:.2s;background:var(--green)}
+        .loader-dot:nth-child(3){animation-delay:.4s;background:var(--gold)}
+        @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+        .loader-err{display:none;text-align:center;padding:0 24px}
+        .loader-err-title{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;color:var(--red);margin-bottom:8px}
+        .loader-err-sub{font-size:.85rem;color:var(--text2);margin-bottom:24px}
 
-        /* ── Loader ─────────────────────────────────────────────────── */
-        .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
-        .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
-        .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; }
-        .loader-dots { display:flex; gap:8px; }
-        .loader-dot { width:8px; height:8px; border-radius:50%; background:var(--accent2); animation:bounce 1.2s infinite ease-in-out; }
-        .loader-dot:nth-child(2){animation-delay:.2s; background:var(--green);}
-        .loader-dot:nth-child(3){animation-delay:.4s; background:var(--gold);}
-        @keyframes bounce { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
-        .loader-err { display:none; text-align:center; padding:0 24px; }
-        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--red); margin-bottom:8px; }
-        .loader-err-sub { font-size:.85rem; color:var(--text2); margin-bottom:24px; }
+        /* Header */
+        .header{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:50}
+        .header-left .greeting{font-size:.82rem;color:var(--text2);font-weight:500;margin-bottom:3px}
+        .header-left .name{font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800}
+        .header-right{display:flex;align-items:center;gap:8px}
+        .icon-btn{width:40px;height:40px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);transition:.2s}
+        .icon-btn:active{transform:scale(.92)}
+        .lang-row{display:flex;gap:4px}
+        .lang-btn{padding:4px 7px;border-radius:8px;font-size:.65rem;font-weight:700;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:.2s}
+        .lang-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 
-        /* ── Header ─────────────────────────────────────────────────── */
-        .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
-        .header-left .greeting { font-size:.82rem; color:var(--text2); font-weight:500; margin-bottom:3px; }
-        .header-left .name { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; }
-        .header-right { display:flex; align-items:center; gap:8px; }
-        .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
-        .icon-btn:active { transform:scale(.92); }
-        .lang-row { display:flex; gap:4px; }
-        .lang-btn { padding:4px 7px; border-radius:8px; font-size:.65rem; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:.2s; }
-        .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+        /* Views */
+        .view{display:none;padding:0 16px;animation:fadeUp .3s ease}
+        .view.active{display:block}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-        /* ── Views ──────────────────────────────────────────────────── */
-        .view { display:none; padding:0 16px; animation:fadeUp .3s ease; }
-        .view.active { display:block; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        /* Cards */
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
 
-        /* ── Cards ──────────────────────────────────────────────────── */
-        .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
+        /* Balance card */
+        .balance-card{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border:none;box-shadow:0 8px 32px rgba(47,128,237,.28)}
+        .balance-label{font-size:.82rem;opacity:.85;font-weight:600;margin-bottom:6px}
+        .balance-amount{font-family:'Sora',sans-serif;font-size:2.4rem;font-weight:800;margin-bottom:18px;line-height:1}
+        .balance-stats{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.2);padding-top:16px;margin:0 -6px}
+        .balance-stat{flex:1;text-align:center;position:relative;padding:0 5px;cursor:pointer;transition:.18s;border-radius:10px}
+        .balance-stat:active{background:rgba(255,255,255,.15);transform:scale(.96)}
+        .balance-stat:not(:last-child)::after{content:'';position:absolute;right:0;top:10%;height:80%;width:1px;background:rgba(255,255,255,.2)}
+        .balance-stat-val{font-size:1.4rem;font-weight:800;margin-bottom:2px}
+        .balance-stat-lbl{font-size:.7rem;opacity:.8}
 
-        /* ── Balance card ────────────────────────────────────────────── */
-        .balance-card { background:linear-gradient(135deg, var(--accent1), var(--accent2)); color:#fff; border:none; box-shadow:0 8px 32px rgba(47,128,237,.28); }
-        .balance-label { font-size:.82rem; opacity:.85; font-weight:600; margin-bottom:6px; }
-        .balance-amount { font-family:'Sora',sans-serif; font-size:2.4rem; font-weight:800; margin-bottom:18px; line-height:1; }
-        .balance-stats { display:flex; gap:12px; border-top:1px solid rgba(255,255,255,.2); padding-top:16px; }
-        .balance-stat {
-            flex:1; cursor:pointer; padding:8px 6px; border-radius:12px;
-            transition:.18s; margin:-8px -6px;
-        }
-        .balance-stat:active { background:rgba(255,255,255,.15); transform:scale(.96); }
-        .balance-stat-val { font-size:1.15rem; font-weight:800; }
-        .balance-stat-lbl { font-size:.7rem; opacity:.8; margin-top:3px; }
-        .balance-stat-hint { font-size:.6rem; opacity:.6; margin-top:2px; }
+        /* Action card */
+        .action-card{display:flex;align-items:center;gap:16px;cursor:pointer;transition:.2s;border:2px dashed var(--border);background:transparent}
+        .action-card:active{transform:scale(.98);background:var(--surface)}
+        .action-icon{width:48px;height:48px;border-radius:14px;background:rgba(47,128,237,.1);color:var(--accent2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .action-title{font-size:.95rem;font-weight:700;margin-bottom:4px}
+        .action-sub{font-size:.78rem;color:var(--text2);line-height:1.4}
 
-        /* ── Action card ─────────────────────────────────────────────── */
-        .action-card { display:flex; align-items:center; gap:16px; cursor:pointer; transition:.2s; border:2px dashed var(--border); background:transparent; }
-        .action-card:active { transform:scale(.98); background:var(--surface); }
-        .action-icon { width:48px; height:48px; border-radius:14px; background:rgba(47,128,237,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .action-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
-        .action-sub { font-size:.78rem; color:var(--text2); line-height:1.4; }
+        /* Section title */
+        .sec-title{font-size:1rem;font-weight:700;margin:20px 0 12px;display:flex;justify-content:space-between;align-items:center}
 
-        /* ── Section title ───────────────────────────────────────────── */
-        .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; }
+        /* Activity items */
+        .activity-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:.15s}
+        .activity-item:last-child{border-bottom:none;padding-bottom:0}
+        .activity-item:active{opacity:.7}
+        .act-icon{width:40px;height:40px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .act-title{font-size:.92rem;font-weight:600;margin-bottom:2px}
+        .act-sub{font-size:.78rem;color:var(--text2)}
+        .act-right{margin-left:auto;text-align:right;flex-shrink:0}
+        .act-amount{font-size:.92rem;font-weight:700}
+        .act-date{font-size:.72rem;color:var(--text2);margin-top:2px}
 
-        /* ── Activity items ──────────────────────────────────────────── */
-        .activity-item { display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:.15s; }
-        .activity-item:last-child { border-bottom:none; padding-bottom:0; }
-        .activity-item:active { opacity:.7; }
-        .act-icon { width:40px; height:40px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .act-title { font-size:.92rem; font-weight:600; margin-bottom:2px; }
-        .act-sub { font-size:.78rem; color:var(--text2); }
-        .act-right { margin-left:auto; text-align:right; flex-shrink:0; }
-        .act-amount { font-size:.92rem; font-weight:700; }
-        .act-date { font-size:.72rem; color:var(--text2); margin-top:2px; }
+        /* Pills */
+        .pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:.7rem;font-weight:700}
+        .pill-blue{background:rgba(47,128,237,.12);color:var(--accent2)}
+        .pill-gold{background:rgba(232,168,56,.15);color:#9A6A00}
+        .pill-green{background:rgba(39,174,96,.12);color:var(--green)}
+        .pill-red{background:rgba(235,87,87,.12);color:var(--red)}
 
-        /* ── Pills ───────────────────────────────────────────────────── */
-        .pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:999px; font-size:.7rem; font-weight:700; }
-        .pill-blue  { background:rgba(47,128,237,.12);  color:var(--accent2); }
-        .pill-gold  { background:rgba(232,168,56,.15);  color:#9A6A00; }
-        .pill-green { background:rgba(39,174,96,.12);   color:var(--green); }
-        .pill-red   { background:rgba(235,87,87,.12);   color:var(--red); }
+        /* Funnel */
+        .funnel-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+        .funnel-row:last-child{margin-bottom:0}
+        .funnel-lbl{width:78px;font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;flex-shrink:0}
+        .funnel-track{flex:1;height:9px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
+        .funnel-fill{height:100%;border-radius:5px;width:0;transition:width 1.2s cubic-bezier(.25,1,.5,1)}
+        .fill-blue{background:var(--accent2)}.fill-green{background:var(--green)}.fill-red{background:var(--red)}
+        .funnel-num{width:28px;text-align:right;font-weight:700;font-size:.85rem}
+        .funnel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-weight:700;font-size:.9rem}
+        .conv-pill{background:rgba(39,174,96,.12);color:var(--green);font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:8px}
 
-        /* ── Funnel ──────────────────────────────────────────────────── */
-        .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
-        .funnel-row:last-child { margin-bottom:0; }
-        .funnel-lbl { width:78px; font-size:.72rem; font-weight:700; color:var(--text2); text-transform:uppercase; flex-shrink:0; }
-        .funnel-track { flex:1; height:9px; background:var(--bg); border-radius:5px; overflow:hidden; border:1px solid var(--border); }
-        .funnel-fill { height:100%; border-radius:5px; width:0; transition:width 1.2s cubic-bezier(.25,1,.5,1); }
-        .fill-blue { background:var(--accent2); } .fill-green { background:var(--green); } .fill-red { background:var(--red); }
-        .funnel-num { width:28px; text-align:right; font-weight:700; font-size:.85rem; }
-        .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-weight:700; font-size:.9rem; }
-        .conv-pill { background:rgba(39,174,96,.12); color:var(--green); font-size:.75rem; font-weight:700; padding:3px 9px; border-radius:8px; }
+        /* Efficiency */
+        .eff-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+        .eff-num{font-family:'Sora',sans-serif;font-size:3rem;font-weight:800;line-height:1}
+        .eff-badge{font-size:.73rem;font-weight:700;padding:4px 10px;border-radius:8px}
+        .eff-good{background:rgba(39,174,96,.12);color:var(--green)}
+        .eff-neutral{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+        .eff-track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+        .eff-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent1));border-radius:4px;width:0;transition:width 1.5s cubic-bezier(.22,1,.36,1)}
+        .eff-compare{font-size:.73rem;color:var(--text2);margin-top:8px;text-align:center}
 
-        /* ── Efficiency ──────────────────────────────────────────────── */
-        .eff-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px; }
-        .eff-num { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; line-height:1; }
-        .eff-badge { font-size:.73rem; font-weight:700; padding:4px 10px; border-radius:8px; }
-        .eff-good { background:rgba(39,174,96,.12); color:var(--green); }
-        .eff-neutral { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
-        .eff-track { height:8px; background:var(--bg); border-radius:4px; overflow:hidden; border:1px solid var(--border); }
-        .eff-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent1)); border-radius:4px; width:0; transition:width 1.5s cubic-bezier(.22,1,.36,1); }
-        .eff-compare { font-size:.73rem; color:var(--text2); margin-top:8px; text-align:center; }
+        /* Avg display */
+        .avg-display{padding:28px 20px;text-align:center;background:linear-gradient(135deg,rgba(86,204,242,.07),rgba(47,128,237,.07));border-radius:var(--radius);border:1px solid rgba(47,128,237,.2);margin-bottom:14px}
+        .avg-num{font-family:'Sora',sans-serif;font-size:3.2rem;font-weight:800;color:var(--accent2);line-height:1}
+        .avg-lbl{font-size:.78rem;color:var(--text2);margin-top:8px;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
 
-        /* ── Avg display ─────────────────────────────────────────────── */
-        .avg-display { padding:28px 20px; text-align:center; background:linear-gradient(135deg,rgba(86,204,242,.07),rgba(47,128,237,.07)); border-radius:var(--radius); border:1px solid rgba(47,128,237,.2); margin-bottom:14px; }
-        .avg-num { font-family:'Sora',sans-serif; font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; }
-        .avg-lbl { font-size:.78rem; color:var(--text2); margin-top:8px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
+        /* Chart */
+        .chart-wrap{position:relative;height:180px}
 
-        /* ── Chart ───────────────────────────────────────────────────── */
-        .chart-wrap { position:relative; height:180px; }
+        /* PRO card */
+        .pro-card{background:linear-gradient(135deg,#F2C94C,#F2994A);border:none;color:#1A1A2E;position:relative;overflow:hidden}
+        .pro-card::before{content:'';position:absolute;top:-24px;right:-24px;width:110px;height:110px;background:rgba(255,255,255,.18);border-radius:50%}
+        .pro-card-inner{position:relative;z-index:1}
+        .pro-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+        .pro-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:800}
+        .pro-badge{background:rgba(0,0,0,.15);padding:4px 9px;border-radius:8px;font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:4px}
+        .pro-desc{font-size:.82rem;font-weight:500;opacity:.95;line-height:1.45;margin-bottom:16px}
+        .pro-progress-wrap{background:rgba(0,0,0,.08);padding:12px 14px;border-radius:12px}
+        .pro-progress-header{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;margin-bottom:8px}
+        .pro-bar-bg{height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden}
+        .pro-bar-fill{height:100%;background:#fff;width:0;border-radius:3px;transition:width 1.5s ease-in-out}
+        .pro-rate-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.22);padding:11px 14px;border-radius:11px;margin-bottom:8px}
+        .pro-add-btn{width:100%;padding:10px;background:rgba(0,0,0,.14);color:#1A1A2E;border:none;border-radius:10px;font-weight:700;font-size:.88rem;display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer;margin-top:10px}
+        .btn-lb-inline{background:rgba(0,0,0,.14);color:#1A1A2E;border:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;cursor:pointer;margin-top:12px;transition:.2s;width:100%;justify-content:center}
+        .btn-lb-inline:active{transform:scale(.96)}
 
-        /* ── PRO card ────────────────────────────────────────────────── */
-        .pro-card { background:linear-gradient(135deg,#F2C94C,#F2994A); border:none; color:#1A1A2E; position:relative; overflow:hidden; }
-        .pro-card::before { content:''; position:absolute; top:-24px; right:-24px; width:110px; height:110px; background:rgba(255,255,255,.18); border-radius:50%; }
-        .pro-card-inner { position:relative; z-index:1; }
-        .pro-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
-        .pro-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
-        .pro-badge { background:rgba(0,0,0,.15); padding:4px 9px; border-radius:8px; font-size:.72rem; font-weight:700; display:flex; align-items:center; gap:4px; }
-        .pro-desc { font-size:.82rem; font-weight:500; opacity:.95; line-height:1.45; margin-bottom:16px; }
-        .pro-progress-wrap { background:rgba(0,0,0,.08); padding:12px 14px; border-radius:12px; }
-        .pro-progress-header { display:flex; justify-content:space-between; font-size:.78rem; font-weight:700; margin-bottom:8px; }
-        .pro-bar-bg { height:6px; background:rgba(255,255,255,.2); border-radius:3px; overflow:hidden; }
-        .pro-bar-fill { height:100%; background:#fff; width:0; border-radius:3px; transition:width 1.5s ease-in-out; }
-        .pro-rate-row { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.22); padding:11px 14px; border-radius:11px; margin-bottom:8px; }
-        .pro-add-btn { width:100%; padding:10px; background:rgba(0,0,0,.14); color:#1A1A2E; border:none; border-radius:10px; font-weight:700; font-size:.88rem; display:flex; justify-content:center; align-items:center; gap:6px; cursor:pointer; margin-top:10px; }
-        .btn-lb-profile { background:rgba(0,0,0,.14); color:#1A1A2E; border:none; border-radius:10px; padding:8px 12px; font-weight:700; font-size:.8rem; display:flex; align-items:center; gap:6px; cursor:pointer; margin-top:10px; transition:.2s; }
-        .btn-lb-profile:active { transform:scale(0.96); }
+        /* Profile 3D card */
+        .profile-btn-card{cursor:pointer;transition:.18s;box-shadow:0 6px 0 rgba(0,0,0,0.12),var(--shadow);border-bottom:2px solid rgba(0,0,0,0.1);position:relative}
+        .profile-btn-card:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,0.08),var(--shadow)}
+        .profile-header{display:flex;align-items:center;gap:14px}
+        .profile-avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-transform:uppercase}
+        .profile-name{font-family:'Sora',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:2px}
+        .profile-phone{font-size:.85rem;color:var(--text2)}
+        .profile-edit-hint{margin-left:auto;color:var(--text2);background:var(--bg);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
 
-        /* ── Profile 3D card ─────────────────────────────────────────── */
-        .profile-btn-card {
-            cursor:pointer; transition:.18s;
-            box-shadow: 0 6px 0 rgba(0,0,0,0.12), var(--shadow);
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-            position:relative;
-        }
-        .profile-btn-card:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 rgba(0,0,0,0.08), var(--shadow);
-        }
-        .profile-header { display:flex; align-items:center; gap:14px; }
-        .profile-avatar { width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; text-transform:uppercase; }
-        .profile-name { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:2px; }
-        .profile-phone { font-size:.85rem; color:var(--text2); }
-        .profile-edit-hint { margin-left:auto; color:var(--text2); background:var(--bg); width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); }
+        /* Settings */
+        .settings-list .settings-row{padding:15px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s}
+        .settings-list .settings-row:last-child{border-bottom:none}
+        .settings-list .settings-row:active{background:var(--bg)}
+        .settings-row-label{font-size:.9rem;font-weight:500}
+        .settings-row-value{margin-left:auto;font-size:.82rem;color:var(--text2);max-width:55%;text-align:right;word-break:break-all}
+        .settings-row-value a{color:var(--accent2);text-decoration:none}
 
-        /* ── Settings list ───────────────────────────────────────────── */
-        .settings-list .settings-row { padding:15px 18px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); cursor:pointer; transition:.15s; }
-        .settings-list .settings-row:last-child { border-bottom:none; }
-        .settings-list .settings-row:active { background:var(--bg); }
-        .settings-row-label { font-size:.9rem; font-weight:500; }
-        .settings-row-value { margin-left:auto; font-size:.82rem; color:var(--text2); max-width:55%; text-align:right; word-break:break-all; }
-        .settings-row-value a { color:var(--accent2); text-decoration:none; }
+        /* Buttons */
+        .btn-primary{background:var(--text);color:var(--bg);border:none;padding:13px 22px;border-radius:13px;font-weight:700;font-size:.9rem;width:100%;cursor:pointer;transition:.2s;font-family:inherit}
+        .btn-primary:active{transform:scale(.97)}
+        .btn-wa{background:#25D366;color:#fff;box-shadow:0 4px 16px rgba(37,211,102,.25)}
+        .btn-tg{background:#2F80ED;color:#fff}
+        .btn-accent{background:var(--accent2);color:#fff}
+        .btn-gold{background:var(--gold);color:#1A1A2E}
+        .btn-outline{background:transparent;border:1px solid var(--accent2);color:var(--accent2);padding:13px 22px;border-radius:13px;font-weight:700;font-size:.85rem;width:100%;cursor:pointer;transition:.2s;font-family:inherit;line-height:1.4}
+        .btn-outline:active{background:rgba(47,128,237,.1)}
 
-        /* ── Buttons ─────────────────────────────────────────────────── */
-        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:13px 22px; border-radius:13px; font-weight:700; font-size:.9rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; }
-        .btn-primary:active { transform:scale(.97); }
-        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
-        .btn-tg { background:#2F80ED; color:#fff; }
-        .btn-accent { background:var(--accent2); color:#fff; }
+        /* Pay buttons */
+        .pay-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:.82rem;transition:.2s;font-family:inherit}
+        .pay-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 
-        /* ── Empty state ─────────────────────────────────────────────── */
-        .empty-state { text-align:center; padding:32px 16px; }
-        .empty-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
-        .empty-sub { font-size:.82rem; color:var(--text2); line-height:1.5; }
+        /* Empty state */
+        .empty-state{text-align:center;padding:32px 16px}
+        .empty-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+        .empty-sub{font-size:.82rem;color:var(--text2);line-height:1.5}
 
-        /* ── Bottom nav ──────────────────────────────────────────────── */
-        .bottom-nav {
-            position:fixed; bottom:0; width:100%; max-width:430px;
-            background:var(--nav-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            display:flex; justify-content:space-between;
-            padding:10px 20px 22px;
-            border-top:1px solid var(--border);
-            z-index:100;
-        }
-        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
-        .nav-item.active { color:var(--accent2); }
-        .nav-item span { font-size:.6rem; font-weight:700; }
-        .nav-item svg { transition:.2s; }
-        .nav-item.active svg { transform:translateY(-2px); }
+        /* Bottom nav */
+        .bottom-nav{position:fixed;bottom:0;width:100%;max-width:430px;background:var(--nav-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;justify-content:space-between;padding:10px 20px 22px;border-top:1px solid var(--border);z-index:100}
+        .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text2);cursor:pointer;transition:.2s;background:transparent;border:none;padding:2px 6px}
+        .nav-item.active{color:var(--accent2)}
+        .nav-item span{font-size:.6rem;font-weight:700}
+        .nav-item svg{transition:.2s}
+        .nav-item.active svg{transform:translateY(-2px)}
 
-        /* ── Modal overlay ───────────────────────────────────────────── */
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; opacity:0; pointer-events:none; transition:.3s; }
-        .modal-overlay.active { opacity:1; pointer-events:all; }
+        /* Modal overlay */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;pointer-events:none;transition:.3s}
+        .modal-overlay.active{opacity:1;pointer-events:all}
 
-        /* ── Bottom sheet ────────────────────────────────────────────── */
-        .bottom-sheet {
-            position:fixed; bottom:-110%; left:50%; transform:translateX(-50%);
-            width:100%; max-width:430px;
-            background:var(--surface); border-radius:24px 24px 0 0;
-            padding:24px; z-index:1000;
-            transition:.35s cubic-bezier(.175,.885,.32,1.275);
-            box-shadow:0 -10px 40px rgba(0,0,0,.15);
-            max-height:85vh; overflow-y:auto;
-        }
-        .bottom-sheet.active { bottom:0; }
-        .sheet-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
-        .sheet-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:18px; }
+        /* Bottom sheet */
+        .bottom-sheet{position:fixed;bottom:-110%;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-radius:24px 24px 0 0;padding:24px;z-index:1000;transition:.35s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 -10px 40px rgba(0,0,0,.15);max-height:85vh;overflow-y:auto}
+        .bottom-sheet.active{bottom:0}
+        .sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+        .sheet-title{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:18px}
 
-        /* ── Form inputs ─────────────────────────────────────────────── */
-        .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
-        .custom-input { width:100%; padding:13px 15px; border:1px solid var(--border); border-radius:11px; background:var(--bg); color:var(--text); font-size:.95rem; margin-bottom:13px; outline:none; font-family:inherit; transition:.2s; }
-        .custom-input:focus { border-color:var(--accent2); }
-        select.custom-input { appearance:none; }
+        /* Inputs */
+        .input-label{font-size:.82rem;color:var(--text2);font-weight:600;margin-bottom:5px;display:block}
+        .custom-input{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:var(--bg);color:var(--text);font-size:.95rem;margin-bottom:13px;outline:none;font-family:inherit;transition:.2s}
+        .custom-input:focus{border-color:var(--accent2)}
+        select.custom-input{appearance:none}
 
-        /* ── Deal detail sheet ───────────────────────────────────────── */
-        .deal-detail-row { display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); }
-        .deal-detail-row:last-child { border-bottom:none; }
-        .deal-detail-lbl { font-size:.82rem; color:var(--text2); font-weight:600; }
-        .deal-detail-val { font-size:.9rem; font-weight:700; text-align:right; max-width:65%; word-break:break-all; }
+        /* Deal detail */
+        .deal-detail-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+        .deal-detail-row:last-child{border-bottom:none}
+        .deal-detail-lbl{font-size:.82rem;color:var(--text2);font-weight:600}
+        .deal-detail-val{font-size:.9rem;font-weight:700;text-align:right;max-width:65%;word-break:break-all}
 
-        /* ── Leaderboard specific ────────────────────────────────────── */
-        .lb-agents-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;}
-        .lb-agent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); }
-        .lb-agent-card.highlight { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.05)); border-color: var(--accent1); }
-        .lb-agent-rank { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--bg); font-size: 1.1rem; font-weight: 800; color: var(--text2); border: 1px solid var(--border); }
-        .lb-rank-1 { background: rgba(255, 215, 0, 0.15); color: #FFD700; border-color: rgba(255, 215, 0, 0.3); font-size: 1.3rem; }
-        .lb-rank-2 { background: rgba(192, 192, 192, 0.15); color: #C0C0C0; border-color: rgba(192, 192, 192, 0.3); font-size: 1.3rem; }
-        .lb-rank-3 { background: rgba(205, 127, 50, 0.15); color: #CD7F32; border-color: rgba(205, 127, 50, 0.3); font-size: 1.3rem; }
-        .lb-agent-info { flex: 1; min-width:0; }
-        .lb-agent-name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        /* Blur effect for non-pro */
-        .lb-name-blurred { filter: blur(4px); opacity: 0.8; user-select: none; cursor: pointer; transition: 0.2s; }
-        .lb-name-blurred:active { opacity: 0.5; }
-        
-        .lb-agent-deals { font-size: 0.75rem; color: var(--text2); font-weight: 500; }
-        .lb-agent-deals span { color: var(--text); font-weight: 700; }
-        .lb-agent-earned { text-align: right; flex-shrink:0; }
-        .lb-earned-lbl { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 2px; }
-        .lb-earned-val { font-size: 1.05rem; font-weight: 800; color: var(--green); }
+        /* Leaderboard */
+        .lb-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+        .lb-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)}
+        .lb-card.highlight{background:linear-gradient(135deg,rgba(86,204,242,.1),rgba(47,128,237,.05));border-color:var(--accent1)}
+        .lb-rank{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--bg);font-size:1.1rem;font-weight:800;color:var(--text2);border:1px solid var(--border)}
+        .lb-rank-1{background:rgba(255,215,0,.15);color:#FFD700;border-color:rgba(255,215,0,.3);font-size:1.3rem}
+        .lb-rank-2{background:rgba(192,192,192,.15);color:#C0C0C0;border-color:rgba(192,192,192,.3);font-size:1.3rem}
+        .lb-rank-3{background:rgba(205,127,50,.15);color:#CD7F32;border-color:rgba(205,127,50,.3);font-size:1.3rem}
+        .lb-info{flex:1;min-width:0}
+        .lb-name{font-weight:800;font-size:1rem;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .lb-name-blur{filter:blur(4px);opacity:.8;user-select:none;cursor:pointer;transition:.2s}
+        .lb-deals{font-size:.75rem;color:var(--text2);font-weight:500}
+        .lb-deals span{color:var(--text);font-weight:700}
+        .lb-right{text-align:right;flex-shrink:0}
+        .lb-earned-lbl{font-size:.65rem;color:var(--text2);text-transform:uppercase;margin-bottom:2px}
+        .lb-earned-val{font-size:1.05rem;font-weight:800;color:var(--green)}
 
-        /* ── Full screens (Catalog/Recommend/Deal/Leaderboard) ───────── */
-        .recommend-screen {
-            display:none; position:fixed; inset:0;
-            background:var(--bg); z-index:500;
-            overflow-y:auto; padding:24px 16px 40px;
-            animation:slideUp .3s ease-out;
-        }
-        @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        .recommend-screen.active { display:block; }
-        .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; }
-        
-        /* ... Остальные стили для рекомендаций, карточек и т.д. ... */
-        .cat-search { position:relative; margin-bottom:12px; }
-        .cat-search input { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:13px 16px 13px 44px; border-radius:14px; font-size:.95rem; outline:none; transition:.2s; font-family:inherit; }
-        .cat-search input:focus { border-color:var(--accent2); }
-        .cat-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text2); pointer-events:none; }
-        .cat-filters { display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none; }
-        .cat-filters::-webkit-scrollbar { display:none; }
-        .filter-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:7px 14px; border-radius:999px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.8rem; transition:.2s; }
-        .filter-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
-        .cat-grid { display:flex; flex-direction:column; gap:10px; }
-        .biz-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; cursor:pointer; transition:.18s; box-shadow:var(--shadow); }
-        .biz-card:active { transform:scale(.98); box-shadow:var(--shadow2); }
-        .biz-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px; }
-        .biz-card-name { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
-        .biz-card-cat { font-size:.72rem; color:var(--accent2); background:rgba(47,128,237,.1); padding:3px 8px; border-radius:6px; font-weight:700; flex-shrink:0; }
-        .biz-card-commission { display:inline-block; padding:5px 10px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:.82rem; font-weight:700; color:var(--green); }
-        .rec-header-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
-        .rec-title { font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:10px; line-height:1.2; }
-        .rec-niche { display:inline-block; font-size:.75rem; color:var(--accent2); background:rgba(47,128,237,.1); padding:4px 10px; border-radius:7px; font-weight:700; margin-bottom:12px; }
-        .rec-desc { font-size:.88rem; color:var(--text2); line-height:1.55; border-top:1px solid var(--border); padding-top:14px; word-break:break-word; }
-        .rec-desc a { color:var(--accent2); text-decoration:none; font-weight:600; }
-        .instruction-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
-        .instruction-text { font-size:.85rem; color:var(--text2); margin-bottom:12px; font-weight:500; line-height:1.4; }
-        .link-box { display:flex; gap:8px; }
-        .link-input { flex:1; min-width:0; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:.82rem; outline:none; font-family:inherit; }
-        .btn-copy { flex-shrink:0; background:var(--accent2); border:none; color:#fff; font-weight:700; padding:0 18px; border-radius:11px; cursor:pointer; transition:.2s; white-space:nowrap; font-family:inherit; }
-        .btn-copy.copied { background:var(--green); }
-        .qr-container { text-align:center; padding:16px; background:#fff; border-radius:16px; display:inline-block; margin:0 auto; box-shadow:0 4px 16px rgba(0,0,0,.1); }
+        /* Fullscreen overlays */
+        .fullscreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto;padding:24px 16px 40px;animation:slideUp .3s ease-out}
+        .fullscreen.active{display:block}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .btn-back{background:transparent;border:none;color:var(--text2);font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 0;margin-bottom:20px}
+
+        /* Catalog */
+        .cat-search{position:relative;margin-bottom:8px}
+        .cat-search input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:13px 16px 13px 44px;border-radius:14px;font-size:.95rem;outline:none;transition:.2s;font-family:inherit}
+        .cat-search input:focus{border-color:var(--accent2)}
+        .cat-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);pointer-events:none}
+        .cat-filter-drop{margin-bottom:14px}
+        .cat-filter-drop select{width:100%;padding:12px 16px;border-radius:14px;background:var(--surface);color:var(--text);border:1px solid var(--border);font-size:.95rem;font-weight:600;outline:none;appearance:auto;cursor:pointer;font-family:inherit}
+        .cat-filter-drop select:focus{border-color:var(--accent2)}
+        .cat-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+        .biz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.18s;box-shadow:var(--shadow)}
+        .biz-card:active{transform:scale(.98);box-shadow:var(--shadow2)}
+        .biz-card-header{display:flex;flex-direction:column;align-items:flex-start;margin-bottom:10px;gap:6px}
+        .biz-card-name{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;line-height:1.3}
+        .biz-card-cat{font-size:.75rem;color:var(--accent2);background:rgba(47,128,237,.1);padding:4px 10px;border-radius:8px;font-weight:700}
+        .biz-card-comm{display:inline-block;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-weight:700;color:var(--green)}
+
+        /* Recommend / Invite screens */
+        .rec-header-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:var(--shadow2)}
+        .rec-title{font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:10px;line-height:1.2}
+        .rec-niche{display:inline-block;font-size:.75rem;color:var(--accent2);background:rgba(47,128,237,.1);padding:4px 10px;border-radius:7px;font-weight:700;margin-bottom:12px}
+        .rec-desc{font-size:.88rem;color:var(--text2);line-height:1.55;border-top:1px solid var(--border);padding-top:14px;word-break:break-word}
+        .rec-desc a{color:var(--accent2);text-decoration:none;font-weight:600}
+        .instruction-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+        .instruction-text{font-size:.85rem;color:var(--text2);margin-bottom:12px;font-weight:500;line-height:1.4}
+        .link-box{display:flex;gap:8px}
+        .link-input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:11px;font-size:.82rem;outline:none;font-family:inherit}
+        .btn-copy{flex-shrink:0;background:var(--accent2);border:none;color:#fff;font-weight:700;padding:0 18px;border-radius:11px;cursor:pointer;transition:.2s;white-space:nowrap;font-family:inherit}
+        .btn-copy.copied{background:var(--green)}
+        .qr-container{text-align:center;padding:16px;background:#fff;border-radius:16px;display:inline-block;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.1)}
     </style>
 </head>
 <body>
 <div class="app">
 
+    <!-- Loader -->
     <div class="loader" id="loader">
         <div class="loader-brand">Win-Win</div>
         <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
-        <div class="loader-dots" id="loaderDots">
-            <div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div>
-        </div>
+        <div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
         <div class="loader-err" id="loaderErr">
             <div class="loader-err-title">Ссылка устарела</div>
             <div class="loader-err-sub">Запросите новую ссылку в боте</div>
@@ -336,34 +280,52 @@
         </div>
     </div>
 
-    <div class="recommend-screen" id="leaderboardSheet">
-        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
-            <button class="btn-back" onclick="closeLeaderboard()">
-                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
-                <span id="t_btn_back_lb">Назад</span>
-            </button>
-            <div style="text-align:center; margin-bottom:24px;">
-                <div style="font-size:2.2rem; margin-bottom:8px;">🏆</div>
-                <h2 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800;" id="t_lb_title">Зал Славы</h2>
+    <!-- ── Fullscreen: Leaderboard ── -->
+    <div class="fullscreen" id="leaderboardScreen">
+        <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+            <button class="btn-back" onclick="closeLeaderboard()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_lb">Назад</span></button>
+            <div style="text-align:center;margin-bottom:24px;">
+                <div style="font-size:2.5rem;margin-bottom:8px;">🏆</div>
+                <h2 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:800;" id="t_lb_title">Зал Славы</h2>
             </div>
-            <div id="lbContent">
-                </div>
+            <div id="lbContent"></div>
         </div>
     </div>
 
-    <div id="recommendScreen" class="recommend-screen">
-        <div style="max-width:430px; margin:0 auto;">
-            <button class="btn-back" onclick="closeRecommend()">
-                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
-                <span id="t_btn_back">Вернуться к каталогу</span>
-            </button>
+    <!-- ── Fullscreen: Invite ── -->
+    <div class="fullscreen" id="inviteScreen">
+        <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+            <button class="btn-back" onclick="closeInviteScreen()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_invite">Назад в каталог</span></button>
+            <div class="rec-header-card" style="text-align:center;">
+                <div style="font-size:2.5rem;margin-bottom:12px;">🤝</div>
+                <div class="rec-title" id="t_invite_title">Пригласите их в Win-Win!</div>
+                <div class="rec-desc" id="t_invite_desc" style="border:none;padding-top:0;">Поделитесь ссылкой, чтобы пригласить бизнес или агента. Вы станете их рекомендателем!</div>
+            </div>
+            <div class="instruction-block">
+                <div class="instruction-text" id="t_copy_link_inv">🔗 Ваша персональная ссылка:</div>
+                <div class="link-box">
+                    <input type="text" id="inviteLinkInput" class="link-input" readonly>
+                    <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">Копировать</button>
+                </div>
+            </div>
+            <div class="instruction-block" style="text-align:center;">
+                <div class="instruction-text" id="t_scan_qr_inv">📱 Или дайте отсканировать QR-код:</div>
+                <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Fullscreen: Recommend ── -->
+    <div class="fullscreen" id="recommendScreen">
+        <div style="max-width:430px;margin:0 auto;">
+            <button class="btn-back" onclick="closeRecommend()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back">Вернуться к каталогу</span></button>
             <div class="rec-header-card">
                 <div class="rec-title" id="recBizName"></div>
                 <div class="rec-niche" id="recBizNiche"></div>
                 <div class="rec-desc" id="recBizDesc"></div>
             </div>
             <div class="instruction-block">
-                <div class="instruction-text" id="t_copy_link">🔗 Скопируйте и отправьте эту ссылку:</div>
+                <div class="instruction-text" id="t_copy_link">🔗 Скопируйте и отправьте ссылку:</div>
                 <div class="link-box">
                     <input type="text" id="refLinkInput" class="link-input" readonly>
                     <button class="btn-copy" id="copyBtn" onclick="copyLink()">Копировать</button>
@@ -377,17 +339,48 @@
         </div>
     </div>
 
-    <div class="recommend-screen" id="dealSheet">
-        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
-            <div class="rec-header-card" style="margin-bottom:24px;">
-                <div class="rec-title" id="t_deal_title" style="margin-bottom:16px; font-size:1.4rem;">Детали сделки</div>
+    <!-- ── Fullscreen: Deal Detail ── -->
+    <div class="fullscreen" id="dealScreen">
+        <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+            <div class="rec-header-card" style="margin-bottom:20px;">
+                <div class="rec-title" style="font-size:1.3rem;margin-bottom:16px;" id="t_deal_title">Детали сделки</div>
                 <div id="dealDetailContent"></div>
             </div>
-            <div id="dealActionButtons" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;"></div>
-            <button class="btn-primary btn-accent" onclick="closeDealDetail()" id="t_btn_back_deal_bottom">Назад</button>
+            <div id="dealActionButtons" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
+            <button class="btn-primary btn-accent" onclick="closeDealDetail()" id="t_btn_back_deal">Назад</button>
         </div>
     </div>
 
+    <!-- ── Fullscreen: Biz Registration ── -->
+    <div class="fullscreen" id="bizRegScreen">
+        <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+            <button class="btn-back" onclick="closeBizReg()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_biz">Назад</span></button>
+            <div class="rec-header-card">
+                <div class="rec-title" id="t_biz_reg_title" style="font-size:1.3rem;margin-bottom:20px;">Зарегистрировать бизнес</div>
+                <label class="input-label">Название бизнеса</label>
+                <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
+                <label class="input-label">Категория / ниша</label>
+                <select class="custom-input" id="bizRegNiche">
+                    <option value="" disabled selected>Выберите...</option>
+                    <option>💅 Красота и эстетика</option>
+                    <option>🏥 Здоровье и медицина</option>
+                    <option>🏠 Дом и ремонт</option>
+                    <option>⚖️ Юриспруденция</option>
+                    <option>🚗 Автомобили</option>
+                    <option>📚 Образование</option>
+                    <option>💼 Финансы</option>
+                    <option>🍕 Ресторанный бизнес</option>
+                </select>
+                <label class="input-label">Комиссия агенту (%)</label>
+                <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10">
+                <label class="input-label">Способ выплаты агентам</label>
+                <input class="custom-input" id="bizRegPay" type="text" placeholder="Bit / Наличные / Перевод">
+                <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:16px;" id="t_biz_reg_submit">Зарегистрировать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header class="header">
         <div class="header-left">
             <div class="greeting" id="t_greeting">С возвращением,</div>
@@ -404,6 +397,7 @@
         </div>
     </header>
 
+    <!-- ── View: Home ── -->
     <div id="view-home" class="view active">
         <div class="card balance-card">
             <div class="balance-label" id="t_balance_label">Социальный капитал</div>
@@ -411,30 +405,29 @@
             <div class="balance-stats">
                 <div class="balance-stat" onclick="openStatDetail('deals')">
                     <div class="balance-stat-val" id="v_deals">0</div>
-                    <div class="balance-stat-lbl" id="t_deals_lbl">Сделок</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
+                    <div class="balance-stat-lbl" id="t_deals_lbl">Закрытых</div>
                 </div>
                 <div class="balance-stat" onclick="openStatDetail('pending')">
                     <div class="balance-stat-val" id="v_pending">0 ₪</div>
                     <div class="balance-stat-lbl" id="t_pending_lbl">Ожидает</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
                 </div>
                 <div class="balance-stat" onclick="openStatDetail('active')">
                     <div class="balance-stat-val" id="v_active">0</div>
                     <div class="balance-stat-lbl" id="t_active_lbl">В работе</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
                 </div>
             </div>
         </div>
 
-        <div class="card action-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, rgba(242, 201, 76, 0.05), rgba(242, 153, 74, 0.05)); border-color: rgba(242, 201, 76, 0.3);">
-            <div class="action-icon" style="background: rgba(242, 201, 76, 0.15); color: #F2C94C;"><i data-feather="award"></i></div>
+        <!-- Leaderboard widget -->
+        <div class="card action-card" onclick="openLeaderboard()" style="background:linear-gradient(135deg,rgba(242,201,76,.06),rgba(242,153,74,.06));border-color:rgba(242,201,76,.3);">
+            <div class="action-icon" style="background:rgba(242,201,76,.15);color:#F2C94C;"><i data-feather="award"></i></div>
             <div>
                 <div class="action-title" id="t_lb_widget_title">Зал Славы</div>
-                <div class="action-sub" id="t_lb_widget_sub" style="color:var(--text)">Топ агентов платформы</div>
+                <div class="action-sub" id="t_lb_widget_sub" style="color:var(--text);">Топ агентов платформы</div>
             </div>
         </div>
 
+        <!-- Catalog CTA -->
         <div class="card action-card" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
             <div class="action-icon"><i data-feather="heart"></i></div>
             <div>
@@ -448,18 +441,25 @@
         <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
     </div>
 
+    <!-- ── View: Catalog ── -->
     <div id="view-catalog" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнеса</h2>
         <div class="cat-search">
             <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
-            <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
+            <input type="text" id="catSearch" placeholder="Поиск..." oninput="renderCatalog()">
         </div>
-        <div class="cat-filters" id="catFilters"></div>
+        <div class="cat-filter-drop">
+            <select id="catFilterSelect" onchange="currentNiche=this.value;renderCatalog()"></select>
+        </div>
         <div class="cat-grid" id="catGrid">
             <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
         </div>
+        <div style="text-align:center;margin-bottom:24px;">
+            <button class="btn-outline" onclick="openInviteScreen()" id="t_invite_btn">Не можете найти тех, кого хотите порекомендовать?</button>
+        </div>
     </div>
 
+    <!-- ── View: History ── -->
     <div id="view-history" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">Мои рекомендации</h2>
         <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">🕒 В процессе</div>
@@ -470,6 +470,7 @@
         <div id="list_history"></div>
     </div>
 
+    <!-- ── View: Wallet ── -->
     <div id="view-wallet" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Финансы</h2>
         <div class="avg-display">
@@ -478,10 +479,7 @@
         </div>
         <div class="card">
             <div class="eff-top">
-                <div>
-                    <div class="eff-num" id="v_eff">—</div>
-                    <div style="font-size:.72rem;color:var(--text2);margin-top:2px;" id="t_eff_sub">% закрытых сделок</div>
-                </div>
+                <div><div class="eff-num" id="v_eff">—</div><div style="font-size:.72rem;color:var(--text2);margin-top:2px;" id="t_eff_sub">% закрытых сделок</div></div>
                 <div class="eff-badge eff-neutral" id="eff_badge">Накапливается</div>
             </div>
             <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
@@ -500,16 +498,13 @@
         <div class="card" id="chartCard" style="display:none;"><div class="chart-wrap"><canvas id="nicheChart"></canvas></div></div>
     </div>
 
+    <!-- ── View: Profile ── -->
     <div id="view-profile" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">Профиль</h2>
-
         <div class="card profile-btn-card" onclick="openProfileEdit()">
             <div class="profile-header">
                 <div class="profile-avatar" id="profileAvatar">W</div>
-                <div>
-                    <div class="profile-name" id="profileName">—</div>
-                    <div class="profile-phone" id="profilePhone">—</div>
-                </div>
+                <div><div class="profile-name" id="profileName">—</div><div class="profile-phone" id="profilePhone">—</div></div>
                 <div class="profile-edit-hint"><i data-feather="edit-2" style="width:15px;height:15px;"></i></div>
             </div>
         </div>
@@ -520,14 +515,14 @@
                     <div class="pro-title">🌟 PRO-Агент</div>
                     <div class="pro-badge"><i data-feather="lock" style="width:11px;height:11px;"></i><span id="t_pro_locked">Закрыто</span></div>
                 </div>
-                <div class="pro-desc" id="t_pro_desc">Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера.</div>
+                <div class="pro-desc" id="t_pro_desc">Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки для бизнеса.</div>
                 <div class="pro-progress-wrap">
                     <div class="pro-progress-header"><span id="t_pro_progress_lbl">Ваш прогресс</span><span id="pro_progress_txt">0 / 50</span></div>
                     <div class="pro-bar-bg"><div class="pro-bar-fill" id="proBar"></div></div>
                 </div>
-                <button class="btn-lb-profile" onclick="openLeaderboard()">
+                <button class="btn-lb-inline" onclick="openLeaderboard()">
                     <i data-feather="award" style="width:14px;height:14px;"></i>
-                    <span id="t_btn_lb_profile_1">Посмотреть Зал Славы</span>
+                    <span id="t_btn_lb_pro">Посмотреть Зал Славы</span>
                 </button>
             </div>
         </div>
@@ -539,23 +534,15 @@
                     <div class="pro-badge" id="t_pro_influencer">Инфлюенсер</div>
                 </div>
                 <div class="pro-desc" id="t_pro_unlocked_desc">Вы устанавливаете свои правила игры.</div>
-                
-                <button class="btn-lb-profile" onclick="openLeaderboard()" style="margin-bottom:14px; background:rgba(0,0,0,0.25); color:#fff;">
+                <button class="btn-lb-inline" onclick="openLeaderboard()" style="background:rgba(0,0,0,.2);color:#fff;margin-bottom:14px;">
                     <i data-feather="award" style="width:14px;height:14px;"></i>
-                    <span id="t_btn_lb_profile_2">Вы в Зале Славы</span>
+                    <span id="t_btn_lb_pro2">Вы в Зале Славы</span>
                 </button>
-
                 <div class="pro-rate-row">
                     <span style="font-weight:600;font-size:.88rem;" id="t_base_rate">Базовая ставка (для всех)</span>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-weight:800;font-size:1rem;" id="v_base_rate">—</span>
-                        <i data-feather="edit-2" style="width:13px;height:13px;opacity:.8;"></i>
-                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:800;font-size:1rem;" id="v_base_rate">—</span><i data-feather="edit-2" style="width:13px;height:13px;opacity:.8;"></i></div>
                 </div>
-                <button class="pro-add-btn" onclick="openNicheModal()">
-                    <i data-feather="plus" style="width:15px;height:15px;"></i>
-                    <span id="t_add_niche">Добавить нишу</span>
-                </button>
+                <button class="pro-add-btn" onclick="openSheet('nicheSheet')"><i data-feather="plus" style="width:15px;height:15px;"></i><span id="t_add_niche">Добавить нишу</span></button>
             </div>
         </div>
 
@@ -575,15 +562,12 @@
 
         <div class="card action-card" style="margin-top:8px;" onclick="openBizReg()">
             <div class="action-icon"><i data-feather="briefcase"></i></div>
-            <div>
-                <div class="action-title" id="t_biz_cta">У вас есть свой бизнес?</div>
-                <div class="action-sub" id="t_biz_cta_sub">Зарегистрируйтесь как бизнес в каталоге Win-Win</div>
-            </div>
+            <div><div class="action-title" id="t_biz_cta">У вас есть свой бизнес?</div><div class="action-sub" id="t_biz_cta_sub">Зарегистрируйтесь как бизнес в каталоге Win-Win</div></div>
         </div>
-
         <a href="#" class="btn-primary btn-wa" id="ctaBtnProfile" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
     </div>
 
+    <!-- Bottom Nav -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
         <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
@@ -592,263 +576,229 @@
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
+    <!-- Overlay -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeAllSheets()"></div>
 
+    <!-- Sheet: Stat detail -->
     <div class="bottom-sheet" id="statSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="statSheetTitle">Детали</div>
         <div id="statSheetContent"></div>
     </div>
 
+    <!-- Sheet: Profile edit -->
     <div class="bottom-sheet" id="profileSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_edit_profile">Редактировать профиль</div>
         <label class="input-label" id="t_edit_name">Имя</label>
         <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
-        
         <label class="input-label" id="t_edit_payment">Способ получения</label>
-        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-            <button class="filter-btn pay-btn" onclick="selectPay('Bit', this)">Bit</button>
-            <button class="filter-btn pay-btn" onclick="selectPay('Paybox', this)">Paybox</button>
-            <button class="filter-btn pay-btn" onclick="selectPay('PayPal', this)">PayPal</button>
-            <button class="filter-btn pay-btn" onclick="selectPay('Наличные', this)" id="t_pay_cash">Наличные</button>
-            <button class="filter-btn pay-btn" onclick="selectPay('Перевод', this)" id="t_pay_bank">Перевод</button>
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+            <button class="pay-btn" onclick="selectPay('Bit',this)">Bit</button>
+            <button class="pay-btn" onclick="selectPay('Paybox',this)">Paybox</button>
+            <button class="pay-btn" onclick="selectPay('PayPal',this)">PayPal</button>
+            <button class="pay-btn" onclick="selectPay('Наличные',this)" id="t_pay_cash">Наличные</button>
+            <button class="pay-btn" onclick="selectPay('Перевод',this)" id="t_pay_bank">Перевод</button>
         </div>
         <input type="hidden" id="editPayment">
-
         <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
         <input class="custom-input" id="editLink" type="url" placeholder="https://...">
         <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:10px;">Сохранить</button>
     </div>
 
-    <div class="bottom-sheet" id="bizRegSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_biz_reg_title">Зарегистрировать бизнес</div>
-        <label class="input-label">Название бизнеса</label>
-        <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
-        <label class="input-label">Категория / ниша</label>
-        <select class="custom-input" id="bizRegNiche">
-            <option value="" disabled selected>Выберите...</option>
-            <option>💅 Красота и эстетика</option>
-            <option>🏥 Здоровье и медицина</option>
-            <option>🏠 Дом и ремонт</option>
-            <option>⚖️ Юриспруденция</option>
-            <option>🚗 Автомобили</option>
-            <option>📚 Образование</option>
-            <option>💼 Финансы</option>
-            <option>🍕 Ресторанный бизнес</option>
-        </select>
-        <label class="input-label">Комиссия агенту (%)</label>
-        <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10">
-        <label class="input-label">Способ выплаты агентам</label>
-        <input class="custom-input" id="bizRegPay" type="text" placeholder="Bit / Наличные / Перевод">
-        <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:4px;" id="t_biz_reg_submit">Зарегистрировать</button>
-    </div>
-
+    <!-- Sheet: Niche (PRO) -->
     <div class="bottom-sheet" id="nicheSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_sheet_title">Добавить спец-условие</div>
         <label class="input-label" id="t_sheet_cat">Категория бизнеса</label>
-        <select class="custom-input">
-            <option value="" disabled selected>Выберите категорию...</option>
-            <option>💅 Красота и эстетика</option>
-            <option>🏥 Здоровье и медицина</option>
-            <option>🏠 Дом и ремонт</option>
-            <option>⚖️ Юриспруденция</option>
-            <option>🚗 Автомобили</option>
-        </select>
+        <select class="custom-input"><option value="" disabled selected>Выберите...</option><option>💅 Красота и эстетика</option><option>🏥 Здоровье и медицина</option><option>🏠 Дом и ремонт</option><option>⚖️ Юриспруденция</option><option>🚗 Автомобили</option></select>
         <label class="input-label" id="t_sheet_rate">Ваша ставка (%)</label>
         <input type="number" class="custom-input" placeholder="Например, 15">
         <button class="btn-primary" onclick="closeAllSheets()" style="margin-top:4px;" id="t_sheet_save">Сохранить условие</button>
     </div>
 
-</div><script>
+</div>
+<script>
 // ── i18n ──────────────────────────────────────────────────────────────────
 const i18n = {
-  ru: {
-    greeting:"С возвращением,", balance_label:"Социальный капитал",
-    deals_lbl:"Закрытых", pending_lbl:"Ожидает", active_lbl:"В работе",
-    action_title:"Помогите любимому бизнесу", action_sub:"Откройте каталог и сделайте рекомендацию",
-    events:"Последние события",
-    catalog_title:"Каталог бизнеса",
-    history_title:"Мои рекомендации", active_sec:"🕒 В процессе", debt_sec:"💰 Ожидают выплаты", done_sec:"✅ История",
-    wallet_title:"Финансы", avg_lbl:"Средний заработок на сделку ₪",
-    eff_sub:"% закрытых сделок", eff_accum:"Накапливается (нужно 3)", eff_above:"Выше среднего", eff_below:"Ниже среднего", eff_avg:"Среднее по платформе:",
-    funnel:"Воронка", f_active:"В работе", f_closed:"Закрыто", f_rejected:"Отклонено",
-    total_leads:"Всего:", awaiting:"Ожидаем выплату от:", all_paid:"✅ Все выплаты получены",
-    chart_title:"По нишам",
-    profile_title:"Профиль", settings:"Настройки", pay_method:"Реквизиты", biz_info:"Ссылка",
-    biz_cta:"У вас есть свой бизнес?", biz_cta_sub:"Зарегистрируйтесь как бизнес в каталоге Win-Win",
-    pro_locked:"Закрыто", pro_desc:"Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера.",
-    pro_progress_lbl:"Ваш прогресс", pro_influencer:"Инфлюенсер", pro_unlocked_desc:"Вы устанавливаете свои правила игры.",
-    base_rate:"Базовая ставка (для всех)", add_niche:"Добавить нишу",
-    sheet_title:"Добавить спец-условие", sheet_cat:"Категория бизнеса", sheet_rate:"Ваша ставка (%)", sheet_save:"Сохранить условие",
-    nav_home:"Главная", nav_catalog:"Каталог", nav_history:"История", nav_wallet:"Кошелёк", nav_profile:"Профиль",
-    status_new:"Новый", status_in_progress:"В работе", status_closed:"Должны", status_confirmed:"Готово", status_rejected:"Отклонён",
-    no_deals:"Пока пусто", no_deals_sub:"Порекомендуйте проверенный бизнес другу — создайте первую сделку.",
-    wa_btn:"Открыть WhatsApp",
-    deal_title:"Детали сделки", edit_profile:"Редактировать профиль",
-    edit_name:"Имя", edit_payment:"Способ получения", edit_link:"Ссылка (соцсеть / сайт)",
-    biz_reg_title:"Зарегистрировать бизнес", biz_reg_submit:"Зарегистрировать",
-    stat_deals:"Закрытые сделки по вашим рекомендациям",
-    stat_pending:"Ожидают выплаты", stat_active:"Сделки в работе",
-    btn_back:"Назад",
-    copy_link:"🔗 Скопируйте и отправьте эту ссылку:", copy_btn:"Копировать", copied:"Скопировано ✅",
-    scan_qr:"📱 Или дайте отсканировать QR-код:", wa_return:"Вернуться в WhatsApp",
-    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка...",
-    cat_empty:"Ничего не найдено", bonus:"🎁 Бонус агенту:", filter_all:"Все",
-    save:"Сохранить",
-    remind_debt: "Напомнить о долге",
-    remind_already_sent: "Мы уже напоминали сегодня бизнесу {biz}. У него есть 72 часа на погашение, иначе он будет скрыт из каталога.",
-    remind_success: "Напоминание успешно отправлено бизнесу!",
-    pay_cash: "Наличные", pay_bank: "Перевод",
-    lb_title: "Зал Славы", lb_widget_title: "Зал Славы", lb_widget_sub: "Топ агентов платформы", lb_profile_btn: "Посмотреть Зал Славы",
-    lb_your_pos: "Ваша позиция", lb_top: "Топ агентов", lb_deals: "Сделок:", lb_earned: "Заработано",
-    lb_blur_alert: "Этот клуб еще впереди! 🌟 Это место для тех, кто действительно старается помочь друзьям и бизнесу, реализовывая свой социальный капитал. Достигните 50 сделок, чтобы открыть имена чемпионов."
+  ru:{
+    greeting:"С возвращением,",balance_label:"Социальный капитал",
+    deals_lbl:"Закрытых",pending_lbl:"Ожидает",active_lbl:"В работе",
+    action_title:"Помогите любимому бизнесу",action_sub:"Откройте каталог и сделайте рекомендацию",
+    events:"Последние события",catalog_title:"Каталог бизнеса",
+    history_title:"Мои рекомендации",active_sec:"🕒 В процессе",debt_sec:"💰 Ожидают выплаты",done_sec:"✅ История",
+    wallet_title:"Финансы",avg_lbl:"Средний заработок на сделку ₪",
+    eff_sub:"% закрытых сделок",eff_accum:"Накапливается (нужно 3)",eff_above:"Выше среднего",eff_below:"Ниже среднего",eff_avg:"Среднее по платформе:",
+    funnel:"Воронка",f_active:"В работе",f_closed:"Закрыто",f_rejected:"Отклонено",
+    total_leads:"Всего:",awaiting:"Ожидаем выплату от:",all_paid:"✅ Все выплаты получены",chart_title:"По нишам",
+    profile_title:"Профиль",settings:"Настройки",pay_method:"Реквизиты",biz_info:"Ссылка",
+    biz_cta:"У вас есть свой бизнес?",biz_cta_sub:"Зарегистрируйтесь как бизнес в каталоге Win-Win",
+    pro_locked:"Закрыто",pro_desc:"Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки.",
+    pro_progress_lbl:"Ваш прогресс",pro_influencer:"Инфлюенсер",pro_unlocked_desc:"Вы устанавливаете свои правила игры.",
+    base_rate:"Базовая ставка (для всех)",add_niche:"Добавить нишу",
+    sheet_title:"Добавить спец-условие",sheet_cat:"Категория",sheet_rate:"Ваша ставка (%)",sheet_save:"Сохранить",
+    nav_home:"Главная",nav_catalog:"Каталог",nav_history:"История",nav_wallet:"Кошелёк",nav_profile:"Профиль",
+    status_new:"Новый",status_in_progress:"В работе",status_closed:"Должны",status_confirmed:"Готово",status_rejected:"Отклонён",
+    no_deals:"Пока пусто",no_deals_sub:"Порекомендуйте проверенный бизнес другу — создайте первую сделку.",
+    wa_btn:"Открыть WhatsApp",deal_title:"Детали сделки",edit_profile:"Редактировать профиль",
+    edit_name:"Имя",edit_payment:"Способ получения",edit_link:"Ссылка (соцсеть / сайт)",
+    biz_reg_title:"Зарегистрировать бизнес",biz_reg_submit:"Зарегистрировать",
+    stat_deals:"Закрытые сделки",stat_pending:"Ожидают выплаты",stat_active:"Сделки в работе",
+    btn_back:"Назад",btn_back_catalog:"Вернуться к каталогу",
+    copy_link:"🔗 Скопируйте и отправьте ссылку:",copy_btn:"Копировать",copied:"Скопировано ✅",
+    scan_qr:"📱 Или дайте отсканировать QR-код:",wa_return:"Вернуться в WhatsApp",
+    cat_search:"Поиск бизнеса или услуги...",cat_empty:"Ничего не найдено",bonus:"🎁 Бонус агенту:",filter_all:"Все категории",save:"Сохранить",
+    remind_debt:"Напомнить о долге",remind_already_sent:"Мы уже напоминали сегодня бизнесу {biz}. У него есть 72 часа.",
+    remind_success:"Напоминание отправлено!",remind_error:"Ошибка отправки. Попробуйте позже.",
+    pay_cash:"Наличные",pay_bank:"Перевод",
+    lb_title:"Зал Славы",lb_widget_title:"Зал Славы",lb_widget_sub:"Топ агентов платформы",
+    lb_btn_pro:"Посмотреть Зал Славы",lb_btn_pro2:"Вы в Зале Славы",
+    lb_your_pos:"Ваша позиция",lb_top:"Топ агентов",lb_deals:"Сделок:",lb_earned:"Заработано",
+    lb_blur:"Этот клуб ещё впереди! 🌟 Достигните 50 сделок, чтобы открыть имена.",
+    invite_btn:"Не можете найти тех, кого хотите порекомендовать?",
+    invite_title:"Пригласите их в Win-Win!",invite_desc:"Поделитесь ссылкой, чтобы пригласить бизнес или агента. Вы станете их рекомендателем!",
+    btn_back_invite:"Назад в каталог",copy_link_inv:"🔗 Ваша персональная ссылка:",scan_qr_inv:"📱 Или QR-код:",
   },
-  he: {
-    greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך",
-    deals_lbl:"סגורות", pending_lbl:"ממתין", active_lbl:"בעבודה",
-    action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
-    events:"אירועים אחרונים", catalog_title:"קטלוג עסקים",
-    history_title:"ההמלצות שלי", active_sec:"🕒 בתהליך", debt_sec:"💰 ממתינות לתשלום", done_sec:"✅ היסטוריה",
-    wallet_title:"פיננסים", avg_lbl:"הכנסה ממוצעת לעסקה ₪",
-    eff_sub:"% עסקאות שנסגרו", eff_accum:"מצטבר (נדרשות 3)", eff_above:"מעל הממוצע", eff_below:"מתחת לממוצע", eff_avg:"ממוצע פלטפורמה:",
-    funnel:"משפך", f_active:"בעבודה", f_closed:"סגור", f_rejected:"נדחה",
-    total_leads:"סה\"כ:", awaiting:"ממתינים לתשלום מ:", all_paid:"✅ כל התשלומים התקבלו",
-    chart_title:"לפי נישה", profile_title:"פרופיל", settings:"הגדרות", pay_method:"פרטי תשלום", biz_info:"קישור",
-    biz_cta:"יש לכם עסק משלכם?", biz_cta_sub:"הירשמו כעסק בקטלוג Win-Win",
-    pro_locked:"נעול", pro_desc:"הגיעו ל-50 המלצות מוצלחות כדי לפתוח את סטטוס האינפלואנסר.",
-    pro_progress_lbl:"ההתקדמות שלך", pro_influencer:"אינפלואנסר", pro_unlocked_desc:"אתה קובע את החוקים שלך.",
-    base_rate:"ריבית בסיסית (לכולם)", add_niche:"הוסף נישה",
-    sheet_title:"הוסף תנאי מיוחד", sheet_cat:"קטגוריית עסק", sheet_rate:"הריבית שלך (%)", sheet_save:"שמור תנאי",
-    nav_home:"ראשי", nav_catalog:"קטלוג", nav_history:"היסטוריה", nav_wallet:"ארנק", nav_profile:"פרופיל",
-    status_new:"חדש", status_in_progress:"בעבודה", status_closed:"חייב", status_confirmed:"הושלם", status_rejected:"נדחה",
-    no_deals:"עדיין ריק", no_deals_sub:"המליצו לחבר על עסק מוכח.",
-    wa_btn:"פתח WhatsApp", deal_title:"פרטי העסקה", edit_profile:"עריכת פרופיל",
-    edit_name:"שם", edit_payment:"אופן קבלה", edit_link:"קישור",
-    biz_reg_title:"רישום עסק", biz_reg_submit:"רישום",
-    stat_deals:"עסקאות שנסגרו לפי המלצותיך", stat_pending:"ממתינות לתשלום", stat_active:"עסקאות פעילות",
-    btn_back:"חזור", copy_link:"🔗 העתיקו ושלחו:", copy_btn:"העתק", copied:"הועתק ✅",
-    scan_qr:"📱 או לסרוק:", wa_return:"חזרה ל-WhatsApp",
-    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"הכל", save:"שמור",
-    remind_debt: "הזכר חוב",
-    remind_already_sent: "כבר הזכרנו היום לעסק {biz}. יש לו 72 שעות לשלם, אחרת הוא יוסתר מהקטלוג.",
-    remind_success: "התזכורת נשלחה!",
-    pay_cash: "מזומן", pay_bank: "העברה בנקאית",
-    lb_title: "היכל התהילה", lb_widget_title: "היכל התהילה", lb_widget_sub: "הסוכנים המובילים בפלטפורמה", lb_profile_btn: "צפה בהיכל התהילה",
-    lb_your_pos: "המיקום שלך", lb_top: "הסוכנים המובילים", lb_deals: "עסקאות:", lb_earned: "הרוויח",
-    lb_blur_alert: "המועדון הזה עוד לפניך! 🌟 המקום הזה מיועד למי שבאמת מנסה לעזור לחברים ולעסקים על ידי מימוש ההון החברתי שלהם. הגע ל-50 עסקאות כדי לפתוח את השמות."
+  he:{
+    greeting:"ברוך שובך,",balance_label:"ההון החברתי שלך",
+    deals_lbl:"סגורות",pending_lbl:"ממתין",active_lbl:"בעבודה",
+    action_title:"עזרו לעסק האהוב עליכם",action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
+    events:"אירועים אחרונים",catalog_title:"קטלוג עסקים",
+    history_title:"ההמלצות שלי",active_sec:"🕒 בתהליך",debt_sec:"💰 ממתינות לתשלום",done_sec:"✅ היסטוריה",
+    wallet_title:"פיננסים",avg_lbl:"הכנסה ממוצעת לעסקה ₪",
+    eff_sub:"% עסקאות שנסגרו",eff_accum:"מצטבר (נדרשות 3)",eff_above:"מעל הממוצע",eff_below:"מתחת לממוצע",eff_avg:"ממוצע פלטפורמה:",
+    funnel:"משפך",f_active:"בעבודה",f_closed:"סגור",f_rejected:"נדחה",
+    total_leads:"סה\"כ:",awaiting:"ממתינים לתשלום מ:",all_paid:"✅ כל התשלומים התקבלו",chart_title:"לפי נישה",
+    profile_title:"פרופיל",settings:"הגדרות",pay_method:"פרטי תשלום",biz_info:"קישור",
+    biz_cta:"יש לכם עסק משלכם?",biz_cta_sub:"הירשמו כעסק בקטלוג Win-Win",
+    pro_locked:"נעול",pro_desc:"הגיעו ל-50 המלצות מוצלחות כדי לפתוח את סטטוס האינפלואנסר.",
+    pro_progress_lbl:"ההתקדמות שלך",pro_influencer:"אינפלואנסר",pro_unlocked_desc:"אתה קובע את החוקים שלך.",
+    base_rate:"ריבית בסיסית (לכולם)",add_niche:"הוסף נישה",
+    sheet_title:"הוסף תנאי מיוחד",sheet_cat:"קטגוריה",sheet_rate:"הריבית שלך (%)",sheet_save:"שמור",
+    nav_home:"ראשי",nav_catalog:"קטלוג",nav_history:"היסטוריה",nav_wallet:"ארנק",nav_profile:"פרופיל",
+    status_new:"חדש",status_in_progress:"בעבודה",status_closed:"חייב",status_confirmed:"הושלם",status_rejected:"נדחה",
+    no_deals:"עדיין ריק",no_deals_sub:"המליצו לחבר על עסק מוכח.",
+    wa_btn:"פתח WhatsApp",deal_title:"פרטי העסקה",edit_profile:"עריכת פרופיל",
+    edit_name:"שם",edit_payment:"אופן קבלה",edit_link:"קישור",
+    biz_reg_title:"רישום עסק",biz_reg_submit:"רישום",
+    stat_deals:"עסקאות שנסגרו",stat_pending:"ממתינות לתשלום",stat_active:"עסקאות פעילות",
+    btn_back:"חזור",btn_back_catalog:"חזרה לקטלוג",
+    copy_link:"🔗 העתיקו ושלחו:",copy_btn:"העתק",copied:"הועתק ✅",
+    scan_qr:"📱 או לסרוק:",wa_return:"חזרה ל-WhatsApp",
+    cat_search:"חיפוש...",cat_empty:"לא נמצא",bonus:"🎁 בונוס:",filter_all:"כל הקטגוריות",save:"שמור",
+    remind_debt:"הזכר חוב",remind_already_sent:"כבר הזכרנו היום לעסק {biz}.",
+    remind_success:"התזכורת נשלחה!",remind_error:"שגיאה. נסה מאוחר יותר.",
+    pay_cash:"מזומן",pay_bank:"העברה",
+    lb_title:"היכל התהילה",lb_widget_title:"היכל התהילה",lb_widget_sub:"הסוכנים המובילים",
+    lb_btn_pro:"צפה בהיכל התהילה",lb_btn_pro2:"אתה בהיכל התהילה",
+    lb_your_pos:"המיקום שלך",lb_top:"הסוכנים המובילים",lb_deals:"עסקאות:",lb_earned:"הרוויח",
+    lb_blur:"הגע ל-50 עסקאות כדי לפתוח את השמות. 🌟",
+    invite_btn:"לא מוצאים את מי שאתם רוצים להמליץ עליו?",
+    invite_title:"הזמינו אותם ל-Win-Win!",invite_desc:"שתפו קישור זה להזמנת עסק או סוכן לפלטפורמה.",
+    btn_back_invite:"חזרה לקטלוג",copy_link_inv:"🔗 הקישור האישי שלך:",scan_qr_inv:"📱 או לסרוק:",
   },
-  en: {
-    greeting:"Welcome back,", balance_label:"Your Social Capital",
-    deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active",
-    action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
-    events:"Recent events", catalog_title:"Business Catalog",
-    history_title:"My Recommendations", active_sec:"🕒 In progress", debt_sec:"💰 Awaiting payment", done_sec:"✅ History",
-    wallet_title:"Finances", avg_lbl:"Average earnings per deal ₪",
-    eff_sub:"% of deals closed", eff_accum:"Accumulating (need 3)", eff_above:"Above average", eff_below:"Below average", eff_avg:"Platform average:",
-    funnel:"Funnel", f_active:"Active", f_closed:"Closed", f_rejected:"Rejected",
-    total_leads:"Total:", awaiting:"Awaiting payment from:", all_paid:"✅ All payouts received",
-    chart_title:"By niche", profile_title:"Profile", settings:"Settings", pay_method:"Payment method", biz_info:"Link",
-    biz_cta:"Do you have your own business?", biz_cta_sub:"Register as a business in Win-Win catalog",
-    pro_locked:"Locked", pro_desc:"Reach 50 successful recommendations to unlock Influencer status.",
-    pro_progress_lbl:"Your progress", pro_influencer:"Influencer", pro_unlocked_desc:"You set the rules of the game.",
-    base_rate:"Base rate (for everyone)", add_niche:"Add niche",
-    sheet_title:"Add special condition", sheet_cat:"Business category", sheet_rate:"Your rate (%)", sheet_save:"Save condition",
-    nav_home:"Home", nav_catalog:"Catalog", nav_history:"History", nav_wallet:"Wallet", nav_profile:"Profile",
-    status_new:"New", status_in_progress:"Active", status_closed:"Owed", status_confirmed:"Done", status_rejected:"Rejected",
-    no_deals:"Still empty", no_deals_sub:"Recommend a trusted business — create your first deal.",
-    wa_btn:"Open WhatsApp", deal_title:"Deal Details", edit_profile:"Edit Profile",
-    edit_name:"Name", edit_payment:"Payment method", edit_link:"Link (social / website)",
-    biz_reg_title:"Register Business", biz_reg_submit:"Register",
-    stat_deals:"Closed deals from your recommendations", stat_pending:"Awaiting payment", stat_active:"Active deals",
-    btn_back:"Back", copy_link:"🔗 Copy and send:", copy_btn:"Copy", copied:"Copied ✅",
-    scan_qr:"📱 Or scan:", wa_return:"Return to WhatsApp",
-    cat_search:"Search business...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All", save:"Save",
-    remind_debt: "Remind about debt",
-    remind_already_sent: "We already reminded {biz} today. They have 72 hours to pay, otherwise they will be hidden from the catalog.",
-    remind_success: "Reminder sent!",
-    pay_cash: "Cash", pay_bank: "Bank Transfer",
-    lb_title: "Leaderboard", lb_widget_title: "Leaderboard", lb_widget_sub: "Top platform agents", lb_profile_btn: "View Leaderboard",
-    lb_your_pos: "Your Position", lb_top: "Top Agents", lb_deals: "Deals:", lb_earned: "Earned",
-    lb_blur_alert: "This club is still ahead! 🌟 This place is for those who really try to help friends and businesses by realizing their social capital. Reach 50 deals to unlock champion names."
+  en:{
+    greeting:"Welcome back,",balance_label:"Your Social Capital",
+    deals_lbl:"Closed",pending_lbl:"Pending",active_lbl:"Active",
+    action_title:"Help a business you love",action_sub:"Open the catalog and make a recommendation",
+    events:"Recent events",catalog_title:"Business Catalog",
+    history_title:"My Recommendations",active_sec:"🕒 In progress",debt_sec:"💰 Awaiting payment",done_sec:"✅ History",
+    wallet_title:"Finances",avg_lbl:"Average earnings per deal ₪",
+    eff_sub:"% of deals closed",eff_accum:"Accumulating (need 3)",eff_above:"Above average",eff_below:"Below average",eff_avg:"Platform average:",
+    funnel:"Funnel",f_active:"Active",f_closed:"Closed",f_rejected:"Rejected",
+    total_leads:"Total:",awaiting:"Awaiting payment from:",all_paid:"✅ All payouts received",chart_title:"By niche",
+    profile_title:"Profile",settings:"Settings",pay_method:"Payment method",biz_info:"Link",
+    biz_cta:"Do you have your own business?",biz_cta_sub:"Register as a business in Win-Win catalog",
+    pro_locked:"Locked",pro_desc:"Reach 50 successful recommendations to unlock Influencer status.",
+    pro_progress_lbl:"Your progress",pro_influencer:"Influencer",pro_unlocked_desc:"You set the rules of the game.",
+    base_rate:"Base rate (for everyone)",add_niche:"Add niche",
+    sheet_title:"Add special condition",sheet_cat:"Category",sheet_rate:"Your rate (%)",sheet_save:"Save",
+    nav_home:"Home",nav_catalog:"Catalog",nav_history:"History",nav_wallet:"Wallet",nav_profile:"Profile",
+    status_new:"New",status_in_progress:"Active",status_closed:"Owed",status_confirmed:"Done",status_rejected:"Rejected",
+    no_deals:"Still empty",no_deals_sub:"Recommend a trusted business — create your first deal.",
+    wa_btn:"Open WhatsApp",deal_title:"Deal Details",edit_profile:"Edit Profile",
+    edit_name:"Name",edit_payment:"Payment method",edit_link:"Link (social / website)",
+    biz_reg_title:"Register Business",biz_reg_submit:"Register",
+    stat_deals:"Closed deals",stat_pending:"Awaiting payment",stat_active:"Active deals",
+    btn_back:"Back",btn_back_catalog:"Back to catalog",
+    copy_link:"🔗 Copy and send:",copy_btn:"Copy",copied:"Copied ✅",
+    scan_qr:"📱 Or scan:",wa_return:"Return to WhatsApp",
+    cat_search:"Search business...",cat_empty:"Nothing found",bonus:"🎁 Bonus:",filter_all:"All categories",save:"Save",
+    remind_debt:"Remind about debt",remind_already_sent:"We already reminded {biz} today. They have 72 hours.",
+    remind_success:"Reminder sent!",remind_error:"Error sending. Try later.",
+    pay_cash:"Cash",pay_bank:"Bank Transfer",
+    lb_title:"Leaderboard",lb_widget_title:"Leaderboard",lb_widget_sub:"Top platform agents",
+    lb_btn_pro:"View Leaderboard",lb_btn_pro2:"You're in the Leaderboard",
+    lb_your_pos:"Your Position",lb_top:"Top Agents",lb_deals:"Deals:",lb_earned:"Earned",
+    lb_blur:"Reach 50 deals to unlock champion names. 🌟",
+    invite_btn:"Can't find who you want to recommend?",
+    invite_title:"Invite them to Win-Win!",invite_desc:"Share this link to invite a business or agent.",
+    btn_back_invite:"Back to catalog",copy_link_inv:"🔗 Your personal link:",scan_qr_inv:"📱 Or scan:",
   },
-  ar: {
-    greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي",
-    deals_lbl:"مغلقة", pending_lbl:"معلق", active_lbl:"نشط",
-    action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم توصية",
-    events:"الأحداث الأخيرة", catalog_title:"كتالوج الأعمال",
-    history_title:"توصياتي", active_sec:"🕒 قيد التنفيذ", debt_sec:"💰 ينتظر الدفع", done_sec:"✅ السجل",
-    wallet_title:"المالية", avg_lbl:"متوسط الأرباح لكل صفقة ₪",
-    eff_sub:"% من الصفقات المغلقة", eff_accum:"يتراكم (يحتاج 3)", eff_above:"فوق المتوسط", eff_below:"دون المتوسط", eff_avg:"متوسط المنصة:",
-    funnel:"المسار", f_active:"نشط", f_closed:"مغلق", f_rejected:"مرفوض",
-    total_leads:"المجموع:", awaiting:"في انتظار الدفع من:", all_paid:"✅ تم استلام جميع المدفوعات",
-    chart_title:"حسب النيش", profile_title:"الملف الشخصي", settings:"الإعدادات", pay_method:"طريقة الدفع", biz_info:"رابط",
-    biz_cta:"هل لديك عمل خاص?", biz_cta_sub:"سجّل كعمل في كتالوج Win-Win",
-    pro_locked:"مقفل", pro_desc:"حقق 50 توصية ناجحة لفتح حالة المؤثر.",
-    pro_progress_lbl:"تقدمك", pro_influencer:"مؤثر", pro_unlocked_desc:"أنت تضع قواعد اللعبة.",
-    base_rate:"المعدل الأساسي (للجميع)", add_niche:"إضافة نيش",
-    sheet_title:"إضافة شرط خاص", sheet_cat:"فئة العمل", sheet_rate:"معدلك (%)", sheet_save:"حفظ الشرط",
-    nav_home:"الرئيسية", nav_catalog:"الكتالوج", nav_history:"السجل", nav_wallet:"المحفظة", nav_profile:"الملف",
-    status_new:"جديد", status_in_progress:"نشط", status_closed:"مدين", status_confirmed:"منجز", status_rejected:"مرفوض",
-    no_deals:"لا يزال فارغاً", no_deals_sub:"أوصِ بعمل موثوق.",
-    wa_btn:"فتح WhatsApp", deal_title:"تفاصيل الصفقة", edit_profile:"تعديل الملف",
-    edit_name:"الاسم", edit_payment:"طريقة الاستلام", edit_link:"رابط",
-    biz_reg_title:"تسجيل عمل", biz_reg_submit:"تسجيل",
-    stat_deals:"الصفقات المغلقة بتوصياتك", stat_pending:"في انتظار الدفع", stat_active:"الصفقات النشطة",
-    btn_back:"رجوع", copy_link:"🔗 انسخ وأرسل:", copy_btn:"نسخ", copied:"تم ✅",
-    scan_qr:"📱 أو امسح:", wa_return:"العودة إلى WhatsApp",
-    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"الكل", save:"حفظ",
-    remind_debt: "تذكير بالدين",
-    remind_already_sent: "لقد قمنا بتذكير {biz} اليوم بالفعل. لديهم 72 ساعة للدفع، وإلا سيتم إخفاؤهم من الكتالوج.",
-    remind_success: "تم إرسال التذكير!",
-    pay_cash: "نقداً", pay_bank: "تحويل بنكي",
-    lb_title: "قاعة المشاهير", lb_widget_title: "قاعة المشاهير", lb_widget_sub: "أفضل وكلاء المنصة", lb_profile_btn: "عرض قاعة المشاهير",
-    lb_your_pos: "مركزك", lb_top: "أفضل الوكلاء", lb_deals: "صفقات:", lb_earned: "المكتسبات",
-    lb_blur_alert: "هذا النادي لا يزال أمامك! 🌟 هذا المكان مخصص لمن يحاول حقًا مساعدة الأصدقاء والأعمال. حقق 50 صفقة لفتح أسماء الأبطال."
+  ar:{
+    greeting:"أهلاً بعودتك,",balance_label:"رأس مالك الاجتماعي",
+    deals_lbl:"مغلقة",pending_lbl:"معلق",active_lbl:"نشط",
+    action_title:"ساعد عملاً تحبه",action_sub:"افتح الكتالوج وقدم توصية",
+    events:"الأحداث الأخيرة",catalog_title:"كتالوج الأعمال",
+    history_title:"توصياتي",active_sec:"🕒 قيد التنفيذ",debt_sec:"💰 ينتظر الدفع",done_sec:"✅ السجل",
+    wallet_title:"المالية",avg_lbl:"متوسط الأرباح لكل صفقة ₪",
+    eff_sub:"% من الصفقات المغلقة",eff_accum:"يتراكم (يحتاج 3)",eff_above:"فوق المتوسط",eff_below:"دون المتوسط",eff_avg:"متوسط المنصة:",
+    funnel:"المسار",f_active:"نشط",f_closed:"مغلق",f_rejected:"مرفوض",
+    total_leads:"المجموع:",awaiting:"في انتظار الدفع من:",all_paid:"✅ تم استلام جميع المدفوعات",chart_title:"حسب النيش",
+    profile_title:"الملف الشخصي",settings:"الإعدادات",pay_method:"طريقة الدفع",biz_info:"رابط",
+    biz_cta:"هل لديك عمل خاص?",biz_cta_sub:"سجّل كعمل في كتالوج Win-Win",
+    pro_locked:"مقفل",pro_desc:"حقق 50 توصية ناجحة لفتح حالة المؤثر.",
+    pro_progress_lbl:"تقدمك",pro_influencer:"مؤثر",pro_unlocked_desc:"أنت تضع قواعد اللعبة.",
+    base_rate:"المعدل الأساسي (للجميع)",add_niche:"إضافة نيش",
+    sheet_title:"إضافة شرط خاص",sheet_cat:"الفئة",sheet_rate:"معدلك (%)",sheet_save:"حفظ",
+    nav_home:"الرئيسية",nav_catalog:"الكتالوج",nav_history:"السجل",nav_wallet:"المحفظة",nav_profile:"الملف",
+    status_new:"جديد",status_in_progress:"نشط",status_closed:"مدين",status_confirmed:"منجز",status_rejected:"مرفوض",
+    no_deals:"لا يزال فارغاً",no_deals_sub:"أوصِ بعمل موثوق.",
+    wa_btn:"فتح WhatsApp",deal_title:"تفاصيل الصفقة",edit_profile:"تعديل الملف",
+    edit_name:"الاسم",edit_payment:"طريقة الاستلام",edit_link:"رابط",
+    biz_reg_title:"تسجيل عمل",biz_reg_submit:"تسجيل",
+    stat_deals:"الصفقات المغلقة",stat_pending:"في انتظار الدفع",stat_active:"الصفقات النشطة",
+    btn_back:"رجوع",btn_back_catalog:"العودة إلى الكتالوج",
+    copy_link:"🔗 انسخ وأرسل:",copy_btn:"نسخ",copied:"تم ✅",
+    scan_qr:"📱 أو امسح:",wa_return:"العودة إلى WhatsApp",
+    cat_search:"بحث...",cat_empty:"لم يوجد",bonus:"🎁 مكافأة:",filter_all:"جميع الفئات",save:"حفظ",
+    remind_debt:"تذكير بالدين",remind_already_sent:"لقد ذكّرنا {biz} اليوم بالفعل.",
+    remind_success:"تم إرسال التذكير!",remind_error:"خطأ. حاول لاحقاً.",
+    pay_cash:"نقداً",pay_bank:"تحويل",
+    lb_title:"قاعة المشاهير",lb_widget_title:"قاعة المشاهير",lb_widget_sub:"أفضل وكلاء المنصة",
+    lb_btn_pro:"عرض قاعة المشاهير",lb_btn_pro2:"أنت في قاعة المشاهير",
+    lb_your_pos:"مركزك",lb_top:"أفضل الوكلاء",lb_deals:"صفقات:",lb_earned:"المكتسبات",
+    lb_blur:"حقق 50 صفقة لفتح أسماء الأبطال. 🌟",
+    invite_btn:"لا تجد من تريد التوصية به؟",
+    invite_title:"ادعهم إلى Win-Win!",invite_desc:"شارك هذا الرابط لدعوة عمل أو وكيل.",
+    btn_back_invite:"العودة إلى الكتالوج",copy_link_inv:"🔗 رابطك الشخصي:",scan_qr_inv:"📱 أو امسح:",
   },
 };
 
 // ── State ─────────────────────────────────────────────────────────────────
-const API_URL  = "https://amlatsa-bot-production.up.railway.app";
-const token    = new URLSearchParams(window.location.search).get('token');
-let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
-let dashData   = null;
-let chartInst  = null;
-// Catalog state
-let allBusinesses = [];
-let catalogAgentId = null;
-let catalogBotPhone = "972534218573";
+const API_URL = "https://amlatsa-bot-production.up.railway.app";
+const token   = new URLSearchParams(window.location.search).get('token');
+let lang      = new URLSearchParams(window.location.search).get('lang') || 'ru';
+let dashData  = null;
+let chartInst = null;
+let allBusinesses = [], catalogAgentId = null, catalogBotPhone = "972534218573";
 let currentNiche = '__all__';
-// Leaderboard state (Lazy Load)
 let leaderboardData = null;
 
 // ── Theme ─────────────────────────────────────────────────────────────────
 function applyTheme() {
     const saved = localStorage.getItem('winwin_theme');
-    if (saved !== 'light') {
-        document.body.classList.add('brand-theme');
-        const btn = document.querySelector('#themeBtn');
-        if (btn) btn.innerHTML = '<i data-feather="sun"></i>';
-    } else {
-        document.body.classList.remove('brand-theme');
-        const btn = document.querySelector('#themeBtn');
-        if (btn) btn.innerHTML = '<i data-feather="moon"></i>';
-    }
+    const dark = saved !== 'light';
+    document.body.classList.toggle('brand-theme', dark);
+    const btn = document.querySelector('#themeBtn');
+    if (btn) btn.innerHTML = dark ? '<i data-feather="sun"></i>' : '<i data-feather="moon"></i>';
     feather.replace();
 }
 function toggleTheme() {
     const isBrand = document.body.classList.contains('brand-theme');
-    if (isBrand) {
-        document.body.classList.remove('brand-theme');
-        localStorage.setItem('winwin_theme', 'light');
-        document.querySelector('#themeBtn').innerHTML = '<i data-feather="moon"></i>';
-    } else {
-        document.body.classList.add('brand-theme');
-        localStorage.setItem('winwin_theme', 'brand');
-        document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
-    }
+    document.body.classList.toggle('brand-theme', !isBrand);
+    localStorage.setItem('winwin_theme', isBrand ? 'light' : 'brand');
+    document.querySelector('#themeBtn').innerHTML = isBrand ? '<i data-feather="moon"></i>' : '<i data-feather="sun"></i>';
     feather.replace();
 }
 
@@ -862,55 +812,49 @@ function setLang(l) {
     applyLang();
     if (dashData) renderAll();
     if (allBusinesses.length) { extractNiches(); renderCatalog(); }
-    if (leaderboardData && document.getElementById('leaderboardSheet').classList.contains('active')) {
-        renderLeaderboardUI();
-    }
+    if (leaderboardData && document.getElementById('leaderboardScreen').classList.contains('active')) renderLeaderboardUI();
 }
 function applyLang() {
-    const L = i18n[lang] || i18n.ru;
+    const L = i18n[lang]||i18n.ru;
     const map = {
-        't_greeting':'greeting','t_balance_label':'balance_label',
-        't_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl',
-        't_action_title':'action_title','t_action_sub':'action_sub','t_events':'events',
-        't_catalog_title':'catalog_title',
+        't_greeting':'greeting','t_balance_label':'balance_label','t_deals_lbl':'deals_lbl',
+        't_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl','t_action_title':'action_title',
+        't_action_sub':'action_sub','t_events':'events','t_catalog_title':'catalog_title',
         't_history_title':'history_title','t_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec',
         't_wallet_title':'wallet_title','t_avg_lbl':'avg_lbl','t_eff_sub':'eff_sub',
         't_funnel':'funnel','t_f_active':'f_active','t_f_closed':'f_closed','t_f_rejected':'f_rejected',
         't_total_leads':'total_leads','t_awaiting':'awaiting','t_chart_title':'chart_title',
         't_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method','t_biz_info':'biz_info',
-        't_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub',
-        't_pro_locked':'pro_locked','t_pro_desc':'pro_desc','t_pro_progress_lbl':'pro_progress_lbl',
-        't_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc',
+        't_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub','t_pro_locked':'pro_locked','t_pro_desc':'pro_desc',
+        't_pro_progress_lbl':'pro_progress_lbl','t_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc',
         't_base_rate':'base_rate','t_add_niche':'add_niche',
         't_sheet_title':'sheet_title','t_sheet_cat':'sheet_cat','t_sheet_rate':'sheet_rate','t_sheet_save':'sheet_save',
         't_nav_home':'nav_home','t_nav_catalog':'nav_catalog','t_nav_history':'nav_history','t_nav_wallet':'nav_wallet','t_nav_profile':'nav_profile',
-        't_deal_title':'deal_title','t_edit_profile':'edit_profile',
-        't_edit_name':'edit_name','t_edit_payment':'edit_payment','t_edit_link':'edit_link',
+        't_deal_title':'deal_title','t_edit_profile':'edit_profile','t_edit_name':'edit_name',
+        't_edit_payment':'edit_payment','t_edit_link':'edit_link',
         't_biz_reg_title':'biz_reg_title','t_biz_reg_submit':'biz_reg_submit',
-        't_pay_cash':'pay_cash', 't_pay_bank':'pay_bank',
-        't_lb_title':'lb_title', 't_lb_widget_title':'lb_widget_title', 't_lb_widget_sub':'lb_widget_sub',
-        't_btn_lb_profile_1':'lb_profile_btn', 't_btn_lb_profile_2':'lb_profile_btn'
+        't_pay_cash':'pay_cash','t_pay_bank':'pay_bank',
+        't_lb_title':'lb_title','t_lb_widget_title':'lb_widget_title','t_lb_widget_sub':'lb_widget_sub',
+        't_btn_lb_pro':'lb_btn_pro','t_btn_lb_pro2':'lb_btn_pro2',
+        't_invite_btn':'invite_btn','t_invite_title':'invite_title','t_invite_desc':'invite_desc',
+        't_btn_back_invite':'btn_back_invite','t_copy_link_inv':'copy_link_inv','t_scan_qr_inv':'scan_qr_inv',
     };
     for (const [id,key] of Object.entries(map)) {
-        const el = document.getElementById(id);
-        if (el && L[key]) el.textContent = L[key];
+        const el = document.getElementById(id); if (el && L[key]) el.textContent = L[key];
     }
-    const catSearch = document.getElementById('catSearch');
-    if (catSearch) catSearch.placeholder = L.cat_search || 'Search...';
-    const waReturn = document.getElementById('waReturnLink');
-    if (waReturn) waReturn.textContent = L.wa_return || 'WhatsApp';
-    const copyBtn = document.getElementById('copyBtn');
-    if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-    if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
-    
-    // Перевод кнопки назад
-    const btnBack = document.getElementById('t_btn_back');
-    if (btnBack) btnBack.textContent = L.btn_back_catalog || (lang === 'he' ? 'חזור' : (lang === 'en' ? 'Back' : (lang === 'ar' ? 'رجوع' : '← Вернуться к каталогу')));
-    const btnBackDeal = document.getElementById('t_btn_back_deal_bottom');
-    if (btnBackDeal) btnBackDeal.textContent = L.btn_back;
-    const btnBackLb = document.getElementById('t_btn_back_lb');
-    if (btnBackLb) btnBackLb.textContent = L.btn_back;
+    const ids = {catSearch:'cat_search',waReturnLink:'wa_return',copyBtn:'copy_btn',inviteCopyBtn:'copy_btn',saveProfileBtn:'save'};
+    for (const [id,key] of Object.entries(ids)) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (id === 'copyBtn' || id === 'inviteCopyBtn') { if (!el.classList.contains('copied')) el.textContent = L[key]; }
+        else if (id === 'catSearch') el.placeholder = L[key];
+        else el.textContent = L[key];
+    }
+    // Back buttons
+    const backs = {'t_btn_back':'btn_back_catalog','t_btn_back_deal':'btn_back','t_btn_back_lb':'btn_back','t_btn_back_biz':'btn_back','t_copy_link':'copy_link','t_scan_qr':'scan_qr'};
+    for (const [id,key] of Object.entries(backs)) {
+        const el = document.getElementById(id); if (el && L[key]) el.textContent = L[key];
+    }
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
@@ -932,237 +876,149 @@ function closeAllSheets() {
     document.getElementById('modalOverlay').classList.remove('active');
     document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
 }
-function openNicheModal() { openSheet('nicheSheet'); }
+function openFullscreen(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0,0);
+    feather.replace();
+}
+function closeFullscreen(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
 
-// ── Animate number ────────────────────────────────────────────────────────
+// ── animNum ───────────────────────────────────────────────────────────────
 function animNum(id, to, dur=1200) {
-    const el = document.getElementById(id);
-    if (!el) return;
+    const el = document.getElementById(id); if (!el) return;
     const start = performance.now();
     const step = ts => {
-        const p = Math.min((ts-start)/dur,1);
-        const ease = 1-Math.pow(1-p,3);
-        const currentVal = (p * to);
-        el.textContent = Number.isInteger(to) ? Math.floor(currentVal) : currentVal.toFixed(1);
+        const p = Math.min((ts-start)/dur,1), ease = 1-Math.pow(1-p,3);
+        el.textContent = Math.round(to*ease);
         if (p<1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
 }
 
-// ── Status helpers ────────────────────────────────────────────────────────
+// ── Status ────────────────────────────────────────────────────────────────
 function statusPill(s) {
     const L = i18n[lang]||i18n.ru;
-    const m = { new:['pill-blue',L.status_new], in_progress:['pill-gold',L.status_in_progress], closed:['pill-gold',L.status_closed], confirmed:['pill-green',L.status_confirmed], rejected:['pill-red',L.status_rejected] };
+    const m = {new:['pill-blue',L.status_new],in_progress:['pill-gold',L.status_in_progress],closed:['pill-gold',L.status_closed],confirmed:['pill-green',L.status_confirmed],rejected:['pill-red',L.status_rejected]};
     const [cls,label] = m[s]||['pill-blue',s];
     return `<span class="pill ${cls}">${label}</span>`;
 }
 function iconForStatus(s) {
-    const icons = { new:'clock', in_progress:'clock', closed:'alert-circle', confirmed:'check-circle', rejected:'x-circle' };
-    const colors = { new:'var(--accent2)', in_progress:'var(--gold)', closed:'var(--gold)', confirmed:'var(--green)', rejected:'var(--red)' };
-    return `<i data-feather="${icons[s]||'circle'}" style="color:${colors[s]||'var(--text2)'};width:20px;height:20px;"></i>`;
+    const ic={new:'clock',in_progress:'clock',closed:'alert-circle',confirmed:'check-circle',rejected:'x-circle'};
+    const co={new:'var(--accent2)',in_progress:'var(--gold)',closed:'var(--gold)',confirmed:'var(--green)',rejected:'var(--red)'};
+    return `<i data-feather="${ic[s]||'circle'}" style="color:${co[s]||'var(--text2)'};width:20px;height:20px;"></i>`;
 }
 
-// ── Deal card & detail ────────────────────────────────────────────────────
+// ── Deal card ─────────────────────────────────────────────────────────────
 function dealItemHtml(lead) {
-    const curr = dashData?.currency || '₪';
-    const hasComm = lead.commission != null;
-    const commColor = lead.status === 'closed' ? 'var(--gold)' : 'var(--green)';
-    return `
-    <div class="activity-item" onclick='openDealDetail(${JSON.stringify(lead).replace(/'/g,"&#39;")})'>
+    const curr = dashData?.currency||'₪', hasComm = lead.commission!=null;
+    const commColor = lead.status==='closed'?'var(--gold)':'var(--green)';
+    return `<div class="activity-item" onclick='openDealDetail(${JSON.stringify(lead).replace(/'/g,"&#39;")})'>
         <div class="act-icon">${iconForStatus(lead.status)}</div>
-        <div style="flex:1;min-width:0;">
-            <div class="act-title">${lead.biz_name}</div>
-            <div class="act-sub">👤 ${lead.client_name}</div>
-        </div>
-        <div class="act-right">
-            ${statusPill(lead.status)}
-            <div class="act-date">${lead.date}</div>
-            ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
-        </div>
+        <div style="flex:1;min-width:0;"><div class="act-title">${lead.biz_name}</div><div class="act-sub">👤 ${lead.client_name}</div></div>
+        <div class="act-right">${statusPill(lead.status)}<div class="act-date">${lead.date}</div>${hasComm?`<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>`:''}</div>
     </div>`;
 }
 
 function openDealDetail(lead) {
-    const L = i18n[lang]||i18n.ru;
-    const curr = dashData?.currency || '₪';
-    
-    let rows = `
-        <div class="deal-detail-row"><div class="deal-detail-lbl">Бизнес</div><div class="deal-detail-val">${lead.biz_name}</div></div>
+    const L = i18n[lang]||i18n.ru, curr = dashData?.currency||'₪';
+    let rows = `<div class="deal-detail-row"><div class="deal-detail-lbl">Бизнес</div><div class="deal-detail-val">${lead.biz_name}</div></div>
         <div class="deal-detail-row"><div class="deal-detail-lbl">Клиент</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
     if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Телефон</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Статус</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Дата</div><div class="deal-detail-val">${lead.date}</div></div>`;
-    if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Сумма сделки</div><div class="deal-detail-val" style="color:var(--text)">${lead.amount} ${curr}</div></div>`;
+    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Статус</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>
+        <div class="deal-detail-row"><div class="deal-detail-lbl">Дата</div><div class="deal-detail-val">${lead.date}</div></div>`;
+    if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Сумма сделки</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
     if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Ваш бонус</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
-    
     document.getElementById('dealDetailContent').innerHTML = rows;
-    
-    const actionsContainer = document.getElementById('dealActionButtons');
-    actionsContainer.innerHTML = '';
+    // Action buttons
+    const actBox = document.getElementById('dealActionButtons');
+    actBox.innerHTML = '';
     if (lead.status === 'closed') {
-        const btnText = L.remind_debt || 'Напомнить о долге';
-        const safeBizName = lead.biz_name.replace(/'/g, "\\'");
-        actionsContainer.innerHTML = `
-            <button class="btn-primary" style="background:var(--gold); color:#1A1A2E;" onclick="remindDebt(${lead.id}, '${safeBizName}')">
-                <i data-feather="bell" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
-                ${btnText}
-            </button>
-        `;
+        const safeName = lead.biz_name.replace(/'/g,"\\'");
+        actBox.innerHTML = `<button class="btn-primary btn-gold" onclick="remindDebt(${lead.id},'${safeName}')"><i data-feather="bell" style="width:15px;height:15px;margin-right:6px;vertical-align:text-bottom;"></i>${L.remind_debt||'Напомнить о долге'}</button>`;
     }
-
-    document.getElementById('dealSheet').classList.add('active');
-    document.body.style.overflow = 'hidden'; 
-    window.scrollTo(0,0);
+    openFullscreen('dealScreen');
     feather.replace();
 }
-
-function closeDealDetail() {
-    document.getElementById('dealSheet').classList.remove('active');
-    document.body.style.overflow = '';
-}
+function closeDealDetail() { closeFullscreen('dealScreen'); }
 
 async function remindDebt(leadId, bizName) {
-    const L = i18n[lang] || i18n.ru;
+    const L = i18n[lang]||i18n.ru;
     const today = new Date().toISOString().split('T')[0];
-    const cacheKey = 'reminded_' + leadId;
-
-    if (localStorage.getItem(cacheKey) === today) {
-        alert(L.remind_already_sent.replace('{biz}', bizName));
-        return;
-    }
-
+    const key = 'reminded_'+leadId;
+    if (localStorage.getItem(key) === today) { alert((L.remind_already_sent||'').replace('{biz}',bizName)); return; }
     try {
-        const res = await fetch(`${API_URL}/api/deals/action?token=${token}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ action: 'remind_debt', lead_id: leadId })
-        });
-        localStorage.setItem(cacheKey, today);
+        const res = await fetch(`${API_URL}/api/deals/action?token=${token}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'remind_debt',lead_id:leadId})});
+        if (!res.ok) throw new Error();
+        localStorage.setItem(key, today);
         alert(L.remind_success);
-    } catch(e) {
-        localStorage.setItem(cacheKey, today);
-        alert(L.remind_success);
-    }
+    } catch(e) { alert(L.remind_error); }
 }
 
-// ── Leaderboard (Зал Славы) ───────────────────────────────────────────────
+// ── Leaderboard ───────────────────────────────────────────────────────────
 async function openLeaderboard() {
-    document.getElementById('leaderboardSheet').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    window.scrollTo(0,0);
-
-    const L = i18n[lang] || i18n.ru;
-    const contentBox = document.getElementById('lbContent');
-
+    openFullscreen('leaderboardScreen');
+    const L = i18n[lang]||i18n.ru, box = document.getElementById('lbContent');
     if (!leaderboardData) {
-        contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || 'Загрузка...'}</div>`;
+        box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2);">...</div>`;
         try {
             const res = await fetch(`${API_URL}/api/leaderboard?token=${token}`);
-            if (res.ok) {
-                leaderboardData = await res.json();
-                renderLeaderboardUI();
-            } else {
-                contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка загрузки рейтинга.</div>`;
-            }
-        } catch(e) {
-            contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка сети.</div>`;
-        }
-    } else {
-        renderLeaderboardUI();
-    }
+            if (res.ok) { leaderboardData = await res.json(); renderLeaderboardUI(); }
+            else box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка загрузки.</div>`;
+        } catch(e) { box.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка сети.</div>`; }
+    } else renderLeaderboardUI();
 }
-
-function closeLeaderboard() {
-    document.getElementById('leaderboardSheet').classList.remove('active');
-    document.body.style.overflow = '';
-}
+function closeLeaderboard() { closeFullscreen('leaderboardScreen'); }
 
 function renderLeaderboardUI() {
     if (!leaderboardData) return;
-    const L = i18n[lang] || i18n.ru;
-    const isPro = (dashData && dashData.success_deals >= 50); 
-    const curr = dashData?.currency || '₪';
+    const L = i18n[lang]||i18n.ru, curr = dashData?.currency||'₪';
+    const isPro = (dashData?.success_deals||0) >= 50;
     let html = '';
-
-    // Ваша позиция (если не в топ 10)
-    let isCurrentInTop = false;
-    if (leaderboardData.top_agents) {
-        leaderboardData.top_agents.forEach(a => {
-            if (leaderboardData.current_agent && a.rank === leaderboardData.current_agent.rank) isCurrentInTop = true;
-        });
+    const topRanks = leaderboardData.top_agents||[];
+    const cur = leaderboardData.current_agent;
+    const curInTop = cur && topRanks.some(a => a.rank === cur.rank);
+    if (cur && !curInTop && cur.rank > 0) {
+        html += `<h3 class="sec-title" style="margin-top:0">${L.lb_your_pos}</h3><div class="lb-list">${agentCardHtml(cur,true,isPro,curr,L)}</div>`;
     }
-
-    if (leaderboardData.current_agent && !isCurrentInTop && leaderboardData.current_agent.rank > 0) {
-        html += `<h3 class="sec-title" style="margin-top:0;">${L.lb_your_pos}</h3>`;
-        html += `<div class="lb-agents-list">${createAgentCardHTML(leaderboardData.current_agent, true, isPro, 'pos', curr, L)}</div>`;
-    }
-
-    // Топ агентов
-    html += `<h3 class="sec-title" style="margin-top:0;">${L.lb_top}</h3>`;
-    html += `<div class="lb-agents-list">`;
-    if (leaderboardData.top_agents && leaderboardData.top_agents.length > 0) {
-        leaderboardData.top_agents.forEach((agent) => {
-            const isCurrent = (leaderboardData.current_agent && agent.rank === leaderboardData.current_agent.rank);
-            html += createAgentCardHTML(agent, isCurrent, isPro, 'top', curr, L);
-        });
-    }
-    html += `</div>`;
-    
+    html += `<h3 class="sec-title" style="margin-top:0">${L.lb_top}</h3><div class="lb-list">`;
+    topRanks.forEach(a => html += agentCardHtml(a, cur && a.rank===cur.rank, isPro, curr, L));
+    html += '</div>';
     document.getElementById('lbContent').innerHTML = html;
 }
-
-function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
-    let rankBadge = agent.rank;
-    let rankClass = '';
-    
-    if (agent.rank === 1) { rankBadge = '🥇'; rankClass = 'lb-rank-1'; }
-    else if (agent.rank === 2) { rankBadge = '🥈'; rankClass = 'lb-rank-2'; }
-    else if (agent.rank === 3) { rankBadge = '🥉'; rankClass = 'lb-rank-3'; }
-    
-    const highlightClass = isCurrent ? 'highlight' : '';
-    // Если текущий агент - не PRO, и это карточка ЧУЖОГО агента, блюрим имя
-    const shouldBlur = !isPro && !isCurrent;
-    const nameClass = shouldBlur ? 'lb-agent-name lb-name-blurred' : 'lb-agent-name';
-    const onClickAttr = shouldBlur ? `onclick="alert('${L.lb_blur_alert.replace(/'/g, "\\'")}')"` : '';
-
-    return `
-        <div class="lb-agent-card ${highlightClass}">
-            <div class="lb-agent-rank ${rankClass}">${rankBadge}</div>
-            <div class="lb-agent-info">
-                <div class="${nameClass}" ${onClickAttr}>${agent.name}</div>
-                <div class="lb-agent-deals">${L.lb_deals} <span>${agent.deals_count}</span></div>
-            </div>
-            <div class="lb-agent-earned">
-                <div class="lb-earned-lbl">${L.lb_earned}</div>
-                <div class="lb-earned-val">${Math.round(agent.earned)} ${curr}</div>
-            </div>
-        </div>
-    `;
+function agentCardHtml(a, isCurrent, isPro, curr, L) {
+    const rIcons = {1:'🥇',2:'🥈',3:'🥉'};
+    const rClasses = {1:'lb-rank-1',2:'lb-rank-2',3:'lb-rank-3'};
+    const rankBadge = rIcons[a.rank]||a.rank, rankClass = rClasses[a.rank]||'';
+    const blur = !isPro && !isCurrent;
+    const nameClass = blur ? 'lb-name lb-name-blur' : 'lb-name';
+    const onClick = blur ? `onclick="alert('${(L.lb_blur||'').replace(/'/g,"\\'")}')"` : '';
+    return `<div class="lb-card ${isCurrent?'highlight':''}">
+        <div class="lb-rank ${rankClass}">${rankBadge}</div>
+        <div class="lb-info"><div class="${nameClass}" ${onClick}>${a.name}</div><div class="lb-deals">${L.lb_deals} <span>${a.deals_count}</span></div></div>
+        <div class="lb-right"><div class="lb-earned-lbl">${L.lb_earned}</div><div class="lb-earned-val">${Math.round(a.earned)} ${curr}</div></div>
+    </div>`;
 }
 
-// ── Stat detail sheet ─────────────────────────────────────────────────────
+// ── Stat detail ───────────────────────────────────────────────────────────
 function openStatDetail(type) {
-    const L = i18n[lang]||i18n.ru;
-    const curr = dashData?.currency || '₪';
-    let title = '', content = '';
-    if (type === 'deals') {
+    const L = i18n[lang]||i18n.ru, curr = dashData?.currency||'₪';
+    let title='', content='';
+    if (type==='deals') {
         title = L.stat_deals;
-        const confirmed = (dashData?.leads||[]).filter(l => l.status==='confirmed'||l.status==='closed');
-        content = confirmed.length
-            ? confirmed.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-    } else if (type === 'pending') {
+        const list = (dashData?.leads||[]).filter(l=>l.status==='confirmed'||l.status==='closed');
+        content = list.length ? list.map(dealItemHtml).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
+    } else if (type==='pending') {
         title = L.stat_pending;
-        const pbs = dashData?.pending_businesses || [];
-        content = pbs.length
-            ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('')
-            : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
-    } else if (type === 'active') {
+        const pbs = dashData?.pending_businesses||[];
+        content = pbs.length ? pbs.map(b=>`<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('') : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
+    } else if (type==='active') {
         title = L.stat_active;
-        const active = (dashData?.leads||[]).filter(l => l.status==='new'||l.status==='in_progress');
-        content = active.length
-            ? active.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
+        const list = (dashData?.leads||[]).filter(l=>l.status==='new'||l.status==='in_progress');
+        content = list.length ? list.map(dealItemHtml).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     }
     document.getElementById('statSheetTitle').textContent = title;
     document.getElementById('statSheetContent').innerHTML = content;
@@ -1170,341 +1026,223 @@ function openStatDetail(type) {
     feather.replace();
 }
 
-// ── Profile edit ──────────────────────────────────────────────────────────
+// ── Profile ───────────────────────────────────────────────────────────────
 function selectPay(method, btnEl) {
     document.getElementById('editPayment').value = method;
     document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
     if (btnEl) btnEl.classList.add('active');
 }
-
 function openProfileEdit() {
     if (!dashData) return;
-    document.getElementById('editName').value = dashData.user_name || '';
-    
-    const currentPay = dashData.payment_method || '';
-    document.getElementById('editPayment').value = currentPay;
-    document.querySelectorAll('.pay-btn').forEach(b => {
-        b.classList.toggle('active', currentPay && b.textContent.trim().toLowerCase() === currentPay.toLowerCase());
-    });
-
-    document.getElementById('editLink').value = dashData.business_info || '';
+    document.getElementById('editName').value = dashData.user_name||'';
+    const pay = dashData.payment_method||'';
+    document.getElementById('editPayment').value = pay;
+    document.querySelectorAll('.pay-btn').forEach(b => b.classList.toggle('active', !!pay && b.textContent.trim().toLowerCase()===pay.toLowerCase()));
+    document.getElementById('editLink').value = dashData.business_info||'';
     openSheet('profileSheet');
 }
-
 async function saveProfile() {
-    const name    = document.getElementById('editName').value.trim();
-    const payment = document.getElementById('editPayment').value.trim();
-    const link    = document.getElementById('editLink').value.trim();
-    const btn     = document.getElementById('saveProfileBtn');
-    btn.textContent = '...';
-    btn.disabled = true;
+    const name=document.getElementById('editName').value.trim(), payment=document.getElementById('editPayment').value.trim(), link=document.getElementById('editLink').value.trim();
+    const btn=document.getElementById('saveProfileBtn'); btn.textContent='...'; btn.disabled=true;
     try {
-        const res = await fetch(`${API_URL}/api/profile/update?token=${token}`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ name, payment_method: payment, business_info: link })
-        });
+        const res = await fetch(`${API_URL}/api/profile/update?token=${token}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,payment_method:payment,business_info:link})});
         if (res.ok) {
-            if (name)    { dashData.user_name = name; document.getElementById('t_name').textContent = name; document.getElementById('profileName').textContent = name; document.getElementById('profileAvatar').textContent = name[0].toUpperCase(); }
-            if (payment) { dashData.payment_method = payment; document.getElementById('v_pay_method').textContent = payment; }
-            if (link)    { dashData.business_info = link; document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(link); }
+            if (name){dashData.user_name=name;document.getElementById('t_name').textContent=name;document.getElementById('profileName').textContent=name;document.getElementById('profileAvatar').textContent=name[0].toUpperCase();}
+            if (payment){dashData.payment_method=payment;document.getElementById('v_pay_method').textContent=payment;}
+            if (link){dashData.business_info=link;document.getElementById('bizInfoRow').style.display='flex';updateBizInfoLink(link);}
             closeAllSheets();
         }
-    } catch(e) {}
-    btn.textContent = (i18n[lang]||i18n.ru).save;
-    btn.disabled = false;
+    } catch(e){}
+    btn.textContent=(i18n[lang]||i18n.ru).save; btn.disabled=false;
 }
 function updateBizInfoLink(link) {
-    const el = document.getElementById('v_biz_info');
-    if (!el) return;
-    if (link && (link.startsWith('http://') || link.startsWith('https://'))) {
-        el.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-    } else {
-        el.textContent = link || '—';
-    }
+    const el=document.getElementById('v_biz_info'); if (!el) return;
+    el.innerHTML = (link&&link.startsWith('http')) ? `<a href="${link}" target="_blank">${link}</a>` : link||'—';
 }
 
-// ── Business registration ─────────────────────────────────────────────────
-function openBizReg() { openSheet('bizRegSheet'); }
+// ── Biz registration ──────────────────────────────────────────────────────
+function openBizReg() { openFullscreen('bizRegScreen'); }
+function closeBizReg() { closeFullscreen('bizRegScreen'); }
 async function submitBizReg() {
-    const name    = document.getElementById('bizRegName').value.trim();
-    const niche   = document.getElementById('bizRegNiche').value;
-    const commVal = document.getElementById('bizRegComm').value.trim();
-    const pay     = document.getElementById('bizRegPay').value.trim();
-    if (!name || !niche) return;
+    const name=document.getElementById('bizRegName').value.trim(), niche=document.getElementById('bizRegNiche').value;
+    const commVal=document.getElementById('bizRegComm').value.trim(), pay=document.getElementById('bizRegPay').value.trim();
+    if (!name||!niche) return;
     const commission = commVal ? `${commVal}%` : null;
-    const btn = document.querySelector('#bizRegSheet .btn-primary');
-    btn.textContent = '...'; btn.disabled = true;
+    const btn=document.getElementById('t_biz_reg_submit'); btn.textContent='...'; btn.disabled=true;
     try {
-        const res = await fetch(`${API_URL}/register`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({
-                role:'business', name, niche:[niche], commission,
-                pay_pref: pay, lang, sender: catalogAgentId,
-                rewardType: commission ? 'pct' : '', rewardValue: commVal,
-            })
-        });
-        if (res.ok) {
-            closeAllSheets();
-            alert('Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.');
-        }
-    } catch(e) {}
-    btn.textContent = (i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled = false;
+        const res = await fetch(`${API_URL}/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'business',name,niche:[niche],commission,pay_pref:pay,lang,sender:catalogAgentId,rewardType:commission?'pct':'',rewardValue:commVal})});
+        if (res.ok) { closeBizReg(); alert('Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.'); }
+    } catch(e){}
+    btn.textContent=(i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled=false;
 }
 
 // ── Catalog ───────────────────────────────────────────────────────────────
 async function loadCatalog() {
     if (!dashData?.agent_id) return;
-    catalogAgentId = dashData.agent_id;
-    catalogBotPhone = dashData.bot_phone || '972534218573';
+    catalogAgentId=dashData.agent_id; catalogBotPhone=dashData.bot_phone||'972534218573';
     try {
-        const catTokRes = await fetch(`${API_URL}/api/catalog/token?agent_id=${catalogAgentId}`);
-        const catTokData = await catTokRes.json();
-        const catTok = catTokData.token;
-        const catRes = await fetch(`${API_URL}/api/catalog?token=${catTok}`);
-        const catData = await catRes.json();
-        allBusinesses = catData.businesses || [];
+        const tok = await fetch(`${API_URL}/api/catalog/token?agent_id=${catalogAgentId}`).then(r=>r.json()).then(d=>d.token);
+        const catData = await fetch(`${API_URL}/api/catalog?token=${tok}`).then(r=>r.json());
+        allBusinesses = catData.businesses||[];
         document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
-        extractNiches();
-        renderCatalog();
+        extractNiches(); renderCatalog();
     } catch(e) {
         document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">Каталог недоступен. Откройте WhatsApp и напишите "1".</div>`;
     }
 }
-
 function extractNiches() {
-    const L = i18n[lang]||i18n.ru;
-    const all = L.filter_all || 'Все';
-    const cats = [all];
-    allBusinesses.forEach(b => { if (b.category && b.category!=='—' && !cats.includes(b.category)) cats.push(b.category); });
-    const container = document.getElementById('catFilters');
-    container.innerHTML = '';
+    const L=i18n[lang]||i18n.ru, all=L.filter_all||'Все';
+    const cats=[all];
+    allBusinesses.forEach(b => { if (b.category&&b.category!=='—'&&!cats.includes(b.category)) cats.push(b.category); });
+    const sel=document.getElementById('catFilterSelect'); if (!sel) return;
+    sel.innerHTML='';
     cats.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = `filter-btn${(cat===all&&currentNiche==='__all__')||(cat===currentNiche)?` active`:''}`;
-        btn.textContent = cat;
-        btn.onclick = () => {
-            currentNiche = cat===all ? '__all__' : cat;
-            document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            renderCatalog();
-        };
-        container.appendChild(btn);
+        const opt=document.createElement('option');
+        opt.value = cat===all?'__all__':cat; opt.textContent=cat;
+        if (currentNiche===opt.value) opt.selected=true;
+        sel.appendChild(opt);
     });
 }
-
 function renderCatalog() {
-    const L = i18n[lang]||i18n.ru;
-    const q = (document.getElementById('catSearch')?.value||'').toLowerCase();
+    const L=i18n[lang]||i18n.ru, q=(document.getElementById('catSearch')?.value||'').toLowerCase();
     const filtered = allBusinesses.filter(b => {
-        const matchSearch = b.name.toLowerCase().includes(q)
-            || (b.business_info&&b.business_info.toLowerCase().includes(q))
-            || (b.category&&b.category.toLowerCase().includes(q))
-            || (Array.isArray(b.niche)?b.niche.some(n=>n.toLowerCase().includes(q)):(b.niche&&String(b.niche).toLowerCase().includes(q)));
-        const matchCat = currentNiche==='__all__' || b.category===currentNiche;
-        return matchSearch && matchCat;
+        const ms = b.name.toLowerCase().includes(q)||(b.business_info&&b.business_info.toLowerCase().includes(q))||(b.category&&b.category.toLowerCase().includes(q))||(Array.isArray(b.niche)?b.niche.some(n=>n.toLowerCase().includes(q)):(b.niche&&String(b.niche).toLowerCase().includes(q)));
+        return ms && (currentNiche==='__all__'||b.category===currentNiche);
     });
-    const grid = document.getElementById('catGrid');
-    if (!filtered.length) { grid.innerHTML = `<div class="empty-state"><div class="empty-sub">${L.cat_empty}</div></div>`; return; }
-    grid.innerHTML = '';
+    const grid=document.getElementById('catGrid');
+    if (!filtered.length) { grid.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.cat_empty}</div></div>`; return; }
+    grid.innerHTML='';
     filtered.forEach(biz => {
-        const card = document.createElement('div');
-        card.className = 'biz-card';
-        card.onclick = () => openRecommend(biz);
-        const catStr = biz.category || '';
-        let nicheStr = '';
-        if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-        else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
-        const fullCat = `${catStr}${nicheStr}`.trim() || 'Бизнес';
-        card.innerHTML = `
-            <div class="biz-card-header">
-                <div class="biz-card-name">${biz.name}</div>
-                <div class="biz-card-cat">${fullCat}</div>
-            </div>
-            <div class="biz-card-commission">${L.bonus} ${biz.commission||'...'}</div>`;
+        const card=document.createElement('div'); card.className='biz-card'; card.onclick=()=>openRecommend(biz);
+        const catStr=biz.category||'';
+        let nicheStr='';
+        if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr=' · '+biz.niche.slice(0,2).join(', ');
+        else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr=' · '+biz.niche;
+        const fullCat=`${catStr}${nicheStr}`.trim()||'Бизнес';
+        card.innerHTML=`<div class="biz-card-header"><div class="biz-card-name">${biz.name}</div><div class="biz-card-cat">${fullCat}</div></div><div class="biz-card-comm">${L.bonus} ${biz.commission||'...'}</div>`;
         grid.appendChild(card);
     });
 }
 
 // ── Recommend ─────────────────────────────────────────────────────────────
 function openRecommend(biz) {
-    document.getElementById('recBizName').textContent = biz.name;
-    const catStr = biz.category || '';
-    let nicheStr = '';
-    if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-    else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
-    document.getElementById('recBizNiche').textContent = `${catStr}${nicheStr}`.trim() || 'Бизнес';
-    const descEl = document.getElementById('recBizDesc');
-    if (biz.business_info) {
-        descEl.innerHTML = biz.business_info.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-        descEl.style.display = 'block';
-    } else { descEl.style.display = 'none'; }
-    const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${catalogAgentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${lang}`;
-    document.getElementById('refLinkInput').value = link;
-    const L = i18n[lang]||i18n.ru;
-    const copyBtn = document.getElementById('copyBtn');
-    copyBtn.textContent = L.copy_btn;
-    copyBtn.classList.remove('copied');
-    // QR
-    const ctx = document.getElementById('qrCanvas').getContext('2d');
-    ctx.clearRect(0,0,300,300);
+    document.getElementById('recBizName').textContent=biz.name;
+    const catStr=biz.category||''; let ns='';
+    if (Array.isArray(biz.niche)&&biz.niche.length) ns=' · '+biz.niche.slice(0,2).join(', ');
+    else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') ns=' · '+biz.niche;
+    document.getElementById('recBizNiche').textContent=`${catStr}${ns}`.trim()||'Бизнес';
+    const descEl=document.getElementById('recBizDesc');
+    if (biz.business_info) { descEl.innerHTML=biz.business_info.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>'); descEl.style.display='block'; }
+    else descEl.style.display='none';
+    const link=`https://invite.winwinnetwork.pro/register.html?role=client&sender=${catalogAgentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${lang}`;
+    document.getElementById('refLinkInput').value=link;
+    const L=i18n[lang]||i18n.ru;
+    const cb=document.getElementById('copyBtn'); cb.textContent=L.copy_btn; cb.classList.remove('copied');
     try { new QRious({element:document.getElementById('qrCanvas'),value:link,size:220,level:'H'}); } catch(e){}
-    document.getElementById('recommendScreen').classList.add('active');
-    window.scrollTo(0,0);
-    feather.replace();
+    openFullscreen('recommendScreen');
 }
-function closeRecommend() {
-    document.getElementById('recommendScreen').classList.remove('active');
-    window.scrollTo(0,0);
-}
+function closeRecommend() { closeFullscreen('recommendScreen'); }
 function copyLink() {
-    const input = document.getElementById('refLinkInput');
-    input.select();
-    try { document.execCommand('copy'); } catch(e) { navigator.clipboard?.writeText(input.value); }
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = (i18n[lang]||i18n.ru).copied;
-    btn.classList.add('copied');
+    const inp=document.getElementById('refLinkInput'); inp.select();
+    try{document.execCommand('copy')}catch(e){navigator.clipboard?.writeText(inp.value);}
+    const btn=document.getElementById('copyBtn'); btn.textContent=(i18n[lang]||i18n.ru).copied; btn.classList.add('copied');
+}
+
+// ── Invite ─────────────────────────────────────────────────────────────────
+function openInviteScreen() {
+    const link=`https://invite.winwinnetwork.pro/register.html?sender=${catalogAgentId}&lang=${lang}`;
+    document.getElementById('inviteLinkInput').value=link;
+    const L=i18n[lang]||i18n.ru;
+    const cb=document.getElementById('inviteCopyBtn'); cb.textContent=L.copy_btn; cb.classList.remove('copied');
+    try{new QRious({element:document.getElementById('inviteQrCanvas'),value:link,size:220,level:'H'})}catch(e){}
+    openFullscreen('inviteScreen');
+}
+function closeInviteScreen() { closeFullscreen('inviteScreen'); }
+function copyInviteLink() {
+    const inp=document.getElementById('inviteLinkInput'); inp.select();
+    try{document.execCommand('copy')}catch(e){navigator.clipboard?.writeText(inp.value);}
+    const btn=document.getElementById('inviteCopyBtn'); btn.textContent=(i18n[lang]||i18n.ru).copied; btn.classList.add('copied');
 }
 
 // ── Main render ───────────────────────────────────────────────────────────
 function renderAll() {
-    const d = dashData;
-    const L = i18n[lang]||i18n.ru;
-    const curr = d.currency || '₪';
-    document.getElementById('t_name').textContent = d.user_name || '—';
-
-    // Balance
-    animNum('v_earned', Math.round(d.total_earned||0));
-    document.getElementById('v_deals').textContent = d.success_deals || 0;
-    document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
-    document.getElementById('v_active').textContent = d.active_deals || 0;
-
+    const d=dashData, L=i18n[lang]||i18n.ru, curr=d.currency||'₪';
+    document.getElementById('t_name').textContent=d.user_name||'—';
+    animNum('v_earned',Math.round(d.total_earned||0));
+    document.getElementById('v_deals').textContent=d.success_deals||0;
+    document.getElementById('v_pending').textContent=Math.round(d.pending_payout||0)+' ₪';
+    document.getElementById('v_active').textContent=d.active_deals||0;
     // PRO
-    const proProgress = Math.min(((d.success_deals||0)/50)*100, 100);
-    document.getElementById('pro_progress_txt').textContent = `${d.success_deals||0} / 50`;
-    setTimeout(() => { const b=document.getElementById('proBar'); if(b) b.style.width=proProgress+'%'; }, 300);
-    if ((d.success_deals||0) >= 50) { document.getElementById('pro-locked').style.display='none'; document.getElementById('pro-unlocked').style.display='block'; }
-
-    // Recent activity
-    const actList = document.getElementById('activityList');
-    if (!d.leads||!d.leads.length) {
-        actList.innerHTML = `<div class="empty-state"><div class="empty-title">${L.no_deals}</div><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-    } else {
-        actList.innerHTML = d.leads.slice(0,6).map(dealItemHtml).join('');
+    const proPct=Math.min(((d.success_deals||0)/50)*100,100);
+    document.getElementById('pro_progress_txt').textContent=`${d.success_deals||0} / 50`;
+    setTimeout(()=>{const b=document.getElementById('proBar');if(b)b.style.width=proPct+'%'},300);
+    if ((d.success_deals||0)>=50){document.getElementById('pro-locked').style.display='none';document.getElementById('pro-unlocked').style.display='block';}
+    // Activity
+    const actList=document.getElementById('activityList');
+    actList.innerHTML=(!d.leads||!d.leads.length)?`<div class="empty-state"><div class="empty-title">${L.no_deals}</div><div class="empty-sub">${L.no_deals_sub}</div></div>`:d.leads.slice(0,6).map(dealItemHtml).join('');
+    // History 3 lists
+    const la=document.getElementById('list_active'),ld=document.getElementById('list_debt'),lh=document.getElementById('list_history');
+    if(la&&ld&&lh){
+        la.innerHTML='';ld.innerHTML='';lh.innerHTML='';
+        const empty=`<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">—</div>`;
+        if(!d.leads||!d.leads.length){la.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;}
+        else{d.leads.forEach(lead=>{const h=`<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;if(lead.status==='new'||lead.status==='in_progress')la.innerHTML+=h;else if(lead.status==='closed')ld.innerHTML+=h;else lh.innerHTML+=h;});}
+        if(!la.innerHTML)la.innerHTML=empty;if(!ld.innerHTML)ld.innerHTML=empty;if(!lh.innerHTML)lh.innerHTML=empty;
     }
-
-    // History — 3 lists
-    const listActive  = document.getElementById('list_active');
-    const listDebt    = document.getElementById('list_debt');
-    const listHistory = document.getElementById('list_history');
-    if (listActive && listDebt && listHistory) {
-        listActive.innerHTML=''; listDebt.innerHTML=''; listHistory.innerHTML='';
-        const emptyRow = `<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">—</div>`;
-        if (!d.leads||!d.leads.length) {
-            listActive.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-        } else {
-            d.leads.forEach(lead => {
-                const html=`<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
-                if (lead.status==='new'||lead.status==='in_progress') listActive.innerHTML+=html;
-                else if (lead.status==='closed') listDebt.innerHTML+=html;
-                else listHistory.innerHTML+=html;
-            });
-        }
-        if (!listActive.innerHTML)  listActive.innerHTML=emptyRow;
-        if (!listDebt.innerHTML)    listDebt.innerHTML=emptyRow;
-        if (!listHistory.innerHTML) listHistory.innerHTML=emptyRow;
-    }
-
-    // Wallet — avg
-    const closed = d.success_deals||0;
-    document.getElementById('v_avg').textContent = closed>0 ? Math.round((d.total_earned||0)/closed) : 0;
-
+    // Wallet avg
+    const closed=d.success_deals||0;
+    document.getElementById('v_avg').textContent=closed>0?Math.round((d.total_earned||0)/closed):0;
     // Efficiency
-    const pct = d.efficiency_pct, avgPct = d.platform_avg_pct||0;
-    if (pct==null) {
-        document.getElementById('v_eff').textContent='—';
-        document.getElementById('eff_badge').textContent=L.eff_accum;
-        document.getElementById('eff_badge').className='eff-badge eff-neutral';
-    } else {
-        animNum('v_eff', Math.round(pct));
-        setTimeout(()=>{ document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'; },100);
-        document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;
-        if (pct>=avgPct) { document.getElementById('eff_badge').textContent=`✅ ${L.eff_above}`; document.getElementById('eff_badge').className='eff-badge eff-good'; }
-        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
-    }
-
+    const pct=d.efficiency_pct,avgPct=d.platform_avg_pct||0;
+    if(pct==null){document.getElementById('v_eff').textContent='—';document.getElementById('eff_badge').textContent=L.eff_accum;document.getElementById('eff_badge').className='eff-badge eff-neutral';}
+    else{animNum('v_eff',Math.round(pct));setTimeout(()=>{document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'},100);document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;if(pct>=avgPct){document.getElementById('eff_badge').textContent=`✅ ${L.eff_above}`;document.getElementById('eff_badge').className='eff-badge eff-good';}else{document.getElementById('eff_badge').textContent=L.eff_below;document.getElementById('eff_badge').className='eff-badge eff-neutral';}}
     // Funnel
-    const active=d.active_deals||0, rejected=d.rejected_deals||0, total=active+closed+rejected;
+    const active=d.active_deals||0,rejected=d.rejected_deals||0,total=active+closed+rejected;
     document.getElementById('t_total_leads').textContent=`${L.total_leads} ${total}`;
     document.getElementById('v_conv').textContent=(total>0?Math.round(closed/total*100):0)+'%';
-    animNum('st_active',active); animNum('st_closed',closed); animNum('st_rejected',rejected);
-    setTimeout(()=>{
-        document.getElementById('bar_active').style.width=(total>0?active/total*100:0)+'%';
-        document.getElementById('bar_closed').style.width=(total>0?closed/total*100:0)+'%';
-        document.getElementById('bar_rejected').style.width=(total>0?rejected/total*100:0)+'%';
-    },80);
-
-    // Pending payouts
-    const pendList = document.getElementById('pendingList');
-    if (!d.pending_businesses||!d.pending_businesses.length) {
-        pendList.innerHTML=`<div style="color:var(--green);font-weight:700;text-align:center;padding:4px 0;">${L.all_paid}</div>`;
-    } else {
-        pendList.innerHTML=d.pending_businesses.map(b=>`
-            <div class="activity-item" style="cursor:default;">
-                <div class="act-icon"><i data-feather="clock" style="color:var(--gold);width:18px;height:18px;"></i></div>
-                <div><div class="act-title">${b.name}</div><div class="act-sub">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div>
-                <div class="act-right"><div class="act-amount" style="color:var(--gold);">${b.amount} ${curr}</div></div>
-            </div>`).join('');
-    }
-
+    animNum('st_active',active);animNum('st_closed',closed);animNum('st_rejected',rejected);
+    setTimeout(()=>{document.getElementById('bar_active').style.width=(total>0?active/total*100:0)+'%';document.getElementById('bar_closed').style.width=(total>0?closed/total*100:0)+'%';document.getElementById('bar_rejected').style.width=(total>0?rejected/total*100:0)+'%';},80);
+    // Pending
+    const pendList=document.getElementById('pendingList');
+    pendList.innerHTML=(!d.pending_businesses||!d.pending_businesses.length)?`<div style="color:var(--green);font-weight:700;text-align:center;padding:4px 0;">${L.all_paid}</div>`:d.pending_businesses.map(b=>`<div class="activity-item" style="cursor:default;"><div class="act-icon"><i data-feather="clock" style="color:var(--gold);width:18px;height:18px;"></i></div><div><div class="act-title">${b.name}</div><div class="act-sub">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div class="act-right"><div class="act-amount" style="color:var(--gold);">${b.amount} ${curr}</div></div></div>`).join('');
     // Chart
-    if (d.chart_data&&d.chart_data.labels&&d.chart_data.labels.length) {
-        document.getElementById('chartCard').style.display='block';
-        document.getElementById('t_chart_title').style.display='flex';
-        if (chartInst) chartInst.destroy();
-        chartInst = new Chart(document.getElementById('nicheChart').getContext('2d'), {
-            type:'doughnut',
-            data:{ labels:d.chart_data.labels, datasets:[{data:d.chart_data.values, backgroundColor:['#56CCF2','#27AE60','#2F80ED','#F2C94C','#9B51E0'], borderWidth:0, hoverOffset:6}] },
-            options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom', labels:{ color:document.body.classList.contains('brand-theme')?'#A0A0B0':'#8A8D9F', font:{family:'Inter',size:12}, padding:14 } } } }
-        });
+    if(d.chart_data&&d.chart_data.labels&&d.chart_data.labels.length){
+        document.getElementById('chartCard').style.display='block';document.getElementById('t_chart_title').style.display='flex';
+        if(chartInst)chartInst.destroy();
+        chartInst=new Chart(document.getElementById('nicheChart').getContext('2d'),{type:'doughnut',data:{labels:d.chart_data.labels,datasets:[{data:d.chart_data.values,backgroundColor:['#56CCF2','#27AE60','#2F80ED','#F2C94C','#9B51E0'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{position:'bottom',labels:{color:document.body.classList.contains('brand-theme')?'#A0A0B0':'#8A8D9F',font:{family:'Inter',size:12},padding:14}}}}});
     }
-
     // Profile
-    const name = d.user_name||'—';
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profilePhone').textContent = d.phone||'—';
-    document.getElementById('profileAvatar').textContent = (name[0]||'W').toUpperCase();
-    document.getElementById('v_pay_method').textContent = d.payment_method||'—';
-    if (d.business_info) { document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(d.business_info); }
-
+    const name=d.user_name||'—';
+    document.getElementById('profileName').textContent=name;document.getElementById('profilePhone').textContent=d.phone||'—';document.getElementById('profileAvatar').textContent=(name[0]||'W').toUpperCase();document.getElementById('v_pay_method').textContent=d.payment_method||'—';
+    if(d.business_info){document.getElementById('bizInfoRow').style.display='flex';updateBizInfoLink(d.business_info);}
     // CTA
-    const phone = d.bot_phone||'972534218573';
-    const waUrl = `https://wa.me/${phone}`;
-    ['ctaBtnHome','ctaBtnProfile'].forEach(id => {
-        const btn=document.getElementById(id); if(!btn) return;
-        btn.style.display='block'; btn.href=waUrl;
-        if (d.channel==='telegram') { btn.className='btn-primary btn-tg'; btn.textContent='Telegram'; }
-        else { btn.textContent=L.wa_btn; }
-    });
+    const phone=d.bot_phone||'972534218573', waUrl=`https://wa.me/${phone}`;
+    ['ctaBtnHome','ctaBtnProfile'].forEach(id=>{const btn=document.getElementById(id);if(!btn)return;btn.style.display='block';btn.href=waUrl;if(d.channel==='telegram'){btn.className='btn-primary btn-tg';btn.textContent='Telegram';}else btn.textContent=L.wa_btn;});
     document.getElementById('errBtn').href=waUrl;
-
     feather.replace();
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────
 async function init() {
     applyTheme();
-    if (i18n[lang]) setLang(lang);
-    else { lang='ru'; applyLang(); }
+    if (i18n[lang]) setLang(lang); else { lang='ru'; applyLang(); }
     if (!token) { showError(); return; }
     try {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
         renderAll();
-        const loader = document.getElementById('loader');
+        const loader=document.getElementById('loader');
         loader.style.opacity='0';
-        setTimeout(()=>loader.style.display='none', 400);
-        // Load catalog in background
+        setTimeout(()=>loader.style.display='none',400);
+        // ── Deep link: открываем нужную вкладку из ?tab= ──
+        const tabParam = new URLSearchParams(window.location.search).get('tab');
+        const tabMap = {home:0,catalog:1,history:2,wallet:3,profile:4};
+        if (tabParam && tabMap.hasOwnProperty(tabParam)) {
+            const navBtns = document.querySelectorAll('.nav-item');
+            switchTab(tabParam, navBtns[tabMap[tabParam]]);
+        }
+        // Каталог в фоне
         loadCatalog();
     } catch(e) { showError(); }
 }
@@ -1514,7 +1252,6 @@ function showError() {
     document.getElementById('loaderErr').style.display='block';
     document.getElementById('errBtn').href='https://wa.me/972534218573';
 }
-
 window.onload = init;
 </script>
 </body>
