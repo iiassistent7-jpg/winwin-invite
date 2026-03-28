@@ -301,7 +301,6 @@
 <body>
 <div class="app">
 
-    <!-- Loader -->
     <div class="loader" id="loader">
         <div class="loader-brand">Win-Win</div>
         <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
@@ -315,7 +314,6 @@
         </div>
     </div>
 
-    <!-- Recommend full-screen view (catalog) -->
     <div id="recommendScreen" class="recommend-screen">
         <div style="max-width:430px; margin:0 auto;">
             <button class="btn-back" onclick="closeRecommend()">
@@ -342,7 +340,22 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <div class="recommend-screen" id="dealSheet">
+        <div style="max-width:430px; margin:0 auto;">
+            <button class="btn-back" onclick="closeDealDetail()">
+                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
+                <span id="t_btn_back_deal">Назад</span>
+            </button>
+            <div class="rec-header-card" style="margin-bottom:24px;">
+                <div class="rec-title" id="t_deal_title" style="margin-bottom:16px; font-size:1.4rem;">Детали сделки</div>
+                <div id="dealDetailContent"></div>
+            </div>
+            <div class="instruction-block" style="text-align:center; background:transparent; border:none; box-shadow:none;">
+                <div class="instruction-text" style="opacity:0.6; font-size:0.8rem;">Вся информация синхронизирована с платформой</div>
+            </div>
+        </div>
+    </div>
+
     <header class="header">
         <div class="header-left">
             <div class="greeting" id="t_greeting">С возвращением,</div>
@@ -355,11 +368,10 @@
                 <button class="lang-btn" onclick="setLang('ar')">AR</button>
                 <button class="lang-btn active" onclick="setLang('ru')">RU</button>
             </div>
-            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="moon"></i></button>
+            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="sun"></i></button>
         </div>
     </header>
 
-    <!-- ── View: Home ── -->
     <div id="view-home" class="view active">
         <div class="card balance-card">
             <div class="balance-label" id="t_balance_label">Социальный капитал</div>
@@ -396,7 +408,6 @@
         <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
     </div>
 
-    <!-- ── View: Catalog ── -->
     <div id="view-catalog" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнеса</h2>
         <div class="cat-search">
@@ -409,7 +420,6 @@
         </div>
     </div>
 
-    <!-- ── View: History ── -->
     <div id="view-history" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">Мои рекомендации</h2>
         <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">🕒 В процессе</div>
@@ -420,7 +430,6 @@
         <div id="list_history"></div>
     </div>
 
-    <!-- ── View: Wallet ── -->
     <div id="view-wallet" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Финансы</h2>
         <div class="avg-display">
@@ -451,7 +460,6 @@
         <div class="card" id="chartCard" style="display:none;"><div class="chart-wrap"><canvas id="nicheChart"></canvas></div></div>
     </div>
 
-    <!-- ── View: Profile ── -->
     <div id="view-profile" class="view">
         <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">Профиль</h2>
 
@@ -526,7 +534,6 @@
         <a href="#" class="btn-primary btn-wa" id="ctaBtnProfile" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
     </div>
 
-    <!-- Bottom Nav -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
         <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
@@ -535,24 +542,14 @@
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
-    <!-- Overlay (shared) -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeAllSheets()"></div>
 
-    <!-- Sheet: Deal detail -->
-    <div class="bottom-sheet" id="dealSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_deal_title">Детали сделки</div>
-        <div id="dealDetailContent"></div>
-    </div>
-
-    <!-- Sheet: Stat detail -->
     <div class="bottom-sheet" id="statSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="statSheetTitle">Детали</div>
         <div id="statSheetContent"></div>
     </div>
 
-    <!-- Sheet: Profile edit -->
     <div class="bottom-sheet" id="profileSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_edit_profile">Редактировать профиль</div>
@@ -565,7 +562,6 @@
         <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:4px;">Сохранить</button>
     </div>
 
-    <!-- Sheet: Business registration -->
     <div class="bottom-sheet" id="bizRegSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_biz_reg_title">Зарегистрировать бизнес</div>
@@ -590,7 +586,6 @@
         <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:4px;" id="t_biz_reg_submit">Зарегистрировать</button>
     </div>
 
-    <!-- Sheet: Niche (PRO) -->
     <div class="bottom-sheet" id="nicheSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_sheet_title">Добавить спец-условие</div>
@@ -608,9 +603,7 @@
         <button class="btn-primary" onclick="closeAllSheets()" style="margin-top:4px;" id="t_sheet_save">Сохранить условие</button>
     </div>
 
-</div><!-- .app -->
-
-<script>
+</div><script>
 // ── i18n ──────────────────────────────────────────────────────────────────
 const i18n = {
   ru: {
@@ -745,17 +738,29 @@ let currentNiche = '__all__';
 // ── Theme ─────────────────────────────────────────────────────────────────
 function applyTheme() {
     const saved = localStorage.getItem('winwin_theme');
-    if (saved === 'brand') {
+    // Если тема не задана жестко как 'light', включаем темную (brand) по умолчанию
+    if (saved !== 'light') {
         document.body.classList.add('brand-theme');
-        document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
+        const btn = document.querySelector('#themeBtn');
+        if (btn) btn.innerHTML = '<i data-feather="sun"></i>';
+    } else {
+        document.body.classList.remove('brand-theme');
+        const btn = document.querySelector('#themeBtn');
+        if (btn) btn.innerHTML = '<i data-feather="moon"></i>';
     }
     feather.replace();
 }
 function toggleTheme() {
-    document.body.classList.toggle('brand-theme');
     const isBrand = document.body.classList.contains('brand-theme');
-    document.querySelector('#themeBtn').innerHTML = isBrand ? '<i data-feather="sun"></i>' : '<i data-feather="moon"></i>';
-    localStorage.setItem('winwin_theme', isBrand ? 'brand' : 'light');
+    if (isBrand) {
+        document.body.classList.remove('brand-theme');
+        localStorage.setItem('winwin_theme', 'light');
+        document.querySelector('#themeBtn').innerHTML = '<i data-feather="moon"></i>';
+    } else {
+        document.body.classList.add('brand-theme');
+        localStorage.setItem('winwin_theme', 'brand');
+        document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
+    }
     feather.replace();
 }
 
@@ -805,6 +810,15 @@ function applyLang() {
     if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
+    
+    // Перевод кнопки назад в сделке
+    const btnBackDeal = document.getElementById('t_btn_back_deal');
+    if (btnBackDeal) {
+        if (lang === 'he') btnBackDeal.textContent = 'חזור';
+        else if (lang === 'en') btnBackDeal.textContent = 'Back';
+        else if (lang === 'ar') btnBackDeal.textContent = 'رجوع';
+        else btnBackDeal.textContent = 'Назад';
+    }
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
@@ -887,9 +901,19 @@ function openDealDetail(lead) {
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Дата</div><div class="deal-detail-val">${lead.date}</div></div>`;
     if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Сумма сделки</div><div class="deal-detail-val" style="color:var(--text)">${lead.amount} ${curr}</div></div>`;
     if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Ваш бонус</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
+    
     document.getElementById('dealDetailContent').innerHTML = rows;
-    openSheet('dealSheet');
+    
+    // Открываем на полный экран с красивой анимацией
+    document.getElementById('dealSheet').classList.add('active');
+    document.body.style.overflow = 'hidden'; // Блокируем скролл фона
+    window.scrollTo(0,0);
     feather.replace();
+}
+
+function closeDealDetail() {
+    document.getElementById('dealSheet').classList.remove('active');
+    document.body.style.overflow = ''; // Возвращаем скролл
 }
 
 // ── Stat detail sheet ─────────────────────────────────────────────────────
