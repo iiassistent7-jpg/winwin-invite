@@ -33,17 +33,29 @@
     .biz-name { font-size: 1.2rem; font-weight: 800; }
     .biz-niche { font-size: 0.75rem; color: #56CCF2; background: rgba(86, 204, 242, 0.1); padding: 4px 8px; border-radius: 6px; font-weight: 700; max-width: 55%; text-align: right; }
     .biz-reward { display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #56CCF2; }
+    
     .recommend-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100%; background: var(--bg-1); padding: 24px 16px; z-index: 10; animation: slideUp 0.3s ease-out; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .recommend-screen.active { display: block; }
     .btn-back { background: transparent; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
-    .rec-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+    
+    /* НОВАЯ КАРТОЧКА БИЗНЕСА НА ЭКРАНЕ РЕКОМЕНДАЦИИ */
+    .rec-header-card { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0)); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px 20px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .rec-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .rec-tags { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .rec-tags .biz-niche { max-width: none; text-align: left; }
+    .rec-stats { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 16px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 10px; display: inline-flex; }
+    .rec-desc { font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; }
+
     .instruction-block { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
-    .instruction-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
-    .link-box { display: flex; gap: 8px; }
-    .link-input { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 12px; font-size: 0.85rem; outline: none; }
-    .btn-copy { background: #2F80ED; border: none; color: #fff; font-weight: 700; padding: 0 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+    .instruction-text { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; line-height: 1.4; }
+    
+    /* ИСПРАВЛЕННАЯ КНОПКА КОПИРОВАНИЯ */
+    .link-box { display: flex; gap: 8px; width: 100%; }
+    .link-input { flex: 1 1 auto; min-width: 0; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 0.85rem; outline: none; }
+    .btn-copy { flex: 0 0 auto; white-space: nowrap; background: #2F80ED; border: none; color: #fff; font-weight: 700; padding: 0 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
     .btn-copy.copied { background: #27AE60; }
+    
     .qr-container { text-align: center; padding: 16px; background: #fff; border-radius: 16px; display: inline-block; margin: 0 auto; }
     .btn-wa-return { display: block; width: 100%; text-align: center; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 1.1rem; padding: 16px; border-radius: 16px; margin-top: 24px; box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25); }
   </style>
@@ -52,26 +64,39 @@
   <div class="shell">
     <div class="lang-switcher">
       <button class="lang-btn" id="btn_lang_en" onclick="setLang('en', true)">GB EN</button>
-      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL \u05e2\u05d1</button>
-      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA \u0639\u0631</button>
-      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU \u0420\u0423</button>
+      <button class="lang-btn" id="btn_lang_he" onclick="setLang('he', true)">IL עב</button>
+      <button class="lang-btn" id="btn_lang_ar" onclick="setLang('ar', true)">SA عر</button>
+      <button class="lang-btn active" id="btn_lang_ru" onclick="setLang('ru', true)">RU РУ</button>
     </div>
+    
     <div id="catalogView">
       <header class="header">
         <h1 class="logo">Win-Win</h1>
         <div class="logo-sub">N e t w o r k</div>
-        <div class="subtitle" id="t_subtitle">\u042d\u043a\u043e\u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u044f</div>
-        <p class="mission" id="t_mission">\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0439 \u0431\u0438\u0437\u043d\u0435\u0441 \u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0435 \u0438 \u043f\u0435\u0440\u0435\u0434\u0430\u0439\u0442\u0435 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044e.</p>
-        <p class="instruction-small" id="t_instruction">\u043d\u0430\u0447\u043d\u0438\u0442\u0435 \u0432\u0432\u043e\u0434\u0438\u0442\u044c \u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u0430</p>
+        <div class="subtitle" id="t_subtitle">Экосистема доверия</div>
+        <p class="mission" id="t_mission">Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.</p>
+        <p class="instruction-small" id="t_instruction">начните вводить наименование бизнеса или нишу</p>
       </header>
-      <div class="search-box"><input type="text" id="searchInput" placeholder="\u041f\u043e\u0438\u0441\u043a..."></div>
+      <div class="search-box"><input type="text" id="searchInput" placeholder="Поиск бизнеса или услуги..."></div>
       <div class="filters" id="nicheFilters"></div>
-      <div class="catalog-grid" id="catalogGrid"><div style="text-align:center; padding:40px; color:var(--text-muted);" id="t_loading">\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...</div></div>
+      <div class="catalog-grid" id="catalogGrid"><div style="text-align:center; padding:40px; color:var(--text-muted);" id="t_loading">Загрузка...</div></div>
     </div>
+
     <div id="recommendView" class="recommend-screen">
-      <button class="btn-back" onclick="closeRecommend()" id="t_btn_back">\u2190</button>
-      <div class="rec-title" id="recBizName"></div>
-      <div class="biz-reward" id="recBizReward" style="margin-bottom: 32px;"></div>
+      <button class="btn-back" onclick="closeRecommend()" id="t_btn_back">←</button>
+      
+      <div class="rec-header-card">
+          <div class="rec-title" id="recBizName"></div>
+          <div class="rec-tags">
+              <div class="biz-niche" id="recBizNiche"></div>
+              <div class="biz-reward" id="recBizReward"></div>
+          </div>
+          <div class="rec-stats">
+              <span style="color: #F2C94C; font-size: 1.1rem;">★</span> 4.9/5 <span style="opacity: 0.5; margin: 0 4px;">•</span> High Trust Score
+          </div>
+          <div class="rec-desc" id="recBizDesc"></div>
+      </div>
+
       <div class="instruction-block">
         <div class="instruction-text" id="t_copy_link"></div>
         <div class="link-box">
@@ -83,17 +108,96 @@
         <div class="instruction-text" id="t_scan_qr"></div>
         <div class="qr-container"><canvas id="qrCanvas"></canvas></div>
       </div>
-      <a href="#" id="waReturnLink" class="btn-wa-return"></a>
+      <a href="#" id="waReturnLink" class="btn-wa-return" id="t_btn_wa"></a>
     </div>
   </div>
+
   <script>
     const i18n = {
-      ru: { subtitle: "\u042d\u043a\u043e\u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u044f", mission: "\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0439 \u0431\u0438\u0437\u043d\u0435\u0441 \u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0435 \u0438 \u043f\u0435\u0440\u0435\u0434\u0430\u0439\u0442\u0435 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044e. \u0412\u0430\u0448 \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0439 \u043a\u0430\u043f\u0438\u0442\u0430\u043b \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 \u0432\u0430\u0441.", instruction: "\u043d\u0430\u0447\u043d\u0438\u0442\u0435 \u0432\u0432\u043e\u0434\u0438\u0442\u044c \u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u043d\u0438\u0435 \u0431\u0438\u0437\u043d\u0435\u0441\u0430 \u0438\u043b\u0438 \u043d\u0438\u0448\u0443", search: "\u041f\u043e\u0438\u0441\u043a \u0431\u0438\u0437\u043d\u0435\u0441\u0430 \u0438\u043b\u0438 \u0443\u0441\u043b\u0443\u0433\u0438...", loading: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...", error_token: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0434\u043e\u0441\u0442\u0443\u043f\u0430", error_expired: "\u0421\u0441\u044b\u043b\u043a\u0430 \u0443\u0441\u0442\u0430\u0440\u0435\u043b\u0430. \u0417\u0430\u043f\u0440\u043e\u0441\u0438\u0442\u0435 \u043a\u0430\u0442\u0430\u043b\u043e\u0433 \u0432 \u0431\u043e\u0442\u0435.", not_found: "\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", btn_back: "\u2190 \u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043a \u0441\u043f\u0438\u0441\u043a\u0443", copy_link: "\u0421\u043a\u043e\u043f\u0438\u0440\u0443\u0439\u0442\u0435 \u0441\u0441\u044b\u043b\u043a\u0443:", scan_qr: "\u0418\u043b\u0438 \u043e\u0442\u0441\u043a\u0430\u043d\u0438\u0440\u0443\u0439\u0442\u0435 QR:", btn_copy: "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c", btn_copied: "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u2705", btn_wa: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u0432 WhatsApp", filter_all: "\u0412\u0441\u0435", bonus: "\ud83c\udf81 \u0411\u043e\u043d\u0443\u0441 \u0430\u0433\u0435\u043d\u0442\u0443:", refresh_btn: "\ud83d\udd04 \u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043a\u0430\u0442\u0430\u043b\u043e\u0433", refresh_hint: "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u2014 \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f WhatsApp" },
-      he: { subtitle: "\u05de\u05e2\u05e8\u05db\u05ea \u05d0\u05e7\u05d5\u05dc\u05d5\u05d2\u05d9\u05ea \u05e9\u05dc \u05d0\u05de\u05d5\u05df", mission: "\u05de\u05e6\u05d0\u05d5 \u05e2\u05e1\u05e7 \u05de\u05d5\u05db\u05d7 \u05d1\u05e7\u05d8\u05dc\u05d5\u05d2 \u05d5\u05d4\u05e2\u05d1\u05d9\u05e8\u05d5 \u05d4\u05de\u05dc\u05e6\u05d4.", instruction: "\u05d4\u05ea\u05d7\u05d9\u05dc\u05d5 \u05dc\u05d4\u05e7\u05dc\u05d9\u05d3 \u05e9\u05dd \u05e2\u05e1\u05e7", search: "\u05d7\u05d9\u05e4\u05d5\u05e9...", loading: "\u05d8\u05d5\u05e2\u05df...", error_token: "\u05e9\u05d2\u05d9\u05d0\u05d4", error_expired: "\u05d4\u05e7\u05d9\u05e9\u05d5\u05e8 \u05e4\u05d2 \u05ea\u05d5\u05e7\u05e3.", not_found: "\u05dc\u05d0 \u05e0\u05de\u05e6\u05d0", btn_back: "\u2190 \u05d7\u05d6\u05e8\u05d4", copy_link: "\u05d4\u05e2\u05ea\u05d9\u05e7\u05d5 \u05d0\u05ea \u05d4\u05e7\u05d9\u05e9\u05d5\u05e8:", scan_qr: "\u05d0\u05d5 \u05e1\u05e8\u05e7\u05d5 QR:", btn_copy: "\u05d4\u05e2\u05ea\u05e7", btn_copied: "\u05d4\u05d5\u05e2\u05ea\u05e7 \u2705", btn_wa: "\u05d7\u05d6\u05e8\u05d4 \u05dc-WhatsApp", filter_all: "\u05d4\u05db\u05dc", bonus: "\ud83c\udf81 \u05d1\u05d5\u05e0\u05d5\u05e1:", refresh_btn: "\ud83d\udd04 \u05e8\u05e2\u05e0\u05df", refresh_hint: "\u05dc\u05d7\u05e6\u05d5" },
-      en: { subtitle: "Ecosystem of Trust", mission: "Find a proven business in the catalog and share a recommendation.", instruction: "start typing business name or niche", search: "Search...", loading: "Loading...", error_token: "Access denied", error_expired: "Link expired. Request new catalog in bot.", not_found: "Nothing found", btn_back: "\u2190 Back", copy_link: "Copy the link:", scan_qr: "Or scan QR:", btn_copy: "Copy", btn_copied: "Copied \u2705", btn_wa: "Return to WhatsApp", filter_all: "All", bonus: "\ud83c\udf81 Agent bonus:", refresh_btn: "\ud83d\udd04 Refresh", refresh_hint: "Tap to refresh" },
-      ar: { subtitle: "\u0646\u0638\u0627\u0645 \u0627\u0644\u062b\u0642\u0629", mission: "\u0627\u0628\u062d\u062b \u0639\u0646 \u0639\u0645\u0644 \u0645\u0648\u062b\u0648\u0642 \u0648\u0634\u0627\u0631\u0643 \u062a\u0648\u0635\u064a\u0629.", instruction: "\u0627\u0628\u062f\u0623 \u0628\u0643\u062a\u0627\u0628\u0629 \u0627\u0633\u0645 \u0627\u0644\u0639\u0645\u0644", search: "\u0628\u062d\u062b...", loading: "\u062c\u0627\u0631\u064a...", error_token: "\u062e\u0637\u0623", error_expired: "\u0627\u0646\u062a\u0647\u062a \u0627\u0644\u0635\u0644\u0627\u062d\u064a\u0629.", not_found: "\u0644\u0645 \u064a\u0648\u062c\u062f", btn_back: "\u2190 \u0631\u062c\u0648\u0639", copy_link: "\u0627\u0646\u0633\u062e \u0627\u0644\u0631\u0627\u0628\u0637:", scan_qr: "\u0623\u0648 \u0627\u0645\u0633\u062d QR:", btn_copy: "\u0646\u0633\u062e", btn_copied: "\u062a\u0645 \u2705", btn_wa: "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 WhatsApp", filter_all: "\u0627\u0644\u0643\u0644", bonus: "\ud83c\udf81 \u0645\u0643\u0627\u0641\u0623\u0629:", refresh_btn: "\ud83d\udd04 \u062a\u062d\u062f\u064a\u062b", refresh_hint: "\u0627\u0636\u063a\u0637" }
+      ru: { 
+          subtitle: "Экосистема доверия", 
+          mission: "Найдите проверенный бизнес в каталоге и передайте рекомендацию. Ваш социальный капитал работает на вас.", 
+          instruction: "начните вводить наименование бизнеса или нишу", 
+          search: "Поиск бизнеса или услуги...", 
+          loading: "Загрузка...", 
+          error_token: "Ошибка доступа", 
+          error_expired: "Ссылка устарела. Запросите каталог в боте.", 
+          not_found: "Ничего не найдено", 
+          btn_back: "← Вернуться к списку", 
+          copy_link: "🔗 Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:", 
+          scan_qr: "📱 Или дайте отсканировать этот код, если человек находится рядом:", 
+          btn_copy: "Копировать", 
+          btn_copied: "Скопировано ✅", 
+          btn_wa: "Вернуться в WhatsApp", 
+          filter_all: "Все", 
+          bonus: "🎁 Бонус агенту:", 
+          refresh_btn: "🔄 Обновить каталог", 
+          refresh_hint: "Нажмите — откроется WhatsApp" 
+      },
+      he: { 
+          subtitle: "מערכת אקולוגית של אמון", 
+          mission: "מצאו עסק מוכח בקטלוג והעבירו המלצה.", 
+          instruction: "התחילו להקליד שם עסק", 
+          search: "חיפוש...", 
+          loading: "טוען...", 
+          error_token: "שגיאה", 
+          error_expired: "הקישור פג תוקף.", 
+          not_found: "לא נמצא", 
+          btn_back: "← חזרה", 
+          copy_link: "🔗 העתיקו ושלחו את הקישור למי שתרצו להמליץ לו על העסק:", 
+          scan_qr: "📱 או תנו לו לסרוק את הקוד, אם הוא נמצא לידכם:", 
+          btn_copy: "העתק", 
+          btn_copied: "הועתק ✅", 
+          btn_wa: "חזרה ל-WhatsApp", 
+          filter_all: "הכל", 
+          bonus: "🎁 בונוס:", 
+          refresh_btn: "🔄 רענן", 
+          refresh_hint: "לחצו" 
+      },
+      en: { 
+          subtitle: "Ecosystem of Trust", 
+          mission: "Find a proven business in the catalog and share a recommendation.", 
+          instruction: "start typing business name or niche", 
+          search: "Search...", 
+          loading: "Loading...", 
+          error_token: "Access denied", 
+          error_expired: "Link expired. Request new catalog in bot.", 
+          not_found: "Nothing found", 
+          btn_back: "← Back", 
+          copy_link: "🔗 Copy and send this link to whoever you want to recommend this business to:", 
+          scan_qr: "📱 Or let them scan this code if they are nearby:", 
+          btn_copy: "Copy", 
+          btn_copied: "Copied ✅", 
+          btn_wa: "Return to WhatsApp", 
+          filter_all: "All", 
+          bonus: "🎁 Agent bonus:", 
+          refresh_btn: "🔄 Refresh", 
+          refresh_hint: "Tap to refresh" 
+      },
+      ar: { 
+          subtitle: "نظام الثقة", 
+          mission: "ابحث عن عمل موثوق وشارك توصية.", 
+          instruction: "ابدأ بكتابة اسم العمل", 
+          search: "بحث...", 
+          loading: "جاري...", 
+          error_token: "خطأ", 
+          error_expired: "انتهت الصلاحية.", 
+          not_found: "لم يوجد", 
+          btn_back: "← رجوع", 
+          copy_link: "🔗 انسخ وأرسل هذا الرابط لمن تريد أن توصي بهذا العمل إليه:", 
+          scan_qr: "📱 أو دعه يمسح هذا الرمز إذا كان بجوارك:", 
+          btn_copy: "نسخ", 
+          btn_copied: "تم ✅", 
+          btn_wa: "العودة إلى WhatsApp", 
+          filter_all: "الكل", 
+          bonus: "🎁 مكافأة:", 
+          refresh_btn: "🔄 تحديث", 
+          refresh_hint: "اضغط" 
+      }
     };
+    
     let currentLang = 'ru';
+    
     function setLang(lang, isManualClick = false) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
@@ -110,15 +214,18 @@
       document.getElementById('waReturnLink').textContent = L.btn_wa;
       if (isManualClick) { extractNiches(); renderCatalog(); }
     }
+    
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const paramLang = urlParams.get('lang');
     if (paramLang && i18n[paramLang]) { setLang(paramLang); } else { setLang('ru'); }
+    
     const API_URL = "https://amlatsa-bot-production.up.railway.app";
     let allBusinesses = [];
     let agentId = null;
     let botPhone = "972534488475";
     let currentNiche = 'Все';
+    
     async function loadCatalog() {
       if (!token) { document.getElementById('catalogGrid').innerHTML = `<div style="text-align:center; padding:40px;">${i18n[currentLang].error_token}</div>`; return; }
       try {
@@ -144,6 +251,7 @@
           </div>`;
       }
     }
+    
     function extractNiches() {
       const cats = [i18n[currentLang].filter_all];
       allBusinesses.forEach(biz => {
@@ -164,6 +272,7 @@
         container.appendChild(btn);
       });
     }
+    
     function renderCatalog() {
       const grid = document.getElementById('catalogGrid');
       const query = document.getElementById('searchInput').value.toLowerCase();
@@ -207,18 +316,51 @@
         grid.appendChild(card);
       });
     }
+    
     document.getElementById('searchInput').addEventListener('input', renderCatalog);
+    
     function openRecommend(biz) {
       document.getElementById('catalogView').style.display = 'none';
       const recView = document.getElementById('recommendView');
       recView.classList.add('active');
       window.scrollTo(0, 0);
+      
+      // Заполняем новую премиальную карточку
       document.getElementById('recBizName').textContent = biz.name;
-      document.getElementById('recBizReward').textContent = `${i18n[currentLang].bonus} ${biz.commission}`;
+      
+      const displayCat = biz.category || '';
+      let displayNiche = '';
+      if (Array.isArray(biz.niche) && biz.niche.length > 0) {
+        if (biz.niche.length <= 2) {
+          displayNiche = ' · ' + biz.niche.join(' • ');
+        } else {
+          displayNiche = ' · ' + biz.niche.slice(0, 2).join(', ') + ' +' + (biz.niche.length - 2);
+        }
+      } else if (typeof biz.niche === 'string' && biz.niche && biz.niche !== '—') {
+        displayNiche = ' · ' + biz.niche;
+      }
+      document.getElementById('recBizNiche').textContent = `${displayCat}${displayNiche}`.trim() || 'Бизнес';
+      
+      document.getElementById('recBizReward').textContent = `${i18n[currentLang].bonus} ${biz.commission || '...'}`;
+      
+      const descEl = document.getElementById('recBizDesc');
+      if (biz.business_info) {
+          descEl.textContent = biz.business_info;
+          descEl.style.display = 'block';
+      } else {
+          descEl.style.display = 'none';
+      }
+
+      // Генерация ссылки и QR
       const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${agentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${currentLang}`;
       document.getElementById('refLinkInput').value = link;
-      new QRious({ element: document.getElementById('qrCanvas'), value: link, size: 200, level: 'H' });
+      
+      const qrCanvas = document.getElementById('qrCanvas');
+      const ctx = qrCanvas.getContext('2d');
+      ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+      new QRious({ element: qrCanvas, value: link, size: 220, level: 'H' });
     }
+    
     function closeRecommend() {
       document.getElementById('recommendView').classList.remove('active');
       document.getElementById('catalogView').style.display = 'block';
@@ -226,6 +368,7 @@
       copyBtn.textContent = i18n[currentLang].btn_copy;
       copyBtn.classList.remove('copied');
     }
+    
     function copyLink() {
       const input = document.getElementById('refLinkInput');
       input.select();
@@ -234,6 +377,7 @@
       btn.textContent = i18n[currentLang].btn_copied;
       btn.classList.add('copied');
     }
+    
     loadCatalog();
   </script>
 </body>
