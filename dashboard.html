@@ -322,6 +322,7 @@
                 <div class="instruction-text" id="t_scan_qr_inv">📱 Или дайте отсканировать QR-код:</div>
                 <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
             </div>
+            <button onclick="closeInviteScreen()" class="btn-primary" style="margin-top:16px;background:transparent;border:1px solid var(--border);color:var(--text2);">← Назад к каталогу</button>
         </div>
     </div>
 
@@ -346,6 +347,7 @@
                 <div class="qr-container"><canvas id="qrCanvas"></canvas></div>
             </div>
             <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">Вернуться в WhatsApp</a>
+            <button onclick="closeRecommend()" class="btn-primary" style="margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--text2);" id="t_btn_back_rec">← Назад к каталогу</button>
         </div>
     </div>
 
@@ -370,7 +372,7 @@
                 <label class="input-label">Название бизнеса</label>
                 <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
                 <label class="input-label">Категория / ниша</label>
-                <select class="custom-input" id="bizRegCat" onchange="updateBizSubcats(this.value)">
+                <select class="custom-input native-select" id="bizRegCat" onchange="updateBizSubcats(this.value)">
                     <option value="" disabled selected>Выберите категорию...</option>
                     <option value="beauty">💅 Красота и эстетика</option>
                     <option value="health">🏥 Здоровье и медицина</option>
@@ -382,7 +384,7 @@
                     <option value="food">🍕 Ресторанный бизнес</option>
                 </select>
                 <label class="input-label" id="lbl_bizRegNiche" style="display:none;">Подкатегория / специализация</label>
-                <select class="custom-input" id="bizRegNiche" style="display:none;">
+                <select class="custom-input native-select" id="bizRegNiche" style="display:none;">
                     <option value="" disabled selected>Выберите подкатегорию...</option>
                 </select>
                 <label class="input-label">Комиссия агенту (%)</label>
@@ -1102,12 +1104,19 @@ function updateBizSubcats(catVal) {
     const subs = bizSubcats[catVal] || [];
     const sel = document.getElementById('bizRegNiche');
     const lbl = document.getElementById('lbl_bizRegNiche');
-    if (!subs.length) { sel.style.display='none'; lbl.style.display='none'; return; }
+    if (!subs.length) { sel.style.display='none'; lbl.style.display='none'; sel.value=''; return; }
+    // Сбрасываем и заполняем подкатегории
     sel.innerHTML = '<option value="" disabled selected>Выберите подкатегорию...</option>';
-    subs.forEach(s => { const o=document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
-    sel.style.display = 'block';
+    subs.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s; o.textContent = s;
+        sel.appendChild(o);
+    });
     lbl.style.display = 'block';
+    sel.style.display = 'block';
     sel.value = '';
+    // Скроллим к подкатегории
+    setTimeout(() => sel.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
 }
 // ── Biz registration ──────────────────────────────────────────────────────
 function openBizReg() { openFullscreen('bizRegScreen'); }
