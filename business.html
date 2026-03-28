@@ -1,1284 +1,745 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Win-Win · Кабинет</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <style>
-        /* ── Light theme ────────────────────────────────────────────── */
-        :root {
-            --bg:        #F7F7F9;
-            --surface:   #FFFFFF;
-            --surface2:  #F2F2F5;
-            --text:      #1A1A2E;
-            --text2:     #8A8D9F;
-            --border:    rgba(0,0,0,0.06);
-            --shadow:    0 4px 20px rgba(0,0,0,0.06);
-            --shadow2:   0 8px 32px rgba(0,0,0,0.12);
-            --accent1:   #56CCF2;
-            --accent2:   #2F80ED;
-            --green:     #27AE60;
-            --gold:      #E8A838;
-            --red:       #EB5757;
-            --radius:    20px;
-            --radius-sm: 12px;
-            --nav-bg:    rgba(255,255,255,0.82);
-        }
-        /* ── Brand dark theme ───────────────────────────────────────── */
-        body.brand-theme {
-            --bg:        #0F0F1A;
-            --surface:   rgba(255,255,255,0.04);
-            --surface2:  rgba(255,255,255,0.07);
-            --text:      #FFFFFF;
-            --text2:     #A0A0B0;
-            --border:    rgba(255,255,255,0.07);
-            --shadow:    0 4px 24px rgba(0,0,0,0.35);
-            --shadow2:   0 8px 40px rgba(0,0,0,0.55);
-            --nav-bg:    rgba(15,15,26,0.85);
-        }
-
-        /* ── Reset ──────────────────────────────────────────────────── */
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        html { -webkit-text-size-adjust:100%; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex; justify-content: center;
-            min-height: 100vh;
-            transition: background .3s, color .3s;
-            overscroll-behavior: none;
-        }
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
-
-        /* ── Loader ─────────────────────────────────────────────────── */
-        .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
-        .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
-        .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; }
-        .loader-dots { display:flex; gap:8px; }
-        .loader-dot { width:8px; height:8px; border-radius:50%; background:var(--accent2); animation:bounce 1.2s infinite ease-in-out; }
-        .loader-dot:nth-child(2){animation-delay:.2s; background:var(--green);}
-        .loader-dot:nth-child(3){animation-delay:.4s; background:var(--gold);}
-        @keyframes bounce { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
-        .loader-err { display:none; text-align:center; padding:0 24px; }
-        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--red); margin-bottom:8px; }
-        .loader-err-sub { font-size:.85rem; color:var(--text2); margin-bottom:24px; }
-
-        /* ── Header ─────────────────────────────────────────────────── */
-        .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
-        .header-left .greeting { font-size:.82rem; color:var(--text2); font-weight:500; margin-bottom:3px; }
-        .header-left .name { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; }
-        .header-right { display:flex; align-items:center; gap:8px; }
-        .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
-        .icon-btn:active { transform:scale(.92); }
-        .lang-row { display:flex; gap:4px; }
-        .lang-btn { padding:4px 7px; border-radius:8px; font-size:.65rem; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:.2s; }
-        .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
-
-        /* ── Views ──────────────────────────────────────────────────── */
-        .view { display:none; padding:0 16px; animation:fadeUp .3s ease; }
-        .view.active { display:block; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-        /* ── Cards ──────────────────────────────────────────────────── */
-        .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
-
-        /* ── Balance card ────────────────────────────────────────────── */
-        .balance-card { background:linear-gradient(135deg, var(--accent1), var(--accent2)); color:#fff; border:none; box-shadow:0 8px 32px rgba(47,128,237,.28); }
-        .balance-label { font-size:.82rem; opacity:.85; font-weight:600; margin-bottom:6px; }
-        .balance-amount { font-family:'Sora',sans-serif; font-size:2.4rem; font-weight:800; margin-bottom:18px; line-height:1; }
-        .balance-stats { display:flex; gap:12px; border-top:1px solid rgba(255,255,255,.2); padding-top:16px; }
-        .balance-stat {
-            flex:1; cursor:pointer; padding:8px 6px; border-radius:12px;
-            transition:.18s; margin:-8px -6px; /* offset for padding */
-        }
-        .balance-stat:active { background:rgba(255,255,255,.15); transform:scale(.96); }
-        .balance-stat-val { font-size:1.15rem; font-weight:800; }
-        .balance-stat-lbl { font-size:.7rem; opacity:.8; margin-top:3px; }
-        .balance-stat-hint { font-size:.6rem; opacity:.6; margin-top:2px; }
-
-        /* ── Action card ─────────────────────────────────────────────── */
-        .action-card { display:flex; align-items:center; gap:16px; cursor:pointer; transition:.2s; border:2px dashed var(--border); background:transparent; }
-        .action-card:active { transform:scale(.98); background:var(--surface); }
-        .action-icon { width:48px; height:48px; border-radius:14px; background:rgba(47,128,237,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .action-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
-        .action-sub { font-size:.78rem; color:var(--text2); line-height:1.4; }
-
-        /* ── Section title ───────────────────────────────────────────── */
-        .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; }
-
-        /* ── Activity items ──────────────────────────────────────────── */
-        .activity-item { display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:.15s; }
-        .activity-item:last-child { border-bottom:none; padding-bottom:0; }
-        .activity-item:active { opacity:.7; }
-        .act-icon { width:40px; height:40px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .act-title { font-size:.92rem; font-weight:600; margin-bottom:2px; }
-        .act-sub { font-size:.78rem; color:var(--text2); }
-        .act-right { margin-left:auto; text-align:right; flex-shrink:0; }
-        .act-amount { font-size:.92rem; font-weight:700; }
-        .act-date { font-size:.72rem; color:var(--text2); margin-top:2px; }
-
-        /* ── Pills ───────────────────────────────────────────────────── */
-        .pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:999px; font-size:.7rem; font-weight:700; }
-        .pill-blue  { background:rgba(47,128,237,.12);  color:var(--accent2); }
-        .pill-gold  { background:rgba(232,168,56,.15);  color:#9A6A00; }
-        .pill-green { background:rgba(39,174,96,.12);   color:var(--green); }
-        .pill-red   { background:rgba(235,87,87,.12);   color:var(--red); }
-
-        /* ── Funnel ──────────────────────────────────────────────────── */
-        .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
-        .funnel-row:last-child { margin-bottom:0; }
-        .funnel-lbl { width:78px; font-size:.72rem; font-weight:700; color:var(--text2); text-transform:uppercase; flex-shrink:0; }
-        .funnel-track { flex:1; height:9px; background:var(--bg); border-radius:5px; overflow:hidden; border:1px solid var(--border); }
-        .funnel-fill { height:100%; border-radius:5px; width:0; transition:width 1.2s cubic-bezier(.25,1,.5,1); }
-        .fill-blue { background:var(--accent2); } .fill-green { background:var(--green); } .fill-red { background:var(--red); }
-        .funnel-num { width:28px; text-align:right; font-weight:700; font-size:.85rem; }
-        .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-weight:700; font-size:.9rem; }
-        .conv-pill { background:rgba(39,174,96,.12); color:var(--green); font-size:.75rem; font-weight:700; padding:3px 9px; border-radius:8px; }
-
-        /* ── Efficiency ──────────────────────────────────────────────── */
-        .eff-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px; }
-        .eff-num { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; line-height:1; }
-        .eff-badge { font-size:.73rem; font-weight:700; padding:4px 10px; border-radius:8px; }
-        .eff-good { background:rgba(39,174,96,.12); color:var(--green); }
-        .eff-neutral { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
-        .eff-track { height:8px; background:var(--bg); border-radius:4px; overflow:hidden; border:1px solid var(--border); }
-        .eff-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent1)); border-radius:4px; width:0; transition:width 1.5s cubic-bezier(.22,1,.36,1); }
-        .eff-compare { font-size:.73rem; color:var(--text2); margin-top:8px; text-align:center; }
-
-        /* ── Avg display ─────────────────────────────────────────────── */
-        .avg-display { padding:28px 20px; text-align:center; background:linear-gradient(135deg,rgba(86,204,242,.07),rgba(47,128,237,.07)); border-radius:var(--radius); border:1px solid rgba(47,128,237,.2); margin-bottom:14px; }
-        .avg-num { font-family:'Sora',sans-serif; font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; }
-        .avg-lbl { font-size:.78rem; color:var(--text2); margin-top:8px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; }
-
-        /* ── Chart ───────────────────────────────────────────────────── */
-        .chart-wrap { position:relative; height:180px; }
-
-        /* ── PRO card ────────────────────────────────────────────────── */
-        .pro-card { background:linear-gradient(135deg,#F2C94C,#F2994A); border:none; color:#1A1A2E; position:relative; overflow:hidden; }
-        .pro-card::before { content:''; position:absolute; top:-24px; right:-24px; width:110px; height:110px; background:rgba(255,255,255,.18); border-radius:50%; }
-        .pro-card-inner { position:relative; z-index:1; }
-        .pro-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
-        .pro-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
-        .pro-badge { background:rgba(0,0,0,.15); padding:4px 9px; border-radius:8px; font-size:.72rem; font-weight:700; display:flex; align-items:center; gap:4px; }
-        .pro-desc { font-size:.82rem; font-weight:500; opacity:.95; line-height:1.45; margin-bottom:16px; }
-        .pro-progress-wrap { background:rgba(0,0,0,.08); padding:12px 14px; border-radius:12px; }
-        .pro-progress-header { display:flex; justify-content:space-between; font-size:.78rem; font-weight:700; margin-bottom:8px; }
-        .pro-bar-bg { height:6px; background:rgba(255,255,255,.2); border-radius:3px; overflow:hidden; }
-        .pro-bar-fill { height:100%; background:#fff; width:0; border-radius:3px; transition:width 1.5s ease-in-out; }
-        .pro-rate-row { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.22); padding:11px 14px; border-radius:11px; margin-bottom:8px; }
-        .pro-add-btn { width:100%; padding:10px; background:rgba(0,0,0,.14); color:#1A1A2E; border:none; border-radius:10px; font-weight:700; font-size:.88rem; display:flex; justify-content:center; align-items:center; gap:6px; cursor:pointer; margin-top:10px; }
-
-        /* ── Profile 3D card ─────────────────────────────────────────── */
-        .profile-btn-card {
-            cursor:pointer; transition:.18s;
-            box-shadow: 0 6px 0 rgba(0,0,0,0.12), var(--shadow);
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-            position:relative;
-        }
-        .profile-btn-card:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 rgba(0,0,0,0.08), var(--shadow);
-        }
-        .profile-header { display:flex; align-items:center; gap:14px; }
-        .profile-avatar { width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; text-transform:uppercase; }
-        .profile-name { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:2px; }
-        .profile-phone { font-size:.85rem; color:var(--text2); }
-        .profile-edit-hint { margin-left:auto; color:var(--text2); background:var(--bg); width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); }
-
-        /* ── Settings list ───────────────────────────────────────────── */
-        .settings-list .settings-row { padding:15px 18px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); cursor:pointer; transition:.15s; }
-        .settings-list .settings-row:last-child { border-bottom:none; }
-        .settings-list .settings-row:active { background:var(--bg); }
-        .settings-row-label { font-size:.9rem; font-weight:500; }
-        .settings-row-value { margin-left:auto; font-size:.82rem; color:var(--text2); max-width:55%; text-align:right; word-break:break-all; }
-        .settings-row-value a { color:var(--accent2); text-decoration:none; }
-
-        /* ── Buttons ─────────────────────────────────────────────────── */
-        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:13px 22px; border-radius:13px; font-weight:700; font-size:.9rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; }
-        .btn-primary:active { transform:scale(.97); }
-        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
-        .btn-tg { background:#2F80ED; color:#fff; }
-        .btn-accent { background:var(--accent2); color:#fff; }
-
-        /* ── Empty state ─────────────────────────────────────────────── */
-        .empty-state { text-align:center; padding:32px 16px; }
-        .empty-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
-        .empty-sub { font-size:.82rem; color:var(--text2); line-height:1.5; }
-
-        /* ── Bottom nav ──────────────────────────────────────────────── */
-        .bottom-nav {
-            position:fixed; bottom:0; width:100%; max-width:430px;
-            background:var(--nav-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            display:flex; justify-content:space-between;
-            padding:10px 20px 22px;
-            border-top:1px solid var(--border);
-            z-index:100;
-        }
-        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
-        .nav-item.active { color:var(--accent2); }
-        .nav-item span { font-size:.6rem; font-weight:700; }
-        .nav-item svg { transition:.2s; }
-        .nav-item.active svg { transform:translateY(-2px); }
-
-        /* ── Modal overlay ───────────────────────────────────────────── */
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; opacity:0; pointer-events:none; transition:.3s; }
-        .modal-overlay.active { opacity:1; pointer-events:all; }
-
-        /* ── Bottom sheet ────────────────────────────────────────────── */
-        .bottom-sheet {
-            position:fixed; bottom:-110%; left:50%; transform:translateX(-50%);
-            width:100%; max-width:430px;
-            background:var(--surface); border-radius:24px 24px 0 0;
-            padding:24px; z-index:1000;
-            transition:.35s cubic-bezier(.175,.885,.32,1.275);
-            box-shadow:0 -10px 40px rgba(0,0,0,.15);
-            max-height:85vh; overflow-y:auto;
-        }
-        .bottom-sheet.active { bottom:0; }
-        .sheet-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
-        .sheet-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:18px; }
-
-        /* ── Form inputs ─────────────────────────────────────────────── */
-        .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
-        .custom-input { width:100%; padding:13px 15px; border:1px solid var(--border); border-radius:11px; background:var(--bg); color:var(--text); font-size:.95rem; margin-bottom:13px; outline:none; font-family:inherit; transition:.2s; }
-        .custom-input:focus { border-color:var(--accent2); }
-        select.custom-input { appearance:none; }
-
-        /* ── Deal detail sheet ───────────────────────────────────────── */
-        .deal-detail-row { display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); }
-        .deal-detail-row:last-child { border-bottom:none; }
-        .deal-detail-lbl { font-size:.82rem; color:var(--text2); font-weight:600; }
-        .deal-detail-val { font-size:.9rem; font-weight:700; text-align:right; max-width:65%; word-break:break-all; }
-
-        /* ── Catalog ─────────────────────────────────────────────────── */
-        .cat-search { position:relative; margin-bottom:12px; }
-        .cat-search input { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:13px 16px 13px 44px; border-radius:14px; font-size:.95rem; outline:none; transition:.2s; font-family:inherit; }
-        .cat-search input:focus { border-color:var(--accent2); }
-        .cat-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text2); pointer-events:none; }
-        .cat-filters { display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none; }
-        .cat-filters::-webkit-scrollbar { display:none; }
-        .filter-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:7px 14px; border-radius:999px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.8rem; transition:.2s; }
-        .filter-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
-        .cat-grid { display:flex; flex-direction:column; gap:10px; }
-        .biz-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; cursor:pointer; transition:.18s; box-shadow:var(--shadow); }
-        .biz-card:active { transform:scale(.98); box-shadow:var(--shadow2); }
-        .biz-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px; }
-        .biz-card-name { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
-        .biz-card-cat { font-size:.72rem; color:var(--accent2); background:rgba(47,128,237,.1); padding:3px 8px; border-radius:6px; font-weight:700; flex-shrink:0; }
-        .biz-card-commission { display:inline-block; padding:5px 10px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:.82rem; font-weight:700; color:var(--green); }
-
-        /* ── Recommend view (full screen) ────────────────────────────── */
-        .recommend-screen {
-            display:none; position:fixed; inset:0;
-            background:var(--bg); z-index:500;
-            overflow-y:auto; padding:24px 16px 40px;
-            animation:slideUp .3s ease-out;
-        }
-        @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        .recommend-screen.active { display:block; }
-        .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; }
-        .rec-header-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
-        .rec-title { font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:10px; line-height:1.2; }
-        .rec-niche { display:inline-block; font-size:.75rem; color:var(--accent2); background:rgba(47,128,237,.1); padding:4px 10px; border-radius:7px; font-weight:700; margin-bottom:12px; }
-        .rec-desc { font-size:.88rem; color:var(--text2); line-height:1.55; border-top:1px solid var(--border); padding-top:14px; word-break:break-word; }
-        .rec-desc a { color:var(--accent2); text-decoration:none; font-weight:600; }
-        .instruction-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
-        .instruction-text { font-size:.85rem; color:var(--text2); margin-bottom:12px; font-weight:500; line-height:1.4; }
-        .link-box { display:flex; gap:8px; }
-        .link-input { flex:1; min-width:0; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:.82rem; outline:none; font-family:inherit; }
-        .btn-copy { flex-shrink:0; background:var(--accent2); border:none; color:#fff; font-weight:700; padding:0 18px; border-radius:11px; cursor:pointer; transition:.2s; white-space:nowrap; font-family:inherit; }
-        .btn-copy.copied { background:var(--green); }
-        .qr-container { text-align:center; padding:16px; background:#fff; border-radius:16px; display:inline-block; margin:0 auto; box-shadow:0 4px 16px rgba(0,0,0,.1); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Win-Win Business Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #1a1a2e; --bg-2: #0f0f1a; 
+      --accent-1: #56CCF2; --accent-2: #2F80ED; 
+      --text-muted: #a0a0b0; 
+      --card: rgba(255, 255, 255, 0.05); 
+      --card-border: rgba(255, 255, 255, 0.1);
+      --success: #27AE60; --danger: #EB5757; --warning: #F2C94C;
+      --pending: #9B51E0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
+    [dir="rtl"] { text-align: right; }
+    .shell { width: 100%; max-width: 600px; padding: 24px 16px 80px 16px; position: relative; }
+    .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+    .header { text-align: center; margin-bottom: 24px; }
+    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
+    .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
+    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 1; padding: 12px 8px; text-align: center; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); background: transparent; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .tab-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .deals-filter { display: flex; gap: 8px; margin-bottom: 16px; }
+    .filter-btn { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+    .filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 12px; }
+    .deal-card.pending { border-color: rgba(155,81,224,0.4); background: rgba(155,81,224,0.05); }
+    .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .deal-client { font-size: 1.2rem; font-weight: 800; }
+    .deal-date { font-size: 0.8rem; color: var(--text-muted); }
+    .deal-info { font-size: 0.9rem; color: #e0e0e0; margin-bottom: 12px; line-height: 1.6; }
+    .deal-info span { font-weight: 600; color: #fff; }
+    .deal-wa-link { color: var(--accent-1); text-decoration: none; font-weight: 600; }
+    .deal-pending-note { font-size: 0.8rem; color: var(--pending); background: rgba(155,81,224,0.1); border: 1px solid rgba(155,81,224,0.3); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
+    .st-new { background: rgba(242,201,76,0.15); color: var(--warning); border: 1px solid rgba(242,201,76,0.3); }
+    .st-progress { background: rgba(86,204,242,0.15); color: var(--accent-1); border: 1px solid rgba(86,204,242,0.3); }
+    .st-closed { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+    .st-rejected { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
+    .st-pending { background: rgba(155,81,224,0.15); color: var(--pending); border: 1px solid rgba(155,81,224,0.3); }
+    .btn-action { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); font-weight: 600; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+    .stats-section-title { font-size: 0.95rem; font-weight: 700; margin: 24px 0 16px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stats-section-title:first-child { margin-top: 0; }
+    .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
+    .stats-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px 8px; text-align: center; }
+    .stats-grid-2 .stat-box { padding: 20px; border-radius: 20px; }
+    .stat-val { font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .stats-grid-3 .stat-val { font-size: 1.15rem; }
+    .stats-grid-2 .stat-val { font-size: 2rem; }
+    .stat-lbl { color: var(--text-muted); font-weight: 500; line-height: 1.2; font-size: 0.65rem; text-transform: uppercase; }
+    .stats-grid-2 .stat-lbl { font-size: 0.8rem; margin-top: 4px; }
+    .funnel-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
+    .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; font-size: 0.95rem; }
+    .funnel-conv { color: var(--success); background: rgba(39,174,96,0.15); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; }
+    .f-bar-wrap { display: flex; align-items: center; margin-bottom: 14px; gap: 12px; }
+    .f-lbl { width: 85px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); flex-shrink: 0; text-transform: uppercase; }
+    .f-bar-bg { flex: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; }
+    .f-bar { height: 100%; border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.25,1,0.5,1); }
+    .f-active { background: var(--accent-1); } .f-closed { background: var(--success); } .f-rejected { background: var(--danger); }
+    .f-val { width: 35px; text-align: right; font-weight: 700; font-size: 0.9rem; }
+    .profile-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+    .prof-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .prof-row:last-child { border-bottom: none; }
+    .prof-lbl { color: var(--text-muted); font-size: 0.9rem; }
+    .prof-val { font-weight: 600; text-align: right; max-width: 60%; word-break: break-word; }
+    .btn-edit { background: var(--accent-2); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    [dir="rtl"] .form-group { text-align: right; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+    .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
+    .form-control:focus { border-color: var(--accent-1); }
+    .form-control:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pay-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pay-btn { flex: 1; min-width: 80px; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; text-align: center; }
+    .pay-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
+    .niche-checkboxes { display: flex; flex-direction: column; gap: 8px; }
+    .niche-checkbox-item { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: 0.2s; }
+    .niche-checkbox-item.checked { background: rgba(86,204,242,0.08); border-color: rgba(86,204,242,0.4); }
+    .niche-checkbox-item input[type=checkbox] { width: 18px; height: 18px; accent-color: #56CCF2; flex-shrink: 0; cursor: pointer; }
+    .niche-checkbox-item span { font-size: 0.9rem; font-weight: 600; color: #e0e0e0; }
+    .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+    .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; align-items: flex-end; justify-content: center; }
+    .modal-backdrop.active { display: flex; opacity: 1; }
+    .modal-content { background: var(--bg-1); border-top: 1px solid var(--card-border); width: 100%; max-width: 600px; border-radius: 24px 24px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275); max-height: 90vh; overflow-y: auto; }
+    .modal-backdrop.active .modal-content { transform: translateY(0); }
+    .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
+    .modal-deal-info { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 24px; font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; border: 1px solid var(--card-border); }
+    .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+    .btn-m-close { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
+    .btn-m-reject { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
+    .btn-m-back { background: transparent; color: var(--text-muted); }
+    .modal-step { display: none; }
+    .modal-step.active { display: block; animation: fadeIn 0.3s; }
+    .bottom-btns { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 560px; display: flex; gap: 10px; z-index: 10; }
+    .btn-wa { flex: 1; text-align: center; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
+    .btn-tg { flex: 1; text-align: center; background: #2F80ED; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(47,128,237,0.25); }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 2000; flex-direction: column; gap: 16px; }
+    .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    /* Долг — баннер сверху */
+    .debt-alert { background: rgba(235,87,87,0.15); border: 1px solid rgba(235,87,87,0.3); border-radius: 16px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .debt-alert .debt-text { color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .debt-alert .debt-sum { color: var(--danger); font-weight: 800; font-size: 1.2rem; }
+    /* Карточка с долгом */
+    .deal-card.unpaid { border-color: rgba(235,87,87,0.4); box-shadow: 0 0 15px rgba(235,87,87,0.1); }
+    /* Мини-чек юнит-экономики */
+    .deal-receipt { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px dashed rgba(255,255,255,0.1); }
+    .receipt-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .receipt-line.agent { color: #fff; font-weight: 500; }
+    .receipt-line.agent .unpaid-warn { color: var(--danger); font-weight: 700; }
+    .receipt-line.agent .paid-ok { color: var(--success); font-size: 0.75rem; }
+    .receipt-line.total { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 2px; margin-bottom: 0; color: #fff; font-weight: 800; font-size: 1rem; }
+    .receipt-line.total .net-profit { color: var(--success); }
+  </style>
 </head>
 <body>
-<div class="app">
+  <div class="loading-overlay" id="globalLoader">
+    <div class="spinner"></div>
+    <div id="loaderText" style="font-weight:700; color:var(--accent-1);">Загрузка данных...</div>
+  </div>
 
-    <div class="loader" id="loader">
-        <div class="loader-brand">Win-Win</div>
-        <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
-        <div class="loader-dots" id="loaderDots">
-            <div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div>
-        </div>
-        <div class="loader-err" id="loaderErr">
-            <div class="loader-err-title">Ссылка устарела</div>
-            <div class="loader-err-sub">Запросите новую ссылку в боте</div>
-            <a href="#" class="btn-primary btn-wa" id="errBtn" style="max-width:240px;margin:0 auto;display:block;text-decoration:none;text-align:center;">WhatsApp</a>
-        </div>
+  <div class="shell" style="display:none;" id="mainShell">
+    <div class="lang-switcher">
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('he')">HE</button>
+      <button class="lang-btn" onclick="setLang('ar')">AR</button>
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
     </div>
-
-    <div id="recommendScreen" class="recommend-screen">
-        <div style="max-width:430px; margin:0 auto;">
-            <button class="btn-back" onclick="closeRecommend()">
-                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
-                <span id="t_btn_back">Вернуться к каталогу</span>
-            </button>
-            <div class="rec-header-card">
-                <div class="rec-title" id="recBizName"></div>
-                <div class="rec-niche" id="recBizNiche"></div>
-                <div class="rec-desc" id="recBizDesc"></div>
-            </div>
-            <div class="instruction-block">
-                <div class="instruction-text" id="t_copy_link">🔗 Скопируйте и отправьте эту ссылку:</div>
-                <div class="link-box">
-                    <input type="text" id="refLinkInput" class="link-input" readonly>
-                    <button class="btn-copy" id="copyBtn" onclick="copyLink()">Копировать</button>
-                </div>
-            </div>
-            <div class="instruction-block" style="text-align:center;">
-                <div class="instruction-text" id="t_scan_qr">📱 Или дайте отсканировать QR-код:</div>
-                <div class="qr-container"><canvas id="qrCanvas"></canvas></div>
-            </div>
-            <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">Вернуться в WhatsApp</a>
-        </div>
-    </div>
-
-    <div class="recommend-screen" id="dealSheet">
-        <div style="max-width:430px; margin:0 auto;">
-            <button class="btn-back" onclick="closeDealDetail()">
-                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
-                <span id="t_btn_back_deal">Назад</span>
-            </button>
-            <div class="rec-header-card" style="margin-bottom:24px;">
-                <div class="rec-title" id="t_deal_title" style="margin-bottom:16px; font-size:1.4rem;">Детали сделки</div>
-                <div id="dealDetailContent"></div>
-            </div>
-            <div class="instruction-block" style="text-align:center; background:transparent; border:none; box-shadow:none;">
-                <div class="instruction-text" style="opacity:0.6; font-size:0.8rem;">Вся информация синхронизирована с платформой</div>
-            </div>
-        </div>
-    </div>
-
     <header class="header">
-        <div class="header-left">
-            <div class="greeting" id="t_greeting">С возвращением,</div>
-            <div class="name" id="t_name">—</div>
-        </div>
-        <div class="header-right">
-            <div class="lang-row">
-                <button class="lang-btn" onclick="setLang('en')">EN</button>
-                <button class="lang-btn" onclick="setLang('he')">HE</button>
-                <button class="lang-btn" onclick="setLang('ar')">AR</button>
-                <button class="lang-btn active" onclick="setLang('ru')">RU</button>
-            </div>
-            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="sun"></i></button>
-        </div>
+      <h1 class="logo">Win-Win</h1>
+      <div class="title" id="t_company_name">...</div>
     </header>
 
-    <div id="view-home" class="view active">
-        <div class="card balance-card">
-            <div class="balance-label" id="t_balance_label">Социальный капитал</div>
-            <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
-            <div class="balance-stats">
-                <div class="balance-stat" onclick="openStatDetail('deals')">
-                    <div class="balance-stat-val" id="v_deals">0</div>
-                    <div class="balance-stat-lbl" id="t_deals_lbl">Сделок</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
-                </div>
-                <div class="balance-stat" onclick="openStatDetail('pending')">
-                    <div class="balance-stat-val" id="v_pending">0 ₪</div>
-                    <div class="balance-stat-lbl" id="t_pending_lbl">Ожидает</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
-                </div>
-                <div class="balance-stat" onclick="openStatDetail('active')">
-                    <div class="balance-stat-val" id="v_active">0</div>
-                    <div class="balance-stat-lbl" id="t_active_lbl">В работе</div>
-                    <div class="balance-stat-hint">↗ подробнее</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card action-card" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
-            <div class="action-icon"><i data-feather="heart"></i></div>
-            <div>
-                <div class="action-title" id="t_action_title">Помогите любимому бизнесу</div>
-                <div class="action-sub" id="t_action_sub">Откройте каталог и сделайте рекомендацию</div>
-            </div>
-        </div>
-
-        <h2 class="sec-title"><span id="t_events">Последние события</span></h2>
-        <div class="card" style="padding:0 16px;" id="activityList"></div>
-        <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('deals')" id="t_tab_deals">💼 Сделки</button>
+      <button class="tab-btn" onclick="switchTab('stats')" id="t_tab_stats">📊 Статистика</button>
+      <button class="tab-btn" onclick="switchTab('profile')" id="t_tab_profile">👤 Профиль</button>
     </div>
 
-    <div id="view-catalog" class="view">
-        <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнеса</h2>
-        <div class="cat-search">
-            <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
-            <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
-        </div>
-        <div class="cat-filters" id="catFilters"></div>
-        <div class="cat-grid" id="catGrid">
-            <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
-        </div>
+    <div id="tab_deals" class="tab-content active">
+      <div class="debt-alert" id="debtBanner" style="display:none;">
+        <div class="debt-text" id="t_total_debt">🔴 Долг агентам:</div>
+        <div class="debt-sum" id="debtAmount">0 ₪</div>
+      </div>
+      <div class="deals-filter">
+        <button class="filter-btn active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
+        <button class="filter-btn" onclick="setDealFilter('history')" id="t_filt_history">История</button>
+      </div>
+      <div id="dealsContainer"></div>
     </div>
 
-    <div id="view-history" class="view">
-        <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">Мои рекомендации</h2>
-        <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">🕒 В процессе</div>
-        <div id="list_active"></div>
-        <div class="sec-title" style="color:#9A6A00;margin-top:16px;" id="t_debt_sec">💰 Ожидают выплаты</div>
-        <div id="list_debt"></div>
-        <div class="sec-title" style="margin-top:16px;" id="t_done_sec">✅ История</div>
-        <div id="list_history"></div>
+    <div id="tab_stats" class="tab-content">
+      <div class="stats-section-title" id="t_st_fin_title">Финансы</div>
+      <div class="stats-grid-3">
+        <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--danger);">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_net_income" style="color:var(--success);">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
+      </div>
+      <div class="stats-section-title" id="t_st_funnel_title">Воронка конверсии</div>
+      <div class="funnel-container">
+        <div class="funnel-header">
+          <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:#fff;">0</span></div>
+          <div class="funnel-conv" id="st_conversion">0%</div>
+        </div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_active">В процессе</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
+      </div>
+      <div class="stats-grid-2">
+        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent-1);">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--warning);">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
+      </div>
     </div>
 
-    <div id="view-wallet" class="view">
-        <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Финансы</h2>
-        <div class="avg-display">
-            <div class="avg-num" id="v_avg">0</div>
-            <div class="avg-lbl" id="t_avg_lbl">Средний заработок на сделку ₪</div>
-        </div>
-        <div class="card">
-            <div class="eff-top">
-                <div>
-                    <div class="eff-num" id="v_eff">—</div>
-                    <div style="font-size:.72rem;color:var(--text2);margin-top:2px;" id="t_eff_sub">% закрытых сделок</div>
-                </div>
-                <div class="eff-badge eff-neutral" id="eff_badge">Накапливается</div>
-            </div>
-            <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
-            <div class="eff-compare" id="eff_compare"></div>
-        </div>
-        <div class="sec-title" id="t_funnel">Воронка</div>
-        <div class="card">
-            <div class="funnel-header"><span id="t_total_leads">Всего: 0</span><span class="conv-pill" id="v_conv">0%</span></div>
-            <div class="funnel-row"><div class="funnel-lbl" id="t_f_active">В работе</div><div class="funnel-track"><div class="funnel-fill fill-blue" id="bar_active"></div></div><div class="funnel-num" id="st_active">0</div></div>
-            <div class="funnel-row"><div class="funnel-lbl" id="t_f_closed">Закрыто</div><div class="funnel-track"><div class="funnel-fill fill-green" id="bar_closed"></div></div><div class="funnel-num" id="st_closed">0</div></div>
-            <div class="funnel-row"><div class="funnel-lbl" id="t_f_rejected">Отклонено</div><div class="funnel-track"><div class="funnel-fill fill-red" id="bar_rejected"></div></div><div class="funnel-num" id="st_rejected">0</div></div>
-        </div>
-        <div class="sec-title" id="t_awaiting">Ожидаем выплату от:</div>
-        <div class="card" id="pendingList"></div>
-        <div class="sec-title" id="t_chart_title" style="display:none;">По нишам</div>
-        <div class="card" id="chartCard" style="display:none;"><div class="chart-wrap"><canvas id="nicheChart"></canvas></div></div>
+    <div id="tab_profile" class="tab-content">
+      <div class="profile-card">
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Вознаграждение</div><div class="prof-val" id="pr_comm"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay"></div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone"></div></div>
+      </div>
+      <button class="btn-edit" onclick="switchTab('edit')" id="t_btn_edit">✏️ Редактировать профиль</button>
     </div>
 
-    <div id="view-profile" class="view">
-        <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">Профиль</h2>
-
-        <div class="card profile-btn-card" onclick="openProfileEdit()">
-            <div class="profile-header">
-                <div class="profile-avatar" id="profileAvatar">W</div>
-                <div>
-                    <div class="profile-name" id="profileName">—</div>
-                    <div class="profile-phone" id="profilePhone">—</div>
-                </div>
-                <div class="profile-edit-hint"><i data-feather="edit-2" style="width:15px;height:15px;"></i></div>
-            </div>
-        </div>
-
-        <div class="card pro-card" id="pro-locked">
-            <div class="pro-card-inner">
-                <div class="pro-top">
-                    <div class="pro-title">🌟 PRO-Агент</div>
-                    <div class="pro-badge"><i data-feather="lock" style="width:11px;height:11px;"></i><span id="t_pro_locked">Закрыто</span></div>
-                </div>
-                <div class="pro-desc" id="t_pro_desc">Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки для бизнеса.</div>
-                <div class="pro-progress-wrap">
-                    <div class="pro-progress-header"><span id="t_pro_progress_lbl">Ваш прогресс</span><span id="pro_progress_txt">0 / 50</span></div>
-                    <div class="pro-bar-bg"><div class="pro-bar-fill" id="proBar"></div></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card pro-card" id="pro-unlocked" style="display:none;">
-            <div class="pro-card-inner">
-                <div class="pro-top">
-                    <div class="pro-title">🌟 PRO-Агент</div>
-                    <div class="pro-badge" id="t_pro_influencer">Инфлюенсер</div>
-                </div>
-                <div class="pro-desc" id="t_pro_unlocked_desc">Вы устанавливаете свои правила игры.</div>
-                <div class="pro-rate-row">
-                    <span style="font-weight:600;font-size:.88rem;" id="t_base_rate">Базовая ставка (для всех)</span>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-weight:800;font-size:1rem;" id="v_base_rate">—</span>
-                        <i data-feather="edit-2" style="width:13px;height:13px;opacity:.8;"></i>
-                    </div>
-                </div>
-                <button class="pro-add-btn" onclick="openNicheModal()">
-                    <i data-feather="plus" style="width:15px;height:15px;"></i>
-                    <span id="t_add_niche">Добавить нишу</span>
-                </button>
-            </div>
-        </div>
-
-        <h3 class="sec-title" style="font-size:.9rem;margin-top:20px;" id="t_settings">Настройки</h3>
-        <div class="card settings-list" style="padding:0;">
-            <div class="settings-row">
-                <i data-feather="credit-card" style="color:var(--text2);flex-shrink:0;"></i>
-                <span class="settings-row-label" id="t_pay_method">Реквизиты</span>
-                <span class="settings-row-value" id="v_pay_method">—</span>
-            </div>
-            <div class="settings-row" id="bizInfoRow" style="display:none;">
-                <i data-feather="link" style="color:var(--text2);flex-shrink:0;"></i>
-                <span class="settings-row-label" id="t_biz_info">Ссылка</span>
-                <span class="settings-row-value" id="v_biz_info">—</span>
-            </div>
-        </div>
-
-        <div class="card action-card" style="margin-top:8px;" onclick="openBizReg()">
-            <div class="action-icon"><i data-feather="briefcase"></i></div>
-            <div>
-                <div class="action-title" id="t_biz_cta">У вас есть свой бизнес?</div>
-                <div class="action-sub" id="t_biz_cta_sub">Зарегистрируйтесь как бизнес в каталоге Win-Win</div>
-            </div>
-        </div>
-
-        <a href="#" class="btn-primary btn-wa" id="ctaBtnProfile" style="display:none;text-decoration:none;text-align:center;margin-top:4px;"></a>
-    </div>
-
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
-    </nav>
-
-    <div class="modal-overlay" id="modalOverlay" onclick="closeAllSheets()"></div>
-
-    <div class="bottom-sheet" id="statSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="statSheetTitle">Детали</div>
-        <div id="statSheetContent"></div>
-    </div>
-
-    <div class="bottom-sheet" id="profileSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_edit_profile">Редактировать профиль</div>
-        <label class="input-label" id="t_edit_name">Имя</label>
-        <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
-        <label class="input-label" id="t_edit_payment">Способ получения</label>
-        <input class="custom-input" id="editPayment" type="text" placeholder="Bit / PayPal / Наличные">
-        <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
-        <input class="custom-input" id="editLink" type="url" placeholder="https://...">
-        <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:4px;">Сохранить</button>
-    </div>
-
-    <div class="bottom-sheet" id="bizRegSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_biz_reg_title">Зарегистрировать бизнес</div>
-        <label class="input-label">Название бизнеса</label>
-        <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio">
-        <label class="input-label">Категория / ниша</label>
-        <select class="custom-input" id="bizRegNiche">
-            <option value="" disabled selected>Выберите...</option>
-            <option>💅 Красота и эстетика</option>
-            <option>🏥 Здоровье и медицина</option>
-            <option>🏠 Дом и ремонт</option>
-            <option>⚖️ Юриспруденция</option>
-            <option>🚗 Автомобили</option>
-            <option>📚 Образование</option>
-            <option>💼 Финансы</option>
-            <option>🍕 Ресторанный бизнес</option>
+    <div id="tab_edit" class="tab-content">
+      <div class="form-group"><label id="t_f_name">Название бизнеса</label><input type="text" class="form-control" id="f_name"></div>
+      <div class="form-group">
+        <label id="t_f_niche">Категория бизнеса</label>
+        <select class="form-control" id="f_niche" onchange="updateEditSubcategories()">
+          <option value="" disabled>Выберите категорию...</option>
+          <option value="Красота и эстетика">Красота и эстетика</option>
+          <option value="Еда и рестораны">Еда и рестораны</option>
+          <option value="Магазины и товары">Магазины и товары</option>
+          <option value="Здоровье и медицина">Здоровье и медицина</option>
+          <option value="Юриспруденция">Юриспруденция</option>
+          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+          <option value="Дом и ремонт">Дом и ремонт</option>
+          <option value="Автомобили">Автомобили</option>
+          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
+          <option value="Обучение и спорт">Обучение и спорт</option>
+          <option value="Домашние питомцы">Домашние питомцы</option>
+          <option value="Туризм и отдых">Туризм и отдых</option>
+          <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
         </select>
-        <label class="input-label">Комиссия агенту (%)</label>
-        <input class="custom-input" id="bizRegComm" type="number" placeholder="Например: 10">
-        <label class="input-label">Способ выплаты агентам</label>
-        <input class="custom-input" id="bizRegPay" type="text" placeholder="Bit / Наличные / Перевод">
-        <button class="btn-primary btn-accent" onclick="submitBizReg()" style="margin-top:4px;" id="t_biz_reg_submit">Зарегистрировать</button>
+      </div>
+      <div class="form-group" id="f_subniche_group" style="display:none;">
+        <label id="t_f_subniche">Специализация <span style="font-size:0.75rem; color:var(--text-muted);">(можно выбрать несколько)</span></label>
+        <div id="f_subniche_tags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
+        <div class="niche-checkboxes" id="f_subniche_list"></div>
+        <button type="button" onclick="confirmBizSubcat()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#56CCF2,#2F80ED);border:none;color:#fff;font-weight:800;font-size:1rem;border-radius:14px;cursor:pointer;box-shadow:0 4px 16px rgba(86,204,242,0.3);" id="bizSubcatDone">✅ Подтвердить выбор</button>
+        <button type="button" onclick="editBizSubcat()" style="display:none;width:100%;margin-top:6px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:0.85rem;border-radius:10px;cursor:pointer;" id="bizSubcatEdit">✏️ Изменить</button>
+      </div>
+      <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
+      <div class="form-group">
+        <label id="t_f_pay">Способ выплаты</label>
+        <div class="pay-btns">
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Bit')">💳 Bit</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('PayPal')">🅿️ PayPal</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Bank')">🏦 Bank</button>
+          <button type="button" class="pay-btn" onclick="selectPayMethod('Cash')">💵 Cash</button>
+        </div>
+        <input type="hidden" id="f_pay">
+      </div>
+      <div class="form-group"><label id="t_f_link">Ссылка (Сайт / Соцсети)</label><input type="text" class="form-control" id="f_link" placeholder="https://..."></div>
+      <button class="btn-save" onclick="submitEditForm()" id="t_btn_save">💾 Сохранить изменения</button>
+      <button class="btn-cancel" onclick="switchTab('profile')" id="t_btn_cancel">Отмена</button>
     </div>
 
-    <div class="bottom-sheet" id="nicheSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_sheet_title">Добавить спец-условие</div>
-        <label class="input-label" id="t_sheet_cat">Категория бизнеса</label>
-        <select class="custom-input">
-            <option value="" disabled selected>Выберите категорию...</option>
-            <option>💅 Красота и эстетика</option>
-            <option>🏥 Здоровье и медицина</option>
-            <option>🏠 Дом и ремонт</option>
-            <option>⚖️ Юриспруденция</option>
-            <option>🚗 Автомобили</option>
-        </select>
-        <label class="input-label" id="t_sheet_rate">Ваша ставка (%)</label>
-        <input type="number" class="custom-input" placeholder="Например, 15">
-        <button class="btn-primary" onclick="closeAllSheets()" style="margin-top:4px;" id="t_sheet_save">Сохранить условие</button>
+    <div class="bottom-btns">
+      <a href="#" id="btnWaReturn" onclick="returnToWa()" style="display:none;" class="btn-wa">WhatsApp</a>
+      <a href="https://t.me/winwin_lead_bot" id="btnTgReturn" target="_blank" style="display:none;" class="btn-tg">Telegram</a>
     </div>
+  </div>
 
-</div><script>
-// ── i18n ──────────────────────────────────────────────────────────────────
-const i18n = {
-  ru: {
-    greeting:"С возвращением,", balance_label:"Социальный капитал",
-    deals_lbl:"Закрытых", pending_lbl:"Ожидает", active_lbl:"В работе",
-    action_title:"Помогите любимому бизнесу", action_sub:"Откройте каталог и сделайте рекомендацию",
-    events:"Последние события",
-    catalog_title:"Каталог бизнеса",
-    history_title:"Мои рекомендации", active_sec:"🕒 В процессе", debt_sec:"💰 Ожидают выплаты", done_sec:"✅ История",
-    wallet_title:"Финансы", avg_lbl:"Средний заработок на сделку ₪",
-    eff_sub:"% закрытых сделок", eff_accum:"Накапливается (нужно 3)", eff_above:"Выше среднего", eff_below:"Ниже среднего", eff_avg:"Среднее по платформе:",
-    funnel:"Воронка", f_active:"В работе", f_closed:"Закрыто", f_rejected:"Отклонено",
-    total_leads:"Всего:", awaiting:"Ожидаем выплату от:", all_paid:"✅ Все выплаты получены",
-    chart_title:"По нишам",
-    profile_title:"Профиль", settings:"Настройки", pay_method:"Реквизиты", biz_info:"Ссылка",
-    biz_cta:"У вас есть свой бизнес?", biz_cta_sub:"Зарегистрируйтесь как бизнес в каталоге Win-Win",
-    pro_locked:"Закрыто", pro_desc:"Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера и устанавливать свои личные ставки для бизнеса.",
-    pro_progress_lbl:"Ваш прогресс", pro_influencer:"Инфлюенсер", pro_unlocked_desc:"Вы устанавливаете свои правила игры.",
-    base_rate:"Базовая ставка (для всех)", add_niche:"Добавить нишу",
-    sheet_title:"Добавить спец-условие", sheet_cat:"Категория бизнеса", sheet_rate:"Ваша ставка (%)", sheet_save:"Сохранить условие",
-    nav_home:"Главная", nav_catalog:"Каталог", nav_history:"История", nav_wallet:"Кошелёк", nav_profile:"Профиль",
-    status_new:"Новый", status_in_progress:"В работе", status_closed:"Должны", status_confirmed:"Готово", status_rejected:"Отклонён",
-    no_deals:"Пока пусто", no_deals_sub:"Порекомендуйте проверенный бизнес другу — создайте первую сделку.",
-    wa_btn:"Открыть WhatsApp",
-    deal_title:"Детали сделки", edit_profile:"Редактировать профиль",
-    edit_name:"Имя", edit_payment:"Способ получения", edit_link:"Ссылка (соцсеть / сайт)",
-    biz_reg_title:"Зарегистрировать бизнес", biz_reg_submit:"Зарегистрировать",
-    stat_deals:"Закрытые сделки по вашим рекомендациям",
-    stat_pending:"Ожидают выплаты", stat_active:"Сделки в работе",
-    btn_back:"← Вернуться к каталогу",
-    copy_link:"🔗 Скопируйте и отправьте эту ссылку:", copy_btn:"Копировать", copied:"Скопировано ✅",
-    scan_qr:"📱 Или дайте отсканировать QR-код:", wa_return:"Вернуться в WhatsApp",
-    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка каталога...",
-    cat_empty:"Ничего не найдено", bonus:"🎁 Бонус агенту:", filter_all:"Все",
-    save:"Сохранить",
-  },
-  he: {
-    greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך",
-    deals_lbl:"סגורות", pending_lbl:"ממתין", active_lbl:"בעבודה",
-    action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
-    events:"אירועים אחרונים", catalog_title:"קטלוג עסקים",
-    history_title:"ההמלצות שלי", active_sec:"🕒 בתהליך", debt_sec:"💰 ממתינות לתשלום", done_sec:"✅ היסטוריה",
-    wallet_title:"פיננסים", avg_lbl:"הכנסה ממוצעת לעסקה ₪",
-    eff_sub:"% עסקאות שנסגרו", eff_accum:"מצטבר (נדרשות 3)", eff_above:"מעל הממוצע", eff_below:"מתחת לממוצע", eff_avg:"ממוצע פלטפורמה:",
-    funnel:"משפך", f_active:"בעבודה", f_closed:"סגור", f_rejected:"נדחה",
-    total_leads:"סה\"כ:", awaiting:"ממתינים לתשלום מ:", all_paid:"✅ כל התשלומים התקבלו",
-    chart_title:"לפי נישה", profile_title:"פרופיל", settings:"הגדרות", pay_method:"פרטי תשלום", biz_info:"קישור",
-    biz_cta:"יש לכם עסק משלכם?", biz_cta_sub:"הירשמו כעסק בקטלוג Win-Win",
-    pro_locked:"נעול", pro_desc:"הגיעו ל-50 המלצות מוצלחות כדי לפתוח את סטטוס האינפלואנסר.",
-    pro_progress_lbl:"ההתקדמות שלך", pro_influencer:"אינפלואנסר", pro_unlocked_desc:"אתה קובע את החוקים שלך.",
-    base_rate:"ריבית בסיסית (לכולם)", add_niche:"הוסף נישה",
-    sheet_title:"הוסף תנאי מיוחד", sheet_cat:"קטגוריית עסק", sheet_rate:"הריבית שלך (%)", sheet_save:"שמור תנאי",
-    nav_home:"ראשי", nav_catalog:"קטלוג", nav_history:"היסטוריה", nav_wallet:"ארנק", nav_profile:"פרופיל",
-    status_new:"חדש", status_in_progress:"בעבודה", status_closed:"חייב", status_confirmed:"הושלם", status_rejected:"נדחה",
-    no_deals:"עדיין ריק", no_deals_sub:"המליצו לחבר על עסק מוכח.",
-    wa_btn:"פתח WhatsApp", deal_title:"פרטי העסקה", edit_profile:"עריכת פרופיל",
-    edit_name:"שם", edit_payment:"אופן קבלה", edit_link:"קישור",
-    biz_reg_title:"רישום עסק", biz_reg_submit:"רישום",
-    stat_deals:"עסקאות שנסגרו לפי המלצותיך", stat_pending:"ממתינות לתשלום", stat_active:"עסקאות פעילות",
-    btn_back:"← חזרה לקטלוג", copy_link:"🔗 העתיקו ושלחו:", copy_btn:"העתק", copied:"הועתק ✅",
-    scan_qr:"📱 או לסרוק:", wa_return:"חזרה ל-WhatsApp",
-    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"הכל", save:"שמור",
-  },
-  en: {
-    greeting:"Welcome back,", balance_label:"Your Social Capital",
-    deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active",
-    action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
-    events:"Recent events", catalog_title:"Business Catalog",
-    history_title:"My Recommendations", active_sec:"🕒 In progress", debt_sec:"💰 Awaiting payment", done_sec:"✅ History",
-    wallet_title:"Finances", avg_lbl:"Average earnings per deal ₪",
-    eff_sub:"% of deals closed", eff_accum:"Accumulating (need 3)", eff_above:"Above average", eff_below:"Below average", eff_avg:"Platform average:",
-    funnel:"Funnel", f_active:"Active", f_closed:"Closed", f_rejected:"Rejected",
-    total_leads:"Total:", awaiting:"Awaiting payment from:", all_paid:"✅ All payouts received",
-    chart_title:"By niche", profile_title:"Profile", settings:"Settings", pay_method:"Payment method", biz_info:"Link",
-    biz_cta:"Do you have your own business?", biz_cta_sub:"Register as a business in Win-Win catalog",
-    pro_locked:"Locked", pro_desc:"Reach 50 successful recommendations to unlock Influencer status.",
-    pro_progress_lbl:"Your progress", pro_influencer:"Influencer", pro_unlocked_desc:"You set the rules of the game.",
-    base_rate:"Base rate (for everyone)", add_niche:"Add niche",
-    sheet_title:"Add special condition", sheet_cat:"Business category", sheet_rate:"Your rate (%)", sheet_save:"Save condition",
-    nav_home:"Home", nav_catalog:"Catalog", nav_history:"History", nav_wallet:"Wallet", nav_profile:"Profile",
-    status_new:"New", status_in_progress:"Active", status_closed:"Owed", status_confirmed:"Done", status_rejected:"Rejected",
-    no_deals:"Still empty", no_deals_sub:"Recommend a trusted business — create your first deal.",
-    wa_btn:"Open WhatsApp", deal_title:"Deal Details", edit_profile:"Edit Profile",
-    edit_name:"Name", edit_payment:"Payment method", edit_link:"Link (social / website)",
-    biz_reg_title:"Register Business", biz_reg_submit:"Register",
-    stat_deals:"Closed deals from your recommendations", stat_pending:"Awaiting payment", stat_active:"Active deals",
-    btn_back:"← Back to catalog", copy_link:"🔗 Copy and send:", copy_btn:"Copy", copied:"Copied ✅",
-    scan_qr:"📱 Or scan:", wa_return:"Return to WhatsApp",
-    cat_search:"Search business...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All", save:"Save",
-  },
-  ar: {
-    greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي",
-    deals_lbl:"مغلقة", pending_lbl:"معلق", active_lbl:"نشط",
-    action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم توصية",
-    events:"الأحداث الأخيرة", catalog_title:"كتالوج الأعمال",
-    history_title:"توصياتي", active_sec:"🕒 قيد التنفيذ", debt_sec:"💰 ينتظر الدفع", done_sec:"✅ السجل",
-    wallet_title:"المالية", avg_lbl:"متوسط الأرباح لكل صفقة ₪",
-    eff_sub:"% من الصفقات المغلقة", eff_accum:"يتراكم (يحتاج 3)", eff_above:"فوق المتوسط", eff_below:"دون المتوسط", eff_avg:"متوسط المنصة:",
-    funnel:"المسار", f_active:"نشط", f_closed:"مغلق", f_rejected:"مرفوض",
-    total_leads:"المجموع:", awaiting:"في انتظار الدفع من:", all_paid:"✅ تم استلام جميع المدفوعات",
-    chart_title:"حسب النيش", profile_title:"الملف الشخصي", settings:"الإعدادات", pay_method:"طريقة الدفع", biz_info:"رابط",
-    biz_cta:"هل لديك عمل خاص?", biz_cta_sub:"سجّل كعمل في كتالوج Win-Win",
-    pro_locked:"مقفل", pro_desc:"حقق 50 توصية ناجحة لفتح حالة المؤثر.",
-    pro_progress_lbl:"تقدمك", pro_influencer:"مؤثر", pro_unlocked_desc:"أنت تضع قواعد اللعبة.",
-    base_rate:"المعدل الأساسي (للجميع)", add_niche:"إضافة نيش",
-    sheet_title:"إضافة شرط خاص", sheet_cat:"فئة العمل", sheet_rate:"معدلك (%)", sheet_save:"حفظ الشرط",
-    nav_home:"الرئيسية", nav_catalog:"الكتالوج", nav_history:"السجل", nav_wallet:"المحفظة", nav_profile:"الملف",
-    status_new:"جديد", status_in_progress:"نشط", status_closed:"مدين", status_confirmed:"منجز", status_rejected:"مرفوض",
-    no_deals:"لا يزال فارغاً", no_deals_sub:"أوصِ بعمل موثوق.",
-    wa_btn:"فتح WhatsApp", deal_title:"تفاصيل الصفقة", edit_profile:"تعديل الملف",
-    edit_name:"الاسم", edit_payment:"طريقة الاستلام", edit_link:"رابط",
-    biz_reg_title:"تسجيل عمل", biz_reg_submit:"تسجيل",
-    stat_deals:"الصفقات المغلقة بتوصياتك", stat_pending:"في انتظار الدفع", stat_active:"الصفقات النشطة",
-    btn_back:"← العودة إلى الكتالوج", copy_link:"🔗 انسخ وأرسل:", copy_btn:"نسخ", copied:"تم ✅",
-    scan_qr:"📱 أو امسح:", wa_return:"العودة إلى WhatsApp",
-    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"الكل", save:"حفظ",
-  },
-};
-
-// ── State ─────────────────────────────────────────────────────────────────
-const API_URL  = "https://amlatsa-bot-production.up.railway.app";
-const token    = new URLSearchParams(window.location.search).get('token');
-let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
-let dashData   = null;
-let chartInst  = null;
-// Catalog state
-let allBusinesses = [];
-let catalogAgentId = null;
-let catalogBotPhone = "972534218573";
-let currentNiche = '__all__';
-
-// ── Theme ─────────────────────────────────────────────────────────────────
-function applyTheme() {
-    const saved = localStorage.getItem('winwin_theme');
-    // Если тема не задана жестко как 'light', включаем темную (brand) по умолчанию
-    if (saved !== 'light') {
-        document.body.classList.add('brand-theme');
-        const btn = document.querySelector('#themeBtn');
-        if (btn) btn.innerHTML = '<i data-feather="sun"></i>';
-    } else {
-        document.body.classList.remove('brand-theme');
-        const btn = document.querySelector('#themeBtn');
-        if (btn) btn.innerHTML = '<i data-feather="moon"></i>';
-    }
-    feather.replace();
-}
-function toggleTheme() {
-    const isBrand = document.body.classList.contains('brand-theme');
-    if (isBrand) {
-        document.body.classList.remove('brand-theme');
-        localStorage.setItem('winwin_theme', 'light');
-        document.querySelector('#themeBtn').innerHTML = '<i data-feather="moon"></i>';
-    } else {
-        document.body.classList.add('brand-theme');
-        localStorage.setItem('winwin_theme', 'brand');
-        document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
-    }
-    feather.replace();
-}
-
-// ── Lang ──────────────────────────────────────────────────────────────────
-function setLang(l) {
-    lang = l;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
-    document.documentElement.lang = l;
-    document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    applyLang();
-    if (dashData) renderAll();
-    if (allBusinesses.length) { extractNiches(); renderCatalog(); }
-}
-function applyLang() {
-    const L = i18n[lang] || i18n.ru;
-    const map = {
-        't_greeting':'greeting','t_balance_label':'balance_label',
-        't_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl',
-        't_action_title':'action_title','t_action_sub':'action_sub','t_events':'events',
-        't_catalog_title':'catalog_title',
-        't_history_title':'history_title','t_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec',
-        't_wallet_title':'wallet_title','t_avg_lbl':'avg_lbl','t_eff_sub':'eff_sub',
-        't_funnel':'funnel','t_f_active':'f_active','t_f_closed':'f_closed','t_f_rejected':'f_rejected',
-        't_total_leads':'total_leads','t_awaiting':'awaiting','t_chart_title':'chart_title',
-        't_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method','t_biz_info':'biz_info',
-        't_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub',
-        't_pro_locked':'pro_locked','t_pro_desc':'pro_desc','t_pro_progress_lbl':'pro_progress_lbl',
-        't_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc',
-        't_base_rate':'base_rate','t_add_niche':'add_niche',
-        't_sheet_title':'sheet_title','t_sheet_cat':'sheet_cat','t_sheet_rate':'sheet_rate','t_sheet_save':'sheet_save',
-        't_nav_home':'nav_home','t_nav_catalog':'nav_catalog','t_nav_history':'nav_history','t_nav_wallet':'nav_wallet','t_nav_profile':'nav_profile',
-        't_deal_title':'deal_title','t_edit_profile':'edit_profile',
-        't_edit_name':'edit_name','t_edit_payment':'edit_payment','t_edit_link':'edit_link',
-        't_biz_reg_title':'biz_reg_title','t_biz_reg_submit':'biz_reg_submit',
-        't_btn_back':'btn_back','t_copy_link':'copy_link','t_scan_qr':'scan_qr',
-    };
-    for (const [id,key] of Object.entries(map)) {
-        const el = document.getElementById(id);
-        if (el && L[key]) el.textContent = L[key];
-    }
-    const catSearch = document.getElementById('catSearch');
-    if (catSearch) catSearch.placeholder = L.cat_search || 'Search...';
-    const waReturn = document.getElementById('waReturnLink');
-    if (waReturn) waReturn.textContent = L.wa_return || 'WhatsApp';
-    const copyBtn = document.getElementById('copyBtn');
-    if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-    if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
-    
-    // Перевод кнопки назад в сделке
-    const btnBackDeal = document.getElementById('t_btn_back_deal');
-    if (btnBackDeal) {
-        if (lang === 'he') btnBackDeal.textContent = 'חזור';
-        else if (lang === 'en') btnBackDeal.textContent = 'Back';
-        else if (lang === 'ar') btnBackDeal.textContent = 'رجوع';
-        else btnBackDeal.textContent = 'Назад';
-    }
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────
-function switchTab(tabId, btnEl) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-'+tabId)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    if (btnEl) btnEl.classList.add('active');
-    window.scrollTo(0,0);
-}
-
-// ── Sheets ────────────────────────────────────────────────────────────────
-function openSheet(id) {
-    closeAllSheets();
-    document.getElementById('modalOverlay').classList.add('active');
-    document.getElementById(id).classList.add('active');
-}
-function closeAllSheets() {
-    document.getElementById('modalOverlay').classList.remove('active');
-    document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
-}
-function openNicheModal() { openSheet('nicheSheet'); }
-
-// ── Animate number ────────────────────────────────────────────────────────
-function animNum(id, to, dur=1200) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const start = performance.now();
-    const step = ts => {
-        const p = Math.min((ts-start)/dur,1);
-        const ease = 1-Math.pow(1-p,3);
-        el.textContent = Math.round(to*ease);
-        if (p<1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-}
-
-// ── Status helpers ────────────────────────────────────────────────────────
-function statusPill(s) {
-    const L = i18n[lang]||i18n.ru;
-    const m = { new:['pill-blue',L.status_new], in_progress:['pill-gold',L.status_in_progress], closed:['pill-gold',L.status_closed], confirmed:['pill-green',L.status_confirmed], rejected:['pill-red',L.status_rejected] };
-    const [cls,label] = m[s]||['pill-blue',s];
-    return `<span class="pill ${cls}">${label}</span>`;
-}
-function iconForStatus(s) {
-    const icons = { new:'clock', in_progress:'clock', closed:'alert-circle', confirmed:'check-circle', rejected:'x-circle' };
-    const colors = { new:'var(--accent2)', in_progress:'var(--gold)', closed:'var(--gold)', confirmed:'var(--green)', rejected:'var(--red)' };
-    return `<i data-feather="${icons[s]||'circle'}" style="color:${colors[s]||'var(--text2)'};width:20px;height:20px;"></i>`;
-}
-
-// ── Deal card & detail ────────────────────────────────────────────────────
-function dealItemHtml(lead) {
-    const curr = dashData?.currency || '₪';
-    const hasComm = lead.commission != null;
-    const commColor = lead.status === 'closed' ? 'var(--gold)' : 'var(--green)';
-    return `
-    <div class="activity-item" onclick='openDealDetail(${JSON.stringify(lead).replace(/'/g,"&#39;")})'>
-        <div class="act-icon">${iconForStatus(lead.status)}</div>
-        <div style="flex:1;min-width:0;">
-            <div class="act-title">${lead.biz_name}</div>
-            <div class="act-sub">👤 ${lead.client_name}</div>
+  <div class="modal-backdrop" id="actionModal">
+    <div class="modal-content">
+      <div class="modal-title" id="m_title">Управление сделкой</div>
+      <div class="modal-deal-info" id="m_info"></div>
+      <div class="modal-step active" id="m_step_main">
+        <button class="modal-btn btn-m-close" onclick="setModalStep('close')" id="t_m_btn_close">✅ Закрыть сделку</button>
+        <button class="modal-btn btn-m-reject" onclick="setModalStep('reject')" id="t_m_btn_reject">❌ Отклонить сделку</button>
+        <button class="modal-btn btn-m-back" onclick="closeModal()" id="t_m_btn_cancel">↩️ Назад</button>
+      </div>
+      <div class="modal-step" id="m_step_close">
+        <div class="form-group">
+          <label id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
+          <input type="number" class="form-control" id="m_amount" placeholder="Например: 1500">
         </div>
-        <div class="act-right">
-            ${statusPill(lead.status)}
-            <div class="act-date">${lead.date}</div>
-            ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
-        </div>
-    </div>`;
-}
+        <button class="btn-save" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
+        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back1">↩️ Назад</button>
+      </div>
+      <div class="modal-step" id="m_step_reject">
+        <p style="text-align:center; margin-bottom:16px;" id="t_m_reject_sure">Вы уверены?</p>
+        <button class="modal-btn btn-m-reject" style="background:var(--danger); color:#fff; border:none;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back2">↩️ Отмена</button>
+      </div>
+      <div class="modal-step" id="m_step_result" style="text-align:center; padding:20px 0;">
+        <div class="spinner" style="margin:0 auto 16px auto;" id="m_spinner"></div>
+        <div id="m_result_msg" style="font-weight:600; white-space:pre-line;">Обработка...</div>
+        <button class="modal-btn btn-m-back" onclick="closeModal()" id="m_btn_finish" style="display:none; margin-top:16px;">Закрыть</button>
+      </div>
+    </div>
+  </div>
 
-function openDealDetail(lead) {
-    const L = i18n[lang]||i18n.ru;
-    const curr = dashData?.currency || '₪';
-    const statusLabel = { new:L.status_new, in_progress:L.status_in_progress, closed:L.status_closed, confirmed:L.status_confirmed, rejected:L.status_rejected };
-    let rows = `
-        <div class="deal-detail-row"><div class="deal-detail-lbl">Бизнес</div><div class="deal-detail-val">${lead.biz_name}</div></div>
-        <div class="deal-detail-row"><div class="deal-detail-lbl">Клиент</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
-    if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Телефон</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Статус</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Дата</div><div class="deal-detail-val">${lead.date}</div></div>`;
-    if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Сумма сделки</div><div class="deal-detail-val" style="color:var(--text)">${lead.amount} ${curr}</div></div>`;
-    if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Ваш бонус</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
-    
-    document.getElementById('dealDetailContent').innerHTML = rows;
-    
-    // Открываем на полный экран с красивой анимацией
-    document.getElementById('dealSheet').classList.add('active');
-    document.body.style.overflow = 'hidden'; // Блокируем скролл фона
-    window.scrollTo(0,0);
-    feather.replace();
-}
+  <script>
+    const i18n = {
+      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"💼 Сделки", tab_stats:"📊 Статистика", tab_profile:"👤 Профиль", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending_confirm:"⏳ Ждём подтверждения", pending_note:"Ожидаем подтверждения получения от агента", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"⚙️ Управлять", st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", st_f_active:"В процессе", st_f_closed:"Закрыто", st_f_rejected:"Отклонено", st_agents:"Уник. агенты", st_avg_deal:"Средний чек", pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон", btn_edit:"✏️ Редактировать профиль", f_name:"Название бизнеса", f_niche:"Ниша", f_comm:"Вознаграждение (например, 10% или 500)", f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"💾 Сохранить изменения", btn_cancel:"Отмена", m_title:"Управление сделкой", m_client:"Клиент:", m_date:"Дата:", m_close:"✅ Закрыть сделку", m_reject:"❌ Отклонить сделку", m_cancel:"↩️ Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть", wa_btn:"WhatsApp" },
+      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף.", err_save:"שגיאה", success_save:"נשמר!", tab_deals:"💼 עסקאות", tab_stats:"📊 סטטיסטיקה", tab_profile:"👤 פרופיל", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending_confirm:"⏳ ממתין לאישור", pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_contact:"צור קשר עם", card_manage:"⚙️ ניהול", st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", st_f_active:"בתהליך", st_f_closed:"נסגרו", st_f_rejected:"נדחו", st_agents:"סוכנים", st_avg_deal:"עסקה ממוצעת", pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"✏️ עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_comm:"תגמול", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"💾 שמור", btn_cancel:"ביטול", m_title:"ניהול עסקה", m_client:"לקוח:", m_date:"תאריך:", m_close:"✅ סגור עסקה", m_reject:"❌ דחה עסקה", m_cancel:"↩️ חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור", wa_btn:"WhatsApp" },
+      en: { loading:"Loading data...", expired:"Link expired.", err_save:"Save error", success_save:"Saved!", tab_deals:"💼 Deals", tab_stats:"📊 Stats", tab_profile:"👤 Profile", filt_active:"Active", filt_history:"History", empty_deals:"Empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending_confirm:"⏳ Awaiting confirmation", pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_contact:"Contact client", card_manage:"⚙️ Manage", st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_funnel_title:"Conversion Funnel", st_total_leads:"Total Leads:", st_f_active:"In Progress", st_f_closed:"Closed", st_f_rejected:"Rejected", st_agents:"Unique Agents", st_avg_deal:"Avg Deal", pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"✏️ Edit Profile", f_name:"Business Name", f_niche:"Niche", f_comm:"Reward (e.g. 10% or 500)", f_pay:"Payment Method", f_link:"Link", btn_save:"💾 Save Changes", btn_cancel:"Cancel", m_title:"Manage Deal", m_client:"Client:", m_date:"Date:", m_close:"✅ Close Deal", m_reject:"❌ Reject Deal", m_cancel:"↩️ Back", m_lbl_amount:"Deal amount", m_conf_close:"Confirm Close", m_sure:"Are you sure?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Done!", action_close:"Close", wa_btn:"WhatsApp" },
+      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط.", err_save:"خطأ", success_save:"تم الحفظ!", tab_deals:"💼 الصفقات", tab_stats:"📊 الإحصائيات", tab_profile:"👤 الملف", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending_confirm:"⏳ بانتظار التأكيد", pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_contact:"الاتصال", card_manage:"⚙️ إدارة", st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", st_f_active:"قيد الإجراء", st_f_closed:"مغلقة", st_f_rejected:"مرفوضة", st_agents:"وكلاء", st_avg_deal:"متوسط الصفقة", pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"✏️ تعديل الملف", f_name:"اسم العمل", f_niche:"المجال", f_comm:"مكافأة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"💾 حفظ", btn_cancel:"إلغاء", m_title:"إدارة الصفقة", m_client:"العميل:", m_date:"التاريخ:", m_close:"✅ إغلاق الصفقة", m_reject:"❌ رفض الصفقة", m_cancel:"↩️ رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق", wa_btn:"WhatsApp" }
+    };
 
-function closeDealDetail() {
-    document.getElementById('dealSheet').classList.remove('active');
-    document.body.style.overflow = ''; // Возвращаем скролл
-}
+    let currentLang = 'ru';
+    let token = new URLSearchParams(window.location.search).get('token');
+    let bizData = null;
+    let currentDealFilter = 'active';
+    let activeDealId = null;
+    const API_URL = "https://amlatsa-bot-production.up.railway.app";
 
-// ── Stat detail sheet ─────────────────────────────────────────────────────
-function openStatDetail(type) {
-    const L = i18n[lang]||i18n.ru;
-    const curr = dashData?.currency || '₪';
-    let title = '', content = '';
-    if (type === 'deals') {
-        title = L.stat_deals;
-        const confirmed = (dashData?.leads||[]).filter(l => l.status==='confirmed'||l.status==='closed');
-        content = confirmed.length
-            ? confirmed.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-    } else if (type === 'pending') {
-        title = L.stat_pending;
-        const pbs = dashData?.pending_businesses || [];
-        content = pbs.length
-            ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('')
-            : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
-    } else if (type === 'active') {
-        title = L.stat_active;
-        const active = (dashData?.leads||[]).filter(l => l.status==='new'||l.status==='in_progress');
-        content = active.length
-            ? active.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-    }
-    document.getElementById('statSheetTitle').textContent = title;
-    document.getElementById('statSheetContent').innerHTML = content;
-    openSheet('statSheet');
-    feather.replace();
-}
-
-// ── Profile edit ──────────────────────────────────────────────────────────
-function openProfileEdit() {
-    if (!dashData) return;
-    document.getElementById('editName').value = dashData.user_name || '';
-    document.getElementById('editPayment').value = dashData.payment_method || '';
-    document.getElementById('editLink').value = dashData.business_info || '';
-    openSheet('profileSheet');
-}
-async function saveProfile() {
-    const name    = document.getElementById('editName').value.trim();
-    const payment = document.getElementById('editPayment').value.trim();
-    const link    = document.getElementById('editLink').value.trim();
-    const btn     = document.getElementById('saveProfileBtn');
-    btn.textContent = '...';
-    btn.disabled = true;
-    try {
-        const res = await fetch(`${API_URL}/api/profile/update?token=${token}`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ name, payment_method: payment, business_info: link })
-        });
-        if (res.ok) {
-            if (name)    { dashData.user_name = name; document.getElementById('t_name').textContent = name; document.getElementById('profileName').textContent = name; document.getElementById('profileAvatar').textContent = name[0].toUpperCase(); }
-            if (payment) { dashData.payment_method = payment; document.getElementById('v_pay_method').textContent = payment; }
-            if (link)    { dashData.business_info = link; document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(link); }
-            closeAllSheets();
-        }
-    } catch(e) {}
-    btn.textContent = (i18n[lang]||i18n.ru).save;
-    btn.disabled = false;
-}
-function updateBizInfoLink(link) {
-    const el = document.getElementById('v_biz_info');
-    if (!el) return;
-    if (link && (link.startsWith('http://') || link.startsWith('https://'))) {
-        el.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-    } else {
-        el.textContent = link || '—';
-    }
-}
-
-// ── Business registration ─────────────────────────────────────────────────
-function openBizReg() { openSheet('bizRegSheet'); }
-async function submitBizReg() {
-    const name    = document.getElementById('bizRegName').value.trim();
-    const niche   = document.getElementById('bizRegNiche').value;
-    const commVal = document.getElementById('bizRegComm').value.trim();
-    const pay     = document.getElementById('bizRegPay').value.trim();
-    if (!name || !niche) return;
-    const commission = commVal ? `${commVal}%` : null;
-    const btn = document.querySelector('#bizRegSheet .btn-primary');
-    btn.textContent = '...'; btn.disabled = true;
-    try {
-        const res = await fetch(`${API_URL}/register`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({
-                role:'business', name, niche:[niche], commission,
-                pay_pref: pay, lang, sender: catalogAgentId,
-                rewardType: commission ? 'pct' : '', rewardValue: commVal,
-            })
-        });
-        if (res.ok) {
-            closeAllSheets();
-            alert('Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.');
-        }
-    } catch(e) {}
-    btn.textContent = (i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled = false;
-}
-
-// ── Catalog ───────────────────────────────────────────────────────────────
-async function loadCatalog() {
-    if (!dashData?.agent_id) return;
-    catalogAgentId = dashData.agent_id;
-    catalogBotPhone = dashData.bot_phone || '972534218573';
-    try {
-        const catTokRes = await fetch(`${API_URL}/api/catalog/token?agent_id=${catalogAgentId}`);
-        const catTokData = await catTokRes.json();
-        const catTok = catTokData.token;
-        const catRes = await fetch(`${API_URL}/api/catalog?token=${catTok}`);
-        const catData = await catRes.json();
-        allBusinesses = catData.businesses || [];
-        document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
-        extractNiches();
-        renderCatalog();
-    } catch(e) {
-        document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">Каталог недоступен. Откройте WhatsApp и напишите "1".</div>`;
-    }
-}
-
-function extractNiches() {
-    const L = i18n[lang]||i18n.ru;
-    const all = L.filter_all || 'Все';
-    const cats = [all];
-    allBusinesses.forEach(b => { if (b.category && b.category!=='—' && !cats.includes(b.category)) cats.push(b.category); });
-    const container = document.getElementById('catFilters');
-    container.innerHTML = '';
-    cats.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = `filter-btn${(cat===all&&currentNiche==='__all__')||(cat===currentNiche)?` active`:''}`;
-        btn.textContent = cat;
-        btn.onclick = () => {
-            currentNiche = cat===all ? '__all__' : cat;
-            document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            renderCatalog();
-        };
-        container.appendChild(btn);
-    });
-}
-
-function renderCatalog() {
-    const L = i18n[lang]||i18n.ru;
-    const q = (document.getElementById('catSearch')?.value||'').toLowerCase();
-    const filtered = allBusinesses.filter(b => {
-        const matchSearch = b.name.toLowerCase().includes(q)
-            || (b.business_info&&b.business_info.toLowerCase().includes(q))
-            || (b.category&&b.category.toLowerCase().includes(q))
-            || (Array.isArray(b.niche)?b.niche.some(n=>n.toLowerCase().includes(q)):(b.niche&&String(b.niche).toLowerCase().includes(q)));
-        const matchCat = currentNiche==='__all__' || b.category===currentNiche;
-        return matchSearch && matchCat;
-    });
-    const grid = document.getElementById('catGrid');
-    if (!filtered.length) { grid.innerHTML = `<div class="empty-state"><div class="empty-sub">${L.cat_empty}</div></div>`; return; }
-    grid.innerHTML = '';
-    filtered.forEach(biz => {
-        const card = document.createElement('div');
-        card.className = 'biz-card';
-        card.onclick = () => openRecommend(biz);
-        const catStr = biz.category || '';
-        let nicheStr = '';
-        if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-        else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
-        const fullCat = `${catStr}${nicheStr}`.trim() || 'Бизнес';
-        card.innerHTML = `
-            <div class="biz-card-header">
-                <div class="biz-card-name">${biz.name}</div>
-                <div class="biz-card-cat">${fullCat}</div>
-            </div>
-            <div class="biz-card-commission">${L.bonus} ${biz.commission||'...'}</div>`;
-        grid.appendChild(card);
-    });
-}
-
-// ── Recommend ─────────────────────────────────────────────────────────────
-function openRecommend(biz) {
-    document.getElementById('recBizName').textContent = biz.name;
-    const catStr = biz.category || '';
-    let nicheStr = '';
-    if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-    else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
-    document.getElementById('recBizNiche').textContent = `${catStr}${nicheStr}`.trim() || 'Бизнес';
-    const descEl = document.getElementById('recBizDesc');
-    if (biz.business_info) {
-        descEl.innerHTML = biz.business_info.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-        descEl.style.display = 'block';
-    } else { descEl.style.display = 'none'; }
-    const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${catalogAgentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${lang}`;
-    document.getElementById('refLinkInput').value = link;
-    const L = i18n[lang]||i18n.ru;
-    const copyBtn = document.getElementById('copyBtn');
-    copyBtn.textContent = L.copy_btn;
-    copyBtn.classList.remove('copied');
-    // QR
-    const ctx = document.getElementById('qrCanvas').getContext('2d');
-    ctx.clearRect(0,0,300,300);
-    try { new QRious({element:document.getElementById('qrCanvas'),value:link,size:220,level:'H'}); } catch(e){}
-    document.getElementById('recommendScreen').classList.add('active');
-    window.scrollTo(0,0);
-    feather.replace();
-}
-function closeRecommend() {
-    document.getElementById('recommendScreen').classList.remove('active');
-    window.scrollTo(0,0);
-}
-function copyLink() {
-    const input = document.getElementById('refLinkInput');
-    input.select();
-    try { document.execCommand('copy'); } catch(e) { navigator.clipboard?.writeText(input.value); }
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = (i18n[lang]||i18n.ru).copied;
-    btn.classList.add('copied');
-}
-
-// ── Main render ───────────────────────────────────────────────────────────
-function renderAll() {
-    const d = dashData;
-    const L = i18n[lang]||i18n.ru;
-    const curr = d.currency || '₪';
-    document.getElementById('t_name').textContent = d.user_name || '—';
-
-    // Balance
-    animNum('v_earned', Math.round(d.total_earned||0));
-    document.getElementById('v_deals').textContent = d.success_deals || 0;
-    document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
-    document.getElementById('v_active').textContent = d.active_deals || 0;
-
-    // PRO
-    const proProgress = Math.min(((d.success_deals||0)/50)*100, 100);
-    document.getElementById('pro_progress_txt').textContent = `${d.success_deals||0} / 50`;
-    setTimeout(() => { const b=document.getElementById('proBar'); if(b) b.style.width=proProgress+'%'; }, 300);
-    if ((d.success_deals||0) >= 50) { document.getElementById('pro-locked').style.display='none'; document.getElementById('pro-unlocked').style.display='block'; }
-
-    // Recent activity
-    const actList = document.getElementById('activityList');
-    if (!d.leads||!d.leads.length) {
-        actList.innerHTML = `<div class="empty-state"><div class="empty-title">${L.no_deals}</div><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-    } else {
-        actList.innerHTML = d.leads.slice(0,6).map(dealItemHtml).join('');
+    function init() {
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (urlLang && i18n[urlLang]) currentLang = urlLang;
+      setLang(currentLang, false);
+      if (!token) { showGlobalError(i18n[currentLang].expired); return; }
+      fetchData();
     }
 
-    // History — 3 lists
-    const listActive  = document.getElementById('list_active');
-    const listDebt    = document.getElementById('list_debt');
-    const listHistory = document.getElementById('list_history');
-    if (listActive && listDebt && listHistory) {
-        listActive.innerHTML=''; listDebt.innerHTML=''; listHistory.innerHTML='';
-        const emptyRow = `<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">—</div>`;
-        if (!d.leads||!d.leads.length) {
-            listActive.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
-        } else {
-            d.leads.forEach(lead => {
-                const html=`<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
-                if (lead.status==='new'||lead.status==='in_progress') listActive.innerHTML+=html;
-                else if (lead.status==='closed') listDebt.innerHTML+=html;
-                else listHistory.innerHTML+=html;
-            });
-        }
-        if (!listActive.innerHTML)  listActive.innerHTML=emptyRow;
-        if (!listDebt.innerHTML)    listDebt.innerHTML=emptyRow;
-        if (!listHistory.innerHTML) listHistory.innerHTML=emptyRow;
+    function setLang(lang, shouldRender = true) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'he' || lang === 'ar') ? 'rtl' : 'ltr';
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      const L = i18n[lang];
+      document.getElementById('loaderText').textContent = L.loading;
+      document.getElementById('t_tab_deals').textContent = L.tab_deals;
+      document.getElementById('t_tab_stats').textContent = L.tab_stats;
+      document.getElementById('t_tab_profile').textContent = L.tab_profile;
+      document.getElementById('t_filt_active').textContent = L.filt_active;
+      document.getElementById('t_filt_history').textContent = L.filt_history;
+      document.getElementById('t_st_fin_title').textContent = L.st_fin_title;
+      document.getElementById('t_st_revenue').textContent = L.st_revenue;
+      document.getElementById('t_st_commission').textContent = L.st_commission;
+      document.getElementById('t_st_net').textContent = L.st_net;
+      document.getElementById('t_st_funnel_title').textContent = L.st_funnel_title;
+      document.getElementById('t_st_total_leads').textContent = L.st_total_leads;
+      document.getElementById('t_st_f_active').textContent = L.st_f_active;
+      document.getElementById('t_st_f_closed').textContent = L.st_f_closed;
+      document.getElementById('t_st_f_rejected').textContent = L.st_f_rejected;
+      document.getElementById('t_st_agents').textContent = L.st_agents;
+      document.getElementById('t_st_avg_deal').textContent = L.st_avg_deal;
+      document.getElementById('t_pr_name').textContent = L.pr_name;
+      document.getElementById('t_pr_niche').textContent = L.pr_niche;
+      document.getElementById('t_pr_comm').textContent = L.pr_comm;
+      document.getElementById('t_pr_pay').textContent = L.pr_pay;
+      document.getElementById('t_pr_phone').textContent = L.pr_phone;
+      document.getElementById('t_btn_edit').textContent = L.btn_edit;
+      document.getElementById('t_f_name').textContent = L.f_name;
+      document.getElementById('t_f_niche').textContent = L.f_niche;
+      document.getElementById('t_f_comm').textContent = L.f_comm;
+      document.getElementById('t_f_pay').textContent = L.f_pay;
+      document.getElementById('t_f_link').textContent = L.f_link;
+      document.getElementById('t_btn_save').textContent = L.btn_save;
+      document.getElementById('t_btn_cancel').textContent = L.btn_cancel;
+      document.getElementById('m_title').textContent = L.m_title;
+      document.getElementById('t_m_btn_close').textContent = L.m_close;
+      document.getElementById('t_m_btn_reject').textContent = L.m_reject;
+      document.getElementById('t_m_btn_cancel').textContent = L.m_cancel;
+      document.getElementById('t_m_lbl_amount').textContent = L.m_lbl_amount;
+      document.getElementById('t_m_btn_confirm_close').textContent = L.m_conf_close;
+      document.getElementById('t_m_btn_back1').textContent = L.m_cancel;
+      document.getElementById('t_m_reject_sure').textContent = L.m_sure;
+      document.getElementById('t_m_btn_confirm_reject').textContent = L.m_conf_reject;
+      document.getElementById('t_m_btn_back2').textContent = L.m_cancel;
+      document.getElementById('m_btn_finish').textContent = L.action_close;
+      document.getElementById('btnWaReturn').textContent = L.wa_btn;
+      if (shouldRender && bizData) renderAll();
     }
 
-    // Wallet — avg
-    const closed = d.success_deals||0;
-    document.getElementById('v_avg').textContent = closed>0 ? Math.round((d.total_earned||0)/closed) : 0;
-
-    // Efficiency
-    const pct = d.efficiency_pct, avgPct = d.platform_avg_pct||0;
-    if (pct==null) {
-        document.getElementById('v_eff').textContent='—';
-        document.getElementById('eff_badge').textContent=L.eff_accum;
-        document.getElementById('eff_badge').className='eff-badge eff-neutral';
-    } else {
-        animNum('v_eff', Math.round(pct));
-        setTimeout(()=>{ document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'; },100);
-        document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;
-        if (pct>=avgPct) { document.getElementById('eff_badge').textContent=`✅ ${L.eff_above}`; document.getElementById('eff_badge').className='eff-badge eff-good'; }
-        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
+    function showGlobalError(msg) {
+      document.querySelector('.spinner').style.display = 'none';
+      document.getElementById('loaderText').textContent = msg;
     }
 
-    // Funnel
-    const active=d.active_deals||0, rejected=d.rejected_deals||0, total=active+closed+rejected;
-    document.getElementById('t_total_leads').textContent=`${L.total_leads} ${total}`;
-    document.getElementById('v_conv').textContent=(total>0?Math.round(closed/total*100):0)+'%';
-    animNum('st_active',active); animNum('st_closed',closed); animNum('st_rejected',rejected);
-    setTimeout(()=>{
-        document.getElementById('bar_active').style.width=(total>0?active/total*100:0)+'%';
-        document.getElementById('bar_closed').style.width=(total>0?closed/total*100:0)+'%';
-        document.getElementById('bar_rejected').style.width=(total>0?rejected/total*100:0)+'%';
-    },80);
-
-    // Pending payouts
-    const pendList = document.getElementById('pendingList');
-    if (!d.pending_businesses||!d.pending_businesses.length) {
-        pendList.innerHTML=`<div style="color:var(--green);font-weight:700;text-align:center;padding:4px 0;">${L.all_paid}</div>`;
-    } else {
-        pendList.innerHTML=d.pending_businesses.map(b=>`
-            <div class="activity-item" style="cursor:default;">
-                <div class="act-icon"><i data-feather="clock" style="color:var(--gold);width:18px;height:18px;"></i></div>
-                <div><div class="act-title">${b.name}</div><div class="act-sub">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div>
-                <div class="act-right"><div class="act-amount" style="color:var(--gold);">${b.amount} ${curr}</div></div>
-            </div>`).join('');
-    }
-
-    // Chart
-    if (d.chart_data&&d.chart_data.labels&&d.chart_data.labels.length) {
-        document.getElementById('chartCard').style.display='block';
-        document.getElementById('t_chart_title').style.display='flex';
-        if (chartInst) chartInst.destroy();
-        chartInst = new Chart(document.getElementById('nicheChart').getContext('2d'), {
-            type:'doughnut',
-            data:{ labels:d.chart_data.labels, datasets:[{data:d.chart_data.values, backgroundColor:['#56CCF2','#27AE60','#2F80ED','#F2C94C','#9B51E0'], borderWidth:0, hoverOffset:6}] },
-            options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom', labels:{ color:document.body.classList.contains('brand-theme')?'#A0A0B0':'#8A8D9F', font:{family:'Inter',size:12}, padding:14 } } } }
-        });
-    }
-
-    // Profile
-    const name = d.user_name||'—';
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profilePhone').textContent = d.phone||'—';
-    document.getElementById('profileAvatar').textContent = (name[0]||'W').toUpperCase();
-    document.getElementById('v_pay_method').textContent = d.payment_method||'—';
-    if (d.business_info) { document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(d.business_info); }
-
-    // CTA
-    const phone = d.bot_phone||'972534218573';
-    const waUrl = `https://wa.me/${phone}`;
-    ['ctaBtnHome','ctaBtnProfile'].forEach(id => {
-        const btn=document.getElementById(id); if(!btn) return;
-        btn.style.display='block'; btn.href=waUrl;
-        if (d.channel==='telegram') { btn.className='btn-primary btn-tg'; btn.textContent='Telegram'; }
-        else { btn.textContent=L.wa_btn; }
-    });
-    document.getElementById('errBtn').href=waUrl;
-
-    feather.replace();
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────
-async function init() {
-    applyTheme();
-    if (i18n[lang]) setLang(lang);
-    else { lang='ru'; applyLang(); }
-    if (!token) { showError(); return; }
-    try {
-        const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
-        if (!res.ok) throw new Error('auth');
-        dashData = await res.json();
+    async function fetchData() {
+      try {
+        const res = await fetch(`${API_URL}/api/business?token=${token}`);
+        if (!res.ok) throw new Error('Auth failed');
+        bizData = await res.json();
+        document.getElementById('globalLoader').style.display = 'none';
+        document.getElementById('mainShell').style.display = 'block';
+        document.getElementById('t_company_name').textContent = bizData.name;
+        updateReturnBtns();
         renderAll();
-        const loader = document.getElementById('loader');
-        loader.style.opacity='0';
-        setTimeout(()=>loader.style.display='none', 400);
-        // Load catalog in background
-        loadCatalog();
-    } catch(e) { showError(); }
-}
-function showError() {
-    document.getElementById('loaderDots').style.display='none';
-    document.getElementById('loaderSub').style.display='none';
-    document.getElementById('loaderErr').style.display='block';
-    document.getElementById('errBtn').href='https://wa.me/972534218573';
-}
+      } catch (err) {
+        showGlobalError(i18n[currentLang].expired);
+      }
+    }
 
-window.onload = init;
-</script>
+    function updateReturnBtns() {
+      const phone = bizData?.bot_phone || '972534218573';
+      const channel = bizData?.channel || 'whatsapp';
+      if (channel === 'telegram') {
+        document.getElementById('btnTgReturn').style.display = 'block';
+      } else {
+        const wa = document.getElementById('btnWaReturn');
+        wa.href = `https://wa.me/${phone}`;
+        wa.style.display = 'block';
+      }
+    }
+
+    function returnToWa() {
+      window.location.href = `https://wa.me/${bizData?.bot_phone || '972534218573'}`;
+    }
+
+    function renderAll() { renderDeals(); renderStats(); renderProfile(); renderEditForm(); }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab_${tabId}`).classList.add('active');
+      const btn = document.querySelector(`[onclick="switchTab('${tabId}')"].tab-btn`);
+      if (btn) btn.classList.add('active');
+    }
+
+    function setDealFilter(f) {
+      currentDealFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.filter-btn[onclick="setDealFilter('${f}')"]`).classList.add('active');
+      renderDeals();
+    }
+
+    function getStatusData(status) {
+      const L = i18n[currentLang];
+      if (status === 'new') return { text: L.st_new, cls: 'st-new' };
+      if (status === 'in_progress') return { text: L.st_prog, cls: 'st-progress' };
+      if (status === 'closed') return { text: L.st_closed, cls: 'st-closed' };
+      if (status === 'rejected') return { text: L.st_rej, cls: 'st-rejected' };
+      if (status === 'pending_confirmation') return { text: L.st_pending_confirm, cls: 'st-pending' };
+      return { text: status, cls: 'st-new' };
+    }
+
+    function renderDeals() {
+      const container = document.getElementById('dealsContainer');
+      const L = i18n[currentLang];
+      const deals = bizData.deals || [];
+      const filtered = deals.filter(d => {
+        if (currentDealFilter === 'active') {
+          // pending_confirmation остаётся в "В работе" — долг не закрыт
+          return ['new', 'in_progress', 'pending_confirmation'].includes(d.status);
+        }
+        return ['closed', 'rejected'].includes(d.status);
+      });
+      if (filtered.length === 0) { container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`; return; }
+      container.innerHTML = filtered.map(d => {
+        const st = getStatusData(d.status);
+        const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
+        const waLink = `https://wa.me/${cleanPhone}`;
+        const isPending = d.status === 'pending_confirmation';
+        let manageBtn = '';
+        if (currentDealFilter === 'active' && !isPending) {
+          manageBtn = `<button class="btn-action" onclick="openDealModal(${d.id})">${L.card_manage}</button>`;
+        }
+        const pendingNote = isPending ? `<div class="deal-pending-note">⏳ ${L.pending_note}</div>` : '';
+        return `<div class="deal-card${isPending ? ' pending unpaid' : ''}">
+          <div class="deal-header">
+            <div><div class="deal-client">${d.client_name}</div><div class="deal-date">${d.date}</div></div>
+            <div class="status-badge ${st.cls}">${st.text}</div>
+          </div>
+          ${pendingNote}
+            <div class="deal-info">
+            ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
+            <a href="${waLink}" class="deal-wa-link" target="_blank">${L.card_contact} ${d.client_name}: ${d.client_phone}</a>
+          </div>
+          ${(d.amount || d.commission) ? `
+          <div class="deal-receipt">
+            ${d.amount ? `<div class="receipt-line"><span>💵 Сумма чека:</span><span>${d.amount} ₪</span></div>` : ''}
+            <div class="receipt-line agent">
+              <span>🎁 Бонус агенту:</span>
+              ${d.commission ? (isPending ? `<span class="unpaid-warn">-${d.commission} ₪ ⚠️</span>` : `<span class="paid-ok">-${d.commission} ₪ ✅</span>`) : '<span>—</span>'}
+            </div>
+            ${(d.amount && d.commission) ? `<div class="receipt-line total"><span>✅ Заработано:</span><span class="net-profit">${Math.round((d.amount - d.commission)*10)/10} ₪</span></div>` : ''}
+          </div>` : ''}
+          ${manageBtn}
+        </div>`;
+      }).join('');
+    }
+
+    function animateValue(id, start, end, duration, suffix = '') {
+      const obj = document.getElementById(id);
+      if (!obj) return;
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function renderStats() {
+      const s = bizData.stats || {};
+      const active = s.active || 0;
+      const closed = s.closed || 0;
+      const rejected = s.rejected || 0;
+      const totalLeads = active + closed + rejected;
+      animateValue("st_revenue", 0, s.total_revenue || 0, 1000, " ₪");
+      animateValue("st_commission", 0, s.total_commission || 0, 1000, " ₪");
+      animateValue("st_net_income", 0, s.total_earned || 0, 1000, " ₪");
+      document.getElementById('st_total_leads').textContent = totalLeads;
+      const convRate = totalLeads > 0 ? Math.round((closed / totalLeads) * 100) : 0;
+      document.getElementById('st_conversion').textContent = convRate + "%";
+      animateValue("st_f_active", 0, active, 1000);
+      animateValue("st_f_closed", 0, closed, 1000);
+      animateValue("st_f_rejected", 0, rejected, 1000);
+      setTimeout(() => {
+        document.getElementById('bar_active').style.width = (totalLeads > 0 ? (active / totalLeads) * 100 : 0) + "%";
+        document.getElementById('bar_closed').style.width = (totalLeads > 0 ? (closed / totalLeads) * 100 : 0) + "%";
+        document.getElementById('bar_rejected').style.width = (totalLeads > 0 ? (rejected / totalLeads) * 100 : 0) + "%";
+      }, 50);
+      animateValue("st_agents", 0, s.agents_count || 0, 1000);
+      animateValue("st_avg_deal", 0, s.avg_deal || 0, 1000, " ₪");
+
+      // Долг агентам
+      const debt = s.pending_debt || 0;
+      const banner = document.getElementById('debtBanner');
+      if (banner) {
+        if (debt > 0) {
+          banner.style.display = 'flex';
+          document.getElementById('debtAmount').textContent = debt + ' ₪';
+        } else {
+          banner.style.display = 'none';
+        }
+      }
+    }
+
+    function renderProfile() {
+      document.getElementById('pr_name').textContent = bizData.name || '—';
+      // niche — массив, показываем тегами
+      const nicheEl = document.getElementById('pr_niche');
+      const niches = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
+      if (niches.length > 0) {
+        nicheEl.innerHTML = niches.map(n => `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:#56CCF2;border-radius:8px;padding:2px 8px;font-size:0.8rem;margin:2px;">${n}</span>`).join(' ');
+      } else {
+        nicheEl.textContent = '—';
+      }
+      document.getElementById('pr_comm').textContent = bizData.commission || '—';
+      document.getElementById('pr_pay').textContent = bizData.payment_method || '—';
+      document.getElementById('pr_phone').textContent = bizData.phone || '—';
+    }
+
+    function renderEditForm() {
+      document.getElementById('f_name').value = bizData.name || '';
+      const catSel = document.getElementById('f_niche');
+      const currentCat = bizData.category || '';
+      for (let i = 0; i < catSel.options.length; i++) {
+        if (catSel.options[i].value === currentCat) { catSel.selectedIndex = i; break; }
+      }
+      // niche — массив подкатегорий из ARRAY
+      let currentNiches = [];
+      if (Array.isArray(bizData.niche)) {
+        currentNiches = bizData.niche;
+      } else if (typeof bizData.niche === 'string' && bizData.niche) {
+        currentNiches = bizData.niche.split(',').map(s => s.trim()).filter(Boolean);
+      }
+      if (currentCat) updateEditSubcategories(currentNiches);
+      document.getElementById('f_comm').value = bizData.commission || '';
+      document.getElementById('f_link').value = bizData.business_info || '';
+      // Кнопки оплаты
+      const pm = bizData.payment_method || '';
+      document.getElementById('f_pay').value = pm;
+      document.querySelectorAll('.pay-btn').forEach(b => {
+        b.classList.toggle('active', pm && b.textContent.includes(pm));
+      });
+    }
+
+    async function submitEditForm() {
+      const btn = document.getElementById('t_btn_save');
+      const origText = btn.textContent;
+      btn.textContent = i18n[currentLang].action_processing;
+      btn.style.opacity = '0.7';
+      const catEl = document.getElementById('f_niche');
+      const selectedSubs = getSelectedSubniches();
+      const payload = {
+        name: document.getElementById('f_name').value,
+        niche: selectedSubs.length > 0 ? selectedSubs : (catEl && catEl.value ? [catEl.value] : []),
+        category: catEl ? catEl.value : '',
+        commission: document.getElementById('f_comm').value,
+        payment_method: document.getElementById('f_pay').value,
+        business_info: document.getElementById('f_link').value
+      };
+      try {
+        const res = await fetch(`${API_URL}/api/business/update?token=${token}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Update failed');
+        bizData = { ...bizData, ...payload };
+        renderProfile();
+        btn.textContent = i18n[currentLang].success_save;
+        btn.style.background = 'var(--success)';
+        setTimeout(() => { btn.textContent = origText; btn.style.opacity = '1'; switchTab('profile'); }, 1500);
+      } catch(e) {
+        btn.textContent = i18n[currentLang].err_save;
+        btn.style.background = 'var(--danger)';
+        setTimeout(() => { btn.textContent = origText; btn.style.background = 'var(--success)'; btn.style.opacity = '1'; }, 2000);
+      }
+    }
+
+    function openDealModal(id) {
+      activeDealId = id;
+      const deal = bizData.deals.find(d => d.id === id);
+      if (!deal) return;
+      const L = i18n[currentLang];
+      document.getElementById('m_info').innerHTML = `
+        <strong>${L.m_client}</strong> ${deal.client_name} (${deal.client_phone})<br>
+        <strong>${L.card_agent}</strong> ${deal.agent_name || '—'}<br>
+        <strong>${L.m_date}</strong> ${deal.date}`;
+      document.getElementById('m_amount').value = '';
+      setModalStep('main');
+      document.getElementById('actionModal').classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('actionModal').classList.remove('active'); activeDealId = null; }
+
+    function setModalStep(step) {
+      document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+      document.getElementById(`m_step_${step}`).classList.add('active');
+    }
+
+    async function submitDealAction(actionType) {
+      const L = i18n[currentLang];
+      if (actionType === 'close' && !document.getElementById('m_amount').value) return;
+      setModalStep('result');
+      document.getElementById('m_spinner').style.display = 'block';
+      document.getElementById('m_result_msg').textContent = L.action_processing;
+      document.getElementById('m_result_msg').style.color = '#fff';
+      document.getElementById('m_btn_finish').style.display = 'none';
+      const payload = { token, deal_id: activeDealId, action: actionType };
+      if (actionType === 'close') payload.amount = document.getElementById('m_amount').value;
+      try {
+        const res = await fetch(`${API_URL}/api/deals/action`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('API Error');
+        document.getElementById('m_spinner').style.display = 'none';
+        document.getElementById('m_btn_finish').style.display = 'block';
+        const resData = await res.json().catch(() => ({}));
+        if (actionType === 'close' && resData.message === 'agent_notified') {
+          const agentName = resData.agent_name || '—';
+          const commStr = resData.comm_str || '—';
+          const waitMsgs = {
+            ru: `⏳ Отлично! Мы уведомили агента ${agentName} о закрытии сделки.\n\nОжидаем его решения по вознаграждению ${commStr} ₪.\n\nАгент может:\n💰 Получить деньги себе\n🎁 Передать бонус клиенту\n🙏 Отказаться от бонуса\n\nКак только он решит — вы получите уведомление.`,
+            he: `⏳ מצוין! הודענו לסוכן ${agentName}.\n\nממתינים להחלטתו על תגמול ${commStr} ₪.`,
+            en: `⏳ Done! Notified agent ${agentName}.\n\nWaiting for decision on ${commStr} ₪ reward.`,
+            ar: `⏳ تم! أبلغنا الوكيل ${agentName}.\n\nننتظر قراره بشأن ${commStr} ₪.`,
+          };
+          document.getElementById('m_result_msg').textContent = waitMsgs[currentLang] || waitMsgs.ru;
+          document.getElementById('m_result_msg').style.color = 'var(--pending)';
+          // Обновляем статус сделки на pending_confirmation в локальных данных
+          const deal = bizData.deals.find(d => d.id === activeDealId);
+          if (deal) deal.status = 'pending_confirmation';
+          renderDeals();
+        } else {
+          document.getElementById('m_result_msg').textContent = L.action_success;
+          document.getElementById('m_result_msg').style.color = 'var(--success)';
+          const deal = bizData.deals.find(d => d.id === activeDealId);
+          if (deal) {
+            deal.status = actionType === 'close' ? 'closed' : 'rejected';
+            if (bizData.stats) {
+              bizData.stats.active = Math.max(0, (bizData.stats.active || 0) - 1);
+              if (actionType === 'close') bizData.stats.closed = (bizData.stats.closed || 0) + 1;
+              else bizData.stats.rejected = (bizData.stats.rejected || 0) + 1;
+            }
+          }
+          renderDeals(); renderStats();
+        }
+      } catch(e) {
+        document.getElementById('m_spinner').style.display = 'none';
+        document.getElementById('m_result_msg').textContent = "Ошибка. Попробуйте ещё раз.";
+        document.getElementById('m_result_msg').style.color = 'var(--danger)';
+        document.getElementById('m_btn_finish').style.display = 'block';
+      }
+    }
+
+    const EDIT_SUBCATEGORIES = {
+      "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+      "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+      "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+      "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+      "Юриспруденция": ["Коммерческое право (для бизнеса)","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+      "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+      "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+      "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+      "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+      "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+      "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+      "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+      "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+    };
+
+    function updateEditSubcategories(preselected = []) {
+      const cat = document.getElementById('f_niche').value;
+      const group = document.getElementById('f_subniche_group');
+      const list = document.getElementById('f_subniche_list');
+      const subs = EDIT_SUBCATEGORIES[cat] || [];
+      list.innerHTML = '';
+      subs.forEach(s => {
+        const item = document.createElement('label');
+        item.className = 'niche-checkbox-item' + (preselected.includes(s) ? ' checked' : '');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = s;
+        cb.checked = preselected.includes(s);
+        cb.addEventListener('change', () => {
+          item.classList.toggle('checked', cb.checked);
+        });
+        const span = document.createElement('span');
+        span.textContent = s;
+        item.appendChild(cb);
+        item.appendChild(span);
+        list.appendChild(item);
+      });
+      group.style.display = subs.length > 0 ? 'block' : 'none';
+    }
+
+    function getSelectedSubniches() {
+      const checkboxes = document.querySelectorAll('#f_subniche_list input[type=checkbox]:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    function selectPayMethod(method) {
+      document.getElementById('f_pay').value = method;
+      document.querySelectorAll('.pay-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.includes(method));
+      });
+    }
+
+    function confirmBizSubcat() {
+      const list = document.getElementById('f_subniche_list');
+      const tags = document.getElementById('f_subniche_tags');
+      const doneBtn = document.getElementById('bizSubcatDone');
+      const editBtn = document.getElementById('bizSubcatEdit');
+      const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+      if (checked.length === 0) return;
+      tags.innerHTML = checked.map(s =>
+        `<span style="display:inline-block;background:rgba(86,204,242,0.15);border:1px solid rgba(86,204,242,0.4);color:#56CCF2;border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
+      ).join('');
+      tags.style.display = 'flex';
+      list.style.display = 'none';
+      doneBtn.style.display = 'none';
+      editBtn.style.display = 'block';
+    }
+
+    function editBizSubcat() {
+      const list = document.getElementById('f_subniche_list');
+      const tags = document.getElementById('f_subniche_tags');
+      const doneBtn = document.getElementById('bizSubcatDone');
+      const editBtn = document.getElementById('bizSubcatEdit');
+      tags.style.display = 'none';
+      list.style.display = 'flex';
+      doneBtn.style.display = 'block';
+      editBtn.style.display = 'none';
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>
