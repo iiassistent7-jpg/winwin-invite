@@ -304,15 +304,11 @@
     <div class="loader-err" id="loaderErr">
         <div class="loader-err-sub" id="t_err_sub" style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:20px;">Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.</div>
         
-        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: left; box-shadow: var(--shadow);">
-            <div style="font-size: 0.75rem; color: var(--text2); text-transform: uppercase; font-weight: 700; margin-bottom: 8px;" id="t_err_preview">Ваше сообщение:</div>
-            <div id="errPrefillText" style="font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.5;">Снова войти в личный кабинет</div>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:20px; flex-wrap:wrap;">
-            <span style="font-size:.85rem; color:var(--text2);" id="t_err_hint">Нажмите кнопку и нажмите Отправить</span>
-            <span id="t_err_pointer" style="font-size:1.2rem;">➡️</span>
-        </div>
+        <!-- prefill hidden — используется только в href кнопки -->
+        <div id="errPrefillText" style="display:none;">Снова войти в личный кабинет</div>
+        <div id="t_err_preview" style="display:none;"></div>
+        <div id="t_err_hint" style="display:none;"></div>
+        <div id="t_err_pointer" style="display:none;"></div>
 
         <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:280px; margin:0 auto 12px; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
             <i data-feather="message-circle" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_wa">Написать в WhatsApp</span>
