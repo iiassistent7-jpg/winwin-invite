@@ -53,6 +53,10 @@
         .spinner { border: 4px solid rgba(86,204,242,0.1); border-left-color: var(--accent1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
+        .loader-err { display:none; text-align:center; padding:0 24px; }
+        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
+        .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:28px; line-height: 1.5; font-weight: 500; }
+
         /* ── Fullscreen Sheets (Swipe transitions) ──────────────────── */
         .fullscreen {
             position: fixed; inset: 0; background: var(--bg); z-index: 500; overflow-y: auto; padding: 24px 16px 40px;
@@ -303,10 +307,10 @@
         
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px; text-align: left; box-shadow: var(--shadow);">
             <div style="font-size: 0.75rem; color: var(--text2); text-transform: uppercase; font-weight: 700; margin-bottom: 8px;" id="t_err_preview">Ваше сообщение:</div>
-            <div id="errPrefillText" style="font-size: 0.95rem; font-weight: 600; color: var(--text); white-space: pre-line;">Код: WINWIN...</div>
+            <div id="errPrefillText" style="font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.5;">Код: WINWIN...</div>
         </div>
 
-        <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:260px; margin:0 auto; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
+        <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:260px; margin:0 auto 12px; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
             <i data-feather="message-circle" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_wa">WhatsApp</span>
         </a>
         <a href="#" class="btn-primary btn-tg" id="errBtnTg" style="max-width:260px; margin:0 auto; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
@@ -764,7 +768,7 @@ const i18n = {
     funnel:"Воронка", f_active:"В работе", f_closed:"Закрыто", f_rejected:"Отклонено", total_leads:"Всего:", awaiting:"Ожидаем выплату от:", all_paid:"✅ Все выплаты получены", chart_title:"По нишам",
     profile_title:"Профиль", settings:"Настройки", pay_method:"Реквизиты", biz_info:"Ссылка", biz_cta:"У вас есть свой бизнес?", biz_cta_sub:"Зарегистрируйтесь как бизнес в каталоге Win-Win", pro_locked:"Закрыто", pro_desc:"Достигните 50 успешных рекомендаций, чтобы открыть статус Инфлюенсера.", pro_progress_lbl:"Ваш прогресс", pro_influencer:"Инфлюенсер", pro_unlocked_desc:"Вы устанавливаете свои правила игры.",
     base_rate:"Базовая ставка (для всех)", add_niche:"Добавить нишу", sheet_title:"Добавить спец-условие", sheet_cat:"Категория бизнеса", sheet_rate:"Ваша ставка (%)", sheet_save:"Сохранить условие",
-    nav_home:"Главная", nav_catalog:"Каталог", nav_history:"История", nav_wallet:"Кошелёк", nav_profile:"Профиль", status_new:"Новый", status_in_progress:"В работе", status_closed:"Должны", status_confirmed:"Готово", status_rejected:"Отклонён", no_deals:"Пока пусто", no_deals_sub:"Порекомендуйте проверенный бизнес другу — создайте первую сделку.", wa_btn:"Открыть WhatsApp",
+    nav_home:"Главная", nav_catalog:"Каталог", nav_history:"История", nav_wallet:"Кошелёк", nav_profile:"Профиль", status_new:"Новый", status_in_progress:"В работе", status_closed:"Должны", status_confirmed:"Готово", status_rejected:"Отклонён", no_deals:"Пока пусто", no_deals_sub:"Порекомендуйте проверенный бизнес другу — создайте первую сделку.", wa_btn:"WhatsApp", btn_tg:"Telegram",
     deal_title:"Детали сделки", edit_profile:"Редактировать профиль", edit_name:"Имя", edit_payment:"Способ получения", edit_link:"Ссылка (соцсеть / сайт)",
     biz_reg_title:"Зарегистрировать бизнес", biz_reg_submit:"Зарегистрировать", biz_reg_name:"Название бизнеса", biz_reg_niche:"Категория / ниша", biz_reg_subniche: "Специализация", biz_reg_pay:"Способ выплаты агентам",
     stat_deals:"Закрытые сделки", stat_pending:"Ожидают выплаты", stat_active:"Сделки в работе",
@@ -776,8 +780,8 @@ const i18n = {
     invite_btn_1: "Если здесь нет бизнеса,", invite_btn_2: "которого вы хотите порекомендовать", invite_btn_3: "Пригласите его в Win-Win",
     invite_title: "Пригласите их в Win-Win!", invite_desc: "Поделитесь этой ссылкой, чтобы пригласить бизнес или агента на платформу. Вы станете их рекомендателем!", btn_back_invite: "Назад в каталог",
     rew_type: "Вид благодарности", rew_pct: "Процент (%)", rew_fix: "Фикс (₪)", rew_gift: "Подарок (🎁)", rew_pct_ph: "Например: 10", rew_fix_ph: "Например: 100", rew_gift_ph: "Например: Бесплатный массаж",
-    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.",
-    err_expired_title: "Время этой сессии истекло", err_expired_sub: "Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.", err_preview: "Ваше сообщение:", err_prefill: "Код: WINWIN\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
+    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию. Если вы уже агент, бэкенд должен разрешить перерегистрацию.",
+    err_expired_title: "Время этой сессии истекло", err_expired_sub: "Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.", err_preview: "Ваше сообщение:", err_prefill: "Код: WINWIN\n\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}"
   },
   he: {
     greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך", deals_lbl:"סגורות", pending_lbl:"ממתין", active_lbl:"בעבודה", action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
@@ -789,7 +793,7 @@ const i18n = {
     base_rate:"ריבית בסיסית", add_niche:"הוסף נישה", sheet_title:"הוסף תנאי מיוחד", sheet_cat:"קטגוריית עסק", sheet_rate:"הריבית שלך (%)", sheet_save:"שמור",
     nav_home:"ראשי", nav_catalog:"קטלוג", nav_history:"היסטוריה", nav_wallet:"ארנק", nav_profile:"פרופיל",
     status_new:"חדש", status_in_progress:"בעבודה", status_closed:"חייב", status_confirmed:"הושלם", status_rejected:"נדחה",
-    no_deals:"עדיין ריק", no_deals_sub:"המליצו לחבר על עסק מוכח.", wa_btn:"פתח WhatsApp",
+    no_deals:"עדיין ריק", no_deals_sub:"המליצו לחבר על עסק מוכח.", wa_btn:"WhatsApp", btn_tg:"Telegram",
     deal_title:"פרטי העסקה", edit_profile:"עריכת פרופיל", edit_name:"שם", edit_payment:"אופן קבלה", edit_link:"קישור",
     biz_reg_title:"רישום עסק", biz_reg_submit:"רישום", biz_reg_name:"שם העסק", biz_reg_niche:"תחום", biz_reg_subniche: "התמחות", biz_reg_pay:"אופן תשלום",
     stat_deals:"עסקאות", stat_pending:"ממתינות", stat_active:"פעילות",
@@ -802,7 +806,7 @@ const i18n = {
     invite_title: "הזמינו אותם ל-Win-Win!", invite_desc: "שתפו קישור זה כדי להזמין עסק או סוכן.", btn_back_invite: "חזרה לקטלוג",
     rew_type: "סוג תגמול", rew_pct: "אחוז (%)", rew_fix: "קבוע (₪)", rew_gift: "מתנה (🎁)", rew_pct_ph: "לדוגמה: 10", rew_fix_ph: "לדוגמה: 100", rew_gift_ph: "לדוגמה: עיסוי חינם",
     biz_reg_comm_lbl: "סכום / תיאור", biz_reg_success: "הבקשה נשלחה! פתח את WhatsApp לסיום.",
-    err_expired_title: "המושב פג תוקף", err_expired_sub: "מושב זה הסתיים, לחץ על כפתור המסנג'ר וקבל קישור כניסה חדש.", err_preview: "ההודעה שלך:", err_prefill: "קוד: WINWIN\nלחץ על כפתור שלח וקבל קישור כניסה חדש {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
+    err_expired_title: "פג תוקפו של מושב זה", err_expired_sub: "מושב זה הסתיים, לחץ על כפתור המסנג'ר וקבל קישור כניסה חדש.", err_preview: "ההודעה שלך:", err_prefill: "קוד: WINWIN\n\nלחץ על כפתור שלח וקבל קישור כניסה חדש {pointer}"
   },
   en: {
     greeting:"Welcome back,", balance_label:"Your Social Capital", deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active", action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
@@ -814,7 +818,7 @@ const i18n = {
     base_rate:"Base rate", add_niche:"Add niche", sheet_title:"Add condition", sheet_cat:"Category", sheet_rate:"Your rate (%)", sheet_save:"Save",
     nav_home:"Home", nav_catalog:"Catalog", nav_history:"History", nav_wallet:"Wallet", nav_profile:"Profile",
     status_new:"New", status_in_progress:"Active", status_closed:"Owed", status_confirmed:"Done", status_rejected:"Rejected",
-    no_deals:"Still empty", no_deals_sub:"Recommend a trusted business.", wa_btn:"Open WhatsApp",
+    no_deals:"Still empty", no_deals_sub:"Recommend a trusted business.", wa_btn:"WhatsApp", btn_tg:"Telegram",
     deal_title:"Deal Details", edit_profile:"Edit Profile", edit_name:"Name", edit_payment:"Payment method", edit_link:"Link",
     biz_reg_title:"Register Business", biz_reg_submit:"Register", biz_reg_name:"Business Name", biz_reg_niche:"Category", biz_reg_subniche: "Specialization", biz_reg_pay:"Payment Method",
     stat_deals:"Closed deals", stat_pending:"Awaiting payment", stat_active:"Active deals",
@@ -827,7 +831,7 @@ const i18n = {
     invite_title: "Invite them to Win-Win!", invite_desc: "Share this link to invite a business or agent.", btn_back_invite: "Back to catalog",
     rew_type: "Reward Type", rew_pct: "Percent (%)", rew_fix: "Fixed (₪)", rew_gift: "Gift (🎁)", rew_pct_ph: "Example: 10", rew_fix_ph: "Example: 100", rew_gift_ph: "Example: Free massage",
     biz_reg_comm_lbl: "Amount / Description", biz_reg_success: "Request sent! Open WhatsApp to complete registration.",
-    err_expired_title: "Session Expired", err_expired_sub: "This session has ended, click the messenger button to get a new login link.", err_preview: "Your message:", err_prefill: "Code: WINWIN\nPress send to get a new login link {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
+    err_expired_title: "Session Expired", err_expired_sub: "This session has ended, click the messenger button to get a new login link.", err_preview: "Your message:", err_prefill: "Code: WINWIN\n\nPress send to get a new login link {pointer}"
   },
   ar: {
     greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي", deals_lbl:"مغلقة", pending_lbl:"معلق", active_lbl:"نشط", action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم توصية",
@@ -839,7 +843,7 @@ const i18n = {
     base_rate:"المعدل الأساسي", add_niche:"إضافة نيش", sheet_title:"إضافة شرط خاص", sheet_cat:"فئة العمل", sheet_rate:"معدلك (%)", sheet_save:"حفظ",
     nav_home:"الرئيسية", nav_catalog:"الكتالوج", nav_history:"السجل", nav_wallet:"المحفظة", nav_profile:"الملف",
     status_new:"جديد", status_in_progress:"نشط", status_closed:"مدين", status_confirmed:"منجز", status_rejected:"مرفوض",
-    no_deals:"لا يزال فارغاً", no_deals_sub:"أوصِ بعمل موثوق.", wa_btn:"فتح WhatsApp",
+    no_deals:"لا يزال فارغاً", no_deals_sub:"أوصِ بعمل موثوق.", wa_btn:"WhatsApp", btn_tg:"Telegram",
     deal_title:"تفاصيل الصفقة", edit_profile:"تعديل الملف", edit_name:"الاسم", edit_payment:"طريقة الاستلام", edit_link:"رابط",
     biz_reg_title:"تسجيل عمل", biz_reg_submit:"تسجيل", biz_reg_name:"اسم العمل", biz_reg_niche:"الفئة", biz_reg_subniche: "تخصص", biz_reg_pay:"طريقة الدفع",
     stat_deals:"الصفقات المغلقة", stat_pending:"في انتظار الدفع", stat_active:"الصفقات النشطة",
@@ -852,7 +856,7 @@ const i18n = {
     invite_title: "ادعهم إلى Win-Win!", invite_desc: "شارك هذا الرابط لدعوة عمل أو وكيل.", btn_back_invite: "العودة إلى الكتالوج",
     rew_type: "نوع المكافأة", rew_pct: "نسبة (%)", rew_fix: "ثابت (₪)", rew_gift: "هدية (🎁)", rew_pct_ph: "مثال: 10", rew_fix_ph: "مثال: 100", rew_gift_ph: "مثال: تدليك مجاني",
     biz_reg_comm_lbl: "المبلغ / الوصف", biz_reg_success: "تم إرسال الطلب! افتح WhatsApp لإكمال التسجيل.",
-    err_expired_title: "انتهت الجلسة", err_expired_sub: "انتهت هذه الجلسة، اضغط على زر تطبيق المراسلة واحصل على رابط دخول جديد.", err_preview: "رسالتك:", err_prefill: "الرمز: WINWIN\nاضغط على زر إرسال واحصل على رابط دخول جديد {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
+    err_expired_title: "انتهت الجلسة", err_expired_sub: "انتهت هذه الجلسة، اضغط على زر تطبيق المراسلة واحصل على رابط دخول جديد.", err_preview: "رسالتك:", err_prefill: "الرمز: WINWIN\n\nاضغط على زر إرسال واحصل على رابط دخول جديد {pointer}"
   },
 };
 
@@ -1001,7 +1005,8 @@ function applyLang() {
         const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
         const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
         const msgText = rawPrefill.replace('{pointer}', pointer);
-        document.getElementById('errPrefillText').textContent = msgText;
+        const elPrefill = document.getElementById('errPrefillText');
+        if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
 
         const msg = encodeURIComponent(msgText);
         const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
@@ -1747,7 +1752,7 @@ function renderAll() {
         setTimeout(()=>{ document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'; },100);
         document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;
         if (pct>=avgPct) { document.getElementById('eff_badge').textContent=`✅ ${L.eff_above}`; document.getElementById('eff_badge').className='eff-badge eff-good'; }
-        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge className='eff-badge eff-neutral'; }
+        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
     }
 
     // Funnel
@@ -1826,7 +1831,8 @@ function showError() {
     const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
     const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
     const msgText = rawPrefill.replace('{pointer}', pointer);
-    document.getElementById('errPrefillText').textContent = msgText;
+    const elPrefill = document.getElementById('errPrefillText');
+    if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
 
     const msg = encodeURIComponent(msgText);
     const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
