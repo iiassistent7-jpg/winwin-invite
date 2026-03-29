@@ -982,7 +982,8 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
         const isRTL = document.documentElement.dir === 'rtl';
-        const isNext = isRTL ? dx > 0 : dx < 0;
+        // Wrapper всегда LTR: свайп влево (dx<0) = следующий, вправо (dx>0) = предыдущий
+        const isNext = dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
             const navBtns = document.querySelectorAll('.nav-item');
