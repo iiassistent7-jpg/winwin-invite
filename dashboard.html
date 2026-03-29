@@ -33,7 +33,7 @@
         /* ── RTL Support ────────────────────────────────────────────── */
         [dir="rtl"] { text-align: right; }
         [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        /* bottom-nav RTL управляется через JS в setLang */
+        body.rtl-mode .bottom-nav { flex-direction: row-reverse !important; }
         [dir="rtl"] .btn-back i { transform: rotate(180deg); }
         [dir="rtl"] .deal-detail-val { text-align: left; }
         [dir="rtl"] .funnel-num { text-align: left; }
@@ -1029,13 +1029,21 @@ function setLang(l) {
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    // Динамический стиль с !important — ничто не перебьёт
-    let _dynStyle = document.getElementById('__rtl_style__');
-    if (!_dynStyle) { _dynStyle = document.createElement('style'); _dynStyle.id = '__rtl_style__'; document.head.appendChild(_dynStyle); }
-    if (l==='he'||l==='ar') {
-        _dynStyle.textContent = '.bottom-nav { flex-direction: row-reverse !important; }';
-    } else {
-        _dynStyle.textContent = '.bottom-nav { flex-direction: row !important; }';
+    // Переставляем кнопки nav физически в DOM
+    const _nav = document.querySelector('.bottom-nav');
+    if (_nav) {
+        const _btns = Array.from(_nav.querySelectorAll('.nav-item'));
+        if (l==='he'||l==='ar') {
+            // RTL: переворачиваем порядок
+            _btns.reverse().forEach(b => _nav.appendChild(b));
+        } else {
+            // LTR: восстанавливаем оригинальный порядок по tabs[]
+            const _order = ['home','catalog','history','wallet','profile'];
+            _order.forEach(id => {
+                const btn = _nav.querySelector(`[onclick*="switchTab('${id}'"]`);
+                if (btn) _nav.appendChild(btn);
+            });
+        }
     }
     // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
     const appEl = document.querySelector('.app');
@@ -1054,8 +1062,7 @@ function setLang(l) {
     extractNiches(); 
     renderCatalog();
     // nav RTL при загрузке
-    const _navInit = document.querySelector('.bottom-nav');
-    if (_navInit) _navInit.style.flexDirection = (lang==='he'||lang==='ar') ? 'row-reverse' : 'row'; 
+    document.body.classList.toggle('rtl-mode', lang==='he'||lang==='ar');
     if (leaderboardData && document.getElementById('leaderboardSheet').classList.contains('active')) {
         renderLeaderboardUI();
     }
