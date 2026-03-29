@@ -1036,18 +1036,27 @@ function toggleTheme() {
 // Физически переставляет кнопки в DOM.
 // RTL: Профиль | Кошелёк | История | Каталог | Главная (право→лево)
 // LTR: Главная | Каталог | История | Кошелёк | Профиль (лево→право)
-const NAV_ORDER_LTR = ['home', 'catalog', 'history', 'wallet', 'profile'];
-const NAV_ORDER_RTL = ['profile', 'wallet', 'history', 'catalog', 'home'];
+// ── Nav order (RTL mirror) ────────────────────────────────────────────────
+// Используем CSS order — надёжнее чем appendChild в цикле
+// LTR: home=1 catalog=2 history=3 wallet=4 profile=5
+// RTL: home=5 catalog=4 history=3 wallet=2 profile=1
+const NAV_ORDER_LTR = {home:1, catalog:2, history:3, wallet:4, profile:5};
+const NAV_ORDER_RTL = {home:5, catalog:4, history:3, wallet:2, profile:1};
 
 function applyNavOrder(isRTL) {
     const nav = document.querySelector('.bottom-nav');
     if (!nav) return;
+    // flex + order работает только если nav display:flex
+    nav.style.display = 'flex';
     const order = isRTL ? NAV_ORDER_RTL : NAV_ORDER_LTR;
-    order.forEach(tabId => {
-        const btn = Array.from(nav.querySelectorAll('.nav-item')).find(b =>
-            b.getAttribute('onclick')?.includes(`'${tabId}'`)
-        );
-        if (btn) nav.appendChild(btn); // appendChild переставляет в конец
+    nav.querySelectorAll('.nav-item').forEach(btn => {
+        const onclick = btn.getAttribute('onclick') || '';
+        for (const tabId in order) {
+            if (onclick.includes(`'${tabId}'`)) {
+                btn.style.order = order[tabId];
+                break;
+            }
+        }
     });
 }
 
