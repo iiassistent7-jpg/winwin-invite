@@ -31,19 +31,19 @@
         body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; transition:background .3s, color .3s; overscroll-behavior:none; }
         
         /* ── RTL Support ────────────────────────────────────────────── */
-        [dir="rtl"] { text-align: right; }
-        [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        [dir="rtl"] .btn-back i { transform: rotate(180deg); }
-        [dir="rtl"] .deal-detail-val { text-align: left; }
-        [dir="rtl"] .funnel-num { text-align: left; }
-        [dir="rtl"] .act-right { margin-left: 0; margin-right: auto; text-align: left; }
-        [dir="rtl"] .settings-row-value { margin-left: 0; margin-right: auto; text-align: left; }
-        [dir="rtl"] .profile-edit-hint { margin-left: 0; margin-right: auto; }
-        [dir="rtl"] .lb-agent-earned { text-align: left; }
-        [dir="rtl"] .cat-filters { direction: rtl; }
+        body.rtl { text-align: right; }
+        body.rtl .header-right { flex-direction: row-reverse; }
+        body.rtl .btn-back i { transform: rotate(180deg); }
+        body.rtl .deal-detail-val { text-align: left; }
+        body.rtl .funnel-num { text-align: left; }
+        body.rtl .act-right { margin-left: 0; margin-right: auto; text-align: left; }
+        body.rtl .settings-row-value { margin-left: 0; margin-right: auto; text-align: left; }
+        body.rtl .profile-edit-hint { margin-left: 0; margin-right: auto; }
+        body.rtl .lb-agent-earned { text-align: left; }
+        body.rtl .cat-filters { direction: rtl; }
 
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr !important; }
-        [dir="rtl"] .view, [dir="rtl"] nav, [dir="rtl"] .header { direction: rtl; }
+        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
+        body.rtl .view, body.rtl nav, body.rtl .header { direction: rtl; }
 
         .req-mark { color: var(--red); font-weight: 800; margin-left: 3px; }
 
@@ -64,10 +64,10 @@
             transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); display: none;
         }
         /* RTL: fullscreens slide in from the LEFT */
-        [dir="rtl"] .fullscreen { transform: translateX(-100%); }
+        body.rtl .fullscreen { transform: translateX(-100%); }
         .fullscreen.active { transform: translateX(0) !important; display: block; }
         .fullscreen.slide-out { transform: translateX(100%); display: block; }
-        [dir="rtl"] .fullscreen.slide-out { transform: translateX(-100%); display: block; }
+        body.rtl .fullscreen.slide-out { transform: translateX(-100%); display: block; }
         
         .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; transition:.2s; }
         .btn-back:active { opacity: 0.6; transform: translateX(-4px); }
@@ -110,7 +110,7 @@
         .balance-stat { flex:1; text-align:center; position:relative; padding:0 5px; cursor:pointer; transition:.18s; }
         .balance-stat:active { background:rgba(255,255,255,.15); transform:scale(.96); border-radius: 8px; }
         .balance-stat:not(:last-child)::after { content:''; position:absolute; right:0; top:10%; height:80%; width:1px; background:rgba(255,255,255,.2); }
-        [dir="rtl"] .balance-stat:not(:last-child)::after { right:auto; left:0; }
+        body.rtl .balance-stat:not(:last-child)::after { right:auto; left:0; }
         .balance-stat-val { font-size:1.4rem; font-weight:800; margin-bottom: 2px; }
         .balance-stat-lbl { font-size:.7rem; opacity:.8; }
         
@@ -145,7 +145,7 @@
         .funnel-lbl { width:78px; font-size:.72rem; font-weight:700; color:var(--text2); text-transform:uppercase; flex-shrink:0; }
         .funnel-track { flex:1; height:9px; background:var(--bg); border-radius:5px; overflow:hidden; border:1px solid var(--border); }
         .funnel-fill { height:100%; border-radius:5px; width:0; transition:width 1.2s cubic-bezier(.25,1,.5,1); }
-        [dir="rtl"] .funnel-fill { float: right; }
+        body.rtl .funnel-fill { float: right; }
         .fill-blue { background:var(--accent2); } .fill-green { background:var(--green); } .fill-red { background:var(--red); }
         .funnel-num { width:28px; text-align:right; font-weight:700; font-size:.85rem; }
         .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-weight:700; font-size:.9rem; }
@@ -157,7 +157,7 @@
         .eff-neutral { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
         .eff-track { height:8px; background:var(--bg); border-radius:4px; overflow:hidden; border:1px solid var(--border); }
         .eff-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent1)); border-radius:4px; width:0; transition:width 1.5s cubic-bezier(.22,1,.36,1); }
-        [dir="rtl"] .eff-fill { float: right; background:linear-gradient(-90deg,var(--accent2),var(--accent1)); }
+        body.rtl .eff-fill { float: right; background:linear-gradient(-90deg,var(--accent2),var(--accent1)); }
         .eff-compare { font-size:.73rem; color:var(--text2); margin-top:8px; text-align:center; }
         .avg-display { padding:28px 20px; text-align:center; background:linear-gradient(135deg,rgba(86,204,242,.07),rgba(47,128,237,.07)); border-radius:var(--radius); border:1px solid rgba(47,128,237,.2); margin-bottom:14px; }
         .avg-num { font-family:'Sora',sans-serif; font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; }
@@ -167,7 +167,7 @@
         /* ── PRO & Profile ───────────────────────────────────────────── */
         .pro-card { background:linear-gradient(135deg,#F2C94C,#F2994A); border:none; color:#1A1A2E; position:relative; overflow:hidden; }
         .pro-card::before { content:''; position:absolute; top:-24px; right:-24px; width:110px; height:110px; background:rgba(255,255,255,.18); border-radius:50%; }
-        [dir="rtl"] .pro-card::before { right:auto; left:-24px; }
+        body.rtl .pro-card::before { right:auto; left:-24px; }
         .pro-card-inner { position:relative; z-index:1; }
         .pro-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
         .pro-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; }
@@ -177,7 +177,7 @@
         .pro-progress-header { display:flex; justify-content:space-between; font-size:.78rem; font-weight:700; margin-bottom:8px; }
         .pro-bar-bg { height:6px; background:rgba(255,255,255,.2); border-radius:3px; overflow:hidden; }
         .pro-bar-fill { height:100%; background:#fff; width:0; border-radius:3px; transition:width 1.5s ease-in-out; }
-        [dir="rtl"] .pro-bar-fill { float:right; }
+        body.rtl .pro-bar-fill { float:right; }
         .pro-rate-row { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.22); padding:11px 14px; border-radius:11px; margin-bottom:8px; }
         .pro-add-btn { width:100%; padding:10px; background:rgba(0,0,0,.14); color:#1A1A2E; border:none; border-radius:10px; font-weight:700; font-size:.88rem; display:flex; justify-content:center; align-items:center; gap:6px; cursor:pointer; margin-top:10px; }
         .btn-lb-profile { background:rgba(0,0,0,.14); color:#1A1A2E; border:none; border-radius:10px; padding:8px 12px; font-weight:700; font-size:.8rem; display:flex; align-items:center; gap:6px; cursor:pointer; margin-top:10px; transition:.2s; }
@@ -216,7 +216,7 @@
         .bottom-nav {
             position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display:flex; justify-content:space-between; padding:10px 20px 22px; border-top:1px solid var(--border); z-index:100;
         }
-        [dir="rtl"] .bottom-nav { flex-direction: row-reverse !important; }
+        body.rtl .bottom-nav { flex-direction: row-reverse !important; }
         .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
         .nav-item.active { color:var(--accent2); }
         .nav-item span { font-size:.6rem; font-weight:700; }
@@ -268,8 +268,8 @@
         .cat-search input { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:13px 16px 13px 44px; border-radius:14px; font-size:.95rem; outline:none; transition:.2s; font-family:inherit; }
         .cat-search input:focus { border-color:var(--accent2); }
         .cat-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text2); pointer-events:none; }
-        [dir="rtl"] .cat-search-icon { left:auto; right:14px; }
-        [dir="rtl"] .cat-search input { padding:13px 44px 13px 16px; }
+        body.rtl .cat-search-icon { left:auto; right:14px; }
+        body.rtl .cat-search input { padding:13px 44px 13px 16px; }
         
         .cat-filters { display:flex; gap:10px; overflow-x:auto; padding: 4px 4px 16px 4px; margin-bottom: 8px; scrollbar-width:none; -webkit-overflow-scrolling: touch; }
         .cat-filters::-webkit-scrollbar { display:none; }
@@ -995,7 +995,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
         // RTL: свайп вправо (dx>0) = следующий таб; LTR: свайп влево (dx<0) = следующий
-        const isRTL = document.documentElement.dir === 'rtl';
+        const isRTL = document.body.classList.contains('rtl');
         const isNext = isRTL ? dx > 0 : dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
@@ -1040,12 +1040,9 @@ function setLang(l) {
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
     const isRTL = (l === 'he' || l === 'ar');
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-    // body.dir НЕ трогаем — иначе overflow в .app меняет начало координат и ломает слайдер
-
-    // Nav зеркалится визуально
-    const navEl = document.querySelector('.bottom-nav');
-    if (navEl) navEl.style.flexDirection = isRTL ? 'row-reverse' : 'row';
+    // Используем CSS-класс вместо dir-атрибута на html/body
+    // dir на html/body меняет координатную систему браузера и ломает translateX-слайдер
+    document.body.classList.toggle('rtl', isRTL);
 
     applyLang();
 
