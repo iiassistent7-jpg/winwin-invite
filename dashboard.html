@@ -53,10 +53,6 @@
         .spinner { border: 4px solid rgba(86,204,242,0.1); border-left-color: var(--accent1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .loader-err { display:none; text-align:center; padding:0 24px; }
-        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
-        .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:28px; line-height: 1.5; font-weight: 500; }
-
         /* ── Fullscreen Sheets (Swipe transitions) ──────────────────── */
         .fullscreen {
             position: fixed; inset: 0; background: var(--bg); z-index: 500; overflow-y: auto; padding: 24px 16px 40px;
@@ -82,7 +78,7 @@
         .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
 
         /* ── Views (Swipe tabs) ─────────────────────────────────────── */
-        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
+        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; direction: ltr; }
         .view { width: 20%; flex-shrink: 0; padding: 0 16px; }
 
         /* ── Cards ──────────────────────────────────────────────────── */
@@ -294,7 +290,7 @@
         .niche-checkbox-item span { font-size:.85rem; font-weight:600; color:var(--text); }
     </style>
 </head>
-<body>
+<body class="brand-theme">
   
   <div class="loader" id="globalLoader">
     <div class="loader-brand">Win-Win</div>
@@ -302,43 +298,20 @@
     <div class="spinner" id="loaderSpinner"></div>
 
     <div class="loader-err" id="loaderErr">
-
-        <!-- Win-Win лого -->
-        <div style="font-family:'Sora',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(90deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;">Win-Win</div>
-        <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;color:#A0A0B0;margin-bottom:28px;">N E T W O R K</div>
-
-        <!-- Главное сообщение -->
-        <div style="font-size:1.05rem;font-weight:700;color:#fff;line-height:1.6;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto;" id="t_err_main">
-            Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.
+        <div class="loader-err-title" id="t_err_title">Время этой сессии истекло</div>
+        <div class="loader-err-sub" id="t_err_sub">Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.</div>
+        
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px; text-align: left; box-shadow: var(--shadow);">
+            <div style="font-size: 0.75rem; color: var(--text2); text-transform: uppercase; font-weight: 700; margin-bottom: 8px;" id="t_err_preview">Ваше сообщение:</div>
+            <div id="errPrefillText" style="font-size: 0.95rem; font-weight: 600; color: var(--text); white-space: pre-line;">Код: WINWIN...</div>
         </div>
 
-        <!-- Преднабранное сообщение -->
-        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 18px;margin:0 auto 20px;max-width:290px;text-align:left;">
-            <div style="font-size:.68rem;color:#A0A0B0;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;" id="t_err_send_label">Это сообщение уже набрано:</div>
-            <div id="errPrefillText" style="font-size:.9rem;font-weight:600;color:#e0e0e0;white-space:pre-line;line-height:1.55;">Снова войти в личный кабинет</div>
-        </div>
-
-        <!-- Подсказка -->
-        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;">
-            <span style="font-size:.82rem;color:#A0A0B0;" id="t_err_hint1">Нажмите кнопку мессенджера</span>
-            <span style="font-size:1.2rem;">👇</span>
-            <span style="font-size:.82rem;color:#A0A0B0;" id="t_err_hint2">и нажмите</span>
-            <span style="font-size:.82rem;font-weight:700;color:#fff;" id="t_err_hint3">Отправить</span>
-            <span style="font-size:1.2rem;" id="t_err_pointer">➡️</span>
-        </div>
-
-        <!-- Кнопка WA (по умолчанию видна) -->
-        <a href="#" id="errBtnWa" style="display:none;max-width:290px;width:100%;margin:0 auto 12px;text-decoration:none;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:999px;padding:15px 24px;color:#fff;font-weight:800;font-size:1rem;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 24px rgba(37,211,102,0.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.855L.057 23.386a.75.75 0 00.923.923l5.562-1.457A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.512-5.228-1.402l-.374-.22-3.899 1.022 1.03-3.774-.242-.389A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-            <span id="t_err_btn_wa">Написать в WhatsApp</span>
+        <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:260px; margin:0 auto; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
+            <i data-feather="message-circle" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_wa">WhatsApp</span>
         </a>
-
-        <!-- Кнопка TG -->
-        <a href="#" id="errBtnTg" style="display:none;max-width:290px;width:100%;margin:0 auto;text-decoration:none;background:linear-gradient(135deg,#2AABEE,#229ED9);border-radius:999px;padding:15px 24px;color:#fff;font-weight:800;font-size:1rem;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 24px rgba(42,171,238,0.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            <span id="t_err_btn_tg">Написать в Telegram</span>
+        <a href="#" class="btn-primary btn-tg" id="errBtnTg" style="max-width:260px; margin:0 auto; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
+            <i data-feather="send" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_tg">Telegram</span>
         </a>
-
     </div>
   </div>
 
@@ -538,18 +511,6 @@
                     <span class="settings-row-label" id="t_biz_info">Ссылка</span>
                     <span class="settings-row-value" id="v_biz_info">—</span>
                 </div>
-                <div class="settings-row" onclick="toggleLeaderboardVisibility()" style="cursor:pointer;">
-                    <i data-feather="award" style="color:var(--text2);flex-shrink:0;"></i>
-                    <span class="settings-row-label" id="t_lb_visibility">Показывать в Зале Славы</span>
-                    <div id="lb_toggle_btn" style="width:44px;height:26px;border-radius:13px;background:var(--green);position:relative;transition:.3s;flex-shrink:0;">
-                        <div id="lb_toggle_knob" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s;"></div>
-                    </div>
-                </div>
-                <div class="settings-row" onclick="openAboutPage()" style="cursor:pointer;">
-                    <i data-feather="info" style="color:var(--text2);flex-shrink:0;"></i>
-                    <span class="settings-row-label" id="t_about_platform">О платформе</span>
-                    <i data-feather="chevron-right" style="color:var(--text2);flex-shrink:0;width:16px;height:16px;"></i>
-                </div>
             </div>
 
             <div class="card action-card" style="margin-top:8px;" onclick="openBizReg()">
@@ -571,53 +532,24 @@
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
-    <div class="fullscreen" id="leaderboardSheet" style="padding-bottom: 100px;">
-        <div style="max-width:430px; margin:0 auto;">
-            <div style="text-align:center; margin-bottom:20px;">
-                <div style="font-size:2.2rem; margin-bottom:8px; margin-top:20px;">🏆</div>
-                <h2 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800;" id="t_lb_title">Зал Славы</h2>
-            </div>
-            <!-- Фильтр по категориям -->
-            <div id="lbFilterWrap" style="display:none; margin-bottom:14px;">
-                <select id="lbCatFilter" onchange="filterLeaderboard(this.value)" style="width:100%;padding:12px 16px;border-radius:14px;background:var(--surface);color:var(--text);border:1px solid var(--border);font-size:.95rem;font-weight:600;outline:none;cursor:pointer;font-family:inherit;"></select>
-            </div>
-            <div id="lbContent"></div>
-        </div>
-        <button class="btn-primary btn-accent" onclick="closeLeaderboard()" id="t_btn_back_lb" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 398px; z-index: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">Назад</button>
-    </div>
-
-    <!-- Agent contact fullscreen -->
-    <div class="fullscreen" id="agentContactScreen">
-        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
-            <button class="btn-back" onclick="closeAgentContact()">
-                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
-                <span id="t_btn_back_agent">Назад</span>
-            </button>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:var(--shadow2);">
-                <div id="agentContactAvatar" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;text-transform:uppercase;">W</div>
-                <div id="agentContactName" style="font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:12px;">—</div>
-                <div style="display:flex;gap:12px;justify-content:center;margin-bottom:18px;">
-                    <div style="text-align:center;background:var(--bg);border-radius:12px;padding:10px 16px;border:1px solid var(--border);">
-                        <div id="agentContactDeals" style="font-size:1.1rem;font-weight:800;color:var(--accent2);">0</div>
-                        <div style="font-size:.68rem;color:var(--text2);font-weight:600;margin-top:2px;" id="t_ac_deals">Сделок</div>
-                    </div>
-                    <div style="text-align:center;background:var(--bg);border-radius:12px;padding:10px 16px;border:1px solid var(--border);">
-                        <div id="agentContactRank" style="font-size:1.1rem;font-weight:800;color:var(--accent2);">#—</div>
-                        <div style="font-size:.68rem;color:var(--text2);font-weight:600;margin-top:2px;" id="t_ac_rank">Место</div>
-                    </div>
+    <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
+        <div style="max-width:430px; margin:0 auto; min-height: 100%; display: flex; flex-direction: column;">
+            <div style="flex: 1; padding: 24px 16px;">
+                <div style="text-align:center; margin-bottom:24px;">
+                    <div style="font-size:2.2rem; margin-bottom:8px; margin-top:20px;">🏆</div>
+                    <h2 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800;" id="t_lb_title">Зал Славы</h2>
                 </div>
-                <div id="agentContactNiches" style="text-align:center;margin-bottom:18px;"></div>
-                <a href="#" class="btn-primary btn-wa" id="agentContactWaBtn" style="display:none;text-decoration:none;text-align:center;">
-                    <i data-feather="message-circle" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
-                    <span id="t_ac_write">Написать в WhatsApp</span>
-                </a>
+                <div id="lbContent"></div>
+            </div>
+            <div style="position: sticky; bottom: 0; padding: 10px 16px 24px; z-index: 600; margin-top: auto; background: linear-gradient(to top, var(--bg) 75%, transparent);">
+                <button class="btn-primary btn-accent" onclick="closeLeaderboard()" id="t_btn_back_lb" style="box-shadow: 0 4px 20px rgba(0,0,0,0.5);">Назад</button>
             </div>
         </div>
     </div>
 
     <div class="fullscreen" id="profileSheet">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
-            <div class="rec-header-card" style="margin-bottom:24px; margin-top:10px;">
+            <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px;">
                 <div class="rec-title" id="t_edit_profile" style="margin-bottom:16px; font-size:1.4rem;">Редактировать профиль</div>
                 
                 <label class="input-label" id="t_edit_name">Имя</label>
@@ -837,15 +769,15 @@ const i18n = {
     biz_reg_title:"Зарегистрировать бизнес", biz_reg_submit:"Зарегистрировать", biz_reg_name:"Название бизнеса", biz_reg_niche:"Категория / ниша", biz_reg_subniche: "Специализация", biz_reg_pay:"Способ выплаты агентам",
     stat_deals:"Закрытые сделки", stat_pending:"Ожидают выплаты", stat_active:"Сделки в работе",
     btn_back:"Назад", btn_back_catalog:"Вернуться к каталогу", copy_link:"Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес", copy_btn:"Копировать", copied:"Скопировано ✅", scan_qr:"📱 Или дайте отсканировать QR-код:", wa_return:"Вернуться в WhatsApp",
-    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка...", cat_empty:"Ничего не найдено", bonus:"🎁 Бонус:", filter_all:"Все", save:"Сохранить",
+    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка...", cat_empty:"Ничего не найдено", bonus:"🎁 Бонус:", filter_all:"Все категории", save:"Сохранить",
     remind_debt: "Напомнить о долге", remind_already_sent: "Мы уже напоминали сегодня бизнесу {biz}.", remind_success: "Напоминание успешно отправлено!", remind_error: "Ошибка отправки. Бэкенд должен обработать этот запрос.",
     pay_cash: "Наличные", pay_bank: "Перевод", lb_title: "Зал Славы", lb_widget_title: "Зал Славы", lb_widget_sub: "Топ агентов", lb_profile_btn: "Посмотреть Зал Славы",
-    lb_your_pos: "Ваша позиция", lb_top: "Топ агентов", lb_deals: "Сделок:", lb_earned: "Заработано", lb_blur_alert: "Клуб Чемпионов еще впереди! 🌟 Это место для тех, кто действительно старается помочь друзьям и бизнесу. Закройте 50 сделок, чтобы открыть имена.", filter_all: "Все категории", lb_visibility: "Показывать в Зале Славы", about_platform: "О платформе", ac_deals: "Сделок", ac_rank: "Место", ac_write: "Написать в WhatsApp",
+    lb_your_pos: "Ваша позиция", lb_top: "Топ агентов", lb_deals: "Сделок:", lb_earned: "Заработано", lb_blur_alert: "Клуб Чемпионов еще впереди! 🌟 Это место для тех, кто действительно старается помочь друзьям и бизнесу. Закройте 50 сделок, чтобы открыть имена.",
     invite_btn_1: "Если здесь нет бизнеса,", invite_btn_2: "которого вы хотите порекомендовать", invite_btn_3: "Пригласите его в Win-Win",
     invite_title: "Пригласите их в Win-Win!", invite_desc: "Поделитесь этой ссылкой, чтобы пригласить бизнес или агента на платформу. Вы станете их рекомендателем!", btn_back_invite: "Назад в каталог",
     rew_type: "Вид благодарности", rew_pct: "Процент (%)", rew_fix: "Фикс (₪)", rew_gift: "Подарок (🎁)", rew_pct_ph: "Например: 10", rew_fix_ph: "Например: 100", rew_gift_ph: "Например: Бесплатный массаж",
-    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию. Если вы уже агент, бэкенд должен разрешить перерегистрацию.",
-    err_expired_title: "Время этой сессии истекло", err_expired_sub: "Вернитесь в мессенджер и получите новую ссылку на вход", err_prefill: "Код: WINWIN\nЧтобы получить ссылку на вход в личный кабинет, просто нажмите Отправить {pointer}"
+    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.",
+    err_expired_title: "Время этой сессии истекло", err_expired_sub: "Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.", err_preview: "Ваше сообщение:", err_prefill: "Код: WINWIN\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
   },
   he: {
     greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך", deals_lbl:"סגורות", pending_lbl:"ממתין", active_lbl:"בעבודה", action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
@@ -862,15 +794,15 @@ const i18n = {
     biz_reg_title:"רישום עסק", biz_reg_submit:"רישום", biz_reg_name:"שם העסק", biz_reg_niche:"תחום", biz_reg_subniche: "התמחות", biz_reg_pay:"אופן תשלום",
     stat_deals:"עסקאות", stat_pending:"ממתינות", stat_active:"פעילות",
     btn_back:"חזור", btn_back_catalog:"חזרה לקטלוג", copy_link:"העתק ושלח קישור זה למי שתרצה להמליץ על עסק זה", copy_btn:"העתק", copied:"הועתק ✅", scan_qr:"📱 או לסרוק:", wa_return:"חזרה ל-WhatsApp",
-    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"הכל", save:"שמור",
+    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"כל הקטגוריות", save:"שמור",
     remind_debt: "הזכר חוב", remind_already_sent: "כבר הזכרנו היום לעסק {biz}.", remind_success: "התזכורת נשלחה!", remind_error: "שגיאה. יש לתקן בשרת.",
     pay_cash: "מזומן", pay_bank: "העברה בנקאית", lb_title: "היכל התהילה", lb_widget_title: "היכל התהילה", lb_widget_sub: "הסוכנים המובילים", lb_profile_btn: "צפה בהיכל התהילה",
-    lb_your_pos: "המיקום שלך", lb_top: "הסוכנים המובילים", lb_deals: "עסקאות:", lb_earned: "הרוויח", lb_blur_alert: "מועדון האלופים לפניך! 🌟 הגע ל-50 עסקאות כדי לפתוח שמות.", filter_all: "כל הקטגוריות", lb_visibility: "הצג בהיכל התהילה", about_platform: "אודות הפלטפורמה", ac_deals: "עסקאות", ac_rank: "מקום", ac_write: "כתוב ב-WhatsApp",
+    lb_your_pos: "המיקום שלך", lb_top: "הסוכנים המובילים", lb_deals: "עסקאות:", lb_earned: "הרוויח", lb_blur_alert: "מועדון האלופים לפניך! 🌟 הגע ל-50 עסקאות כדי לפתוח שמות.",
     invite_btn_1: "אם העסק לא כאן,", invite_btn_2: "ואתה רוצה להמליץ עליו", invite_btn_3: "הזמן אותו ל-Win-Win",
     invite_title: "הזמינו אותם ל-Win-Win!", invite_desc: "שתפו קישור זה כדי להזמין עסק או סוכן.", btn_back_invite: "חזרה לקטלוג",
     rew_type: "סוג תגמול", rew_pct: "אחוז (%)", rew_fix: "קבוע (₪)", rew_gift: "מתנה (🎁)", rew_pct_ph: "לדוגמה: 10", rew_fix_ph: "לדוגמה: 100", rew_gift_ph: "לדוגמה: עיסוי חינם",
     biz_reg_comm_lbl: "סכום / תיאור", biz_reg_success: "הבקשה נשלחה! פתח את WhatsApp לסיום.",
-    err_expired_title: "פג תוקפו של מושב זה", err_expired_sub: "חזור למסנג'ר וקבל קישור כניסה חדש", err_prefill: "קוד: WINWIN\nכדי לקבל קישור לאזור האישי, פשוט לחץ על 'שלח' {pointer}"
+    err_expired_title: "המושב פג תוקף", err_expired_sub: "מושב זה הסתיים, לחץ על כפתור המסנג'ר וקבל קישור כניסה חדש.", err_preview: "ההודעה שלך:", err_prefill: "קוד: WINWIN\nלחץ על כפתור שלח וקבל קישור כניסה חדש {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
   },
   en: {
     greeting:"Welcome back,", balance_label:"Your Social Capital", deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active", action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
@@ -887,15 +819,15 @@ const i18n = {
     biz_reg_title:"Register Business", biz_reg_submit:"Register", biz_reg_name:"Business Name", biz_reg_niche:"Category", biz_reg_subniche: "Specialization", biz_reg_pay:"Payment Method",
     stat_deals:"Closed deals", stat_pending:"Awaiting payment", stat_active:"Active deals",
     btn_back:"Back", btn_back_catalog:"Back to catalog", copy_link:"Copy and send this link to the person you want to recommend", copy_btn:"Copy", copied:"Copied ✅", scan_qr:"📱 Or scan:", wa_return:"Return to WhatsApp",
-    cat_search:"Search...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All", save:"Save",
+    cat_search:"Search...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All categories", save:"Save",
     remind_debt: "Remind about debt", remind_already_sent: "We already reminded {biz} today.", remind_success: "Reminder sent!", remind_error: "Error sending (Backend).",
     pay_cash: "Cash", pay_bank: "Transfer", lb_title: "Leaderboard", lb_widget_title: "Leaderboard", lb_widget_sub: "Top agents", lb_profile_btn: "View Leaderboard",
-    lb_your_pos: "Your Position", lb_top: "Top Agents", lb_deals: "Deals:", lb_earned: "Earned", lb_blur_alert: "Reach 50 deals to unlock champion names. 🌟", filter_all: "All categories", lb_visibility: "Show in Leaderboard", about_platform: "About Platform", ac_deals: "Deals", ac_rank: "Rank", ac_write: "Write on WhatsApp",
+    lb_your_pos: "Your Position", lb_top: "Top Agents", lb_deals: "Deals:", lb_earned: "Earned", lb_blur_alert: "Reach 50 deals to unlock champion names. 🌟",
     invite_btn_1: "If the business isn't here,", invite_btn_2: "and you want to recommend it", invite_btn_3: "Invite them to Win-Win",
     invite_title: "Invite them to Win-Win!", invite_desc: "Share this link to invite a business or agent.", btn_back_invite: "Back to catalog",
     rew_type: "Reward Type", rew_pct: "Percent (%)", rew_fix: "Fixed (₪)", rew_gift: "Gift (🎁)", rew_pct_ph: "Example: 10", rew_fix_ph: "Example: 100", rew_gift_ph: "Example: Free massage",
     biz_reg_comm_lbl: "Amount / Description", biz_reg_success: "Request sent! Open WhatsApp to complete registration.",
-    err_expired_title: "Session Expired", err_expired_sub: "Return to the messenger and get a new login link", err_prefill: "Code: WINWIN\nTo get a link to your dashboard, just press Send {pointer}"
+    err_expired_title: "Session Expired", err_expired_sub: "This session has ended, click the messenger button to get a new login link.", err_preview: "Your message:", err_prefill: "Code: WINWIN\nPress send to get a new login link {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
   },
   ar: {
     greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي", deals_lbl:"مغلقة", pending_lbl:"معلق", active_lbl:"نشط", action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم توصية",
@@ -912,15 +844,15 @@ const i18n = {
     biz_reg_title:"تسجيل عمل", biz_reg_submit:"تسجيل", biz_reg_name:"اسم العمل", biz_reg_niche:"الفئة", biz_reg_subniche: "تخصص", biz_reg_pay:"طريقة الدفع",
     stat_deals:"الصفقات المغلقة", stat_pending:"في انتظار الدفع", stat_active:"الصفقات النشطة",
     btn_back:"رجوع", btn_back_catalog:"العودة إلى الكتالوج", copy_link:"انسخ وأرسل هذا الرابط لمن تريد أن توصي بهذا العمل", copy_btn:"نسخ", copied:"تم ✅", scan_qr:"📱 أو امسح:", wa_return:"العودة إلى WhatsApp",
-    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"الكل", save:"حفظ",
+    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"جميع الفئات", save:"حفظ",
     remind_debt: "تذكير بالدين", remind_already_sent: "لقد قمنا بتذكير {biz} اليوم بالفعل.", remind_success: "تم الإرسال!", remind_error: "خطأ في الإرسال.",
     pay_cash: "نقداً", pay_bank: "تحويل", lb_title: "قاعة المشاهير", lb_widget_title: "قاعة المشاهير", lb_widget_sub: "أفضل وكلاء", lb_profile_btn: "عرض قاعة المشاهير",
-    lb_your_pos: "مركزك", lb_top: "أفضل الوكلاء", lb_deals: "صفقات:", lb_earned: "المكتسبات", lb_blur_alert: "حقق 50 صفقة لفتح أسماء الأبطال. 🌟", filter_all: "جميع الفئات", lb_visibility: "إظهار في لوحة الشرف", about_platform: "عن المنصة", ac_deals: "صفقات", ac_rank: "مركز", ac_write: "اكتب على WhatsApp",
+    lb_your_pos: "مركزك", lb_top: "أفضل الوكلاء", lb_deals: "صفقات:", lb_earned: "المكتسبات", lb_blur_alert: "حقق 50 صفقة لفتح أسماء الأبطال. 🌟",
     invite_btn_1: "إذا كان العمل غير موجود،", invite_btn_2: "وتريد أن توصي به", invite_btn_3: "ادعهم إلى Win-Win",
     invite_title: "ادعهم إلى Win-Win!", invite_desc: "شارك هذا الرابط لدعوة عمل أو وكيل.", btn_back_invite: "العودة إلى الكتالوج",
     rew_type: "نوع المكافأة", rew_pct: "نسبة (%)", rew_fix: "ثابت (₪)", rew_gift: "هدية (🎁)", rew_pct_ph: "مثال: 10", rew_fix_ph: "مثال: 100", rew_gift_ph: "مثال: تدليك مجاني",
     biz_reg_comm_lbl: "المبلغ / الوصف", biz_reg_success: "تم إرسال الطلب! افتح WhatsApp لإكمال التسجيل.",
-    err_expired_title: "انتهت صلاحية هذه الجلسة", err_expired_sub: "ارجع إلى تطبيق المراسلة واحصل على رابط جديد", err_prefill: "الرمز: WINWIN\nللحصول على الرابط، فقط اضغط إرسال {pointer}"
+    err_expired_title: "انتهت الجلسة", err_expired_sub: "انتهت هذه الجلسة، اضغط على زر تطبيق المراسلة واحصل على رابط دخول جديد.", err_preview: "رسالتك:", err_prefill: "الرمز: WINWIN\nاضغط على زر إرسال واحصل على رابط دخول جديد {pointer}", btn_tg: "Telegram", btn_wa: "WhatsApp"
   },
 };
 
@@ -1037,7 +969,7 @@ function applyLang() {
         't_invite_title':'invite_title','t_invite_desc':'invite_desc','t_copy_link_inv':'copy_link','t_scan_qr_inv':'scan_qr',
         't_rew_type':'rew_type', 't_rew_pct':'rew_pct', 't_rew_fix':'rew_fix', 't_rew_gift':'rew_gift', 't_biz_reg_comm_lbl': 'biz_reg_comm_lbl',
         't_btn_cancel_prof': 'btn_back', 't_copy_link': 'copy_link',
-        't_err_title': 'err_expired_title', 't_err_sub': 'err_expired_sub'
+        't_err_title': 'err_expired_title', 't_err_sub': 'err_expired_sub', 't_err_preview': 'err_preview'
     };
     for (const [id,key] of Object.entries(map)) {
         const el = document.getElementById(id);
@@ -1066,16 +998,21 @@ function applyLang() {
     }
 
     if (dashData || true) { 
-        const msg = encodeURIComponent('Снова войти в личный кабинет');
-        
+        const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
+        const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
+        const msgText = rawPrefill.replace('{pointer}', pointer);
+        document.getElementById('errPrefillText').textContent = msgText;
+
+        const msg = encodeURIComponent(msgText);
         const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
         const btnWa = document.getElementById('errBtnWa');
         if(btnWa) btnWa.href = `https://wa.me/${phone}?text=${msg}`;
+        
+        const btnTgLabel = document.getElementById('t_err_btn_tg');
+        if (btnTgLabel) btnTgLabel.textContent = L.btn_tg;
+        const btnWaLabel = document.getElementById('t_err_btn_wa');
+        if (btnWaLabel) btnWaLabel.textContent = L.btn_wa;
     }
-    const elLbVis2 = document.getElementById('t_lb_visibility');
-    if (elLbVis2) elLbVis2.textContent = (i18n[lang]||i18n.ru).lb_visibility || 'Показывать в Зале Славы';
-    const elAbout2 = document.getElementById('t_about_platform');
-    if (elAbout2) elAbout2.textContent = (i18n[lang]||i18n.ru).about_platform || 'О платформе';
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
@@ -1173,8 +1110,7 @@ function openDealDetail(lead) {
     
     const actionsContainer = document.getElementById('dealActionButtons');
     actionsContainer.innerHTML = '';
-    // Кнопка только если: закрыта, деньги не переведены, комиссия есть
-    if (lead.status === 'closed' && lead.payment_confirmed === false && lead.commission > 0) {
+    if (lead.status === 'closed') {
         const btnText = L.remind_debt || 'Напомнить о долге';
         const safeBizName = lead.biz_name.replace(/'/g, "\\'");
         actionsContainer.innerHTML = `
@@ -1236,15 +1172,9 @@ async function openLeaderboard() {
     if (!leaderboardData) {
         contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || 'Загрузка...'}</div>`;
         try {
-            const agentId = dashData?.agent_id;
-            if (!agentId) throw new Error('no agent_id');
-            const lbTokRes = await fetch(`${API_URL}/api/leaderboard/token?agent_id=${agentId}`);
-            if (!lbTokRes.ok) throw new Error('token error');
-            const lbTok = (await lbTokRes.json()).token;
-            const res = await fetch(`${API_URL}/api/leaderboard?token=${lbTok}`);
+            const res = await fetch(`${API_URL}/api/leaderboard?token=${token}`);
             if (res.ok) {
                 leaderboardData = await res.json();
-                populateLbCategoryFilter();
                 renderLeaderboardUI();
             } else {
                 contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка загрузки рейтинга.</div>`;
@@ -1254,7 +1184,6 @@ async function openLeaderboard() {
             contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка сети.</div>`;
         }
     } else {
-        populateLbCategoryFilter();
         renderLeaderboardUI();
     }
 }
@@ -1267,120 +1196,63 @@ function closeLeaderboard() {
     }, 300);
 }
 
-let lbCurrentCat = '__all__';
-
-function populateLbCategoryFilter() {
-    if (!leaderboardData) return;
-    const L = i18n[lang] || i18n.ru;
-    const allCats = new Set();
-    (leaderboardData.top_agents || []).forEach(a => (a.niche_categories || []).forEach(c => allCats.add(c)));
-    const sel = document.getElementById('lbCatFilter');
-    const wrap = document.getElementById('lbFilterWrap');
-    if (!sel || allCats.size === 0) { if (wrap) wrap.style.display = 'none'; return; }
-    sel.innerHTML = `<option value="__all__">${L.filter_all || 'Все категории'}</option>`;
-    allCats.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat; opt.textContent = cat;
-        sel.appendChild(opt);
-    });
-    sel.value = lbCurrentCat;
-    if (wrap) wrap.style.display = 'block';
-}
-
-function filterLeaderboard(cat) {
-    lbCurrentCat = cat;
-    renderLeaderboardUI();
-}
-
 function renderLeaderboardUI() {
     if (!leaderboardData) return;
     const L = i18n[lang] || i18n.ru;
-    const isPro = (dashData && dashData.success_deals >= 50);
+    const isPro = (dashData && dashData.success_deals >= 50); 
     const curr = dashData?.currency || '₪';
-
-    let topAgents = leaderboardData.top_agents || [];
-    if (lbCurrentCat !== '__all__') {
-        topAgents = topAgents.filter(a => (a.niche_categories || []).includes(lbCurrentCat));
-    }
-
-    const cur = leaderboardData.current_agent;
-    const curInTop = cur && topAgents.some(a => a.rank === cur.rank);
     let html = '';
 
-    if (cur && !curInTop && cur.rank > 0 && lbCurrentCat === '__all__') {
+    let isCurrentInTop = false;
+    if (leaderboardData.top_agents) {
+        leaderboardData.top_agents.forEach(a => {
+            if (leaderboardData.current_agent && a.rank === leaderboardData.current_agent.rank) isCurrentInTop = true;
+        });
+    }
+
+    if (leaderboardData.current_agent && !isCurrentInTop && leaderboardData.current_agent.rank > 0) {
         html += `<h3 class="sec-title" style="margin-top:0;">${L.lb_your_pos}</h3>`;
-        html += `<div class="lb-agents-list">${createAgentCardHTML(cur, true, isPro, 'pos', curr, L)}</div>`;
+        html += `<div class="lb-agents-list">${createAgentCardHTML(leaderboardData.current_agent, true, isPro, 'pos', curr, L)}</div>`;
     }
 
     html += `<h3 class="sec-title" style="margin-top:0;">${L.lb_top}</h3>`;
     html += `<div class="lb-agents-list">`;
-    if (topAgents.length > 0) {
-        topAgents.forEach(agent => {
-            const isCurrent = !!(cur && agent.rank === cur.rank);
+    if (leaderboardData.top_agents && leaderboardData.top_agents.length > 0) {
+        leaderboardData.top_agents.forEach((agent) => {
+            const isCurrent = (leaderboardData.current_agent && agent.rank === leaderboardData.current_agent.rank);
             html += createAgentCardHTML(agent, isCurrent, isPro, 'top', curr, L);
         });
-    } else {
-        html += `<div class="empty-state"><div class="empty-sub">${L.cat_empty || 'Ничего не найдено'}</div></div>`;
     }
-    html += '</div>';
+    html += `</div>`;
+    
     document.getElementById('lbContent').innerHTML = html;
 }
 
 function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
-    let rankBadge = agent.rank, rankClass = '';
+    let rankBadge = agent.rank;
+    let rankClass = '';
     if (agent.rank === 1) { rankBadge = '🥇'; rankClass = 'lb-rank-1'; }
     else if (agent.rank === 2) { rankBadge = '🥈'; rankClass = 'lb-rank-2'; }
     else if (agent.rank === 3) { rankBadge = '🥉'; rankClass = 'lb-rank-3'; }
-
+    
     const highlightClass = isCurrent ? 'highlight' : '';
     const shouldBlur = !isPro && !isCurrent;
     const infoClass = shouldBlur ? 'lb-agent-info lb-blurred' : 'lb-agent-info';
-    const clickable = !shouldBlur && isPro && !isCurrent;
-    const cardClick = shouldBlur
-        ? `onclick="alert('${(L.lb_blur_alert || '').replace(/'/g, "\'")}')"`
-        : (clickable ? `onclick='openAgentContact(${JSON.stringify(agent)})'` : '');
-
-    const niches = (agent.niche_categories || []).slice(0, 3);
-    const nichesHtml = niches.length
-        ? `<div style="margin-top:4px;">${niches.map(n => `<span style="display:inline-block;background:rgba(47,128,237,.1);color:var(--accent2);border-radius:6px;padding:2px 7px;font-size:.65rem;font-weight:700;margin:2px;">${n}</span>`).join('')}</div>`
-        : '';
+    const onClickAttr = shouldBlur ? `onclick="alert('${L.lb_blur_alert.replace(/'/g, "\\'")}')"` : '';
 
     return `
-        <div class="lb-agent-card ${highlightClass}" ${cardClick} style="${clickable ? 'cursor:pointer;' : ''}">
+        <div class="lb-agent-card ${highlightClass}">
             <div class="lb-agent-rank ${rankClass}">${rankBadge}</div>
-            <div class="${infoClass}">
+            <div class="${infoClass}" ${onClickAttr}>
                 <div class="lb-agent-name">${agent.name}</div>
                 <div class="lb-agent-deals">${L.lb_deals} <span>${agent.deals_count}</span></div>
-                ${nichesHtml}
             </div>
             <div class="lb-agent-earned">
                 <div class="lb-earned-lbl">${L.lb_earned}</div>
-                <div class="lb-earned-val">${agent.deals_count} ★</div>
+                <div class="lb-earned-val">${Math.round(agent.earned)} ${curr}</div>
             </div>
         </div>
     `;
-}
-
-function openAgentContact(agent) {
-    document.getElementById('agentContactAvatar').textContent = (agent.name[0] || 'W').toUpperCase();
-    document.getElementById('agentContactName').textContent = agent.name;
-    document.getElementById('agentContactDeals').textContent = agent.deals_count;
-    document.getElementById('agentContactRank').textContent = '#' + agent.rank;
-    const niches = agent.niche_categories || [];
-    document.getElementById('agentContactNiches').innerHTML = niches.length
-        ? niches.map(n => `<span style="display:inline-block;background:rgba(47,128,237,.1);color:var(--accent2);border-radius:8px;padding:4px 10px;font-size:.75rem;font-weight:700;margin:3px;">${n}</span>`).join('')
-        : '';
-    const waBtn = document.getElementById('agentContactWaBtn');
-    if (agent.wa_phone) { waBtn.href = `https://wa.me/${agent.wa_phone}`; waBtn.style.display = 'flex'; }
-    else waBtn.style.display = 'none';
-    document.getElementById('agentContactScreen').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    window.scrollTo(0, 0);
-    feather.replace();
-}
-function closeAgentContact() {
-    document.getElementById('agentContactScreen').classList.remove('active');
-    document.body.style.overflow = '';
 }
 
 // ── Stat detail sheet ─────────────────────────────────────────────────────
@@ -1659,16 +1531,6 @@ async function loadCatalog() {
     if (!dashData?.agent_id) return;
     catalogAgentId = dashData.agent_id;
     catalogBotPhone = dashData.bot_phone || "972534218573";
-    const cacheKey = `catalog_${dashData.agent_id}`;
-    try {
-        const cached = sessionStorage.getItem(cacheKey);
-        if (cached) {
-            allBusinesses = JSON.parse(cached);
-            if (typeof extractNiches === 'function') extractNiches();
-            renderCatalog();
-            return;
-        }
-    } catch(e) {}
     try {
         const catTokRes = await fetch(`${API_URL}/api/catalog/token?agent_id=${catalogAgentId}`);
         const catTokData = await catTokRes.json();
@@ -1676,7 +1538,6 @@ async function loadCatalog() {
         const catRes = await fetch(`${API_URL}/api/catalog?token=${catTok}`);
         const catData = await catRes.json();
         allBusinesses = catData.businesses || [];
-            try { sessionStorage.setItem(cacheKey, JSON.stringify(allBusinesses)); } catch(e) {}
         document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
         extractNiches();
         renderCatalog();
@@ -1827,8 +1688,6 @@ function renderAll() {
     const d = dashData;
     const L = i18n[lang]||i18n.ru;
     const curr = d.currency || '₪';
-    lbVisible = d.show_in_leaderboard !== false;
-    renderLbToggle();
     document.getElementById('t_name').textContent = d.user_name || '—';
 
     // Balance
@@ -1888,7 +1747,7 @@ function renderAll() {
         setTimeout(()=>{ document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'; },100);
         document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;
         if (pct>=avgPct) { document.getElementById('eff_badge').textContent=`✅ ${L.eff_above}`; document.getElementById('eff_badge').className='eff-badge eff-good'; }
-        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
+        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge className='eff-badge eff-neutral'; }
     }
 
     // Funnel
@@ -1954,136 +1813,37 @@ async function init() {
         document.getElementById('mainShell').style.display='block';
         
         renderAll();
-        // Deep link: открываем нужную вкладку из ?tab=
-        const tabParam = new URLSearchParams(window.location.search).get('tab');
-        const tabMap = {home:0, catalog:1, history:2, wallet:3, profile:4};
-        if (tabParam && tabMap.hasOwnProperty(tabParam)) {
-            const navBtns = document.querySelectorAll('.nav-item');
-            switchTab(tabParam, navBtns[tabMap[tabParam]]);
-        }
         loadCatalog();
     } catch(e) { showError(); }
 }
-// ── Leaderboard visibility toggle ────────────────────────────────────────
-let lbVisible = true;
-function renderLbToggle() {
-    const btn = document.getElementById('lb_toggle_btn');
-    const knob = document.getElementById('lb_toggle_knob');
-    if (!btn) return;
-    if (lbVisible) {
-        btn.style.background = 'var(--green)';
-        knob.style.right = '3px'; knob.style.left = 'auto';
-    } else {
-        btn.style.background = 'rgba(0,0,0,0.2)';
-        knob.style.left = '3px'; knob.style.right = 'auto';
-    }
-}
-async function toggleLeaderboardVisibility() {
-    lbVisible = !lbVisible;
-    renderLbToggle();
-    try {
-        await fetch(`${API_URL}/api/profile/update?token=${token}`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({show_in_leaderboard: lbVisible})
-        });
-    } catch(e) {}
-}
-function openAboutPage() {
-    window.open(`https://winwinnetwork.pro/about.html?lang=${lang}&from=cabinet&token=${token}`, '_blank');
-}
-
 function showError() {
-    document.getElementById('loaderDots').style.display = 'none';
-    document.getElementById('loaderSub').style.display = 'none';
-    document.getElementById('loaderSpinner').style.display = 'none';
-    document.getElementById('loaderErr').style.display = 'block';
-
+    document.getElementById('loaderDots').style.display='none';
+    document.getElementById('loaderSub').style.display='none';
+    document.getElementById('loaderSpinner').style.display='none';
+    document.getElementById('loaderErr').style.display='block';
+    
     const L = i18n[lang] || i18n.ru;
-    const isRtl = (lang === 'he' || lang === 'ar');
-    const pointer = isRtl ? '👈' : '➡️';
+    const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
+    const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
+    const msgText = rawPrefill.replace('{pointer}', pointer);
+    document.getElementById('errPrefillText').textContent = msgText;
 
-    // Переводим тексты экрана ошибки
-    const ETEXTS = {
-        ru: {
-            main: 'Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.',
-            send_label: 'Это сообщение уже набрано:',
-            hint1: 'Нажмите кнопку мессенджера',
-            hint2: 'и нажмите',
-            hint3: 'Отправить',
-            btn_wa: 'Написать в WhatsApp',
-            btn_tg: 'Написать в Telegram',
-            prefill: 'Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}',
-        },
-        he: {
-            main: 'הסשן הזה הסתיים, לחצו על כפתור המסנגר וקבלו קישור חדש לכניסה.',
-            send_label: 'ההודעה כבר מוכנה:',
-            hint1: 'לחצו על כפתור המסנגר',
-            hint2: 'ואז לחצו',
-            hint3: 'שלח',
-            btn_wa: 'לפתוח WhatsApp',
-            btn_tg: 'לפתוח Telegram',
-            prefill: 'להיכנס שוב לאזור האישי\nלחצו על שלח וקבלו קישור חדש {pointer}',
-        },
-        en: {
-            main: 'This session has ended. Tap the messenger button to get a new login link.',
-            send_label: 'This message is ready to send:',
-            hint1: 'Tap the messenger button',
-            hint2: 'then tap',
-            hint3: 'Send',
-            btn_wa: 'Open WhatsApp',
-            btn_tg: 'Open Telegram',
-            prefill: 'Log in again to my dashboard\nTap Send to get a new login link {pointer}',
-        },
-        ar: {
-            main: 'انتهت هذه الجلسة، اضغط على زر المراسلة واحصل على رابط دخول جديد.',
-            send_label: 'الرسالة جاهزة:',
-            hint1: 'اضغط زر المراسلة',
-            hint2: 'ثم اضغط',
-            hint3: 'إرسال',
-            btn_wa: 'فتح WhatsApp',
-            btn_tg: 'فتح Telegram',
-            prefill: 'تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}',
-        },
-    };
-    const ET = ETEXTS[lang] || ETEXTS.ru;
-
-    // Заполняем тексты
-    const elMain = document.getElementById('t_err_main');
-    if (elMain) elMain.textContent = ET.main;
-    const elLabel = document.getElementById('t_err_send_label');
-    if (elLabel) elLabel.textContent = ET.send_label;
-    const elHint1 = document.getElementById('t_err_hint1');
-    if (elHint1) elHint1.textContent = ET.hint1;
-    const elHint2 = document.getElementById('t_err_hint2');
-    if (elHint2) elHint2.textContent = ET.hint2;
-    const elHint3 = document.getElementById('t_err_hint3');
-    if (elHint3) elHint3.textContent = ET.hint3;
-    const elPtrEl = document.getElementById('t_err_pointer');
-    if (elPtrEl) elPtrEl.textContent = pointer;
-
-    // Преднабранный текст в карточке (видимый пользователю)
-    const prefillText = ET.prefill.replace('{pointer}', pointer);
-    const elPrefill = document.getElementById('errPrefillText');
-    if (elPrefill) elPrefill.textContent = prefillText;
-
-    // Преднабранный текст для ссылки (URL-encoded)
-    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : '972534218573';
-    const msgEncoded = encodeURIComponent(prefillText);
-
-    // Показываем нужную кнопку
+    const msg = encodeURIComponent(msgText);
+    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
+    
     const isTg = dashData && dashData.channel === 'telegram';
     if (isTg) {
         const btnTg = document.getElementById('errBtnTg');
-        const lblTg = document.getElementById('t_err_btn_tg');
-        if (lblTg) lblTg.textContent = ET.btn_tg;
-        btnTg.style.display = 'flex';
-        btnTg.href = `https://t.me/winwin_lead_bot?start=link`;
+        if (btnTg) {
+            btnTg.style.display = 'flex';
+            btnTg.href = `https://t.me/winwin_lead_bot?start=link`;
+        }
     } else {
         const btnWa = document.getElementById('errBtnWa');
-        const lblWa = document.getElementById('t_err_btn_wa');
-        if (lblWa) lblWa.textContent = ET.btn_wa;
-        btnWa.style.display = 'flex';
-        btnWa.href = `https://wa.me/${phone}?text=${msgEncoded}`;
+        if (btnWa) {
+            btnWa.style.display = 'flex';
+            btnWa.href = `https://wa.me/${phone}?text=${msg}`;
+        }
     }
 }
 
