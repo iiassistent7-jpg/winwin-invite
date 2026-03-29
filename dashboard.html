@@ -987,9 +987,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
             const navBtns = document.querySelectorAll('.nav-item');
-            // При RTL бар визуально перевёрнут — берём кнопку с зеркальным индексом
-            const btnIdx = isRTL ? (tabs.length - 1 - next) : next;
-            switchTab(tabs[next], navBtns[btnIdx]);
+            switchTab(tabs[next], navBtns[next]);
         }
     }
 });
@@ -1118,15 +1116,12 @@ function applyLang() {
 
 // ── Navigation ────────────────────────────────────────────────────────────
 function switchTab(tabId, btnEl) {
-    const isRTL = document.documentElement.dir === 'rtl';
     const navBtns = document.querySelectorAll('.nav-item');
     navBtns.forEach(b => b.classList.remove('active'));
 
-    // Если btnEl не передан — находим правильную кнопку с учётом RTL
     const index = tabs.indexOf(tabId);
     if (!btnEl && index !== -1) {
-        const btnIdx = isRTL ? (tabs.length - 1 - index) : index;
-        btnEl = navBtns[btnIdx];
+        btnEl = navBtns[index];
     }
     if (btnEl) btnEl.classList.add('active');
 
