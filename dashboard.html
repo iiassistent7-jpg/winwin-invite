@@ -33,7 +33,6 @@
         /* ── RTL Support ────────────────────────────────────────────── */
         [dir="rtl"] { text-align: right; }
         [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        body.rtl-mode .bottom-nav { flex-direction: row-reverse !important; }
         [dir="rtl"] .btn-back i { transform: rotate(180deg); }
         [dir="rtl"] .deal-detail-val { text-align: left; }
         [dir="rtl"] .funnel-num { text-align: left; }
@@ -44,7 +43,6 @@
         [dir="rtl"] .cat-filters { direction: rtl; }
 
         .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
-        /* Контент вьюшек остаётся RTL при смене языка */
         [dir="rtl"] .view, [dir="rtl"] nav, [dir="rtl"] .header { direction: rtl; }
 
         .req-mark { color: var(--red); font-weight: 800; margin-left: 3px; }
@@ -65,10 +63,11 @@
             position: fixed; inset: 0; background: var(--bg); z-index: 500; overflow-y: auto; padding: 24px 16px 40px;
             transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); display: none;
         }
+        /* RTL: fullscreens slide in from the LEFT */
         [dir="rtl"] .fullscreen { transform: translateX(-100%); }
         .fullscreen.active { transform: translateX(0) !important; display: block; }
-        .fullscreen.slide-out-left { transform: translateX(-100%); display: block; }
-        [dir="rtl"] .fullscreen.slide-out-left { transform: translateX(100%); display: block; }
+        .fullscreen.slide-out { transform: translateX(100%); display: block; }
+        [dir="rtl"] .fullscreen.slide-out { transform: translateX(-100%); display: block; }
         
         .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; transition:.2s; }
         .btn-back:active { opacity: 0.6; transform: translateX(-4px); }
@@ -85,7 +84,21 @@
         .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
 
         /* ── Views (Swipe tabs) ─────────────────────────────────────── */
-        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; direction: ltr; position: relative; left: 0; }
+        /*
+         * ВАЖНО: wrapper всегда LTR-порядок [Home][Catalog][History][Wallet][Profile]
+         * Offset всегда: translateX(-index * 20%)
+         * Nav зеркалится визуально через flex-direction:row-reverse в RTL
+         * Свайп: dx < 0 (влево) всегда = index+1; dx > 0 (вправо) = index-1
+         */
+        .views-wrapper {
+            display: flex;
+            width: 500%;
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+            direction: ltr; /* wrapper всегда LTR */
+            position: relative;
+            left: 0;
+        }
         .view { width: 20%; flex-shrink: 0; padding: 0 16px; }
 
         /* ── Cards ──────────────────────────────────────────────────── */
@@ -257,7 +270,6 @@
         [dir="rtl"] .cat-search-icon { left:auto; right:14px; }
         [dir="rtl"] .cat-search input { padding:13px 44px 13px 16px; }
         
-        /* 3D Category Pills (Swipeable) */
         .cat-filters { display:flex; gap:10px; overflow-x:auto; padding: 4px 4px 16px 4px; margin-bottom: 8px; scrollbar-width:none; -webkit-overflow-scrolling: touch; }
         .cat-filters::-webkit-scrollbar { display:none; }
         .filter-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:10px 18px; border-radius:999px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.85rem; transition:.2s; box-shadow: 0 4px 0 rgba(0,0,0,0.05); }
@@ -286,7 +298,6 @@
         .btn-copy.copied { background:var(--green); }
         .qr-container { text-align:center; padding:16px; background:#fff; border-radius:16px; display:inline-block; margin:0 auto; box-shadow:0 4px 16px rgba(0,0,0,.1); }
 
-        /* Pay/Reward Buttons Row styling */
         .pay-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:10px 8px; border-radius:12px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.8rem; transition:.2s; flex:1; text-align:center;}
         .pay-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
 
@@ -307,7 +318,6 @@
     <div class="loader-err" id="loaderErr">
         <div class="loader-err-sub" id="t_err_sub" style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:20px;">Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.</div>
         
-        <!-- prefill hidden — используется только в href кнопки -->
         <div id="errPrefillText" style="display:none;">Снова войти в личный кабинет</div>
         <div id="t_err_preview" style="display:none;"></div>
         <div id="t_err_hint" style="display:none;"></div>
@@ -532,11 +542,11 @@
         </div>
 
     </div><nav class="bottom-nav">
-        <button id="navBtn0" class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
-        <button id="navBtn1" class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
-        <button id="navBtn2" class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
-        <button id="navBtn3" class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
-        <button id="navBtn4" class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
+        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
     <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
@@ -729,7 +739,6 @@ const CATEGORIES_STANDARD = {
     "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
 };
 
-// ── ПЕРЕВОДЫ КАТЕГОРИЙ ───────────────────────────────────────────
 const CAT_TR = {
     "Красота и эстетика": {he: "יופי ואסתטיקה", en: "Beauty & Aesthetics", ar: "الجمال والجماليات"},
     "Еда и рестораны": {he: "אוכל ומסעדות", en: "Food & Restaurants", ar: "الطعام والمطاعم"},
@@ -746,7 +755,6 @@ const CAT_TR = {
     "Бизнес и B2B услуги": {he: "עסקים ושירותי B2B", en: "Business & B2B", ar: "الأعمال وخدمات B2B"}
 };
 
-// ── ПЕРЕВОДЫ ПОДКАТЕГОРИЙ (ru→he/en/ar) ────────────────────────────
 const SUBCAT_TR = {
     "Косметология": {he:"קוסמטולוגיה", en:"Cosmetology", ar:"التجميل"},
     "Инъекционная косметология": {he:"קוסמטולוגיה בהזרקות", en:"Injection Cosmetology", ar:"التجميل بالحقن"},
@@ -824,19 +832,16 @@ function translateSubcat(ruName, targetLang) {
     if (targetLang === 'ru' || !SUBCAT_TR[ruName]) return ruName;
     return SUBCAT_TR[ruName][targetLang] || ruName;
 }
-
 function translateNiches(niche, targetLang) {
     if (!niche || targetLang === 'ru') return niche;
     if (Array.isArray(niche)) return niche.map(n => translateSubcat(n, targetLang)).join(', ');
     if (typeof niche === 'string') return niche.split(',').map(n => translateSubcat(n.trim(), targetLang)).join(', ');
     return niche;
 }
-
 function getCatName(sysName, targetLang) {
     if (targetLang === 'ru' || !CAT_TR[sysName]) return sysName;
     return CAT_TR[sysName][targetLang] || sysName;
 }
-
 function populateCategories() {
     const bizRegSelect = document.getElementById('bizRegNiche');
     const nicheSheetSelect = document.getElementById('nicheSheetCat');
@@ -963,9 +968,16 @@ let leaderboardData = null;
 
 const tabs = ['home', 'catalog', 'history', 'wallet', 'profile'];
 
-// ── Swipe Logic (RTL Aware) ───────────────────────────────────────────────
+// ── Swipe Logic ───────────────────────────────────────────────────────────
+// ПРАВИЛО: wrapper всегда LTR. Offset = -index * 20% независимо от языка.
+// Свайп: dx < 0 (влево) = index+1; dx > 0 (вправо) = index-1. Всегда одинаково.
+// Nav зеркалится визуально через flex-direction:row-reverse в RTL, но index не меняется.
+
 let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
-function currentTabIndex() { return tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active')); }
+
+function currentTabIndex() {
+    return tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+}
 
 document.querySelector('.app').addEventListener('touchstart', e => {
     if (document.querySelector('.fullscreen.active') || document.querySelector('.bottom-sheet.active')) return;
@@ -981,10 +993,8 @@ document.querySelector('.app').addEventListener('touchend', e => {
     const dt = Date.now() - touchStartTime;
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
-        const isRTL = document.documentElement.dir === 'rtl';
-        const _swRTL = (lang==='he'||lang==='ar');
-        // LTR: влево=вперёд; RTL: вправо=вперёд
-        const isNext = _swRTL ? dx > 0 : dx < 0;
+        // ФИХ: единая логика для всех языков — влево=вперёд, вправо=назад
+        const isNext = dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
             const navBtns = document.querySelectorAll('.nav-item');
@@ -1027,35 +1037,31 @@ function setLang(l) {
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
-    document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    // Переставляем кнопки nav — сначала всегда LTR, потом RTL если нужно
-    const _nav = document.getElementById('navBtn0')?.parentNode;
-    if (_nav) {
-        [0,1,2,3,4].forEach(i => { const b = document.getElementById('navBtn'+i); if (b) _nav.appendChild(b); });
-        if (l==='he'||l==='ar') {
-            [4,3,2,1,0].forEach(i => { const b = document.getElementById('navBtn'+i); if (b) _nav.appendChild(b); });
-        }
-    }
-    // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
-    const appEl = document.querySelector('.app');
-    if (appEl) { appEl.scrollLeft = 0; }
+    const isRTL = (l === 'he' || l === 'ar');
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.body.dir = isRTL ? 'rtl' : 'ltr';
+
+    // Nav зеркалится визуально
+    const navEl = document.querySelector('.bottom-nav');
+    if (navEl) navEl.style.flexDirection = isRTL ? 'row-reverse' : 'row';
+
     applyLang();
-    
-    // Сдвигаем Wrapper если направление поменялось
+
+    // ФИХ: пересчёт offset по единой формуле независимо от RTL
     const curIdx = currentTabIndex();
-    if(curIdx !== -1) {
+    if (curIdx !== -1) {
         document.getElementById('viewsWrapper').style.transform = `translateX(${-curIdx * 20}%)`;
     }
 
     if (dashData) renderAll();
-    extractNiches(); 
+    extractNiches();
     renderCatalog();
-    // nav RTL при загрузке
-    document.body.classList.toggle('rtl-mode', lang==='he'||lang==='ar');
+
     if (leaderboardData && document.getElementById('leaderboardSheet').classList.contains('active')) {
         renderLeaderboardUI();
     }
 }
+
 function applyLang() {
     const L = i18n[lang] || i18n.ru;
     const map = {
@@ -1087,14 +1093,12 @@ function applyLang() {
     const inviteCopyBtn = document.getElementById('inviteCopyBtn'); if (inviteCopyBtn && !inviteCopyBtn.classList.contains('copied')) inviteCopyBtn.textContent = L.copy_btn || 'Copy';
     const saveProfileBtn = document.getElementById('saveProfileBtn'); if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
     
-    const btnBack = document.getElementById('t_btn_back_rec_top'); if (btnBack) btnBack.textContent = L.btn_back_catalog;
     const btnBackMid = document.getElementById('t_btn_back_rec_mid'); if (btnBackMid) btnBackMid.textContent = L.btn_back_catalog;
     const btnBackDeal = document.getElementById('t_btn_back_deal_bottom'); if (btnBackDeal) btnBackDeal.textContent = L.btn_back;
     const btnBackLb = document.getElementById('t_btn_back_lb'); if (btnBackLb) btnBackLb.textContent = L.btn_back;
     const proTitle1 = document.getElementById('t_pro_title_1'); if (proTitle1) proTitle1.textContent = L.pro_agent_title || '🌟 PRO-Агент';
     const proTitle2 = document.getElementById('t_pro_title_2'); if (proTitle2) proTitle2.textContent = L.pro_agent_title || '🌟 PRO-Агент';
     const btnBackBiz = document.getElementById('t_btn_back_biz_bottom'); if (btnBackBiz) btnBackBiz.textContent = L.btn_back;
-    const btnBackBizTop = document.getElementById('t_btn_back_biz'); if (btnBackBizTop) btnBackBizTop.textContent = L.btn_back;
     const btnBackInv = document.getElementById('t_btn_back_invite'); if (btnBackInv) btnBackInv.textContent = L.btn_back_invite;
 
     const curType = document.getElementById('bizRegRewardType').value;
@@ -1106,23 +1110,21 @@ function applyLang() {
         else commInput.placeholder = '...';
     }
 
-    if (dashData || true) { 
-        const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
-        const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
-        const msgText = rawPrefill.replace('{pointer}', pointer);
-        const elPrefill = document.getElementById('errPrefillText');
-        if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
+    const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
+    const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
+    const msgText = rawPrefill.replace('{pointer}', pointer);
+    const elPrefill = document.getElementById('errPrefillText');
+    if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
 
-        const msg = encodeURIComponent(msgText);
-        const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
-        const btnWa = document.getElementById('errBtnWa');
-        if(btnWa) btnWa.href = `https://wa.me/${phone}?text=${msg}`;
-        
-        const btnTgLabel = document.getElementById('t_err_btn_tg');
-        if (btnTgLabel) btnTgLabel.textContent = L.btn_tg;
-        const btnWaLabel = document.getElementById('t_err_btn_wa');
-        if (btnWaLabel) btnWaLabel.textContent = L.btn_wa;
-    }
+    const msg = encodeURIComponent(msgText);
+    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
+    const btnWa = document.getElementById('errBtnWa');
+    if(btnWa) btnWa.href = `https://wa.me/${phone}?text=${msg}`;
+    
+    const btnTgLabel = document.getElementById('t_err_btn_tg');
+    if (btnTgLabel) btnTgLabel.textContent = L.btn_tg;
+    const btnWaLabel = document.getElementById('t_err_btn_wa');
+    if (btnWaLabel) btnWaLabel.textContent = L.btn_wa;
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
@@ -1131,12 +1133,11 @@ function switchTab(tabId, btnEl) {
     navBtns.forEach(b => b.classList.remove('active'));
 
     const index = tabs.indexOf(tabId);
-    if (!btnEl && index !== -1) {
-        btnEl = navBtns[index];
-    }
+    if (!btnEl && index !== -1) btnEl = navBtns[index];
     if (btnEl) btnEl.classList.add('active');
 
-    if(index !== -1) {
+    if (index !== -1) {
+        // ФИХ: единая формула для всех языков и направлений
         document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1166,8 +1167,7 @@ function animNum(id, to, dur=1200) {
     const step = ts => {
         const p = Math.min((ts-start)/dur,1);
         const ease = 1-Math.pow(1-p,3);
-        const currentVal = (p * to);
-        el.textContent = Number.isInteger(to) ? Math.floor(currentVal) : currentVal.toFixed(1);
+        el.textContent = Number.isInteger(to) ? Math.floor(p * to) : (p * to).toFixed(1);
         if (p<1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -1210,14 +1210,26 @@ function openDealDetail(lead) {
     const L = i18n[lang]||i18n.ru;
     const curr = dashData?.currency || '₪';
     
+    // Метки через i18n — больше не захардкоженный русский
+    const LABELS = {
+        biz:   {ru:'Бизнес',      he:'עסק',         en:'Business',    ar:'عمل'},
+        client:{ru:'Клиент',      he:'לקוח',         en:'Client',      ar:'العميل'},
+        phone: {ru:'Телефон',     he:'טלפון',        en:'Phone',       ar:'هاتف'},
+        status:{ru:'Статус',      he:'סטטוס',        en:'Status',      ar:'الحالة'},
+        date:  {ru:'Дата',        he:'תאריך',        en:'Date',        ar:'التاريخ'},
+        amount:{ru:'Сумма сделки',he:'סכום העסקה',   en:'Deal Amount', ar:'مبلغ الصفقة'},
+        bonus: {ru:'Ваш бонус',   he:'הבונוס שלך',   en:'Your Bonus',  ar:'مكافأتك'},
+    };
+    const lbl = k => (LABELS[k]||{})[lang] || LABELS[k].ru;
+
     let rows = `
-        <div class="deal-detail-row"><div class="deal-detail-lbl">Бизнес</div><div class="deal-detail-val">${lead.biz_name}</div></div>
-        <div class="deal-detail-row"><div class="deal-detail-lbl">Клиент</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
-    if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Телефон</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Статус</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Дата</div><div class="deal-detail-val">${lead.date}</div></div>`;
-    if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Сумма сделки</div><div class="deal-detail-val" style="color:var(--text)">${lead.amount} ${curr}</div></div>`;
-    if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">Ваш бонус</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
+        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('biz')}</div><div class="deal-detail-val">${lead.biz_name}</div></div>
+        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
+    if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
+    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>`;
+    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('date')}</div><div class="deal-detail-val">${lead.date}</div></div>`;
+    if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('amount')}</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
+    if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
     
     document.getElementById('dealDetailContent').innerHTML = rows;
     
@@ -1235,18 +1247,27 @@ function openDealDetail(lead) {
     }
 
     document.getElementById('dealSheet').classList.add('active');
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
     window.scrollTo(0,0);
     feather.replace();
 }
 
-function closeDealDetail() {
-    document.getElementById('dealSheet').classList.add('slide-out-left');
+// ── ФИХ: единая функция закрытия fullscreen с учётом RTL ─────────────────
+function closeFullscreen(id) {
+    const el = document.getElementById(id);
+    el.classList.add('slide-out');
     setTimeout(() => {
-        document.getElementById('dealSheet').classList.remove('active', 'slide-out-left');
+        el.classList.remove('active', 'slide-out');
         document.body.style.overflow = '';
     }, 300);
 }
+
+function closeDealDetail()    { closeFullscreen('dealSheet'); }
+function closeLeaderboard()   { closeFullscreen('leaderboardSheet'); }
+function closeProfileEdit()   { closeFullscreen('profileSheet'); }
+function closeRecommend()     { closeFullscreen('recommendScreen'); }
+function closeInviteScreen()  { closeFullscreen('inviteScreen'); }
+function closeBizReg()        { closeFullscreen('bizRegSheet'); }
 
 async function remindDebt(leadId, bizName) {
     const L = i18n[lang] || i18n.ru;
@@ -1257,15 +1278,13 @@ async function remindDebt(leadId, bizName) {
         alert(L.remind_already_sent.replace('{biz}', bizName));
         return;
     }
-
     try {
         const res = await fetch(`${API_URL}/api/deals/action?token=${token}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ action: 'remind_debt', lead_id: leadId })
         });
-        
-        if (!res.ok) throw new Error('Server returned an error');
+        if (!res.ok) throw new Error('Server error');
         localStorage.setItem(cacheKey, today);
         alert(L.remind_success);
     } catch(e) {
@@ -1273,7 +1292,7 @@ async function remindDebt(leadId, bizName) {
     }
 }
 
-// ── Leaderboard (Зал Славы) ───────────────────────────────────────────────
+// ── Leaderboard ───────────────────────────────────────────────────────────
 async function openLeaderboard() {
     document.getElementById('leaderboardSheet').classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1285,7 +1304,6 @@ async function openLeaderboard() {
     if (!leaderboardData) {
         contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || 'Загрузка...'}</div>`;
         try {
-            // Получаем отдельный leaderboard-токен по agent_id
             const agentId = dashData && dashData.agent_id ? dashData.agent_id : null;
             let lbToken = token;
             if (agentId) {
@@ -1300,7 +1318,6 @@ async function openLeaderboard() {
                 contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка загрузки рейтинга.</div>`;
             }
         } catch(e) {
-            console.error("Leaderboard error:", e);
             contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка сети.</div>`;
         }
     } else {
@@ -1308,18 +1325,10 @@ async function openLeaderboard() {
     }
 }
 
-function closeLeaderboard() {
-    document.getElementById('leaderboardSheet').classList.add('slide-out-left');
-    setTimeout(() => {
-        document.getElementById('leaderboardSheet').classList.remove('active', 'slide-out-left');
-        document.body.style.overflow = '';
-    }, 300);
-}
-
 function renderLeaderboardUI() {
     if (!leaderboardData) return;
     const L = i18n[lang] || i18n.ru;
-    const isPro = (dashData && dashData.success_deals >= 50); 
+    const isPro = (dashData && dashData.success_deals >= 50);
     const curr = dashData?.currency || '₪';
     let html = '';
 
@@ -1344,13 +1353,11 @@ function renderLeaderboardUI() {
         });
     }
     html += `</div>`;
-    
     document.getElementById('lbContent').innerHTML = html;
 }
 
 function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
-    let rankBadge = agent.rank;
-    let rankClass = '';
+    let rankBadge = agent.rank, rankClass = '';
     if (agent.rank === 1) { rankBadge = '🥇'; rankClass = 'lb-rank-1'; }
     else if (agent.rank === 2) { rankBadge = '🥈'; rankClass = 'lb-rank-2'; }
     else if (agent.rank === 3) { rankBadge = '🥉'; rankClass = 'lb-rank-3'; }
@@ -1383,21 +1390,15 @@ function openStatDetail(type) {
     if (type === 'deals') {
         title = L.stat_deals;
         const confirmed = (dashData?.leads||[]).filter(l => l.status==='confirmed'||l.status==='closed');
-        content = confirmed.length
-            ? confirmed.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
+        content = confirmed.length ? confirmed.map(l => dealItemHtml(l)).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     } else if (type === 'pending') {
         title = L.stat_pending;
         const pbs = dashData?.pending_businesses || [];
-        content = pbs.length
-            ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('')
-            : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
+        content = pbs.length ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('') : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
     } else if (type === 'active') {
         title = L.stat_active;
         const active = (dashData?.leads||[]).filter(l => l.status==='new'||l.status==='in_progress');
-        content = active.length
-            ? active.map(l => dealItemHtml(l)).join('')
-            : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
+        content = active.length ? active.map(l => dealItemHtml(l)).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     }
     document.getElementById('statSheetTitle').textContent = title;
     document.getElementById('statSheetContent').innerHTML = content;
@@ -1405,7 +1406,7 @@ function openStatDetail(type) {
     feather.replace();
 }
 
-// ── Profile edit (Fullscreen) ─────────────────────────────────────────────
+// ── Profile edit ──────────────────────────────────────────────────────────
 function selectPay(method, btnEl) {
     document.getElementById('editPayment').value = method;
     document.querySelectorAll('#profileSheet .pay-btn').forEach(b => b.classList.remove('active'));
@@ -1421,18 +1422,9 @@ function openProfileEdit() {
         b.classList.toggle('active', currentPay && b.textContent.trim().toLowerCase() === currentPay.toLowerCase());
     });
     document.getElementById('editLink').value = dashData.business_info || '';
-    
     document.getElementById('profileSheet').classList.add('active');
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
     window.scrollTo(0,0);
-}
-
-function closeProfileEdit() {
-    document.getElementById('profileSheet').classList.add('slide-out-left');
-    setTimeout(() => {
-        document.getElementById('profileSheet').classList.remove('active', 'slide-out-left');
-        document.body.style.overflow = '';
-    }, 300);
 }
 
 async function saveProfile() {
@@ -1488,10 +1480,7 @@ function updateBizRegSubcategories() {
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.value = s;
-            cb.addEventListener('change', () => { 
-                item.classList.toggle('checked', cb.checked); 
-                checkBizRegForm(); 
-            });
+            cb.addEventListener('change', () => { item.classList.toggle('checked', cb.checked); checkBizRegForm(); });
             const span = document.createElement('span');
             span.textContent = s;
             item.appendChild(cb); item.appendChild(span);
@@ -1508,8 +1497,7 @@ function updateBizRegSubcategories() {
 }
 
 function getSelectedBizRegSubniches() {
-    const checkboxes = document.querySelectorAll('#bizRegSubnicheList input[type=checkbox]:checked');
-    return Array.from(checkboxes).map(cb => cb.value);
+    return Array.from(document.querySelectorAll('#bizRegSubnicheList input[type=checkbox]:checked')).map(cb => cb.value);
 }
 
 function confirmBizRegSubcat() {
@@ -1518,12 +1506,8 @@ function confirmBizRegSubcat() {
     const doneBtn = document.getElementById('bizRegSubcatDone');
     const editBtn = document.getElementById('bizRegSubcatEdit');
     const checked = getSelectedBizRegSubniches();
-    
     if (checked.length === 0) return;
-    
-    tags.innerHTML = checked.map(s =>
-        `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:var(--accent1);border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
-    ).join('');
+    tags.innerHTML = checked.map(s => `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:var(--accent1);border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`).join('');
     tags.style.display = 'flex';
     list.style.display = 'none';
     doneBtn.style.display = 'none';
@@ -1545,12 +1529,11 @@ function setBizRewardType(type, btn) {
     document.getElementById('bizRegRewardType').value = type;
     document.querySelectorAll('#btnRewPct, #btnRewFix, #btnRewGift').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     const commInput = document.getElementById('bizRegComm');
     const L = i18n[lang] || i18n.ru;
-    if(type === 'pct') { commInput.type = 'number'; commInput.placeholder = L.rew_pct_ph || 'Например: 10'; }
-    else if(type === 'fix') { commInput.type = 'number'; commInput.placeholder = L.rew_fix_ph || 'Например: 100'; }
-    else { commInput.type = 'text'; commInput.placeholder = L.rew_gift_ph || 'Например: Бесплатный массаж'; }
+    if(type === 'pct') { commInput.type = 'number'; commInput.placeholder = L.rew_pct_ph; }
+    else if(type === 'fix') { commInput.type = 'number'; commInput.placeholder = L.rew_fix_ph; }
+    else { commInput.type = 'text'; commInput.placeholder = L.rew_gift_ph; }
     checkBizRegForm();
 }
 
@@ -1567,22 +1550,17 @@ function checkBizRegForm() {
     const rewardType = document.getElementById('bizRegRewardType').value;
     const comm = document.getElementById('bizRegComm').value.trim();
     const pay = document.getElementById('bizRegPay').value;
-    
     const subsRequired = cat && CATEGORIES_STANDARD[cat] && CATEGORIES_STANDARD[cat].length > 0;
-    const selectedSubs = getSelectedBizRegSubniches();
-    const subsOk = !subsRequired || selectedSubs.length > 0;
-
+    const subsOk = !subsRequired || getSelectedBizRegSubniches().length > 0;
     const btn = document.getElementById('btnBizRegSubmit');
     if (name && cat && rewardType && comm && pay && subsOk) {
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'all';
+        btn.style.opacity = '1'; btn.style.pointerEvents = 'all';
     } else {
-        btn.style.opacity = '0.5';
-        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
     }
 }
 
-function openBizReg() { 
+function openBizReg() {
     document.getElementById('bizRegName').value = '';
     document.getElementById('bizRegNiche').value = '';
     document.getElementById('bizRegRewardType').value = '';
@@ -1592,30 +1570,20 @@ function openBizReg() {
     document.getElementById('bizRegPay').value = '';
     document.getElementById('bizRegLink').value = '';
     document.getElementById('bizRegSubnicheGroup').style.display = 'none';
-    
     checkBizRegForm();
-
     document.getElementById('bizRegSheet').classList.add('active');
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
     window.scrollTo(0,0);
-}
-function closeBizReg() {
-    document.getElementById('bizRegSheet').classList.add('slide-out-left');
-    setTimeout(() => {
-        document.getElementById('bizRegSheet').classList.remove('active', 'slide-out-left');
-        document.body.style.overflow = '';
-    }, 300);
 }
 
 async function submitBizReg() {
-    const name    = document.getElementById('bizRegName').value.trim();
-    const cat     = document.getElementById('bizRegNiche').value;
+    const name = document.getElementById('bizRegName').value.trim();
+    const cat  = document.getElementById('bizRegNiche').value;
     const rewardType = document.getElementById('bizRegRewardType').value;
     const commVal = document.getElementById('bizRegComm').value.trim();
-    const pay     = document.getElementById('bizRegPay').value;
-    const link    = document.getElementById('bizRegLink').value.trim();
+    const pay  = document.getElementById('bizRegPay').value;
+    const link = document.getElementById('bizRegLink').value.trim();
     const selectedSubs = getSelectedBizRegSubniches();
-    
     const subsRequired = cat && CATEGORIES_STANDARD[cat] && CATEGORIES_STANDARD[cat].length > 0;
     if (!name || !cat || !rewardType || !commVal || !pay || (subsRequired && selectedSubs.length === 0)) return;
 
@@ -1628,21 +1596,11 @@ async function submitBizReg() {
     try {
         const res = await fetch(`${API_URL}/register`, {
             method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({
-                role:'business', name, category: cat, niche: selectedSubs, commission: commissionStr,
-                pay_pref: pay, lang, sender: catalogAgentId,
-                rewardType: rewardType, rewardValue: commVal, business_info: link
-            })
+            body: JSON.stringify({ role:'business', name, category: cat, niche: selectedSubs, commission: commissionStr, pay_pref: pay, lang, sender: catalogAgentId, rewardType, rewardValue: commVal, business_info: link })
         });
-        if (res.ok) {
-            closeBizReg();
-            alert((i18n[lang]||i18n.ru).biz_reg_success);
-        } else {
-            alert('Ошибка сервера. Передайте разработчику бэкенда: нужно разрешить агентам регистрироваться как бизнес.');
-        }
-    } catch(e) {
-        alert('Ошибка сети.');
-    }
+        if (res.ok) { closeBizReg(); alert((i18n[lang]||i18n.ru).biz_reg_success); }
+        else { alert('Ошибка сервера.'); }
+    } catch(e) { alert('Ошибка сети.'); }
     btn.textContent = (i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled = false;
 }
 
@@ -1662,16 +1620,14 @@ async function loadCatalog() {
         extractNiches();
         renderCatalog();
     } catch(e) {
-        document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">Каталог недоступен. Откройте WhatsApp и напишите "1".</div>`;
+        document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">Каталог недоступен.</div>`;
     }
 }
 
 function extractNiches() {
     const L = i18n[lang]||i18n.ru;
     const all = L.filter_all || 'Все категории';
-    
     const cats = [all, ...Object.keys(CATEGORIES_STANDARD)];
-    
     const container = document.getElementById('catFilters');
     if (!container) return;
     container.innerHTML = '';
@@ -1707,13 +1663,9 @@ function renderCatalog() {
         const card = document.createElement('div');
         card.className = 'biz-card';
         card.onclick = () => openRecommend(biz);
-        
         const translatedCat = getCatName(biz.category || '', lang);
-        
-        let nicheStr = '';
-        const _nRaw1 = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
-        if (_nRaw1.length) nicheStr = ' · ' + _nRaw1.map(n=>translateSubcat(n,lang)).join(', ');
-        
+        const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
+        const nicheStr = _nRaw.length ? ' · ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
         const fullCat = `${translatedCat}${nicheStr}`.trim() || 'Бизнес';
         card.innerHTML = `
             <div class="biz-card-header">
@@ -1729,17 +1681,18 @@ function renderCatalog() {
 function openRecommend(biz) {
     document.getElementById('recBizName').textContent = biz.name;
     const translatedCat = getCatName(biz.category || '', lang);
-    let nicheStr = '';
-    const _nRaw2 = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
-    if (_nRaw2.length) nicheStr = ' · ' + _nRaw2.map(n=>translateSubcat(n,lang)).join(', ');
-    
+    const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
+    const nicheStr = _nRaw.length ? ' · ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
     document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || 'Бизнес';
     
     const descEl = document.getElementById('recBizDesc');
     if (biz.business_info) {
-        descEl.innerHTML = biz.business_info.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+        // Санитизация перед вставкой в innerHTML
+        const safe = biz.business_info.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        descEl.innerHTML = safe.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
         descEl.style.display = 'block';
     } else { descEl.style.display = 'none'; }
+
     const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${catalogAgentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${lang}`;
     document.getElementById('refLinkInput').value = link;
     const L = i18n[lang]||i18n.ru;
@@ -1754,17 +1707,10 @@ function openRecommend(biz) {
     window.scrollTo(0,0);
     feather.replace();
 }
-function closeRecommend() {
-    document.getElementById('recommendScreen').classList.add('slide-out-left');
-    setTimeout(() => {
-        document.getElementById('recommendScreen').classList.remove('active', 'slide-out-left');
-        document.body.style.overflow = '';
-    }, 300);
-}
+
 function copyLink() {
     const input = document.getElementById('refLinkInput');
-    input.select();
-    try { document.execCommand('copy'); } catch(e) { navigator.clipboard?.writeText(input.value); }
+    navigator.clipboard?.writeText(input.value).catch(() => { input.select(); document.execCommand('copy'); });
     const btn = document.getElementById('copyBtn');
     btn.textContent = (i18n[lang]||i18n.ru).copied;
     btn.classList.add('copied');
@@ -1773,31 +1719,21 @@ function copyLink() {
 function openInviteScreen() {
     const link = `https://invite.winwinnetwork.pro/register.html?sender=${catalogAgentId}&lang=${lang}`;
     document.getElementById('inviteLinkInput').value = link;
-    
     const L = i18n[lang]||i18n.ru;
     const copyBtn = document.getElementById('inviteCopyBtn');
     copyBtn.textContent = L.copy_btn;
     copyBtn.classList.remove('copied');
-
     const ctx = document.getElementById('inviteQrCanvas').getContext('2d');
     ctx.clearRect(0,0,300,300);
     try { new QRious({element:document.getElementById('inviteQrCanvas'),value:link,size:220,level:'H'}); } catch(e){}
-    
     document.getElementById('inviteScreen').classList.add('active');
     document.body.style.overflow = 'hidden';
     window.scrollTo(0,0);
 }
-function closeInviteScreen() {
-    document.getElementById('inviteScreen').classList.add('slide-out-left');
-    setTimeout(() => {
-        document.getElementById('inviteScreen').classList.remove('active', 'slide-out-left');
-        document.body.style.overflow = '';
-    }, 300);
-}
+
 function copyInviteLink() {
     const input = document.getElementById('inviteLinkInput');
-    input.select();
-    try { document.execCommand('copy'); } catch(e) { navigator.clipboard?.writeText(input.value); }
+    navigator.clipboard?.writeText(input.value).catch(() => { input.select(); document.execCommand('copy'); });
     const btn = document.getElementById('inviteCopyBtn');
     btn.textContent = (i18n[lang]||i18n.ru).copied;
     btn.classList.add('copied');
@@ -1810,19 +1746,16 @@ function renderAll() {
     const curr = d.currency || '₪';
     document.getElementById('t_name').textContent = d.user_name || '—';
 
-    // Balance
     animNum('v_earned', Math.round(d.total_earned||0));
     document.getElementById('v_deals').textContent = d.success_deals || 0;
     document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
     document.getElementById('v_active').textContent = d.active_deals || 0;
 
-    // PRO
     const proProgress = Math.min(((d.success_deals||0)/50)*100, 100);
     document.getElementById('pro_progress_txt').textContent = `${d.success_deals||0} / 50`;
     setTimeout(() => { const b=document.getElementById('proBar'); if(b) b.style.width=proProgress+'%'; }, 300);
     if ((d.success_deals||0) >= 50) { document.getElementById('pro-locked').style.display='none'; document.getElementById('pro-unlocked').style.display='block'; }
 
-    // Recent activity
     const actList = document.getElementById('activityList');
     if (!d.leads||!d.leads.length) {
         actList.innerHTML = `<div class="empty-state"><div class="empty-title">${L.no_deals}</div><div class="empty-sub">${L.no_deals_sub}</div></div>`;
@@ -1830,7 +1763,6 @@ function renderAll() {
         actList.innerHTML = d.leads.slice(0,6).map(dealItemHtml).join('');
     }
 
-    // History — 3 lists
     const listActive  = document.getElementById('list_active');
     const listDebt    = document.getElementById('list_debt');
     const listHistory = document.getElementById('list_history');
@@ -1852,11 +1784,9 @@ function renderAll() {
         if (!listHistory.innerHTML) listHistory.innerHTML=emptyRow;
     }
 
-    // Wallet — avg
     const closed = d.success_deals||0;
     document.getElementById('v_avg').textContent = closed>0 ? Math.round((d.total_earned||0)/closed) : 0;
 
-    // Efficiency
     const pct = d.efficiency_pct, avgPct = d.platform_avg_pct||0;
     if (pct==null) {
         document.getElementById('v_eff').textContent='—';
@@ -1870,7 +1800,6 @@ function renderAll() {
         else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
     }
 
-    // Funnel
     const active=d.active_deals||0, rejected=d.rejected_deals||0, total=active+closed+rejected;
     document.getElementById('t_total_leads').textContent=`${L.total_leads} ${total}`;
     document.getElementById('v_conv').textContent=(total>0?Math.round(closed/total*100):0)+'%';
@@ -1881,7 +1810,6 @@ function renderAll() {
         document.getElementById('bar_rejected').style.width=(total>0?rejected/total*100:0)+'%';
     },80);
 
-    // Pending payouts
     const pendList = document.getElementById('pendingList');
     if (!d.pending_businesses||!d.pending_businesses.length) {
         pendList.innerHTML=`<div style="color:var(--green);font-weight:700;text-align:center;padding:4px 0;">${L.all_paid}</div>`;
@@ -1894,7 +1822,6 @@ function renderAll() {
             </div>`).join('');
     }
 
-    // Chart
     if (d.chart_data&&d.chart_data.labels&&d.chart_data.labels.length) {
         document.getElementById('chartCard').style.display='block';
         document.getElementById('t_chart_title').style.display='flex';
@@ -1906,7 +1833,6 @@ function renderAll() {
         });
     }
 
-    // Profile
     const name = d.user_name||'—';
     document.getElementById('profileName').textContent = name;
     document.getElementById('profilePhone').textContent = d.phone||'—';
@@ -1919,7 +1845,7 @@ function renderAll() {
 
 // ── Init ──────────────────────────────────────────────────────────────────
 async function init() {
-    populateCategories(); 
+    populateCategories();
     applyTheme();
     if (i18n[lang]) setLang(lang);
     else { lang='ru'; applyLang(); }
@@ -1928,69 +1854,43 @@ async function init() {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
-        
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
-        
         renderAll();
         loadCatalog();
     } catch(e) { showError(); }
 }
+
 function showError() {
-    // скрываем элементы лоадера (безопасно — через querySelector)
     ['loaderDots','loaderSub','loaderText','loaderSpinner'].forEach(id => {
         const el = document.getElementById(id); if (el) el.style.display='none';
     });
     document.getElementById('loaderErr').style.display='block';
-    
     const L = i18n[lang] || i18n.ru;
     const isRtl = (lang === 'he' || lang === 'ar');
     const pointer = isRtl ? '👈' : '➡️';
-
-    // Текст сессии (только один)
     const elSub = document.getElementById('t_err_sub');
     if (elSub) elSub.textContent = L.err_expired_sub || i18n.ru.err_expired_sub;
-
-    // Лейбл карточки
-    const elPreview = document.getElementById('t_err_preview');
-    if (elPreview) elPreview.textContent = L.err_preview || 'Ваше сообщение:';
-
-    // Подсказка
-    const HINTS = {
-        ru: 'Нажмите кнопку и нажмите Отправить',
-        he: 'לחצו על הכפתור ואז שלח',
-        en: 'Tap the button then press Send',
-        ar: 'اضغط الزر ثم أرسل',
-    };
+    const HINTS = { ru:'Нажмите кнопку и нажмите Отправить', he:'לחצו על הכפתור ואז שלח', en:'Tap the button then press Send', ar:'اضغط الزر ثم أرسل' };
     const elHint = document.getElementById('t_err_hint');
     if (elHint) elHint.textContent = HINTS[lang] || HINTS.ru;
     const elPtr = document.getElementById('t_err_pointer');
     if (elPtr) elPtr.textContent = pointer;
-
-    // Преднабранный текст
     const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
     const msgText = rawPrefill.replace('{pointer}', pointer);
     const elPrefill = document.getElementById('errPrefillText');
     if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
-
-    // Кнопки
     const BTN_WA = {ru:'Написать в WhatsApp', he:'לפתוח WhatsApp', en:'Open WhatsApp', ar:'فتح WhatsApp'};
     const BTN_TG = {ru:'Написать в Telegram', he:'לפתוח Telegram', en:'Open Telegram', ar:'فتح Telegram'};
-    const elBtnWaLbl = document.getElementById('t_err_btn_wa');
-    if (elBtnWaLbl) elBtnWaLbl.textContent = BTN_WA[lang] || BTN_WA.ru;
-    const elBtnTgLbl = document.getElementById('t_err_btn_tg');
-    if (elBtnTgLbl) elBtnTgLbl.textContent = BTN_TG[lang] || BTN_TG.ru;
-
+    const elBtnWaLbl = document.getElementById('t_err_btn_wa'); if (elBtnWaLbl) elBtnWaLbl.textContent = BTN_WA[lang] || BTN_WA.ru;
+    const elBtnTgLbl = document.getElementById('t_err_btn_tg'); if (elBtnTgLbl) elBtnTgLbl.textContent = BTN_TG[lang] || BTN_TG.ru;
     const msg = encodeURIComponent(msgText);
     const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : '972534218573';
-    
     const isTg = dashData && dashData.channel === 'telegram';
     if (isTg) {
-        const btnTg = document.getElementById('errBtnTg');
-        if (btnTg) { btnTg.style.display = 'flex'; btnTg.href = 'https://t.me/winwin_lead_bot?start=link'; }
+        const btnTg = document.getElementById('errBtnTg'); if (btnTg) { btnTg.style.display = 'flex'; btnTg.href = 'https://t.me/winwin_lead_bot?start=link'; }
     } else {
-        const btnWa = document.getElementById('errBtnWa');
-        if (btnWa) { btnWa.style.display = 'flex'; btnWa.href = 'https://wa.me/' + phone + '?text=' + msg; }
+        const btnWa = document.getElementById('errBtnWa'); if (btnWa) { btnWa.style.display = 'flex'; btnWa.href = 'https://wa.me/' + phone + '?text=' + msg; }
     }
 }
 
