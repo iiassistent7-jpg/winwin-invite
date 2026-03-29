@@ -216,7 +216,7 @@
         .bottom-nav {
             position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display:flex; justify-content:space-between; padding:10px 20px 22px; border-top:1px solid var(--border); z-index:100;
         }
-        body.rtl .bottom-nav { flex-direction: row-reverse !important; }
+        /* Nav order управляется через JS applyNavOrder() — CSS row-reverse не нужен */
         .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
         .nav-item.active { color:var(--accent2); }
         .nav-item span { font-size:.6rem; font-weight:700; }
@@ -1032,6 +1032,25 @@ function toggleTheme() {
     feather.replace();
 }
 
+// ── Nav order (RTL mirror) ────────────────────────────────────────────────
+// Физически переставляет кнопки в DOM.
+// RTL: Профиль | Кошелёк | История | Каталог | Главная (право→лево)
+// LTR: Главная | Каталог | История | Кошелёк | Профиль (лево→право)
+const NAV_ORDER_LTR = ['home', 'catalog', 'history', 'wallet', 'profile'];
+const NAV_ORDER_RTL = ['profile', 'wallet', 'history', 'catalog', 'home'];
+
+function applyNavOrder(isRTL) {
+    const nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+    const order = isRTL ? NAV_ORDER_RTL : NAV_ORDER_LTR;
+    order.forEach(tabId => {
+        const btn = Array.from(nav.querySelectorAll('.nav-item')).find(b =>
+            b.getAttribute('onclick')?.includes(`'${tabId}'`)
+        );
+        if (btn) nav.appendChild(btn); // appendChild переставляет в конец
+    });
+}
+
 // ── Lang ──────────────────────────────────────────────────────────────────
 function setLang(l) {
     lang = l;
@@ -1043,21 +1062,23 @@ function setLang(l) {
     // dir на html/body меняет координатную систему браузера и ломает translateX-слайдер
     document.body.classList.toggle('rtl', isRTL);
 
-    // Явно через JS — гарантированно, независимо от CSS-специфичности
-    const navEl = document.querySelector('.bottom-nav');
-    if (navEl) navEl.style.flexDirection = isRTL ? 'row-reverse' : 'row';
+    // Физически переставляем кнопки nav в DOM
+    applyNavOrder(isRTL);
 
     applyLang();
 
-    // Сбрасываем активное состояние nav на текущий таб
-    // (без этого при смене языка active-класс остаётся на старом месте)
+    // Восстанавливаем активное состояние на текущий таб
     const curIdx = currentTabIndex();
-    const curTab = curIdx !== -1 ? tabs[curIdx] : 'home';
+    const curTabId = curIdx !== -1 ? tabs[curIdx] : 'home';
+    // switchTab обновит активную кнопку по имени таба — не по индексу в DOM
     const navBtns = document.querySelectorAll('.nav-item');
     navBtns.forEach(b => b.classList.remove('active'));
-    if (curIdx !== -1) navBtns[curIdx].classList.add('active');
+    const activeBtn = Array.from(navBtns).find(b =>
+        b.getAttribute('onclick')?.includes(`'${curTabId}'`)
+    );
+    if (activeBtn) activeBtn.classList.add('active');
 
-    // Пересчёт offset — единая формула для всех языков
+    // Пересчёт offset — единая формула
     document.getElementById('viewsWrapper').style.transform = `translateX(${-(curIdx !== -1 ? curIdx : 0) * 20}%)`;
 
     if (dashData) renderAll();
@@ -1139,12 +1160,15 @@ function switchTab(tabId, btnEl) {
     const navBtns = document.querySelectorAll('.nav-item');
     navBtns.forEach(b => b.classList.remove('active'));
 
-    const index = tabs.indexOf(tabId);
-    if (!btnEl && index !== -1) btnEl = navBtns[index];
-    if (btnEl) btnEl.classList.add('active');
+    // Ищем кнопку по onclick-атрибуту, а не по индексу в DOM
+    // Это работает корректно и когда nav в прямом, и когда в обратном порядке
+    const targetBtn = Array.from(navBtns).find(b =>
+        b.getAttribute('onclick')?.includes(`'${tabId}'`)
+    ) || btnEl;
+    if (targetBtn) targetBtn.classList.add('active');
 
+    const index = tabs.indexOf(tabId);
     if (index !== -1) {
-        // ФИХ: единая формула для всех языков и направлений
         document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1863,10 +1887,8 @@ async function init() {
         dashData = await res.json();
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
-        // Применяем nav direction ПОСЛЕ показа — гарантия что DOM виден
-        const _navFix = document.querySelector('.bottom-nav');
-        const _isRTL = document.body.classList.contains('rtl');
-        if (_navFix) _navFix.style.flexDirection = _isRTL ? 'row-reverse' : 'row';
+        // Повторно применяем порядок nav после показа mainShell
+        applyNavOrder(document.body.classList.contains('rtl'));
         renderAll();
         loadCatalog();
     } catch(e) { showError(); }
