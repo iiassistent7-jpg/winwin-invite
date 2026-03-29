@@ -982,8 +982,8 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
         const isRTL = document.documentElement.dir === 'rtl';
-        const _swRTL = document.documentElement.dir === 'rtl';
-        // LTR: влево = вперёд; RTL: вправо = вперёд (к Home)
+        const _swRTL = (lang==='he'||lang==='ar');
+        // LTR: влево=вперёд; RTL: вправо=вперёд
         const isNext = _swRTL ? dx > 0 : dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
@@ -1029,14 +1029,13 @@ function setLang(l) {
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    // Переставляем кнопки nav по id
+    // Переставляем кнопки nav — сначала всегда LTR, потом RTL если нужно
     const _nav = document.getElementById('navBtn0')?.parentNode;
     if (_nav) {
-        const _ids = l==='he'||l==='ar' ? [4,3,2,1,0] : [0,1,2,3,4];
-        _ids.forEach(i => {
-            const b = document.getElementById('navBtn'+i);
-            if (b) _nav.appendChild(b);
-        });
+        [0,1,2,3,4].forEach(i => { const b = document.getElementById('navBtn'+i); if (b) _nav.appendChild(b); });
+        if (l==='he'||l==='ar') {
+            [4,3,2,1,0].forEach(i => { const b = document.getElementById('navBtn'+i); if (b) _nav.appendChild(b); });
+        }
     }
     // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
     const appEl = document.querySelector('.app');
