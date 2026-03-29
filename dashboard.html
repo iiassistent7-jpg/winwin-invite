@@ -1028,7 +1028,6 @@ function setLang(l) {
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     // Переставляем кнопки nav — сначала всегда LTR, потом RTL если нужно
     const _nav = document.getElementById('navBtn0')?.parentNode;
     if (_nav) {
@@ -1045,9 +1044,7 @@ function setLang(l) {
     // Сдвигаем Wrapper если направление поменялось
     const curIdx = currentTabIndex();
     if(curIdx !== -1) {
-        const _isRTL2 = document.documentElement.dir === 'rtl';
-        const _off2 = _isRTL2 ? (curIdx - (tabs.length - 1)) * 20 : -curIdx * 20;
-        document.getElementById('viewsWrapper').style.transform = `translateX(${_off2}%)`;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${-curIdx * 20}%)`;
     }
 
     if (dashData) renderAll();
@@ -1140,9 +1137,7 @@ function switchTab(tabId, btnEl) {
     if (btnEl) btnEl.classList.add('active');
 
     if(index !== -1) {
-        const _isRTL = document.documentElement.dir === 'rtl';
-        const _offset = _isRTL ? (index - (tabs.length - 1)) * 20 : -index * 20;
-        document.getElementById('viewsWrapper').style.transform = `translateX(${_offset}%)`;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-'+tabId).classList.add('active');
