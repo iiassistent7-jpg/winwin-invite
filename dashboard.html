@@ -982,8 +982,9 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
         const isRTL = document.documentElement.dir === 'rtl';
-        // Wrapper всегда LTR: свайп влево (dx<0) = следующий, вправо (dx>0) = предыдущий
-        const isNext = dx < 0;
+        const _swRTL = document.documentElement.dir === 'rtl';
+        // LTR: влево = вперёд; RTL: вправо = вперёд (к Home)
+        const isNext = _swRTL ? dx > 0 : dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
             const navBtns = document.querySelectorAll('.nav-item');
@@ -1035,7 +1036,9 @@ function setLang(l) {
     // Сдвигаем Wrapper если направление поменялось
     const curIdx = currentTabIndex();
     if(curIdx !== -1) {
-        document.getElementById('viewsWrapper').style.transform = `translateX(${-curIdx * 20}%)`;
+        const _isRTL2 = document.documentElement.dir === 'rtl';
+        const _off2 = _isRTL2 ? (curIdx - (tabs.length - 1)) * 20 : -curIdx * 20;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${_off2}%)`;
     }
 
     if (dashData) renderAll();
@@ -1126,7 +1129,9 @@ function switchTab(tabId, btnEl) {
     if (btnEl) btnEl.classList.add('active');
 
     if(index !== -1) {
-        document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
+        const _isRTL = document.documentElement.dir === 'rtl';
+        const _offset = _isRTL ? (index - (tabs.length - 1)) * 20 : -index * 20;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${_offset}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-'+tabId).classList.add('active');
