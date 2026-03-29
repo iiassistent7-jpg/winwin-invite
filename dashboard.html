@@ -33,7 +33,7 @@
         /* ── RTL Support ────────────────────────────────────────────── */
         [dir="rtl"] { text-align: right; }
         [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        [dir="rtl"] .bottom-nav { flex-direction: row-reverse; direction: rtl; }
+        /* bottom-nav RTL управляется через JS в setLang */
         [dir="rtl"] .btn-back i { transform: rotate(180deg); }
         [dir="rtl"] .deal-detail-val { text-align: left; }
         [dir="rtl"] .funnel-num { text-align: left; }
@@ -1028,6 +1028,9 @@ function setLang(l) {
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+    // Явно переворачиваем nav через JS
+    const _navEl = document.querySelector('.bottom-nav');
+    if (_navEl) _navEl.style.flexDirection = (l==='he'||l==='ar') ? 'row-reverse' : 'row';
     // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
     const appEl = document.querySelector('.app');
     if (appEl) { appEl.scrollLeft = 0; }
@@ -1043,7 +1046,10 @@ function setLang(l) {
 
     if (dashData) renderAll();
     extractNiches(); 
-    renderCatalog(); 
+    renderCatalog();
+    // nav RTL при загрузке
+    const _navInit = document.querySelector('.bottom-nav');
+    if (_navInit) _navInit.style.flexDirection = (lang==='he'||lang==='ar') ? 'row-reverse' : 'row'; 
     if (leaderboardData && document.getElementById('leaderboardSheet').classList.contains('active')) {
         renderLeaderboardUI();
     }
