@@ -1029,9 +1029,14 @@ function setLang(l) {
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    // Явно переворачиваем nav через JS
-    const _navEl = document.querySelector('.bottom-nav');
-    if (_navEl) _navEl.style.flexDirection = (l==='he'||l==='ar') ? 'row-reverse' : 'row';
+    // Динамический стиль с !important — ничто не перебьёт
+    let _dynStyle = document.getElementById('__rtl_style__');
+    if (!_dynStyle) { _dynStyle = document.createElement('style'); _dynStyle.id = '__rtl_style__'; document.head.appendChild(_dynStyle); }
+    if (l==='he'||l==='ar') {
+        _dynStyle.textContent = '.bottom-nav { flex-direction: row-reverse !important; }';
+    } else {
+        _dynStyle.textContent = '.bottom-nav { flex-direction: row !important; }';
+    }
     // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
     const appEl = document.querySelector('.app');
     if (appEl) { appEl.scrollLeft = 0; }
