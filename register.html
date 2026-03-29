@@ -699,7 +699,7 @@
         payload.source_url = window.location.href;
 
         // Явно собираем поля — FormData не видит hidden элементы
-        form.querySelectorAll('input[type="text"], input[type="tel"], textarea').forEach(el => {
+        form.querySelectorAll('input[type="text"], input[type="tel"], input[type="hidden"], textarea').forEach(el => {
           if (el.name) payload[el.name] = el.value;
         });
         form.querySelectorAll('select').forEach(el => {
