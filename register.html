@@ -343,6 +343,18 @@
     .niche-cb-item.checked { background: rgba(86,204,242,0.08); border-color: rgba(86,204,242,0.4); }
     .niche-cb-item input[type=checkbox] { width: 18px; height: 18px; accent-color: #56CCF2; flex-shrink: 0; }
     .niche-cb-item span { font-size: 0.9rem; font-weight: 600; color: #e0e0e0; }
+    /* ── Invite flow: выбор роли ── */
+    .role-selector { display:none; margin-bottom:24px; }
+    .role-selector.visible { display:block; }
+    .role-selector-title { text-align:center; font-size:1.1rem; font-weight:700; color:var(--text-muted); margin-bottom:16px; }
+    .role-cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .role-card { background:var(--card); border:2px solid var(--card-border); border-radius:20px; padding:22px 14px; text-align:center; cursor:pointer; transition:all 0.25s; user-select:none; }
+    .role-card:hover { border-color:rgba(108,99,255,0.4); background:rgba(108,99,255,0.08); }
+    .role-card:active { transform:scale(0.97); }
+    .role-card.selected { background:linear-gradient(135deg,rgba(108,99,255,0.25),rgba(0,212,170,0.15)); border-color:var(--accent-1); }
+    .role-card-icon { font-size:2.4rem; margin-bottom:10px; }
+    .role-card-title { font-size:1rem; font-weight:800; color:var(--text-main); margin-bottom:4px; }
+    .role-card-sub { font-size:0.78rem; color:var(--text-muted); line-height:1.4; }
   </style>
 </head>
 <body>
@@ -362,6 +374,23 @@
         <div class="page-slogan" id="pageSlogan">Здесь выигрывают все!</div>
         <div class="page-title" id="pageTitle">Регистрация</div>
       </header>
+
+      <!-- Выбор роли — только для invite-ссылок (без role= и receiver= в URL) -->
+      <div class="role-selector" id="roleSelector">
+        <div class="role-selector-title" id="roleSelectorTitle">Присоединиться как:</div>
+        <div class="role-cards">
+          <div class="role-card" id="roleCardBusiness" onclick="selectInviteRole('business')">
+            <div class="role-card-icon">🏢</div>
+            <div class="role-card-title" id="roleCardBizTitle">Владелец бизнеса</div>
+            <div class="role-card-sub" id="roleCardBizSub">Хочу увеличить базу клиентов</div>
+          </div>
+          <div class="role-card" id="roleCardAgent" onclick="selectInviteRole('agent')">
+            <div class="role-card-icon">🤝</div>
+            <div class="role-card-title" id="roleCardAgTitle">Довольный клиент</div>
+            <div class="role-card-sub" id="roleCardAgSub">Хочу рекомендовать</div>
+          </div>
+        </div>
+      </div>
 
       <!-- Выбор мессенджера — ДО формы -->
       <div class="messenger-pre" id="messengerPre">
@@ -476,7 +505,34 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const role = urlParams.get('role') || 'client';
+      // Определяем flow: invite (без role и receiver) или обычный
+      const urlRole     = urlParams.get('role');
+      const hasReceiver = !!urlParams.get('receiver');
+      const isInviteFlow = !urlRole && !hasReceiver;
+      let role = urlRole || (hasReceiver ? 'client' : null);
+
+      // ── INVITE FLOW ──────────────────────────────────────────────────────
+      if (isInviteFlow) {
+        document.getElementById('roleSelector').classList.add('visible');
+        document.getElementById('regForm').style.display = 'none';
+        document.getElementById('messengerPre').style.display = 'none';
+      }
+
+      window.selectInviteRole = function(selectedRole) {
+        role = selectedRole;
+        document.getElementById('roleCardBusiness').classList.toggle('selected', selectedRole === 'business');
+        document.getElementById('roleCardAgent').classList.toggle('selected', selectedRole === 'agent');
+        setTimeout(() => {
+          document.getElementById('roleSelector').classList.remove('visible');
+          document.getElementById('regForm').style.display = 'block';
+          if (selectedRole !== 'client') {
+            document.getElementById('messengerPre').style.display = 'block';
+          }
+          document.querySelectorAll(`.role-${selectedRole}`).forEach(el => el.classList.remove('hidden'));
+          applyLang(document.querySelector('.lang-btn.active')?.dataset.lang || 'ru');
+          window.scrollTo(0, 0);
+        }, 200);
+      };
 
       const form = document.getElementById("regForm");
       const submitBtn = document.getElementById("submitBtn");
@@ -541,6 +597,13 @@
           document.getElementById("paymentLabel").textContent = role==="agent" ? T.pay_agent : T.pay_biz;
         document.getElementById("languageHidden").value = lang;
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang===lang));
+        // Карточки выбора роли
+        const _RC = { ru:{selector:"Присоединиться как:",biz_title:"Владелец бизнеса",biz_sub:"Хочу увеличить базу клиентов",ag_title:"Довольный клиент",ag_sub:"Хочу рекомендовать"}, en:{selector:"Join as:",biz_title:"Business Owner",biz_sub:"I want more clients",ag_title:"Happy Client",ag_sub:"I want to recommend"}, he:{selector:"הצטרפו כ:",biz_title:"בעל עסק",biz_sub:"אני רוצה להגדיל את בסיס הלקוחות",ag_title:"לקוח מרוצה",ag_sub:"אני רוצה להמליץ"}, ar:{selector:"انضم كـ:",biz_title:"صاحب عمل",biz_sub:"أريد المزيد من العملاء",ag_title:"عميل سعيد",ag_sub:"أريد أن أوصي"} }[lang] || {selector:"Присоединиться как:",biz_title:"Владелец бизнеса",biz_sub:"Хочу увеличить базу клиентов",ag_title:"Довольный клиент",ag_sub:"Хочу рекомендовать"};
+        const _rT=document.getElementById('roleSelectorTitle'); if(_rT) _rT.textContent=_RC.selector;
+        const _rbT=document.getElementById('roleCardBizTitle'); if(_rbT) _rbT.textContent=_RC.biz_title;
+        const _rbS=document.getElementById('roleCardBizSub');   if(_rbS) _rbS.textContent=_RC.biz_sub;
+        const _raT=document.getElementById('roleCardAgTitle');  if(_raT) _raT.textContent=_RC.ag_title;
+        const _raS=document.getElementById('roleCardAgSub');    if(_raS) _raS.textContent=_RC.ag_sub;
       }
 
       document.querySelectorAll(".lang-btn").forEach(btn => {
