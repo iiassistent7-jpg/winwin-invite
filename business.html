@@ -1,193 +1,265 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win Business Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-1: #1a1a2e; --bg-2: #0f0f1a; 
-      --accent-1: #56CCF2; --accent-2: #2F80ED; 
-      --text-muted: #a0a0b0; 
-      --card: rgba(255, 255, 255, 0.05); 
-      --card-border: rgba(255, 255, 255, 0.1);
-      --success: #27AE60; --danger: #EB5757; --warning: #F2C94C;
-      --pending: #9B51E0;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
-    body { background: var(--bg-1); color: #fff; min-height: 100vh; display: flex; justify-content: center; }
-    [dir="rtl"] { text-align: right; }
-    .shell { width: 100%; max-width: 600px; padding: 24px 16px 80px 16px; position: relative; }
-    .lang-switcher { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-    .lang-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 20px; padding: 6px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .lang-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
-    .header { text-align: center; margin-bottom: 24px; }
-    .logo { font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; color: transparent; margin-bottom: 4px; }
-    .title { font-size: 1.1rem; font-weight: 600; color: #fff; }
-    .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--card-border); overflow-x: auto; scrollbar-width: none; }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { flex: 1; padding: 12px 8px; text-align: center; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); background: transparent; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-    .tab-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .tab-content { display: none; animation: fadeIn 0.3s ease; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .deals-filter { display: flex; gap: 8px; margin-bottom: 16px; }
-    .filter-btn { flex: 1; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-    .filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
-    .deal-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 12px; }
-    .deal-card.pending { border-color: rgba(155,81,224,0.4); background: rgba(155,81,224,0.05); }
-    .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .deal-client { font-size: 1.2rem; font-weight: 800; }
-    .deal-date { font-size: 0.8rem; color: var(--text-muted); }
-    .deal-info { font-size: 0.9rem; color: #e0e0e0; margin-bottom: 12px; line-height: 1.6; }
-    .deal-info span { font-weight: 600; color: #fff; }
-    .deal-wa-link { color: var(--accent-1); text-decoration: none; font-weight: 600; }
-    .deal-pending-note { font-size: 0.8rem; color: var(--pending); background: rgba(155,81,224,0.1); border: 1px solid rgba(155,81,224,0.3); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
-    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
-    .st-new { background: rgba(242,201,76,0.15); color: var(--warning); border: 1px solid rgba(242,201,76,0.3); }
-    .st-progress { background: rgba(86,204,242,0.15); color: var(--accent-1); border: 1px solid rgba(86,204,242,0.3); }
-    .st-closed { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
-    .st-rejected { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
-    .st-pending { background: rgba(155,81,224,0.15); color: var(--pending); border: 1px solid rgba(155,81,224,0.3); }
-    .btn-action { display: block; width: 100%; text-align: center; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); font-weight: 600; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-    .stats-section-title { font-size: 0.95rem; font-weight: 700; margin: 24px 0 16px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stats-section-title:first-child { margin-top: 0; }
-    .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
-    .stats-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-    .stat-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px 8px; text-align: center; }
-    .stats-grid-2 .stat-box { padding: 20px; border-radius: 20px; }
-    .stat-val { font-weight: 800; color: #fff; margin-bottom: 4px; }
-    .stats-grid-3 .stat-val { font-size: 1.15rem; }
-    .stats-grid-2 .stat-val { font-size: 2rem; }
-    .stat-lbl { color: var(--text-muted); font-weight: 500; line-height: 1.2; font-size: 0.65rem; text-transform: uppercase; }
-    .stats-grid-2 .stat-lbl { font-size: 0.8rem; margin-top: 4px; }
-    .funnel-container { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-    .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; font-size: 0.95rem; }
-    .funnel-conv { color: var(--success); background: rgba(39,174,96,0.15); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; }
-    .f-bar-wrap { display: flex; align-items: center; margin-bottom: 14px; gap: 12px; }
-    .f-lbl { width: 85px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); flex-shrink: 0; text-transform: uppercase; }
-    .f-bar-bg { flex: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; }
-    .f-bar { height: 100%; border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.25,1,0.5,1); }
-    .f-active { background: var(--accent-1); } .f-closed { background: var(--success); } .f-rejected { background: var(--danger); }
-    .f-val { width: 35px; text-align: right; font-weight: 700; font-size: 0.9rem; }
-    .profile-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
-    .prof-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .prof-row:last-child { border-bottom: none; }
-    .prof-lbl { color: var(--text-muted); font-size: 0.9rem; }
-    .prof-val { font-weight: 600; text-align: right; max-width: 60%; word-break: break-word; }
-    .btn-edit { background: var(--accent-2); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-    .form-group { margin-bottom: 16px; text-align: left; }
-    [dir="rtl"] .form-group { text-align: right; }
-    .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
-    .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); color: #fff; padding: 14px; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
-    .form-control:focus { border-color: var(--accent-1); }
-    .form-control:disabled { opacity: 0.5; cursor: not-allowed; }
-    .pay-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-    .pay-btn { flex: 1; min-width: 80px; background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted); padding: 12px 8px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.2s; text-align: center; }
-    .pay-btn.active { background: linear-gradient(135deg, rgba(86,204,242,0.2), rgba(47,128,237,0.2)); color: #fff; border-color: rgba(86,204,242,0.5); }
-    .niche-checkboxes { display: flex; flex-direction: column; gap: 8px; }
-    .niche-checkbox-item { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: 0.2s; }
-    .niche-checkbox-item.checked { background: rgba(86,204,242,0.08); border-color: rgba(86,204,242,0.4); }
-    .niche-checkbox-item input[type=checkbox] { width: 18px; height: 18px; accent-color: #56CCF2; flex-shrink: 0; cursor: pointer; }
-    .niche-checkbox-item span { font-size: 0.9rem; font-weight: 600; color: #e0e0e0; }
-    .btn-save { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
-    .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; opacity: 0; align-items: flex-end; justify-content: center; }
-    .modal-backdrop.active { display: flex; opacity: 1; }
-    .modal-content { background: var(--bg-1); border-top: 1px solid var(--card-border); width: 100%; max-width: 600px; border-radius: 24px 24px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275); max-height: 90vh; overflow-y: auto; }
-    .modal-backdrop.active .modal-content { transform: translateY(0); }
-    .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
-    .modal-deal-info { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 24px; font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; border: 1px solid var(--card-border); }
-    .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-    .btn-m-close { background: rgba(39,174,96,0.15); color: var(--success); border: 1px solid rgba(39,174,96,0.3); }
-    .btn-m-reject { background: rgba(235,87,87,0.15); color: var(--danger); border: 1px solid rgba(235,87,87,0.3); }
-    .btn-m-back { background: transparent; color: var(--text-muted); }
-    .modal-step { display: none; }
-    .modal-step.active { display: block; animation: fadeIn 0.3s; }
-    .bottom-btns { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 560px; display: flex; gap: 10px; z-index: 10; }
-    .btn-wa { flex: 1; text-align: center; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,211,102,0.25); }
-    .btn-tg { flex: 1; text-align: center; background: #2F80ED; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; padding: 16px; border-radius: 16px; box-shadow: 0 8px 24px rgba(47,128,237,0.25); }
-    .loading-overlay { position: fixed; inset: 0; background: var(--bg-1); display: flex; justify-content: center; align-items: center; z-index: 2000; flex-direction: column; gap: 16px; }
-    .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent-1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-    /* Долг — баннер сверху */
-    .debt-alert { background: rgba(235,87,87,0.15); border: 1px solid rgba(235,87,87,0.3); border-radius: 16px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .debt-alert .debt-text { color: #fff; font-weight: 600; font-size: 0.9rem; }
-    .debt-alert .debt-sum { color: var(--danger); font-weight: 800; font-size: 1.2rem; }
-    /* Карточка с долгом */
-    .deal-card.unpaid { border-color: rgba(235,87,87,0.4); box-shadow: 0 0 15px rgba(235,87,87,0.1); }
-    /* Мини-чек юнит-экономики */
-    .deal-receipt { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px dashed rgba(255,255,255,0.1); }
-    .receipt-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-    .receipt-line.agent { color: #fff; font-weight: 500; }
-    .receipt-line.agent .unpaid-warn { color: var(--danger); font-weight: 700; }
-    .receipt-line.agent .paid-ok { color: var(--success); font-size: 0.75rem; }
-    .receipt-line.total { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 2px; margin-bottom: 0; color: #fff; font-weight: 800; font-size: 1rem; }
-    .receipt-line.total .net-profit { color: var(--success); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Win-Win · Бизнес Кабинет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        /* ── Light theme ────────────────────────────────────────────── */
+        :root {
+            --bg:        #F7F7F9;
+            --surface:   #FFFFFF;
+            --surface2:  #F2F2F5;
+            --text:      #1A1A2E;
+            --text2:     #8A8D9F;
+            --border:    rgba(0,0,0,0.06);
+            --shadow:    0 4px 20px rgba(0,0,0,0.06);
+            --shadow2:   0 8px 32px rgba(0,0,0,0.12);
+            --accent1:   #56CCF2;
+            --accent2:   #2F80ED;
+            --green:     #27AE60;
+            --gold:      #F2C94C;
+            --red:       #EB5757;
+            --purple:    #9B51E0;
+            --radius:    20px;
+            --radius-sm: 12px;
+            --nav-bg:    rgba(255,255,255,0.82);
+        }
+        /* ── Brand dark theme ───────────────────────────────────────── */
+        body.brand-theme {
+            --bg:        #0F0F1A;
+            --surface:   rgba(255,255,255,0.04);
+            --surface2:  rgba(255,255,255,0.07);
+            --text:      #FFFFFF;
+            --text2:     #A0A0B0;
+            --border:    rgba(255,255,255,0.07);
+            --shadow:    0 4px 24px rgba(0,0,0,0.35);
+            --shadow2:   0 8px 40px rgba(0,0,0,0.55);
+            --nav-bg:    rgba(15,15,26,0.85);
+        }
+
+        /* ── Reset & Base ───────────────────────────────────────────── */
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html { -webkit-text-size-adjust:100%; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; min-height: 100vh; transition: background .3s, color .3s; overscroll-behavior: none; }
+        [dir="rtl"] { text-align: right; }
+        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
+
+        /* ── Loader ─────────────────────────────────────────────────── */
+        .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
+        .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
+        .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; font-weight:600; }
+        .spinner { border: 4px solid rgba(86,204,242,0.1); border-left-color: var(--accent1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Header ─────────────────────────────────────────────────── */
+        .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
+        .header-left .logo-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:2px;}
+        .header-left .company-name { font-size:.85rem; color:var(--text); font-weight:600; }
+        .header-right { display:flex; align-items:center; gap:8px; }
+        .lang-row { display:flex; gap:4px; }
+        .lang-btn { padding:4px 7px; border-radius:8px; font-size:.65rem; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:.2s; }
+        .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+        .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
+        .icon-btn:active { transform:scale(.92); }
+
+        /* ── Views ──────────────────────────────────────────────────── */
+        .view { display:none; padding:0 16px; animation:fadeUp .3s ease; }
+        .view.active { display:block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── Common Cards & Sections ────────────────────────────────── */
+        .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
+        .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:0.5px; }
+
+        /* ── Debt Banner ────────────────────────────────────────────── */
+        .debt-alert { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+        .debt-alert .debt-text { color:var(--text); font-weight:600; font-size:0.9rem; }
+        .debt-alert .debt-sum { color:var(--red); font-weight:800; font-size:1.2rem; }
+
+        /* ── Filters ────────────────────────────────────────────────── */
+        .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
+        .filter-btn-tab { flex:1; background:transparent; border:none; color:var(--text2); padding:10px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:.2s; }
+        .filter-btn-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+
+        /* ── Deal Card ──────────────────────────────────────────────── */
+        .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; }
+        .deal-card.pending { border-color:rgba(155,81,224,0.4); background:rgba(155,81,224,0.03); }
+        .deal-card.unpaid { border-color:rgba(235,87,87,0.4); box-shadow:0 0 15px rgba(235,87,87,0.08); }
+        
+        .deal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+        .deal-client { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:2px; }
+        .deal-date { font-size:0.75rem; color:var(--text2); font-weight:500; }
+        
+        .status-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.7rem; font-weight:700; white-space:nowrap; }
+        .st-new { background:rgba(242,201,76,0.15); color:var(--gold); }
+        .st-progress { background:rgba(86,204,242,0.15); color:var(--accent1); }
+        .st-closed { background:rgba(39,174,96,0.15); color:var(--green); }
+        .st-rejected { background:rgba(235,87,87,0.15); color:var(--red); }
+        .st-pending { background:rgba(155,81,224,0.15); color:var(--purple); }
+        
+        .deal-pending-note { font-size:0.75rem; color:var(--purple); background:rgba(155,81,224,0.1); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
+        
+        .deal-info { font-size:0.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
+        .deal-info span { font-weight:600; color:var(--text); }
+        .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+        
+        .deal-receipt { background:var(--surface2); border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid var(--border); }
+        .receipt-line { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text2); margin-bottom:6px; }
+        .receipt-line.agent { color:var(--text); font-weight:500; }
+        .receipt-line.agent .unpaid-warn { color:var(--red); font-weight:700; }
+        .receipt-line.agent .paid-ok { color:var(--green); font-size:0.75rem; font-weight:700; }
+        .receipt-line.total { border-top:1px dashed var(--border); padding-top:8px; margin-top:4px; margin-bottom:0; color:var(--text); font-weight:800; font-size:0.95rem; }
+        .receipt-line.total .net-profit { color:var(--green); }
+        
+        .btn-action { display:flex; justify-content:center; align-items:center; gap:8px; width:100%; background:var(--surface2); color:var(--text); border:1px solid var(--border); font-weight:600; font-size:0.9rem; padding:12px; border-radius:12px; cursor:pointer; transition:.2s; }
+        .btn-action:active { transform:scale(0.98); background:var(--border); }
+
+        /* ── Stats View ─────────────────────────────────────────────── */
+        /* Changed to 2 columns for 4 items */
+        .stats-grid-3 { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:16px; }
+        .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+        .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 8px; text-align:center; box-shadow:var(--shadow); }
+        .stats-grid-2 .stat-box { padding:20px; border-radius:20px; }
+        .stat-val { font-family:'Sora',sans-serif; font-weight:800; color:var(--text); margin-bottom:4px; }
+        .stats-grid-3 .stat-val { font-size:1.15rem; }
+        .stats-grid-2 .stat-val { font-size:1.8rem; }
+        .stat-lbl { color:var(--text2); font-weight:600; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.5px; }
+        
+        .funnel-container { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:24px; box-shadow:var(--shadow); }
+        .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; font-size:0.95rem; }
+        .funnel-conv { color:var(--green); background:rgba(39,174,96,0.15); padding:4px 10px; border-radius:8px; font-size:0.85rem; }
+        .f-bar-wrap { display:flex; align-items:center; margin-bottom:14px; gap:12px; }
+        .f-lbl { width:85px; font-size:0.75rem; font-weight:600; color:var(--text2); flex-shrink:0; text-transform:uppercase; }
+        .f-bar-bg { flex:1; background:var(--surface2); height:10px; border-radius:5px; overflow:hidden; border:1px solid var(--border); }
+        .f-bar { height:100%; border-radius:5px; width:0%; transition:width 1s cubic-bezier(0.25,1,0.5,1); }
+        .f-active { background:var(--accent1); } .f-closed { background:var(--green); } .f-rejected { background:var(--red); }
+        .f-val { width:35px; text-align:right; font-weight:700; font-size:0.9rem; }
+
+        /* ── Profile View ───────────────────────────────────────────── */
+        .profile-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:0 20px; margin-bottom:16px; box-shadow:var(--shadow); }
+        .prof-row { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); }
+        .prof-row:last-child { border-bottom:none; }
+        .prof-lbl { color:var(--text2); font-size:0.85rem; font-weight:600; }
+        .prof-val { font-weight:700; font-size:0.9rem; text-align:right; max-width:60%; word-break:break-word; }
+        
+        /* ── Buttons ────────────────────────────────────────────────── */
+        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:14px 22px; border-radius:14px; font-weight:700; font-size:0.95rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; display:flex; justify-content:center; align-items:center; gap:8px; }
+        .btn-primary:active { transform:scale(.97); }
+        .btn-accent { background:var(--accent2); color:#fff; }
+        .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+        
+        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); text-decoration:none; margin-top:14px; display:none; }
+        .btn-tg { background:#2F80ED; color:#fff; box-shadow:0 4px 16px rgba(47,128,237,.25); text-decoration:none; margin-top:14px; display:none; }
+
+        /* ── Bottom Nav ─────────────────────────────────────────────── */
+        .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; padding:10px 30px 22px; border-top:1px solid var(--border); z-index:100; }
+        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
+        .nav-item.active { color:var(--accent2); }
+        .nav-item span { font-size:.6rem; font-weight:700; }
+        .nav-item svg { transition:.2s; }
+        .nav-item.active svg { transform:translateY(-2px); }
+
+        /* ── Full Screen Sheets (Slide-over) ────────────────────────── */
+        .recommend-screen { display:none; position:fixed; inset:0; background:var(--bg); z-index:500; overflow-y:auto; padding:24px 16px 40px; animation:slideUp .3s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        .recommend-screen.active { display:block; }
+        
+        .btn-back { background:transparent; border:none; color:var(--text2); font-size:0.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; }
+        .sheet-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
+        .sheet-title { font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; margin-bottom:20px; }
+
+        /* ── Form Inputs ────────────────────────────────────────────── */
+        .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
+        .custom-input { width:100%; padding:14px 16px; border:1px solid var(--border); border-radius:12px; background:var(--surface2); color:var(--text); font-size:.95rem; margin-bottom:16px; outline:none; font-family:inherit; transition:.2s; }
+        .custom-input:focus { border-color:var(--accent2); background:var(--surface); }
+        select.custom-input { appearance:none; }
+
+        .pay-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .pay-btn { flex:1; min-width:80px; background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:12px 8px; border-radius:12px; cursor:pointer; font-weight:700; font-size:.85rem; transition:.2s; text-align:center; }
+        .pay-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+
+        .niche-checkboxes { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+        .niche-checkbox-item { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer; transition:.2s; }
+        .niche-checkbox-item.checked { background:rgba(86,204,242,0.1); border-color:var(--accent1); }
+        .niche-checkbox-item input[type=checkbox] { width:18px; height:18px; accent-color:var(--accent1); flex-shrink:0; cursor:pointer; }
+        .niche-checkbox-item span { font-size:.85rem; font-weight:600; color:var(--text); }
+        
+        .step-panel { display: none; }
+        .step-panel.active { display: block; animation: fadeIn .3s; }
+        .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight: 500; font-size: 0.9rem;}
+    </style>
 </head>
 <body>
+  
   <div class="loading-overlay" id="globalLoader">
+    <div class="loader-brand">Win-Win</div>
+    <div class="loader-sub" id="loaderText">Загрузка данных...</div>
     <div class="spinner"></div>
-    <div id="loaderText" style="font-weight:700; color:var(--accent-1);">Загрузка данных...</div>
   </div>
 
-  <div class="shell" style="display:none;" id="mainShell">
-    <div class="lang-switcher">
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('he')">HE</button>
-      <button class="lang-btn" onclick="setLang('ar')">AR</button>
-      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
-    </div>
+  <div class="app" style="display:none;" id="mainShell">
+    
     <header class="header">
-      <h1 class="logo">Win-Win</h1>
-      <div class="title" id="t_company_name">...</div>
+      <div class="header-left">
+        <div class="logo-text">Win-Win</div>
+        <div class="company-name" id="t_company_name">...</div>
+      </div>
+      <div class="header-right">
+        <div class="lang-row">
+          <button class="lang-btn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" onclick="setLang('he')">HE</button>
+          <button class="lang-btn" onclick="setLang('ar')">AR</button>
+          <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+        </div>
+        <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="sun"></i></button>
+      </div>
     </header>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('deals')" id="t_tab_deals">💼 Сделки</button>
-      <button class="tab-btn" onclick="switchTab('stats')" id="t_tab_stats">📊 Статистика</button>
-      <button class="tab-btn" onclick="switchTab('profile')" id="t_tab_profile">👤 Профиль</button>
-    </div>
-
-    <div id="tab_deals" class="tab-content active">
+    <div id="view-deals" class="view active">
       <div class="debt-alert" id="debtBanner" style="display:none;">
         <div class="debt-text" id="t_total_debt">🔴 Долг агентам:</div>
         <div class="debt-sum" id="debtAmount">0 ₪</div>
       </div>
+      
       <div class="deals-filter">
-        <button class="filter-btn active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
-        <button class="filter-btn" onclick="setDealFilter('history')" id="t_filt_history">История</button>
+        <button class="filter-btn-tab active" onclick="setDealFilter('active')" id="t_filt_active">В работе</button>
+        <button class="filter-btn-tab" onclick="setDealFilter('history')" id="t_filt_history">История</button>
       </div>
+      
       <div id="dealsContainer"></div>
     </div>
 
-    <div id="tab_stats" class="tab-content">
-      <div class="stats-section-title" id="t_st_fin_title">Финансы</div>
+    <div id="view-stats" class="view">
+      <div class="sec-title" id="t_st_fin_title">Финансы</div>
       <div class="stats-grid-3">
         <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--danger);">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_net_income" style="color:var(--success);">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red);">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_net_income" style="color:var(--green);">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_pending_conf" style="color:var(--purple);">0</div><div class="stat-lbl" id="t_st_pending_conf">Ждут агента</div></div>
       </div>
-      <div class="stats-section-title" id="t_st_funnel_title">Воронка конверсии</div>
+      
+      <div class="sec-title" id="t_st_funnel_title">Воронка конверсии</div>
       <div class="funnel-container">
         <div class="funnel-header">
-          <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:#fff;">0</span></div>
+          <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:var(--text);">0</span></div>
           <div class="funnel-conv" id="st_conversion">0%</div>
         </div>
         <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_active">В процессе</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
         <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
         <div class="f-bar-wrap"><div class="f-lbl" id="t_st_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
       </div>
+      
       <div class="stats-grid-2">
-        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent-1);">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--warning);">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent1);">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--gold);">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
       </div>
     </div>
 
-    <div id="tab_profile" class="tab-content">
+    <div id="view-profile" class="view">
+      <div class="sec-title" id="t_tab_profile">Профиль</div>
       <div class="profile-card">
         <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name"></div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche"></div></div>
@@ -195,95 +267,195 @@
         <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay"></div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone"></div></div>
       </div>
-      <button class="btn-edit" onclick="switchTab('edit')" id="t_btn_edit">✏️ Редактировать профиль</button>
+      
+      <button class="btn-primary btn-outline" onclick="openProfileEdit()">
+        <i data-feather="edit-2" style="width:16px;height:16px;"></i>
+        <span id="t_btn_edit">Редактировать профиль</span>
+      </button>
+      
+      <a href="#" id="btnWaReturn" class="btn-primary btn-wa"><i data-feather="message-circle" style="width:18px;height:18px;"></i> WhatsApp</a>
+      <a href="https://t.me/winwin_lead_bot" id="btnTgReturn" class="btn-primary btn-tg" target="_blank"><i data-feather="send" style="width:18px;height:18px;"></i> Telegram</a>
     </div>
 
-    <div id="tab_edit" class="tab-content">
-      <div class="form-group"><label id="t_f_name">Название бизнеса</label><input type="text" class="form-control" id="f_name"></div>
-      <div class="form-group">
-        <label id="t_f_niche">Категория бизнеса</label>
-        <select class="form-control" id="f_niche" onchange="updateEditSubcategories()">
-          <option value="" disabled>Выберите категорию...</option>
-          <option value="Красота и эстетика">Красота и эстетика</option>
-          <option value="Еда и рестораны">Еда и рестораны</option>
-          <option value="Магазины и товары">Магазины и товары</option>
-          <option value="Здоровье и медицина">Здоровье и медицина</option>
-          <option value="Юриспруденция">Юриспруденция</option>
-          <option value="Недвижимость и финансы">Недвижимость и финансы</option>
-          <option value="Дом и ремонт">Дом и ремонт</option>
-          <option value="Автомобили">Автомобили</option>
-          <option value="Праздники и мероприятия">Праздники и мероприятия</option>
-          <option value="Обучение и спорт">Обучение и спорт</option>
-          <option value="Домашние питомцы">Домашние питомцы</option>
-          <option value="Туризм и отдых">Туризм и отдых</option>
-          <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
-        </select>
-      </div>
-      <div class="form-group" id="f_subniche_group" style="display:none;">
-        <label id="t_f_subniche">Специализация <span style="font-size:0.75rem; color:var(--text-muted);">(можно выбрать несколько)</span></label>
-        <div id="f_subniche_tags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
-        <div class="niche-checkboxes" id="f_subniche_list"></div>
-        <button type="button" onclick="confirmBizSubcat()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#56CCF2,#2F80ED);border:none;color:#fff;font-weight:800;font-size:1rem;border-radius:14px;cursor:pointer;box-shadow:0 4px 16px rgba(86,204,242,0.3);" id="bizSubcatDone">✅ Подтвердить выбор</button>
-        <button type="button" onclick="editBizSubcat()" style="display:none;width:100%;margin-top:6px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:0.85rem;border-radius:10px;cursor:pointer;" id="bizSubcatEdit">✏️ Изменить</button>
-      </div>
-      <div class="form-group"><label id="t_f_comm">Вознаграждение (например, 10% или 500)</label><input type="text" class="form-control" id="f_comm"></div>
-      <div class="form-group">
-        <label id="t_f_pay">Способ выплаты</label>
-        <div class="pay-btns">
-          <button type="button" class="pay-btn" onclick="selectPayMethod('Bit')">💳 Bit</button>
-          <button type="button" class="pay-btn" onclick="selectPayMethod('PayPal')">🅿️ PayPal</button>
-          <button type="button" class="pay-btn" onclick="selectPayMethod('Bank')">🏦 Bank</button>
-          <button type="button" class="pay-btn" onclick="selectPayMethod('Cash')">💵 Cash</button>
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('deals', this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
+        <button class="nav-item" onclick="switchTab('stats', this)"><i data-feather="pie-chart"></i><span id="nav_stats">Статистика</span></button>
+        <button class="nav-item" onclick="switchTab('profile', this)"><i data-feather="user"></i><span id="nav_profile">Профиль</span></button>
+    </nav>
+
+    <div class="recommend-screen" id="manageDealSheet">
+        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
+            <div class="sheet-card" style="margin-bottom:24px;">
+                <div class="sheet-title" id="m_title">Управление сделкой</div>
+                
+                <div style="font-size:0.9rem; color:var(--text2); margin-bottom:24px; line-height:1.6;">
+                    <strong id="m_lbl_client" style="color:var(--text);">Клиент:</strong> <span id="m_val_client"></span><br>
+                    <strong id="m_lbl_agent" style="color:var(--text);">Агент:</strong> <span id="m_val_agent"></span><br>
+                    <strong id="m_lbl_date" style="color:var(--text);">Дата:</strong> <span id="m_val_date"></span>
+                </div>
+
+                <div class="step-panel active" id="m_step_main">
+                    <button class="btn-primary" style="background:rgba(39,174,96,0.15); color:var(--green); margin-bottom:12px; border:1px solid rgba(39,174,96,0.3);" onclick="setManageStep('close')">
+                        <i data-feather="check-circle" style="width:18px;height:18px;"></i> <span id="t_m_btn_close">Закрыть сделку</span>
+                    </button>
+                    <button class="btn-primary" style="background:rgba(235,87,87,0.15); color:var(--red); border:1px solid rgba(235,87,87,0.3);" onclick="setManageStep('reject')">
+                        <i data-feather="x-circle" style="width:18px;height:18px;"></i> <span id="t_m_btn_reject">Отклонить сделку</span>
+                    </button>
+                </div>
+
+                <div class="step-panel" id="m_step_close">
+                    <label class="input-label" id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
+                    <input type="number" class="custom-input" id="m_amount" placeholder="Например: 1500">
+                    <button class="btn-primary btn-accent" onclick="submitDealAction('close')" style="margin-bottom:12px;" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
+                    <button class="btn-primary btn-outline" onclick="setManageStep('main')" id="t_m_btn_back1">Отмена</button>
+                </div>
+
+                <div class="step-panel" id="m_step_reject">
+                    <p style="text-align:center; margin-bottom:16px; font-weight:600;" id="t_m_reject_sure">Вы уверены, что хотите отклонить?</p>
+                    <button class="btn-primary" style="background:var(--red); color:#fff; margin-bottom:12px;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+                    <button class="btn-primary btn-outline" onclick="setManageStep('main')" id="t_m_btn_back2">Отмена</button>
+                </div>
+
+                <div class="step-panel" id="m_step_result" style="text-align:center; padding:20px 0;">
+                    <div class="spinner" style="margin:0 auto 16px auto;" id="m_spinner"></div>
+                    <div id="m_result_msg" style="font-weight:600; white-space:pre-line; color:var(--text);">Обработка...</div>
+                    <button class="btn-primary btn-outline" onclick="closeManageDeal()" id="m_btn_finish" style="display:none; margin-top:20px;">Закрыть</button>
+                </div>
+            </div>
+            
+            <button class="btn-primary btn-accent" onclick="closeManageDeal()" id="t_m_btn_cancel_bottom" style="display: flex;">Назад</button>
         </div>
-        <input type="hidden" id="f_pay">
-      </div>
-      <div class="form-group"><label id="t_f_link">Ссылка (Сайт / Соцсети)</label><input type="text" class="form-control" id="f_link" placeholder="https://..."></div>
-      <button class="btn-save" onclick="submitEditForm()" id="t_btn_save">💾 Сохранить изменения</button>
-      <button class="btn-cancel" onclick="switchTab('profile')" id="t_btn_cancel">Отмена</button>
     </div>
 
-    <div class="bottom-btns">
-      <a href="#" id="btnWaReturn" onclick="returnToWa()" style="display:none;" class="btn-wa">WhatsApp</a>
-      <a href="https://t.me/winwin_lead_bot" id="btnTgReturn" target="_blank" style="display:none;" class="btn-tg">Telegram</a>
-    </div>
-  </div>
+    <div class="recommend-screen" id="editProfileSheet">
+        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
+            <button class="btn-back" onclick="closeProfileEdit()">
+                <i data-feather="arrow-left" style="width:18px;height:18px;"></i>
+                <span id="t_btn_cancel">Отмена</span>
+            </button>
 
-  <div class="modal-backdrop" id="actionModal">
-    <div class="modal-content">
-      <div class="modal-title" id="m_title">Управление сделкой</div>
-      <div class="modal-deal-info" id="m_info"></div>
-      <div class="modal-step active" id="m_step_main">
-        <button class="modal-btn btn-m-close" onclick="setModalStep('close')" id="t_m_btn_close">✅ Закрыть сделку</button>
-        <button class="modal-btn btn-m-reject" onclick="setModalStep('reject')" id="t_m_btn_reject">❌ Отклонить сделку</button>
-        <button class="modal-btn btn-m-back" onclick="closeModal()" id="t_m_btn_cancel">↩️ Назад</button>
-      </div>
-      <div class="modal-step" id="m_step_close">
-        <div class="form-group">
-          <label id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
-          <input type="number" class="form-control" id="m_amount" placeholder="Например: 1500">
+            <div class="sheet-card">
+                <div class="sheet-title" id="t_btn_edit_title">Редактирование</div>
+                
+                <label class="input-label" id="t_f_name">Название бизнеса</label>
+                <input type="text" class="custom-input" id="f_name">
+
+                <label class="input-label" id="t_f_niche">Категория бизнеса</label>
+                <select class="custom-input" id="f_niche" onchange="updateEditSubcategories()">
+                    <option value="" disabled>Выберите категорию...</option>
+                    <option value="Красота и эстетика">Красота и эстетика</option>
+                    <option value="Еда и рестораны">Еда и рестораны</option>
+                    <option value="Магазины и товары">Магазины и товары</option>
+                    <option value="Здоровье и медицина">Здоровье и медицина</option>
+                    <option value="Юриспруденция">Юриспруденция</option>
+                    <option value="Недвижимость и финансы">Недвижимость и финансы</option>
+                    <option value="Дом и ремонт">Дом и ремонт</option>
+                    <option value="Автомобили">Автомобили</option>
+                    <option value="Праздники и мероприятия">Праздники и мероприятия</option>
+                    <option value="Обучение и спорт">Обучение и спорт</option>
+                    <option value="Домашние питомцы">Домашние питомцы</option>
+                    <option value="Туризм и отдых">Туризм и отдых</option>
+                    <option value="Бизнес и B2B услуги">Бизнес и B2B услуги</option>
+                </select>
+
+                <div id="f_subniche_group" style="display:none; margin-bottom:16px;">
+                    <label class="input-label" id="t_f_subniche">Специализация</label>
+                    <div id="f_subniche_tags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+                    <div class="niche-checkboxes" id="f_subniche_list"></div>
+                    <button type="button" onclick="confirmBizSubcat()" class="btn-primary" style="background:var(--surface2); color:var(--text); border:1px solid var(--border);" id="bizSubcatDone">✅ Подтвердить выбор</button>
+                    <button type="button" onclick="editBizSubcat()" class="btn-primary btn-outline" style="display:none; margin-top:8px;" id="bizSubcatEdit">✏️ Изменить</button>
+                </div>
+
+                <label class="input-label" id="t_f_comm">Вознаграждение (например, 10% или 500)</label>
+                <input type="text" class="custom-input" id="f_comm">
+
+                <label class="input-label" id="t_f_pay">Способ выплаты</label>
+                <div class="pay-btns">
+                    <button type="button" class="pay-btn" onclick="selectPayMethod('Bit')">Bit</button>
+                    <button type="button" class="pay-btn" onclick="selectPayMethod('PayPal')">PayPal</button>
+                    <button type="button" class="pay-btn" onclick="selectPayMethod('Bank')">Bank</button>
+                    <button type="button" class="pay-btn" onclick="selectPayMethod('Cash')">Cash</button>
+                </div>
+                <input type="hidden" id="f_pay">
+
+                <label class="input-label" id="t_f_link">Ссылка (Сайт / Соцсети)</label>
+                <input type="text" class="custom-input" id="f_link" placeholder="https://...">
+
+                <button class="btn-primary btn-accent" onclick="submitEditForm()" id="t_btn_save" style="margin-top:16px;">Сохранить изменения</button>
+            </div>
         </div>
-        <button class="btn-save" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
-        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back1">↩️ Назад</button>
-      </div>
-      <div class="modal-step" id="m_step_reject">
-        <p style="text-align:center; margin-bottom:16px;" id="t_m_reject_sure">Вы уверены?</p>
-        <button class="modal-btn btn-m-reject" style="background:var(--danger); color:#fff; border:none;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
-        <button class="modal-btn btn-m-back" onclick="setModalStep('main')" id="t_m_btn_back2">↩️ Отмена</button>
-      </div>
-      <div class="modal-step" id="m_step_result" style="text-align:center; padding:20px 0;">
-        <div class="spinner" style="margin:0 auto 16px auto;" id="m_spinner"></div>
-        <div id="m_result_msg" style="font-weight:600; white-space:pre-line;">Обработка...</div>
-        <button class="modal-btn btn-m-back" onclick="closeModal()" id="m_btn_finish" style="display:none; margin-top:16px;">Закрыть</button>
-      </div>
     </div>
+
   </div>
 
   <script>
+    // ── Theme Logic ──────────────────────────────────────────────────────────
+    function applyTheme() {
+        const saved = localStorage.getItem('winwin_theme');
+        if (saved !== 'light') {
+            document.body.classList.add('brand-theme');
+            const btn = document.querySelector('#themeBtn');
+            if (btn) btn.innerHTML = '<i data-feather="sun"></i>';
+        } else {
+            document.body.classList.remove('brand-theme');
+            const btn = document.querySelector('#themeBtn');
+            if (btn) btn.innerHTML = '<i data-feather="moon"></i>';
+        }
+        if (typeof feather !== 'undefined') feather.replace();
+    }
+    function toggleTheme() {
+        const isBrand = document.body.classList.contains('brand-theme');
+        if (isBrand) {
+            document.body.classList.remove('brand-theme');
+            localStorage.setItem('winwin_theme', 'light');
+            document.querySelector('#themeBtn').innerHTML = '<i data-feather="moon"></i>';
+        } else {
+            document.body.classList.add('brand-theme');
+            localStorage.setItem('winwin_theme', 'brand');
+            document.querySelector('#themeBtn').innerHTML = '<i data-feather="sun"></i>';
+        }
+        feather.replace();
+    }
+
+    // Call early to prevent flash
+    applyTheme();
+
+    // ── Swipe Logic ──────────────────────────────────────────────────────────
+    const tabsList = ['deals', 'stats', 'profile'];
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+
+    function currentTabIndex() {
+        return tabsList.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+    }
+
+    document.querySelector('.app').addEventListener('touchstart', e => {
+        if (document.querySelector('.recommend-screen.active')) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }, {passive: true});
+
+    document.querySelector('.app').addEventListener('touchend', e => {
+        if (document.querySelector('.recommend-screen.active')) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+        
+        if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            const cur = currentTabIndex();
+            const next = dx < 0 ? cur + 1 : cur - 1; // Left swipe (dx < 0) -> next
+            if (next >= 0 && next < tabsList.length) {
+                const navBtns = document.querySelectorAll('.nav-item');
+                switchTab(tabsList[next], navBtns[next]);
+            }
+        }
+    });
+
     const i18n = {
-      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"💼 Сделки", tab_stats:"📊 Статистика", tab_profile:"👤 Профиль", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending_confirm:"⏳ Ждём подтверждения", pending_note:"Ожидаем подтверждения получения от агента", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"⚙️ Управлять", st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", st_f_active:"В процессе", st_f_closed:"Закрыто", st_f_rejected:"Отклонено", st_agents:"Уник. агенты", st_avg_deal:"Средний чек", pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон", btn_edit:"✏️ Редактировать профиль", f_name:"Название бизнеса", f_niche:"Ниша", f_comm:"Вознаграждение (например, 10% или 500)", f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"💾 Сохранить изменения", btn_cancel:"Отмена", m_title:"Управление сделкой", m_client:"Клиент:", m_date:"Дата:", m_close:"✅ Закрыть сделку", m_reject:"❌ Отклонить сделку", m_cancel:"↩️ Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть", wa_btn:"WhatsApp" },
-      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף.", err_save:"שגיאה", success_save:"נשמר!", tab_deals:"💼 עסקאות", tab_stats:"📊 סטטיסטיקה", tab_profile:"👤 פרופיל", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending_confirm:"⏳ ממתין לאישור", pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_contact:"צור קשר עם", card_manage:"⚙️ ניהול", st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", st_f_active:"בתהליך", st_f_closed:"נסגרו", st_f_rejected:"נדחו", st_agents:"סוכנים", st_avg_deal:"עסקה ממוצעת", pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"✏️ עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_comm:"תגמול", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"💾 שמור", btn_cancel:"ביטול", m_title:"ניהול עסקה", m_client:"לקוח:", m_date:"תאריך:", m_close:"✅ סגור עסקה", m_reject:"❌ דחה עסקה", m_cancel:"↩️ חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור", wa_btn:"WhatsApp" },
-      en: { loading:"Loading data...", expired:"Link expired.", err_save:"Save error", success_save:"Saved!", tab_deals:"💼 Deals", tab_stats:"📊 Stats", tab_profile:"👤 Profile", filt_active:"Active", filt_history:"History", empty_deals:"Empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending_confirm:"⏳ Awaiting confirmation", pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_contact:"Contact client", card_manage:"⚙️ Manage", st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_funnel_title:"Conversion Funnel", st_total_leads:"Total Leads:", st_f_active:"In Progress", st_f_closed:"Closed", st_f_rejected:"Rejected", st_agents:"Unique Agents", st_avg_deal:"Avg Deal", pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"✏️ Edit Profile", f_name:"Business Name", f_niche:"Niche", f_comm:"Reward (e.g. 10% or 500)", f_pay:"Payment Method", f_link:"Link", btn_save:"💾 Save Changes", btn_cancel:"Cancel", m_title:"Manage Deal", m_client:"Client:", m_date:"Date:", m_close:"✅ Close Deal", m_reject:"❌ Reject Deal", m_cancel:"↩️ Back", m_lbl_amount:"Deal amount", m_conf_close:"Confirm Close", m_sure:"Are you sure?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Done!", action_close:"Close", wa_btn:"WhatsApp" },
-      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط.", err_save:"خطأ", success_save:"تم الحفظ!", tab_deals:"💼 الصفقات", tab_stats:"📊 الإحصائيات", tab_profile:"👤 الملف", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending_confirm:"⏳ بانتظار التأكيد", pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_contact:"الاتصال", card_manage:"⚙️ إدارة", st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", st_f_active:"قيد الإجراء", st_f_closed:"مغلقة", st_f_rejected:"مرفوضة", st_agents:"وكلاء", st_avg_deal:"متوسط الصفقة", pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"✏️ تعديل الملف", f_name:"اسم العمل", f_niche:"المجال", f_comm:"مكافأة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"💾 حفظ", btn_cancel:"إلغاء", m_title:"إدارة الصفقة", m_client:"العميل:", m_date:"التاريخ:", m_close:"✅ إغلاق الصفقة", m_reject:"❌ رفض الصفقة", m_cancel:"↩️ رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق", wa_btn:"WhatsApp" }
+      ru: { loading:"Загрузка данных...", expired:"Ссылка устарела. Запросите новую в боте.", err_save:"Ошибка сохранения", success_save:"Изменения сохранены!", tab_deals:"Сделки", tab_stats:"Статистика", tab_profile:"Профиль", filt_active:"В работе", filt_history:"История", empty_deals:"Здесь пока пусто.", st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending_confirm:"⏳ Ждём подтверждения", pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_contact:"Связаться с клиентом", card_manage:"Управлять", st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_conf: "Ждут агента", st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", st_f_active:"В процессе", st_f_closed:"Закрыто", st_f_rejected:"Отклонено", st_agents:"Уник. агенты", st_avg_deal:"Средний чек", pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон", btn_edit:"Редактировать профиль", f_name:"Название бизнеса", f_niche:"Категория", f_subniche:"Специализация", f_comm:"Вознаграждение (10% или 500)", f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)", btn_save:"Сохранить изменения", btn_cancel:"Отмена", m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:", m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_cancel:"Назад", m_lbl_amount:"Сумма сделки (только цифры)", m_conf_close:"Подтвердить закрытие", m_sure:"Вы уверены, что хотите отклонить?", m_conf_reject:"Да, отклонить", action_processing:"Обработка...", action_success:"Успешно выполнено!", action_close:"Закрыть", wa_btn:"WhatsApp" },
+      he: { loading:"טוען נתונים...", expired:"הקישור פג תוקף.", err_save:"שגיאה", success_save:"נשמר!", tab_deals:"עסקאות", tab_stats:"סטטיסטיקה", tab_profile:"פרופיל", filt_active:"פעיל", filt_history:"היסטוריה", empty_deals:"ריק כאן.", st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending_confirm:"⏳ ממתין לאישור", pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_contact:"צור קשר", card_manage:"ניהול", st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_conf: "ממתין לסוכן", st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", st_f_active:"בתהליך", st_f_closed:"נסגרו", st_f_rejected:"נדחו", st_agents:"סוכנים", st_avg_deal:"עסקה ממוצעת", pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון", btn_edit:"עריכת פרופיל", f_name:"שם העסק", f_niche:"תחום", f_subniche:"התמחות", f_comm:"תגמול", f_pay:"אופן תשלום", f_link:"קישור", btn_save:"שמור שינויים", btn_cancel:"ביטול", m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:", m_close:"סגור עסקה", m_reject:"דחה עסקה", m_cancel:"חזרה", m_lbl_amount:"סכום העסקה", m_conf_close:"אשר סגירה", m_sure:"האם אתה בטוח?", m_conf_reject:"כן, לדחות", action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור", wa_btn:"WhatsApp" },
+      en: { loading:"Loading data...", expired:"Link expired.", err_save:"Save error", success_save:"Saved!", tab_deals:"Deals", tab_stats:"Stats", tab_profile:"Profile", filt_active:"Active", filt_history:"History", empty_deals:"Empty here.", st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending_confirm:"⏳ Awaiting confirmation", pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_contact:"Contact client", card_manage:"Manage", st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_conf: "Awaiting agent", st_funnel_title:"Conversion Funnel", st_total_leads:"Total Leads:", st_f_active:"In Progress", st_f_closed:"Closed", st_f_rejected:"Rejected", st_agents:"Unique Agents", st_avg_deal:"Avg Deal", pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone", btn_edit:"Edit Profile", f_name:"Business Name", f_niche:"Category", f_subniche:"Specialization", f_comm:"Reward (e.g. 10% or 500)", f_pay:"Payment Method", f_link:"Link", btn_save:"Save Changes", btn_cancel:"Cancel", m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:", m_close:"Close Deal", m_reject:"Reject Deal", m_cancel:"Back", m_lbl_amount:"Deal amount", m_conf_close:"Confirm Close", m_sure:"Are you sure?", m_conf_reject:"Yes, Reject", action_processing:"Processing...", action_success:"Done!", action_close:"Close", wa_btn:"WhatsApp" },
+      ar: { loading:"جاري التحميل...", expired:"انتهت صلاحية الرابط.", err_save:"خطأ", success_save:"تم الحفظ!", tab_deals:"الصفقات", tab_stats:"إحصائيات", tab_profile:"الملف", filt_active:"نشط", filt_history:"السجل", empty_deals:"فارغ هنا.", st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending_confirm:"⏳ بانتظار التأكيد", pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_contact:"الاتصال بالعميل", card_manage:"إدارة", st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_conf: "في انتظار الوكيل", st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", st_f_active:"قيد الإجراء", st_f_closed:"مغلقة", st_f_rejected:"مرفوضة", st_agents:"وكلاء", st_avg_deal:"متوسط الصفقة", pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف", btn_edit:"تعديل الملف", f_name:"اسم العمل", f_niche:"الفئة", f_subniche:"تخصص", f_comm:"مكافأة", f_pay:"طريقة الدفع", f_link:"رابط", btn_save:"حفظ التغييرات", btn_cancel:"إلغاء", m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:", m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_cancel:"رجوع", m_lbl_amount:"مبلغ الصفقة", m_conf_close:"تأكيد الإغلاق", m_sure:"هل أنت متأكد؟", m_conf_reject:"نعم، أرفض", action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق", wa_btn:"WhatsApp" }
     };
 
     let currentLang = 'ru';
@@ -309,15 +481,16 @@
       document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
       const L = i18n[lang];
       document.getElementById('loaderText').textContent = L.loading;
-      document.getElementById('t_tab_deals').textContent = L.tab_deals;
-      document.getElementById('t_tab_stats').textContent = L.tab_stats;
-      document.getElementById('t_tab_profile').textContent = L.tab_profile;
+      document.getElementById('nav_deals').textContent = L.tab_deals;
+      document.getElementById('nav_stats').textContent = L.tab_stats;
+      document.getElementById('nav_profile').textContent = L.tab_profile;
       document.getElementById('t_filt_active').textContent = L.filt_active;
       document.getElementById('t_filt_history').textContent = L.filt_history;
       document.getElementById('t_st_fin_title').textContent = L.st_fin_title;
       document.getElementById('t_st_revenue').textContent = L.st_revenue;
       document.getElementById('t_st_commission').textContent = L.st_commission;
       document.getElementById('t_st_net').textContent = L.st_net;
+      document.getElementById('t_st_pending_conf').textContent = L.st_pending_conf;
       document.getElementById('t_st_funnel_title').textContent = L.st_funnel_title;
       document.getElementById('t_st_total_leads').textContent = L.st_total_leads;
       document.getElementById('t_st_f_active').textContent = L.st_f_active;
@@ -333,15 +506,21 @@
       document.getElementById('t_btn_edit').textContent = L.btn_edit;
       document.getElementById('t_f_name').textContent = L.f_name;
       document.getElementById('t_f_niche').textContent = L.f_niche;
+      document.getElementById('t_f_subniche').textContent = L.f_subniche;
       document.getElementById('t_f_comm').textContent = L.f_comm;
       document.getElementById('t_f_pay').textContent = L.f_pay;
       document.getElementById('t_f_link').textContent = L.f_link;
       document.getElementById('t_btn_save').textContent = L.btn_save;
       document.getElementById('t_btn_cancel').textContent = L.btn_cancel;
       document.getElementById('m_title').textContent = L.m_title;
+      document.getElementById('t_btn_edit_title').textContent = L.btn_edit;
+      
+      document.getElementById('m_lbl_client').textContent = L.m_client;
+      document.getElementById('m_lbl_agent').textContent = L.m_agent;
+      document.getElementById('m_lbl_date').textContent = L.m_date;
+      
       document.getElementById('t_m_btn_close').textContent = L.m_close;
       document.getElementById('t_m_btn_reject').textContent = L.m_reject;
-      document.getElementById('t_m_btn_cancel').textContent = L.m_cancel;
       document.getElementById('t_m_lbl_amount').textContent = L.m_lbl_amount;
       document.getElementById('t_m_btn_confirm_close').textContent = L.m_conf_close;
       document.getElementById('t_m_btn_back1').textContent = L.m_cancel;
@@ -349,7 +528,8 @@
       document.getElementById('t_m_btn_confirm_reject').textContent = L.m_conf_reject;
       document.getElementById('t_m_btn_back2').textContent = L.m_cancel;
       document.getElementById('m_btn_finish').textContent = L.action_close;
-      document.getElementById('btnWaReturn').textContent = L.wa_btn;
+      document.getElementById('t_m_btn_cancel_bottom').textContent = L.m_cancel;
+      
       if (shouldRender && bizData) renderAll();
     }
 
@@ -358,62 +538,94 @@
       document.getElementById('loaderText').textContent = msg;
     }
 
+    function handleDeepLink() {
+        const urlTab = new URLSearchParams(window.location.search).get('tab');
+        if (urlTab && tabsList.includes(urlTab)) {
+            const btn = document.querySelector(`.nav-item[onclick*="'${urlTab}'"]`);
+            switchTab(urlTab, btn);
+        }
+    }
+
     async function fetchData() {
+      const cacheKey = `biz_cache_${token}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      
+      // Рендер из кэша для моментальной загрузки
+      if (cached) {
+          try {
+              bizData = JSON.parse(cached);
+              document.getElementById('globalLoader').style.display = 'none';
+              document.getElementById('mainShell').style.display = 'block';
+              document.getElementById('t_company_name').textContent = bizData.name || '—';
+              updateReturnBtns();
+              renderAll();
+              handleDeepLink();
+          } catch(e) {}
+      }
+
+      // Фоновый запрос для обновления данных
       try {
         const res = await fetch(`${API_URL}/api/business?token=${token}`);
         if (!res.ok) throw new Error('Auth failed');
-        bizData = await res.json();
-        document.getElementById('globalLoader').style.display = 'none';
-        document.getElementById('mainShell').style.display = 'block';
-        document.getElementById('t_company_name').textContent = bizData.name;
-        updateReturnBtns();
-        renderAll();
+        const freshData = await res.json();
+        const freshStr = JSON.stringify(freshData);
+        
+        // Перерисовываем только если данные изменились
+        if (freshStr !== cached) {
+            bizData = freshData;
+            sessionStorage.setItem(cacheKey, freshStr);
+            if (!cached) {
+                document.getElementById('globalLoader').style.display = 'none';
+                document.getElementById('mainShell').style.display = 'block';
+            }
+            document.getElementById('t_company_name').textContent = bizData.name || '—';
+            updateReturnBtns();
+            renderAll();
+            if (!cached) handleDeepLink();
+        }
       } catch (err) {
-        showGlobalError(i18n[currentLang].expired);
+        if (!cached) showGlobalError(i18n[currentLang].expired);
       }
+      feather.replace();
     }
 
     function updateReturnBtns() {
       const phone = bizData?.bot_phone || '972534218573';
       const channel = bizData?.channel || 'whatsapp';
       if (channel === 'telegram') {
-        document.getElementById('btnTgReturn').style.display = 'block';
+        document.getElementById('btnTgReturn').style.display = 'flex';
       } else {
         const wa = document.getElementById('btnWaReturn');
         wa.href = `https://wa.me/${phone}`;
-        wa.style.display = 'block';
+        wa.style.display = 'flex';
       }
-    }
-
-    function returnToWa() {
-      window.location.href = `https://wa.me/${bizData?.bot_phone || '972534218573'}`;
     }
 
     function renderAll() { renderDeals(); renderStats(); renderProfile(); renderEditForm(); }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(`tab_${tabId}`).classList.add('active');
-      const btn = document.querySelector(`[onclick="switchTab('${tabId}')"].tab-btn`);
-      if (btn) btn.classList.add('active');
+    function switchTab(tabId, btnEl) {
+      document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById(`view-${tabId}`).classList.add('active');
+      if (btnEl) btnEl.classList.add('active');
+      window.scrollTo(0,0);
     }
 
     function setDealFilter(f) {
       currentDealFilter = f;
-      document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
-      document.querySelector(`.filter-btn[onclick="setDealFilter('${f}')"]`).classList.add('active');
+      document.querySelectorAll('.filter-btn-tab').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.filter-btn-tab[onclick="setDealFilter('${f}')"]`).classList.add('active');
       renderDeals();
     }
 
     function getStatusData(status) {
       const L = i18n[currentLang];
-      if (status === 'new') return { text: L.st_new, cls: 'st-new' };
-      if (status === 'in_progress') return { text: L.st_prog, cls: 'st-progress' };
-      if (status === 'closed') return { text: L.st_closed, cls: 'st-closed' };
-      if (status === 'rejected') return { text: L.st_rej, cls: 'st-rejected' };
-      if (status === 'pending_confirmation') return { text: L.st_pending_confirm, cls: 'st-pending' };
-      return { text: status, cls: 'st-new' };
+      if (status === 'new') return { text: L.st_new, cls: 'st-new', icon: 'clock' };
+      if (status === 'in_progress') return { text: L.st_prog, cls: 'st-progress', icon: 'clock' };
+      if (status === 'closed') return { text: L.st_closed, cls: 'st-closed', icon: 'check-circle' };
+      if (status === 'rejected') return { text: L.st_rej, cls: 'st-rejected', icon: 'x-circle' };
+      if (status === 'pending_confirmation') return { text: L.st_pending_confirm, cls: 'st-pending', icon: 'alert-circle' };
+      return { text: status, cls: 'st-new', icon:'circle' };
     }
 
     function renderDeals() {
@@ -422,31 +634,38 @@
       const deals = bizData.deals || [];
       const filtered = deals.filter(d => {
         if (currentDealFilter === 'active') {
-          // pending_confirmation остаётся в "В работе" — долг не закрыт
           return ['new', 'in_progress', 'pending_confirmation'].includes(d.status);
         }
         return ['closed', 'rejected'].includes(d.status);
       });
       if (filtered.length === 0) { container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`; return; }
+      
       container.innerHTML = filtered.map(d => {
         const st = getStatusData(d.status);
         const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
         const waLink = `https://wa.me/${cleanPhone}`;
         const isPending = d.status === 'pending_confirmation';
+        
         let manageBtn = '';
         if (currentDealFilter === 'active' && !isPending) {
-          manageBtn = `<button class="btn-action" onclick="openDealModal(${d.id})">${L.card_manage}</button>`;
+          manageBtn = `<button class="btn-action" onclick="openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage}</button>`;
         }
-        const pendingNote = isPending ? `<div class="deal-pending-note">⏳ ${L.pending_note}</div>` : '';
-        return `<div class="deal-card${isPending ? ' pending unpaid' : ''}">
+        
+        const pendingNote = isPending ? `<div class="deal-pending-note"><i data-feather="clock" style="width:14px;height:14px;"></i> ${L.pending_note}</div>` : '';
+        
+        return `
+        <div class="deal-card${isPending ? ' pending unpaid' : ''}">
           <div class="deal-header">
-            <div><div class="deal-client">${d.client_name}</div><div class="deal-date">${d.date}</div></div>
-            <div class="status-badge ${st.cls}">${st.text}</div>
+            <div>
+                <div class="deal-client">${d.client_name}</div>
+                <div class="deal-date">${d.date}</div>
+            </div>
+            <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
           </div>
           ${pendingNote}
-            <div class="deal-info">
+          <div class="deal-info">
             ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
-            <a href="${waLink}" class="deal-wa-link" target="_blank">${L.card_contact} ${d.client_name}: ${d.client_phone}</a>
+            <a href="${waLink}" class="deal-wa-link" target="_blank"><i data-feather="message-circle" style="width:14px;height:14px;"></i> ${d.client_phone}</a>
           </div>
           ${(d.amount || d.commission) ? `
           <div class="deal-receipt">
@@ -460,6 +679,7 @@
           ${manageBtn}
         </div>`;
       }).join('');
+      feather.replace();
     }
 
     function animateValue(id, start, end, duration, suffix = '') {
@@ -481,12 +701,19 @@
       const closed = s.closed || 0;
       const rejected = s.rejected || 0;
       const totalLeads = active + closed + rejected;
+      
       animateValue("st_revenue", 0, s.total_revenue || 0, 1000, " ₪");
       animateValue("st_commission", 0, s.total_commission || 0, 1000, " ₪");
       animateValue("st_net_income", 0, s.total_earned || 0, 1000, " ₪");
+      
+      // Расчет ожидающих подтверждения агента
+      const computedPending = (bizData.deals || []).filter(d => d.status === 'pending_confirmation').length;
+      animateValue("st_pending_conf", 0, s.pending_conf !== undefined ? s.pending_conf : computedPending, 1000);
+
       document.getElementById('st_total_leads').textContent = totalLeads;
       const convRate = totalLeads > 0 ? Math.round((closed / totalLeads) * 100) : 0;
       document.getElementById('st_conversion').textContent = convRate + "%";
+      
       animateValue("st_f_active", 0, active, 1000);
       animateValue("st_f_closed", 0, closed, 1000);
       animateValue("st_f_rejected", 0, rejected, 1000);
@@ -495,10 +722,10 @@
         document.getElementById('bar_closed').style.width = (totalLeads > 0 ? (closed / totalLeads) * 100 : 0) + "%";
         document.getElementById('bar_rejected').style.width = (totalLeads > 0 ? (rejected / totalLeads) * 100 : 0) + "%";
       }, 50);
+      
       animateValue("st_agents", 0, s.agents_count || 0, 1000);
       animateValue("st_avg_deal", 0, s.avg_deal || 0, 1000, " ₪");
 
-      // Долг агентам
       const debt = s.pending_debt || 0;
       const banner = document.getElementById('debtBanner');
       if (banner) {
@@ -513,17 +740,28 @@
 
     function renderProfile() {
       document.getElementById('pr_name').textContent = bizData.name || '—';
-      // niche — массив, показываем тегами
       const nicheEl = document.getElementById('pr_niche');
       const niches = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
       if (niches.length > 0) {
-        nicheEl.innerHTML = niches.map(n => `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:#56CCF2;border-radius:8px;padding:2px 8px;font-size:0.8rem;margin:2px;">${n}</span>`).join(' ');
+        nicheEl.innerHTML = niches.map(n => `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:0.75rem;margin:2px;font-weight:700;">${n}</span>`).join(' ');
       } else {
         nicheEl.textContent = '—';
       }
       document.getElementById('pr_comm').textContent = bizData.commission || '—';
       document.getElementById('pr_pay').textContent = bizData.payment_method || '—';
       document.getElementById('pr_phone').textContent = bizData.phone || '—';
+    }
+
+    function openProfileEdit() {
+        renderEditForm();
+        document.getElementById('editProfileSheet').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0,0);
+    }
+    
+    function closeProfileEdit() {
+        document.getElementById('editProfileSheet').classList.remove('active');
+        document.body.style.overflow = '';
     }
 
     function renderEditForm() {
@@ -533,7 +771,6 @@
       for (let i = 0; i < catSel.options.length; i++) {
         if (catSel.options[i].value === currentCat) { catSel.selectedIndex = i; break; }
       }
-      // niche — массив подкатегорий из ARRAY
       let currentNiches = [];
       if (Array.isArray(bizData.niche)) {
         currentNiches = bizData.niche;
@@ -543,7 +780,6 @@
       if (currentCat) updateEditSubcategories(currentNiches);
       document.getElementById('f_comm').value = bizData.commission || '';
       document.getElementById('f_link').value = bizData.business_info || '';
-      // Кнопки оплаты
       const pm = bizData.payment_method || '';
       document.getElementById('f_pay').value = pm;
       document.querySelectorAll('.pay-btn').forEach(b => {
@@ -572,56 +808,77 @@
         });
         if (!res.ok) throw new Error('Update failed');
         bizData = { ...bizData, ...payload };
+        
+        // Update cache manually
+        const cacheKey = `biz_cache_${token}`;
+        if(sessionStorage.getItem(cacheKey)) {
+            sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
+        }
+
         renderProfile();
         btn.textContent = i18n[currentLang].success_save;
-        btn.style.background = 'var(--success)';
-        setTimeout(() => { btn.textContent = origText; btn.style.opacity = '1'; switchTab('profile'); }, 1500);
+        btn.style.background = 'var(--green)';
+        setTimeout(() => { btn.textContent = origText; btn.style.opacity = '1'; btn.style.background='var(--accent2)'; closeProfileEdit(); }, 1500);
       } catch(e) {
         btn.textContent = i18n[currentLang].err_save;
-        btn.style.background = 'var(--danger)';
-        setTimeout(() => { btn.textContent = origText; btn.style.background = 'var(--success)'; btn.style.opacity = '1'; }, 2000);
+        btn.style.background = 'var(--red)';
+        setTimeout(() => { btn.textContent = origText; btn.style.background = 'var(--accent2)'; btn.style.opacity = '1'; }, 2000);
       }
     }
 
-    function openDealModal(id) {
+    /* ── Full Screen Manage Deal ── */
+    function openManageDeal(id) {
       activeDealId = id;
       const deal = bizData.deals.find(d => d.id === id);
       if (!deal) return;
-      const L = i18n[currentLang];
-      document.getElementById('m_info').innerHTML = `
-        <strong>${L.m_client}</strong> ${deal.client_name} (${deal.client_phone})<br>
-        <strong>${L.card_agent}</strong> ${deal.agent_name || '—'}<br>
-        <strong>${L.m_date}</strong> ${deal.date}`;
+      document.getElementById('m_val_client').textContent = `${deal.client_name} (${deal.client_phone})`;
+      document.getElementById('m_val_agent').textContent = deal.agent_name || '—';
+      document.getElementById('m_val_date').textContent = deal.date;
       document.getElementById('m_amount').value = '';
-      setModalStep('main');
-      document.getElementById('actionModal').classList.add('active');
+      setManageStep('main');
+      document.getElementById('manageDealSheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('t_m_btn_cancel_bottom').style.display = 'flex';
+      window.scrollTo(0,0);
     }
 
-    function closeModal() { document.getElementById('actionModal').classList.remove('active'); activeDealId = null; }
+    function closeManageDeal() { 
+        document.getElementById('manageDealSheet').classList.remove('active'); 
+        document.body.style.overflow = '';
+        activeDealId = null; 
+    }
 
-    function setModalStep(step) {
-      document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+    function setManageStep(step) {
+      document.querySelectorAll('.step-panel').forEach(el => el.classList.remove('active'));
       document.getElementById(`m_step_${step}`).classList.add('active');
+      if(step === 'result') {
+          document.getElementById('t_m_btn_cancel_bottom').style.display = 'none';
+      } else {
+          document.getElementById('t_m_btn_cancel_bottom').style.display = 'flex';
+      }
     }
 
     async function submitDealAction(actionType) {
       const L = i18n[currentLang];
       if (actionType === 'close' && !document.getElementById('m_amount').value) return;
-      setModalStep('result');
+      setManageStep('result');
       document.getElementById('m_spinner').style.display = 'block';
       document.getElementById('m_result_msg').textContent = L.action_processing;
-      document.getElementById('m_result_msg').style.color = '#fff';
+      document.getElementById('m_result_msg').style.color = 'var(--text)';
       document.getElementById('m_btn_finish').style.display = 'none';
+      
       const payload = { token, deal_id: activeDealId, action: actionType };
       if (actionType === 'close') payload.amount = document.getElementById('m_amount').value;
+      
       try {
         const res = await fetch(`${API_URL}/api/deals/action`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         if (!res.ok) throw new Error('API Error');
         document.getElementById('m_spinner').style.display = 'none';
-        document.getElementById('m_btn_finish').style.display = 'block';
+        document.getElementById('m_btn_finish').style.display = 'flex';
         const resData = await res.json().catch(() => ({}));
+        
         if (actionType === 'close' && resData.message === 'agent_notified') {
           const agentName = resData.agent_name || '—';
           const commStr = resData.comm_str || '—';
@@ -632,14 +889,14 @@
             ar: `⏳ تم! أبلغنا الوكيل ${agentName}.\n\nننتظر قراره بشأن ${commStr} ₪.`,
           };
           document.getElementById('m_result_msg').textContent = waitMsgs[currentLang] || waitMsgs.ru;
-          document.getElementById('m_result_msg').style.color = 'var(--pending)';
-          // Обновляем статус сделки на pending_confirmation в локальных данных
+          document.getElementById('m_result_msg').style.color = 'var(--purple)';
           const deal = bizData.deals.find(d => d.id === activeDealId);
           if (deal) deal.status = 'pending_confirmation';
-          renderDeals();
+          
+          updateCacheAndRender();
         } else {
           document.getElementById('m_result_msg').textContent = L.action_success;
-          document.getElementById('m_result_msg').style.color = 'var(--success)';
+          document.getElementById('m_result_msg').style.color = 'var(--green)';
           const deal = bizData.deals.find(d => d.id === activeDealId);
           if (deal) {
             deal.status = actionType === 'close' ? 'closed' : 'rejected';
@@ -649,14 +906,21 @@
               else bizData.stats.rejected = (bizData.stats.rejected || 0) + 1;
             }
           }
-          renderDeals(); renderStats();
+          updateCacheAndRender();
         }
       } catch(e) {
         document.getElementById('m_spinner').style.display = 'none';
         document.getElementById('m_result_msg').textContent = "Ошибка. Попробуйте ещё раз.";
-        document.getElementById('m_result_msg').style.color = 'var(--danger)';
-        document.getElementById('m_btn_finish').style.display = 'block';
+        document.getElementById('m_result_msg').style.color = 'var(--red)';
+        document.getElementById('m_btn_finish').style.display = 'flex';
       }
+    }
+
+    function updateCacheAndRender() {
+        const cacheKey = `biz_cache_${token}`;
+        sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
+        renderDeals();
+        renderStats();
     }
 
     const EDIT_SUBCATEGORIES = {
@@ -688,13 +952,10 @@
         cb.type = 'checkbox';
         cb.value = s;
         cb.checked = preselected.includes(s);
-        cb.addEventListener('change', () => {
-          item.classList.toggle('checked', cb.checked);
-        });
+        cb.addEventListener('change', () => { item.classList.toggle('checked', cb.checked); });
         const span = document.createElement('span');
         span.textContent = s;
-        item.appendChild(cb);
-        item.appendChild(span);
+        item.appendChild(cb); item.appendChild(span);
         list.appendChild(item);
       });
       group.style.display = subs.length > 0 ? 'block' : 'none';
@@ -707,9 +968,7 @@
 
     function selectPayMethod(method) {
       document.getElementById('f_pay').value = method;
-      document.querySelectorAll('.pay-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent.includes(method));
-      });
+      document.querySelectorAll('.pay-btn').forEach(b => { b.classList.toggle('active', b.textContent.includes(method)); });
     }
 
     function confirmBizSubcat() {
@@ -720,12 +979,13 @@
       const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
       if (checked.length === 0) return;
       tags.innerHTML = checked.map(s =>
-        `<span style="display:inline-block;background:rgba(86,204,242,0.15);border:1px solid rgba(86,204,242,0.4);color:#56CCF2;border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
+        `<span style="display:inline-block;background:rgba(86,204,242,0.1);border:1px solid rgba(86,204,242,0.3);color:var(--accent1);border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
       ).join('');
       tags.style.display = 'flex';
       list.style.display = 'none';
       doneBtn.style.display = 'none';
-      editBtn.style.display = 'block';
+      editBtn.style.display = 'flex';
+      editBtn.style.justifyContent = 'center';
     }
 
     function editBizSubcat() {
