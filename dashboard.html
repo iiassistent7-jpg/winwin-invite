@@ -1028,6 +1028,7 @@ function setLang(l) {
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+    document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     // Явно переворачиваем nav через JS
     const _navEl = document.querySelector('.bottom-nav');
     if (_navEl) _navEl.style.flexDirection = (l==='he'||l==='ar') ? 'row-reverse' : 'row';
