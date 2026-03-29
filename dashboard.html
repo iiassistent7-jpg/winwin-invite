@@ -1180,7 +1180,7 @@ async function openLeaderboard() {
         contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || 'Загрузка...'}</div>`;
         try {
             // Получаем отдельный leaderboard-токен по agent_id
-            const agentId = dashData && dashData.partner_id ? dashData.partner_id : null;
+            const agentId = dashData && dashData.agent_id ? dashData.agent_id : null;
             let lbToken = token;
             if (agentId) {
                 const tkRes = await fetch(`${API_URL}/api/leaderboard/token?agent_id=${agentId}`);
