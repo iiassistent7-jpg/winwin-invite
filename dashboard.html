@@ -302,14 +302,43 @@
     <div class="spinner" id="loaderSpinner"></div>
 
     <div class="loader-err" id="loaderErr">
-        <div class="loader-err-title" id="t_err_title">Время этой сессии истекло</div>
-        <div class="loader-err-sub" id="t_err_sub">Вернитесь в мессенджер и получите новую ссылку</div>
-        <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:260px; margin:0 auto 12px; text-decoration:none; display:none; flex-direction:column; align-items:center;">
-            <div style="display:flex; align-items:center; gap:8px;"><i data-feather="message-circle" style="width:20px;height:20px;"></i> <span>WhatsApp</span></div>
+
+        <!-- Win-Win лого -->
+        <div style="font-family:'Sora',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(90deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;">Win-Win</div>
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.18em;color:#A0A0B0;margin-bottom:28px;">N E T W O R K</div>
+
+        <!-- Главное сообщение -->
+        <div style="font-size:1.05rem;font-weight:700;color:#fff;line-height:1.6;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto;" id="t_err_main">
+            Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.
+        </div>
+
+        <!-- Преднабранное сообщение -->
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 18px;margin:0 auto 20px;max-width:290px;text-align:left;">
+            <div style="font-size:.68rem;color:#A0A0B0;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;" id="t_err_send_label">Это сообщение уже набрано:</div>
+            <div id="errPrefillText" style="font-size:.9rem;font-weight:600;color:#e0e0e0;white-space:pre-line;line-height:1.55;">Снова войти в личный кабинет</div>
+        </div>
+
+        <!-- Подсказка -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;">
+            <span style="font-size:.82rem;color:#A0A0B0;" id="t_err_hint1">Нажмите кнопку мессенджера</span>
+            <span style="font-size:1.2rem;">👇</span>
+            <span style="font-size:.82rem;color:#A0A0B0;" id="t_err_hint2">и нажмите</span>
+            <span style="font-size:.82rem;font-weight:700;color:#fff;" id="t_err_hint3">Отправить</span>
+            <span style="font-size:1.2rem;" id="t_err_pointer">➡️</span>
+        </div>
+
+        <!-- Кнопка WA (по умолчанию видна) -->
+        <a href="#" id="errBtnWa" style="display:none;max-width:290px;width:100%;margin:0 auto 12px;text-decoration:none;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:999px;padding:15px 24px;color:#fff;font-weight:800;font-size:1rem;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 24px rgba(37,211,102,0.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.855L.057 23.386a.75.75 0 00.923.923l5.562-1.457A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.512-5.228-1.402l-.374-.22-3.899 1.022 1.03-3.774-.242-.389A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            <span id="t_err_btn_wa">Написать в WhatsApp</span>
         </a>
-        <a href="#" class="btn-primary btn-tg" id="errBtnTg" style="max-width:260px; margin:0 auto; text-decoration:none; display:none; flex-direction:column; align-items:center;">
-            <div style="display:flex; align-items:center; gap:8px;"><i data-feather="send" style="width:20px;height:20px;"></i> <span>Telegram</span></div>
+
+        <!-- Кнопка TG -->
+        <a href="#" id="errBtnTg" style="display:none;max-width:290px;width:100%;margin:0 auto;text-decoration:none;background:linear-gradient(135deg,#2AABEE,#229ED9);border-radius:999px;padding:15px 24px;color:#fff;font-weight:800;font-size:1rem;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 24px rgba(42,171,238,0.3);transition:transform .2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            <span id="t_err_btn_tg">Написать в Telegram</span>
         </a>
+
     </div>
   </div>
 
@@ -542,7 +571,7 @@
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
-    <div class="fullscreen" id="leaderboardSheet" style="padding-bottom: 80px;">
+    <div class="fullscreen" id="leaderboardSheet" style="padding-bottom: 100px;">
         <div style="max-width:430px; margin:0 auto;">
             <div style="text-align:center; margin-bottom:20px;">
                 <div style="font-size:2.2rem; margin-bottom:8px; margin-top:20px;">🏆</div>
@@ -1037,9 +1066,7 @@ function applyLang() {
     }
 
     if (dashData || true) { 
-        const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
-        const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
-        const msg = encodeURIComponent(rawPrefill.replace('{pointer}', pointer));
+        const msg = encodeURIComponent('Снова войти в личный кабинет');
         
         const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
         const btnWa = document.getElementById('errBtnWa');
@@ -1966,27 +1993,101 @@ function openAboutPage() {
 }
 
 function showError() {
-    document.getElementById('loaderDots').style.display='none';
-    document.getElementById('loaderSub').style.display='none';
-    document.getElementById('loaderSpinner').style.display='none';
-    document.getElementById('loaderErr').style.display='block';
-    
+    document.getElementById('loaderDots').style.display = 'none';
+    document.getElementById('loaderSub').style.display = 'none';
+    document.getElementById('loaderSpinner').style.display = 'none';
+    document.getElementById('loaderErr').style.display = 'block';
+
     const L = i18n[lang] || i18n.ru;
-    const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
-    const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
-    const msg = encodeURIComponent(rawPrefill.replace('{pointer}', pointer));
-    
-    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
-    
+    const isRtl = (lang === 'he' || lang === 'ar');
+    const pointer = isRtl ? '👈' : '➡️';
+
+    // Переводим тексты экрана ошибки
+    const ETEXTS = {
+        ru: {
+            main: 'Эта сессия закончилась, нажмите на кнопку мессенджера и получите новую ссылку на вход.',
+            send_label: 'Это сообщение уже набрано:',
+            hint1: 'Нажмите кнопку мессенджера',
+            hint2: 'и нажмите',
+            hint3: 'Отправить',
+            btn_wa: 'Написать в WhatsApp',
+            btn_tg: 'Написать в Telegram',
+            prefill: 'Снова войти в личный кабинет
+Нажмите кнопку отправить и получите новую ссылку на вход {pointer}',
+        },
+        he: {
+            main: 'הסשן הזה הסתיים, לחצו על כפתור המסנג'ר וקבלו קישור חדש לכניסה.',
+            send_label: 'ההודעה כבר מוכנה:',
+            hint1: 'לחצו על כפתור המסנג'ר',
+            hint2: 'ואז לחצו',
+            hint3: 'שלח',
+            btn_wa: 'לפתוח WhatsApp',
+            btn_tg: 'לפתוח Telegram',
+            prefill: 'להיכנס שוב לאזור האישי
+לחצו על 'שלח' וקבלו קישור חדש {pointer}',
+        },
+        en: {
+            main: 'This session has ended. Tap the messenger button to get a new login link.',
+            send_label: 'This message is ready to send:',
+            hint1: 'Tap the messenger button',
+            hint2: 'then tap',
+            hint3: 'Send',
+            btn_wa: 'Open WhatsApp',
+            btn_tg: 'Open Telegram',
+            prefill: 'Log in again to my dashboard
+Tap Send to get a new login link {pointer}',
+        },
+        ar: {
+            main: 'انتهت هذه الجلسة، اضغط على زر المراسلة واحصل على رابط دخول جديد.',
+            send_label: 'الرسالة جاهزة:',
+            hint1: 'اضغط زر المراسلة',
+            hint2: 'ثم اضغط',
+            hint3: 'إرسال',
+            btn_wa: 'فتح WhatsApp',
+            btn_tg: 'فتح Telegram',
+            prefill: 'تسجيل الدخول مرة أخرى
+اضغط إرسال للحصول على رابط جديد {pointer}',
+        },
+    };
+    const ET = ETEXTS[lang] || ETEXTS.ru;
+
+    // Заполняем тексты
+    const elMain = document.getElementById('t_err_main');
+    if (elMain) elMain.textContent = ET.main;
+    const elLabel = document.getElementById('t_err_send_label');
+    if (elLabel) elLabel.textContent = ET.send_label;
+    const elHint1 = document.getElementById('t_err_hint1');
+    if (elHint1) elHint1.textContent = ET.hint1;
+    const elHint2 = document.getElementById('t_err_hint2');
+    if (elHint2) elHint2.textContent = ET.hint2;
+    const elHint3 = document.getElementById('t_err_hint3');
+    if (elHint3) elHint3.textContent = ET.hint3;
+    const elPtrEl = document.getElementById('t_err_pointer');
+    if (elPtrEl) elPtrEl.textContent = pointer;
+
+    // Преднабранный текст в карточке (видимый пользователю)
+    const prefillText = ET.prefill.replace('{pointer}', pointer);
+    const elPrefill = document.getElementById('errPrefillText');
+    if (elPrefill) elPrefill.textContent = prefillText;
+
+    // Преднабранный текст для ссылки (URL-encoded)
+    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : '972534218573';
+    const msgEncoded = encodeURIComponent(prefillText);
+
+    // Показываем нужную кнопку
     const isTg = dashData && dashData.channel === 'telegram';
     if (isTg) {
         const btnTg = document.getElementById('errBtnTg');
+        const lblTg = document.getElementById('t_err_btn_tg');
+        if (lblTg) lblTg.textContent = ET.btn_tg;
         btnTg.style.display = 'flex';
         btnTg.href = `https://t.me/winwin_lead_bot?start=link`;
     } else {
         const btnWa = document.getElementById('errBtnWa');
+        const lblWa = document.getElementById('t_err_btn_wa');
+        if (lblWa) lblWa.textContent = ET.btn_wa;
         btnWa.style.display = 'flex';
-        btnWa.href = `https://wa.me/${phone}?text=${msg}`;
+        btnWa.href = `https://wa.me/${phone}?text=${msgEncoded}`;
     }
 }
 
