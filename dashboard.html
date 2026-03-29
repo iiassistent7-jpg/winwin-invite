@@ -34,15 +34,16 @@
 
         .req-mark { color: var(--red); font-weight: 800; margin-left: 3px; }
 
-        /* ── Loader ─────────────────────────────────────────────────── */
+        /* ── Loader & Expired Session ───────────────────────────────── */
         .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
         .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
         .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; font-weight:600; }
         .spinner { border: 4px solid rgba(86,204,242,0.1); border-left-color: var(--accent1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
         .loader-err { display:none; text-align:center; padding:0 24px; }
-        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--red); margin-bottom:8px; }
-        .loader-err-sub { font-size:.85rem; color:var(--text2); margin-bottom:24px; }
+        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
+        .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:28px; line-height: 1.5; font-weight: 500; }
 
         /* ── Fullscreen Sheets (Swipe transitions) ──────────────────── */
         .fullscreen {
@@ -161,13 +162,13 @@
         .settings-row-value a { color:var(--accent2); text-decoration:none; }
 
         /* ── Buttons ─────────────────────────────────────────────────── */
-        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:13px 22px; border-radius:13px; font-weight:700; font-size:.9rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; display:flex; justify-content:center; align-items:center; gap:8px;}
+        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:14px 22px; border-radius:14px; font-weight:700; font-size:.95rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; display:flex; justify-content:center; align-items:center; gap:8px;}
         .btn-primary:active { transform:scale(.97); }
-        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
-        .btn-tg { background:#2F80ED; color:#fff; }
+        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); text-decoration:none; margin-top:14px;}
+        .btn-tg { background:#2F80ED; color:#fff; box-shadow:0 4px 16px rgba(47,128,237,.25); text-decoration:none; margin-top:14px;}
         .btn-accent { background:var(--accent2); color:#fff; }
-        .btn-outline { background:transparent; border:1px solid var(--accent2); color:var(--accent2); padding:13px 22px; border-radius:13px; font-weight:700; font-size:.85rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; line-height: 1.4; }
-        .btn-outline:active { background:rgba(47,128,237,.1); }
+        .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); padding:13px 22px; border-radius:13px; font-weight:700; font-size:.85rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; line-height: 1.4; }
+        .btn-outline:active { background:var(--surface2); }
 
         .empty-state { text-align:center; padding:32px 16px; }
         .empty-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
@@ -204,31 +205,38 @@
 
         /* ── Leaderboard specific ────────────────────────────────────── */
         .lb-agents-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;}
-        .lb-agent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); }
+        .lb-agent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
         .lb-agent-card.highlight { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.05)); border-color: var(--accent1); }
         .lb-agent-rank { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--bg); font-size: 1.1rem; font-weight: 800; color: var(--text2); border: 1px solid var(--border); }
         .lb-rank-1 { background: rgba(255, 215, 0, 0.15); color: #FFD700; border-color: rgba(255, 215, 0, 0.3); font-size: 1.3rem; }
         .lb-rank-2 { background: rgba(192, 192, 192, 0.15); color: #C0C0C0; border-color: rgba(192, 192, 192, 0.3); font-size: 1.3rem; }
         .lb-rank-3 { background: rgba(205, 127, 50, 0.15); color: #CD7F32; border-color: rgba(205, 127, 50, 0.3); font-size: 1.3rem; }
-        .lb-agent-info { flex: 1; min-width:0; }
-        .lb-agent-name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .lb-name-blurred { filter: blur(4px); opacity: 0.8; user-select: none; cursor: pointer; transition: 0.2s; }
-        .lb-name-blurred:active { opacity: 0.5; }
+        .lb-agent-info { flex: 1; min-width:0; z-index: 2; }
+        .lb-agent-name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: filter 0.2s;}
+        
+        .lb-blurred .lb-agent-name { filter: blur(5px); opacity: 0.7; user-select: none; }
+        .lb-blurred { cursor: pointer; }
+        .lb-blurred:active { transform: scale(0.98); }
+
         .lb-agent-deals { font-size: 0.75rem; color: var(--text2); font-weight: 500; }
         .lb-agent-deals span { color: var(--text); font-weight: 700; }
-        .lb-agent-earned { text-align: right; flex-shrink:0; }
+        .lb-agent-earned { text-align: right; flex-shrink:0; z-index: 2; }
         .lb-earned-lbl { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 2px; }
         .lb-earned-val { font-size: 1.05rem; font-weight: 800; color: var(--green); }
 
         /* ── Catalog & Recommend ─────────────────────────────────────── */
-        .cat-search { position:relative; margin-bottom:8px; }
+        .cat-search { position:relative; margin-bottom:12px; }
         .cat-search input { width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:13px 16px 13px 44px; border-radius:14px; font-size:.95rem; outline:none; transition:.2s; font-family:inherit; }
         .cat-search input:focus { border-color:var(--accent2); }
         .cat-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text2); pointer-events:none; }
         
-        .cat-filters-dropdown { margin-bottom: 16px; }
-        .cat-filters-dropdown select { width: 100%; padding: 12px 16px; border-radius: 14px; background-color: var(--surface); color: var(--text); border: 1px solid var(--border); font-size: 0.95rem; font-weight: 600; outline: none; appearance: auto; cursor: pointer; font-family: inherit; }
-        .cat-filters-dropdown select:focus { border-color: var(--accent2); }
+        /* 3D Category Pills (Swipeable) */
+        .cat-filters { display:flex; gap:10px; overflow-x:auto; padding: 4px 4px 16px 4px; margin-bottom: 8px; scrollbar-width:none; -webkit-overflow-scrolling: touch; }
+        .cat-filters::-webkit-scrollbar { display:none; }
+        .filter-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:10px 18px; border-radius:999px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.85rem; transition:.2s; box-shadow: 0 4px 0 rgba(0,0,0,0.05); }
+        .filter-btn:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0); }
+        .filter-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); box-shadow: 0 4px 0 rgba(47,128,237,0.3); }
+        .filter-btn.active:active { box-shadow: 0 0 0 rgba(47,128,237,0); }
 
         .cat-grid { display:flex; flex-direction:column; gap:10px; margin-bottom: 20px; }
         .biz-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; cursor:pointer; transition:.18s; box-shadow:var(--shadow); }
@@ -263,21 +271,26 @@
     </style>
 </head>
 <body>
-<div class="app">
+  
+  <div class="loader" id="globalLoader">
+    <div class="loader-brand">Win-Win</div>
+    <div class="loader-sub" id="loaderText">Загрузка данных...</div>
+    <div class="spinner" id="loaderSpinner"></div>
 
-    <div class="loader" id="loader">
-        <div class="loader-brand">Win-Win</div>
-        <div class="loader-sub" id="loaderSub">Загрузка кабинета...</div>
-        <div class="loader-dots">
-            <div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div>
-        </div>
-        <div class="loader-err" id="loaderErr">
-            <div class="loader-err-title">Ссылка устарела</div>
-            <div class="loader-err-sub">Запросите новую ссылку в боте</div>
-            <a href="#" class="btn-primary btn-wa" id="errBtn" style="max-width:240px;margin:0 auto;text-decoration:none;">WhatsApp</a>
-        </div>
+    <div class="loader-err" id="loaderErr">
+        <div class="loader-err-title" id="t_err_title">Время этой сессии истекло</div>
+        <div class="loader-err-sub" id="t_err_sub">Вернитесь в мессенджер и получите новую ссылку</div>
+        <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:260px; margin:0 auto 12px; text-decoration:none; display:none;">
+            <i data-feather="message-circle" style="width:20px;height:20px;"></i> <span>WhatsApp</span>
+        </a>
+        <a href="#" class="btn-primary btn-tg" id="errBtnTg" style="max-width:260px; margin:0 auto; text-decoration:none; display:none;">
+            <i data-feather="send" style="width:20px;height:20px;"></i> <span>Telegram</span>
+        </a>
     </div>
+  </div>
 
+  <div class="app" style="display:none;" id="mainShell">
+    
     <header class="header">
         <div class="header-left">
             <div class="greeting" id="t_greeting">С возвращением,</div>
@@ -296,7 +309,7 @@
 
     <div class="views-wrapper" id="viewsWrapper">
         
-        <div id="view-home" class="view">
+        <div id="view-home" class="view active">
             <div class="card balance-card">
                 <div class="balance-label" id="t_balance_label">Социальный капитал</div>
                 <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
@@ -344,16 +357,15 @@
                 <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
             </div>
             
-            <div class="cat-filters-dropdown">
-                <select id="catFilterSelect" onchange="currentNiche = this.value; renderCatalog();"></select>
+            <div style="margin-bottom: 24px;">
+                <button class="btn-outline" onclick="openInviteScreen()" id="t_invite_btn">Не можете найти здесь тех, кого хотите порекомендовать?</button>
             </div>
+            
+            <div class="cat-filters" id="catFilters">
+                </div>
 
             <div class="cat-grid" id="catGrid">
                 <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
-            </div>
-
-            <div style="text-align:center; margin-top: 24px; margin-bottom: 24px;">
-                <button class="btn-outline" onclick="openInviteScreen()" id="t_invite_btn">Не можете найти здесь тех, кого хотите порекомендовать?</button>
             </div>
         </div>
 
@@ -498,6 +510,35 @@
         </div>
     </div>
 
+    <div class="fullscreen" id="profileSheet">
+        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
+            <div class="rec-header-card" style="margin-bottom:24px;">
+                <div class="rec-title" id="t_edit_profile" style="margin-bottom:16px; font-size:1.4rem;">Редактировать профиль</div>
+                
+                <label class="input-label" id="t_edit_name">Имя</label>
+                <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
+                
+                <label class="input-label" id="t_edit_payment">Способ получения</label>
+                <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+                    <button class="pay-btn" onclick="selectPay('Bit', this)">Bit</button>
+                    <button class="pay-btn" onclick="selectPay('Paybox', this)">Paybox</button>
+                    <button class="pay-btn" onclick="selectPay('PayPal', this)">PayPal</button>
+                    <button class="pay-btn" onclick="selectPay('Наличные', this)" id="t_pay_cash">Наличные</button>
+                    <button class="pay-btn" onclick="selectPay('Перевод', this)" id="t_pay_bank">Перевод</button>
+                </div>
+                <input type="hidden" id="editPayment">
+
+                <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
+                <input class="custom-input" id="editLink" type="url" placeholder="https://...">
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;">
+                <button class="btn-primary" style="background:var(--green); color:#fff;" id="saveProfileBtn" onclick="saveProfile()">Сохранить</button>
+                <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_prof">Назад</button>
+            </div>
+        </div>
+    </div>
+
     <div class="fullscreen" id="inviteScreen">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <button class="btn-back" onclick="closeInviteScreen()"><i data-feather="arrow-left" style="width:18px;height:18px;"></i><span id="t_btn_back_invite">Назад в каталог</span></button>
@@ -612,27 +653,6 @@
         <div id="statSheetContent"></div>
     </div>
 
-    <div class="bottom-sheet" id="profileSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_edit_profile">Редактировать профиль</div>
-        <label class="input-label" id="t_edit_name">Имя</label>
-        <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
-        
-        <label class="input-label" id="t_edit_payment">Способ получения</label>
-        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-            <button class="pay-btn" onclick="selectPay('Bit', this)">Bit</button>
-            <button class="pay-btn" onclick="selectPay('Paybox', this)">Paybox</button>
-            <button class="pay-btn" onclick="selectPay('PayPal', this)">PayPal</button>
-            <button class="pay-btn" onclick="selectPay('Наличные', this)" id="t_pay_cash">Наличные</button>
-            <button class="pay-btn" onclick="selectPay('Перевод', this)" id="t_pay_bank">Перевод</button>
-        </div>
-        <input type="hidden" id="editPayment">
-
-        <label class="input-label" id="t_edit_link">Ссылка (соцсеть / сайт)</label>
-        <input class="custom-input" id="editLink" type="url" placeholder="https://...">
-        <button class="btn-primary btn-accent" id="saveProfileBtn" onclick="saveProfile()" style="margin-top:10px;">Сохранить</button>
-    </div>
-
     <div class="bottom-sheet" id="nicheSheet">
         <div class="sheet-handle"></div>
         <div class="sheet-title" id="t_sheet_title">Добавить спец-условие</div>
@@ -666,14 +686,11 @@ const CATEGORIES_STANDARD = {
 function populateCategories() {
     const bizRegSelect = document.getElementById('bizRegNiche');
     const nicheSheetSelect = document.getElementById('nicheSheetCat');
-    
     const defaultOpt = `<option value="" disabled selected>Выберите...</option>`;
     let optionsHtml = defaultOpt;
-    
     for (const cat in CATEGORIES_STANDARD) {
         optionsHtml += `<option value="${cat}">${cat}</option>`;
     }
-    
     if(bizRegSelect) bizRegSelect.innerHTML = optionsHtml;
     if(nicheSheetSelect) nicheSheetSelect.innerHTML = optionsHtml;
 }
@@ -691,13 +708,14 @@ const i18n = {
     biz_reg_title:"Зарегистрировать бизнес", biz_reg_submit:"Зарегистрировать", biz_reg_name:"Название бизнеса", biz_reg_niche:"Категория / ниша", biz_reg_subniche: "Специализация", biz_reg_pay:"Способ выплаты агентам",
     stat_deals:"Закрытые сделки", stat_pending:"Ожидают выплаты", stat_active:"Сделки в работе",
     btn_back:"Назад", btn_back_catalog:"Вернуться к каталогу", copy_link:"🔗 Скопируйте и отправьте эту ссылку:", copy_btn:"Копировать", copied:"Скопировано ✅", scan_qr:"📱 Или дайте отсканировать QR-код:", wa_return:"Вернуться в WhatsApp",
-    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка...", cat_empty:"Ничего не найдено", bonus:"🎁 Бонус:", filter_all:"Все категории", save:"Сохранить",
+    cat_search:"Поиск бизнеса или услуги...", cat_loading:"Загрузка...", cat_empty:"Ничего не найдено", bonus:"🎁 Бонус:", filter_all:"Все", save:"Сохранить",
     remind_debt: "Напомнить о долге", remind_already_sent: "Мы уже напоминали сегодня бизнесу {biz}.", remind_success: "Напоминание успешно отправлено!", remind_error: "Ошибка отправки.",
     pay_cash: "Наличные", pay_bank: "Перевод", lb_title: "Зал Славы", lb_widget_title: "Зал Славы", lb_widget_sub: "Топ агентов", lb_profile_btn: "Посмотреть Зал Славы",
-    lb_your_pos: "Ваша позиция", lb_top: "Топ агентов", lb_deals: "Сделок:", lb_earned: "Заработано", lb_blur_alert: "Достигните 50 сделок, чтобы открыть имена чемпионов. 🌟",
+    lb_your_pos: "Ваша позиция", lb_top: "Топ агентов", lb_deals: "Сделок:", lb_earned: "Заработано", lb_blur_alert: "Клуб Чемпионов еще впереди! 🌟 Это место для тех, кто действительно старается помочь друзьям и бизнесу. Закройте 50 сделок, чтобы открыть имена.",
     invite_btn: "Не можете найти здесь тех, кого хотите порекомендовать?", invite_title: "Пригласите их в Win-Win!", invite_desc: "Поделитесь этой ссылкой, чтобы пригласить бизнес или агента.", btn_back_invite: "Назад в каталог",
     rew_type: "Вид благодарности", rew_pct: "Процент (%)", rew_fix: "Фикс (₪)", rew_gift: "Подарок (🎁)", rew_pct_ph: "Например: 10", rew_fix_ph: "Например: 100", rew_gift_ph: "Например: Бесплатный массаж",
-    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию."
+    biz_reg_comm_lbl: "Размер / Описание", biz_reg_success: "Заявка отправлена! Откройте WhatsApp чтобы завершить регистрацию.",
+    err_expired_title: "Время этой сессии истекло", err_expired_sub: "Вернитесь в мессенджер и получите новую ссылку", err_prefill: "Код: WINWIN\nЧтобы получить ссылку на вход в личный кабинет, просто нажмите Отправить 👉"
   },
   he: {
     greeting:"ברוך שובך,", balance_label:"ההון החברתי שלך", deals_lbl:"סגורות", pending_lbl:"ממתין", active_lbl:"בעבודה", action_title:"עזרו לעסק האהוב עליכם", action_sub:"פתחו את הקטלוג וקחו המלצה ראשונה",
@@ -714,13 +732,14 @@ const i18n = {
     biz_reg_title:"רישום עסק", biz_reg_submit:"רישום", biz_reg_name:"שם העסק", biz_reg_niche:"תחום", biz_reg_subniche: "התמחות", biz_reg_pay:"אופן תשלום",
     stat_deals:"עסקאות", stat_pending:"ממתינות", stat_active:"פעילות",
     btn_back:"חזור", btn_back_catalog:"חזרה לקטלוג", copy_link:"🔗 העתיקו ושלחו:", copy_btn:"העתק", copied:"הועתק ✅", scan_qr:"📱 או לסרוק:", wa_return:"חזרה ל-WhatsApp",
-    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"כל הקטגוריות", save:"שמור",
+    cat_search:"חיפוש...", cat_loading:"טוען...", cat_empty:"לא נמצא", bonus:"🎁 בונוס:", filter_all:"הכל", save:"שמור",
     remind_debt: "הזכר חוב", remind_already_sent: "כבר הזכרנו היום לעסק {biz}.", remind_success: "התזכורת נשלחה!", remind_error: "שגיאה.",
     pay_cash: "מזומן", pay_bank: "העברה בנקאית", lb_title: "היכל התהילה", lb_widget_title: "היכל התהילה", lb_widget_sub: "הסוכנים המובילים", lb_profile_btn: "צפה בהיכל התהילה",
-    lb_your_pos: "המיקום שלך", lb_top: "הסוכנים המובילים", lb_deals: "עסקאות:", lb_earned: "הרוויח", lb_blur_alert: "הגע ל-50 עסקאות כדי לפתוח את השמות. 🌟",
+    lb_your_pos: "המיקום שלך", lb_top: "הסוכנים המובילים", lb_deals: "עסקאות:", lb_earned: "הרוויח", lb_blur_alert: "מועדון האלופים עדיין לפניך! 🌟 הגע ל-50 עסקאות כדי לפתוח שמות.",
     invite_btn: "לא מוצאים את מי שאתם רוצים להמליץ עליו?", invite_title: "הזמינו אותם ל-Win-Win!", invite_desc: "שתפו קישור זה כדי להזמין עסק או סוכן.", btn_back_invite: "חזרה לקטלוג",
     rew_type: "סוג תגמול", rew_pct: "אחוז (%)", rew_fix: "קבוע (₪)", rew_gift: "מתנה (🎁)", rew_pct_ph: "לדוגמה: 10", rew_fix_ph: "לדוגמה: 100", rew_gift_ph: "לדוגמה: עיסוי חינם",
-    biz_reg_comm_lbl: "סכום / תיאור", biz_reg_success: "הבקשה נשלחה! פתח את WhatsApp לסיום ההרשמה."
+    biz_reg_comm_lbl: "סכום / תיאור", biz_reg_success: "הבקשה נשלחה! פתח את WhatsApp לסיום ההרשמה.",
+    err_expired_title: "פג תוקפו של מושב זה", err_expired_sub: "חזור לשליח וקבל קישור חדש", err_prefill: "קוד: WINWIN\nכדי לקבל קישור לאזור האישי, פשוט לחץ על 'שלח' 👈"
   },
   en: {
     greeting:"Welcome back,", balance_label:"Your Social Capital", deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active", action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
@@ -737,13 +756,14 @@ const i18n = {
     biz_reg_title:"Register Business", biz_reg_submit:"Register", biz_reg_name:"Business Name", biz_reg_niche:"Category", biz_reg_subniche: "Specialization", biz_reg_pay:"Payment Method",
     stat_deals:"Closed deals", stat_pending:"Awaiting payment", stat_active:"Active deals",
     btn_back:"Back", btn_back_catalog:"Back to catalog", copy_link:"🔗 Copy and send:", copy_btn:"Copy", copied:"Copied ✅", scan_qr:"📱 Or scan:", wa_return:"Return to WhatsApp",
-    cat_search:"Search...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All categories", save:"Save",
+    cat_search:"Search...", cat_loading:"Loading...", cat_empty:"Nothing found", bonus:"🎁 Bonus:", filter_all:"All", save:"Save",
     remind_debt: "Remind about debt", remind_already_sent: "We already reminded {biz} today.", remind_success: "Reminder sent!", remind_error: "Error sending.",
     pay_cash: "Cash", pay_bank: "Transfer", lb_title: "Leaderboard", lb_widget_title: "Leaderboard", lb_widget_sub: "Top agents", lb_profile_btn: "View Leaderboard",
-    lb_your_pos: "Your Position", lb_top: "Top Agents", lb_deals: "Deals:", lb_earned: "Earned", lb_blur_alert: "Reach 50 deals to unlock champion names. 🌟",
+    lb_your_pos: "Your Position", lb_top: "Top Agents", lb_deals: "Deals:", lb_earned: "Earned", lb_blur_alert: "Champions Club is ahead! 🌟 Reach 50 deals to unlock champion names.",
     invite_btn: "Can't find who you want to recommend?", invite_title: "Invite them to Win-Win!", invite_desc: "Share this link to invite a business or agent.", btn_back_invite: "Back to catalog",
     rew_type: "Reward Type", rew_pct: "Percent (%)", rew_fix: "Fixed (₪)", rew_gift: "Gift (🎁)", rew_pct_ph: "Example: 10", rew_fix_ph: "Example: 100", rew_gift_ph: "Example: Free massage",
-    biz_reg_comm_lbl: "Amount / Description", biz_reg_success: "Request sent! Open WhatsApp to complete registration."
+    biz_reg_comm_lbl: "Amount / Description", biz_reg_success: "Request sent! Open WhatsApp to complete registration.",
+    err_expired_title: "Session Expired", err_expired_sub: "Return to the messenger and get a new link", err_prefill: "Code: WINWIN\nTo get a link to your dashboard, just press Send 👉"
   },
   ar: {
     greeting:"أهلاً بعودتك,", balance_label:"رأس مالك الاجتماعي", deals_lbl:"مغلقة", pending_lbl:"معلق", active_lbl:"نشط", action_title:"ساعد عملاً تحبه", action_sub:"افتح الكتالوج وقدم توصية",
@@ -760,13 +780,14 @@ const i18n = {
     biz_reg_title:"تسجيل عمل", biz_reg_submit:"تسجيل", biz_reg_name:"اسم العمل", biz_reg_niche:"الفئة", biz_reg_subniche: "تخصص", biz_reg_pay:"طريقة الدفع",
     stat_deals:"الصفقات المغلقة", stat_pending:"في انتظار الدفع", stat_active:"الصفقات النشطة",
     btn_back:"رجوع", btn_back_catalog:"العودة إلى الكتالوج", copy_link:"🔗 انسخ وأرسل:", copy_btn:"نسخ", copied:"تم ✅", scan_qr:"📱 أو امسح:", wa_return:"العودة إلى WhatsApp",
-    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"جميع الفئات", save:"حفظ",
+    cat_search:"بحث...", cat_loading:"جاري...", cat_empty:"لم يوجد", bonus:"🎁 مكافأة:", filter_all:"الكل", save:"حفظ",
     remind_debt: "تذكير بالدين", remind_already_sent: "لقد قمنا بتذكير {biz} اليوم بالفعل.", remind_success: "تم الإرسال!", remind_error: "خطأ في الإرسال.",
     pay_cash: "نقداً", pay_bank: "تحويل", lb_title: "قاعة المشاهير", lb_widget_title: "قاعة المشاهير", lb_widget_sub: "أفضل وكلاء", lb_profile_btn: "عرض قاعة المشاهير",
     lb_your_pos: "مركزك", lb_top: "أفضل الوكلاء", lb_deals: "صفقات:", lb_earned: "المكتسبات", lb_blur_alert: "حقق 50 صفقة لفتح أسماء الأبطال. 🌟",
     invite_btn: "لا تجد من تريد التوصية به؟", invite_title: "ادعهم إلى Win-Win!", invite_desc: "شارك هذا الرابط لدعوة عمل أو وكيل.", btn_back_invite: "العودة إلى الكتالوج",
     rew_type: "نوع المكافأة", rew_pct: "نسبة (%)", rew_fix: "ثابت (₪)", rew_gift: "هدية (🎁)", rew_pct_ph: "مثال: 10", rew_fix_ph: "مثال: 100", rew_gift_ph: "مثال: تدليك مجاني",
-    biz_reg_comm_lbl: "المبلغ / الوصف", biz_reg_success: "تم إرسال الطلب! افتح WhatsApp لإكمال التسجيل."
+    biz_reg_comm_lbl: "المبلغ / الوصف", biz_reg_success: "تم إرسال الطلب! افتح WhatsApp لإكمال التسجيل.",
+    err_expired_title: "انتهت صلاحية هذه الجلسة", err_expired_sub: "عُد إلى التطبيق واحصل على رابط جديد", err_prefill: "الرمز: WINWIN\nللحصول على الرابط، فقط اضغط إرسال 👈"
   },
 };
 
@@ -822,7 +843,7 @@ function applyTheme() {
         const btn = document.querySelector('#themeBtn');
         if (btn) btn.innerHTML = '<i data-feather="moon"></i>';
     }
-    feather.replace();
+    if (typeof feather !== 'undefined') feather.replace();
 }
 function toggleTheme() {
     const isBrand = document.body.classList.contains('brand-theme');
@@ -869,14 +890,14 @@ function applyLang() {
         't_pay_cash':'pay_cash','t_pay_bank':'pay_bank','t_pay_cash_reg':'pay_cash','t_pay_bank_reg':'pay_bank','t_lb_title':'lb_title','t_lb_widget_title':'lb_widget_title',
         't_lb_widget_sub':'lb_widget_sub','t_btn_lb_profile_1':'lb_profile_btn','t_btn_lb_profile_2':'lb_profile_btn',
         't_invite_btn':'invite_btn','t_invite_title':'invite_title','t_invite_desc':'invite_desc','t_copy_link_inv':'copy_link','t_scan_qr_inv':'scan_qr',
-        't_rew_type':'rew_type', 't_rew_pct':'rew_pct', 't_rew_fix':'rew_fix', 't_rew_gift':'rew_gift', 't_biz_reg_comm_lbl': 'biz_reg_comm_lbl'
+        't_rew_type':'rew_type', 't_rew_pct':'rew_pct', 't_rew_fix':'rew_fix', 't_rew_gift':'rew_gift', 't_biz_reg_comm_lbl': 'biz_reg_comm_lbl',
+        't_btn_cancel_prof': 'btn_back'
     };
     for (const [id,key] of Object.entries(map)) {
         const el = document.getElementById(id);
         if (el && L[key]) el.textContent = L[key];
     }
     const catSearch = document.getElementById('catSearch'); if (catSearch) catSearch.placeholder = L.cat_search || 'Search...';
-    const waReturn = document.getElementById('waReturnLink'); if (waReturn) waReturn.textContent = L.wa_return || 'WhatsApp';
     const copyBtn = document.getElementById('copyBtn'); if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
     const inviteCopyBtn = document.getElementById('inviteCopyBtn'); if (inviteCopyBtn && !inviteCopyBtn.classList.contains('copied')) inviteCopyBtn.textContent = L.copy_btn || 'Copy';
     const saveProfileBtn = document.getElementById('saveProfileBtn'); if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
@@ -1115,15 +1136,16 @@ function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
     else if (agent.rank === 3) { rankBadge = '🥉'; rankClass = 'lb-rank-3'; }
     
     const highlightClass = isCurrent ? 'highlight' : '';
+    // Если агент не ПРО и карточка чужая -> блюр имени
     const shouldBlur = !isPro && !isCurrent;
-    const nameClass = shouldBlur ? 'lb-agent-name lb-name-blurred' : 'lb-agent-name';
+    const infoClass = shouldBlur ? 'lb-agent-info lb-blurred' : 'lb-agent-info';
     const onClickAttr = shouldBlur ? `onclick="alert('${L.lb_blur_alert.replace(/'/g, "\\'")}')"` : '';
 
     return `
         <div class="lb-agent-card ${highlightClass}">
             <div class="lb-agent-rank ${rankClass}">${rankBadge}</div>
-            <div class="lb-agent-info">
-                <div class="${nameClass}" ${onClickAttr}>${agent.name}</div>
+            <div class="${infoClass}" ${onClickAttr}>
+                <div class="lb-agent-name">${agent.name}</div>
                 <div class="lb-agent-deals">${L.lb_deals} <span>${agent.deals_count}</span></div>
             </div>
             <div class="lb-agent-earned">
@@ -1164,7 +1186,7 @@ function openStatDetail(type) {
     feather.replace();
 }
 
-// ── Profile edit ──────────────────────────────────────────────────────────
+// ── Profile edit (Fullscreen) ─────────────────────────────────────────────
 function selectPay(method, btnEl) {
     document.getElementById('editPayment').value = method;
     document.querySelectorAll('#profileSheet .pay-btn').forEach(b => b.classList.remove('active'));
@@ -1180,7 +1202,18 @@ function openProfileEdit() {
         b.classList.toggle('active', currentPay && b.textContent.trim().toLowerCase() === currentPay.toLowerCase());
     });
     document.getElementById('editLink').value = dashData.business_info || '';
-    openSheet('profileSheet');
+    
+    document.getElementById('profileSheet').classList.add('active');
+    document.body.style.overflow = 'hidden'; 
+    window.scrollTo(0,0);
+}
+
+function closeProfileEdit() {
+    document.getElementById('profileSheet').classList.add('slide-out-left');
+    setTimeout(() => {
+        document.getElementById('profileSheet').classList.remove('active', 'slide-out-left');
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 async function saveProfile() {
@@ -1199,7 +1232,7 @@ async function saveProfile() {
             if (name)    { dashData.user_name = name; document.getElementById('t_name').textContent = name; document.getElementById('profileName').textContent = name; document.getElementById('profileAvatar').textContent = name[0].toUpperCase(); }
             if (payment) { dashData.payment_method = payment; document.getElementById('v_pay_method').textContent = payment; }
             if (link)    { dashData.business_info = link; document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(link); }
-            closeAllSheets();
+            closeProfileEdit();
         }
     } catch(e) {}
     btn.textContent = (i18n[lang]||i18n.ru).save;
@@ -1316,7 +1349,6 @@ function checkBizRegForm() {
     const comm = document.getElementById('bizRegComm').value.trim();
     const pay = document.getElementById('bizRegPay').value;
     
-    // Проверка подкатегорий, если они есть у выбранной категории
     const subsRequired = cat && CATEGORIES_STANDARD[cat] && CATEGORIES_STANDARD[cat].length > 0;
     const selectedSubs = getSelectedBizRegSubniches();
     const subsOk = !subsRequired || selectedSubs.length > 0;
@@ -1340,7 +1372,6 @@ function openBizReg() {
     document.getElementById('bizRegComm').placeholder = '...';
     document.getElementById('bizRegPay').value = '';
     document.getElementById('bizRegLink').value = '';
-    
     document.getElementById('bizRegSubnicheGroup').style.display = 'none';
     
     checkBizRegForm();
@@ -1418,15 +1449,20 @@ function extractNiches() {
     const cats = [all];
     allBusinesses.forEach(b => { if (b.category && b.category!=='—' && !cats.includes(b.category)) cats.push(b.category); });
     
-    const select = document.getElementById('catFilterSelect');
-    if (!select) return;
-    select.innerHTML = '';
+    const container = document.getElementById('catFilters');
+    if (!container) return;
+    container.innerHTML = '';
     cats.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat === all ? '__all__' : cat;
-        opt.textContent = cat;
-        if (currentNiche === opt.value) opt.selected = true;
-        select.appendChild(opt);
+        const btn = document.createElement('button');
+        btn.className = `filter-btn ${(cat===all&&currentNiche==='__all__')||(cat===currentNiche)?'active':''}`;
+        btn.textContent = cat;
+        btn.onclick = () => {
+            currentNiche = cat===all ? '__all__' : cat;
+            document.querySelectorAll('#catFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCatalog();
+        };
+        container.appendChild(btn);
     });
 }
 
@@ -1482,7 +1518,7 @@ function openRecommend(biz) {
     const copyBtn = document.getElementById('copyBtn');
     copyBtn.textContent = L.copy_btn;
     copyBtn.classList.remove('copied');
-    // QR
+    
     const ctx = document.getElementById('qrCanvas').getContext('2d');
     ctx.clearRect(0,0,300,300);
     try { new QRious({element:document.getElementById('qrCanvas'),value:link,size:220,level:'H'}); } catch(e){}
@@ -1659,14 +1695,13 @@ function renderAll() {
         if (d.channel==='telegram') { btn.className='btn-primary btn-tg'; btn.textContent='Telegram'; }
         else { btn.textContent=L.wa_btn; }
     });
-    document.getElementById('errBtn').href=waUrl;
 
     feather.replace();
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────
 async function init() {
-    populateCategories(); // Заполняем списки нашими стандартами без эмодзи
+    populateCategories(); 
     applyTheme();
     if (i18n[lang]) setLang(lang);
     else { lang='ru'; applyLang(); }
@@ -1675,11 +1710,11 @@ async function init() {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
+        
+        document.getElementById('globalLoader').style.display='none';
+        document.getElementById('mainShell').style.display='block';
+        
         renderAll();
-        const loader = document.getElementById('loader');
-        loader.style.opacity='0';
-        setTimeout(()=>loader.style.display='none', 400);
-        // Load catalog in background
         loadCatalog();
     } catch(e) { showError(); }
 }
@@ -1687,7 +1722,22 @@ function showError() {
     document.getElementById('loaderDots').style.display='none';
     document.getElementById('loaderSub').style.display='none';
     document.getElementById('loaderErr').style.display='block';
-    document.getElementById('errBtn').href='https://wa.me/972534218573';
+    
+    const L = i18n[lang] || i18n.ru;
+    const msg = encodeURIComponent(L.err_prefill);
+    const phone = (dashData && dashData.bot_phone) ? dashData.bot_phone : "972534218573";
+    
+    // Показываем нужную кнопку в зависимости от того, откуда пришел юзер (если известно), иначе WhatsApp
+    const isTg = dashData && dashData.channel === 'telegram';
+    if (isTg) {
+        const btnTg = document.getElementById('errBtnTg');
+        btnTg.style.display = 'flex';
+        btnTg.href = `https://t.me/winwin_lead_bot?start=link`;
+    } else {
+        const btnWa = document.getElementById('errBtnWa');
+        btnWa.style.display = 'flex';
+        btnWa.href = `https://wa.me/${phone}?text=${msg}`;
+    }
 }
 
 window.onload = init;
