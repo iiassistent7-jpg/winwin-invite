@@ -43,7 +43,9 @@
         [dir="rtl"] .lb-agent-earned { text-align: left; }
         [dir="rtl"] .cat-filters { direction: rtl; }
 
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
+        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
+        /* Контент вьюшек остаётся RTL при смене языка */
+        [dir="rtl"] .view, [dir="rtl"] nav, [dir="rtl"] .header { direction: rtl; }
 
         .req-mark { color: var(--red); font-weight: 800; margin-left: 3px; }
 
@@ -83,7 +85,7 @@
         .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
 
         /* ── Views (Swipe tabs) ─────────────────────────────────────── */
-        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; direction: ltr; }
+        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; direction: ltr; position: relative; left: 0; }
         .view { width: 20%; flex-shrink: 0; padding: 0 16px; }
 
         /* ── Cards ──────────────────────────────────────────────────── */
@@ -1024,6 +1026,9 @@ function setLang(l) {
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+    // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
+    const appEl = document.querySelector('.app');
+    if (appEl) { appEl.scrollLeft = 0; }
     applyLang();
     
     // Сдвигаем Wrapper если направление поменялось
