@@ -33,7 +33,7 @@
         /* ── RTL Support ────────────────────────────────────────────── */
         [dir="rtl"] { text-align: right; }
         [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        [dir="rtl"] .bottom-nav { flex-direction: row-reverse; }
+        [dir="rtl"] .bottom-nav { flex-direction: row-reverse; direction: rtl; }
         [dir="rtl"] .btn-back i { transform: rotate(180deg); }
         [dir="rtl"] .deal-detail-val { text-align: left; }
         [dir="rtl"] .funnel-num { text-align: left; }
@@ -43,7 +43,7 @@
         [dir="rtl"] .lb-agent-earned { text-align: left; }
         [dir="rtl"] .cat-filters { direction: rtl; }
 
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
+        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
         /* Контент вьюшек остаётся RTL при смене языка */
         [dir="rtl"] .view, [dir="rtl"] nav, [dir="rtl"] .header { direction: rtl; }
 
