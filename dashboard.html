@@ -532,11 +532,11 @@
         </div>
 
     </div><nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
+        <button id="navBtn0" class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
+        <button id="navBtn1" class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
+        <button id="navBtn2" class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
+        <button id="navBtn3" class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
+        <button id="navBtn4" class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
     </nav>
 
     <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
@@ -1029,21 +1029,14 @@ function setLang(l) {
     document.documentElement.lang = l;
     document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
     document.body.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
-    // Переставляем кнопки nav физически в DOM
-    const _nav = document.querySelector('.bottom-nav');
+    // Переставляем кнопки nav по id
+    const _nav = document.getElementById('navBtn0')?.parentNode;
     if (_nav) {
-        const _btns = Array.from(_nav.querySelectorAll('.nav-item'));
-        if (l==='he'||l==='ar') {
-            // RTL: переворачиваем порядок
-            _btns.reverse().forEach(b => _nav.appendChild(b));
-        } else {
-            // LTR: восстанавливаем оригинальный порядок по tabs[]
-            const _order = ['home','catalog','history','wallet','profile'];
-            _order.forEach(id => {
-                const btn = _nav.querySelector(`[onclick*="switchTab('${id}'"]`);
-                if (btn) _nav.appendChild(btn);
-            });
-        }
+        const _ids = l==='he'||l==='ar' ? [4,3,2,1,0] : [0,1,2,3,4];
+        _ids.forEach(i => {
+            const b = document.getElementById('navBtn'+i);
+            if (b) _nav.appendChild(b);
+        });
     }
     // При смене направления сбрасываем scroll клипа чтобы wrapper не смещался
     const appEl = document.querySelector('.app');
