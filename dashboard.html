@@ -33,6 +33,7 @@
         /* ── RTL Support ────────────────────────────────────────────── */
         [dir="rtl"] { text-align: right; }
         [dir="rtl"] .header-right { flex-direction: row-reverse; }
+        [dir="rtl"] .bottom-nav { flex-direction: row-reverse; }
         [dir="rtl"] .btn-back i { transform: rotate(180deg); }
         [dir="rtl"] .deal-detail-val { text-align: left; }
         [dir="rtl"] .funnel-num { text-align: left; }
@@ -743,6 +744,92 @@ const CAT_TR = {
     "Бизнес и B2B услуги": {he: "עסקים ושירותי B2B", en: "Business & B2B", ar: "الأعمال وخدمات B2B"}
 };
 
+// ── ПЕРЕВОДЫ ПОДКАТЕГОРИЙ (ru→he/en/ar) ────────────────────────────
+const SUBCAT_TR = {
+    "Косметология": {he:"קוסמטולוגיה", en:"Cosmetology", ar:"التجميل"},
+    "Инъекционная косметология": {he:"קוסמטולוגיה בהזרקות", en:"Injection Cosmetology", ar:"التجميل بالحقن"},
+    "Лазерная эпиляция": {he:"הסרת שיער בלייזר", en:"Laser Hair Removal", ar:"إزالة الشعر بالليزر"},
+    "Эпиляция": {he:"שעווה ואפילציה", en:"Waxing & Epilation", ar:"إزالة الشعر"},
+    "Перманентный макияж": {he:"איפור קבוע", en:"Permanent Makeup", ar:"الميكاب الدائم"},
+    "Удаление тату и татуажа": {he:"הסרת קעקועים", en:"Tattoo Removal", ar:"إزالة الوشم"},
+    "Стилисты по волосам и барберы": {he:"ספרים וסטייליסטים", en:"Hair Stylists & Barbers", ar:"مصففو الشعر"},
+    "Ногтевой сервис": {he:"שירותי ציפורניים", en:"Nail Services", ar:"خدمات الأظافر"},
+    "Брови и ресницы": {he:"גבות וריסים", en:"Brows & Lashes", ar:"الحواجب والرموش"},
+    "Макияж": {he:"איפור", en:"Makeup", ar:"المكياج"},
+    "SPA и релакс-массаж": {he:"ספא ועיסוי", en:"SPA & Massage", ar:"سبا وتدليك"},
+    "Рестораны и кафе": {he:"מסעדות ובתי קפה", en:"Restaurants & Cafes", ar:"المطاعم والمقاهي"},
+    "Доставка еды и рационы": {he:"משלוחי אוכל", en:"Food Delivery", ar:"توصيل الطعام"},
+    "Авторская выпечка и десерты": {he:"מאפייה ועוגות", en:"Bakery & Desserts", ar:"المخبوزات والحلويات"},
+    "Бары и пабы": {he:"ברים ופאבים", en:"Bars & Pubs", ar:"الحانات"},
+    "Кейтеринг и банкеты": {he:"קייטרינג", en:"Catering", ar:"كاترينج"},
+    "Одежда, обувь и аксессуары": {he:"בגדים ונעליים", en:"Clothing & Shoes", ar:"الملابس والأحذية"},
+    "Мебель и товары для дома": {he:"ריהוט ובית", en:"Furniture & Home", ar:"الأثاث والمنزل"},
+    "Ювелирные изделия": {he:"תכשיטים", en:"Jewelry", ar:"المجوهرات"},
+    "Цветы и подарки": {he:"פרחים ומתנות", en:"Flowers & Gifts", ar:"الزهور والهدايا"},
+    "Косметика и парфюмерия": {he:"קוסמטיקה ובשמים", en:"Cosmetics & Perfumery", ar:"مستحضرات التجميل"},
+    "Стоматология": {he:"רפואת שיניים", en:"Dentistry", ar:"طب الأسنان"},
+    "Психология и психотерапия": {he:"פסיכולוגיה", en:"Psychology", ar:"علم النفس"},
+    "Физиотерапия и остеопатия": {he:"פיזיותרפיה", en:"Physiotherapy", ar:"العلاج الطبيعي"},
+    "Диетология и нутрициология": {he:"דיאטולוגיה", en:"Dietology", ar:"التغذية"},
+    "Альтернативная медицина": {he:"רפואה אלטרנטיבית", en:"Alternative Medicine", ar:"الطب البديل"},
+    "Лечебный массаж": {he:"עיסוי רפואי", en:"Medical Massage", ar:"التدليك الطبي"},
+    "Оптика и зрение": {he:"אופטיקה", en:"Optics", ar:"البصريات"},
+    "Коммерческое право (для бизнеса)": {he:"משפט מסחרי", en:"Commercial Law", ar:"القانون التجاري"},
+    "Недвижимость": {he:"נדלן", en:"Real Estate", ar:"العقارات"},
+    "Семейное право": {he:"דיני משפחה", en:"Family Law", ar:"قانون الأسرة"},
+    "Иммиграция и визы": {he:"הגירה ווזות", en:"Immigration & Visas", ar:"الهجرة والتأشيرات"},
+    "Уголовное право": {he:"פלילי", en:"Criminal Law", ar:"القانون الجنائي"},
+    "Травмы и Битуах Леуми": {he:"תאונות וביטוח לאומי", en:"Injuries & Insurance", ar:"الإصابات والتأمين"},
+    "Нотариусы и переводы": {he:"נוטריון ותרגומים", en:"Notaries & Translations", ar:"التوثيق والترجمة"},
+    "Недвижимость (купля/продажа/аренда)": {he:"נדלן (קנייה/מכירה)", en:"Real Estate (buy/sell/rent)", ar:"العقارات (شراء/بيع)"},
+    "Ипотека и рефинансирование": {he:"משכנתאות", en:"Mortgage", ar:"الرهن العقاري"},
+    "Бухгалтерия и налоги": {he:"הנהלת חשבונות", en:"Accounting & Taxes", ar:"المحاسبة والضرائب"},
+    "Страхование (все виды)": {he:"ביטוח", en:"Insurance", ar:"التأمين"},
+    "Ремонт под ключ": {he:"שיפוץ מלא", en:"Full Renovation", ar:"تجديد كامل"},
+    "Электрика": {he:"חשמל", en:"Electrical", ar:"الكهرباء"},
+    "Сантехника": {he:"אינסטלציה", en:"Plumbing", ar:"السباكة"},
+    "Кондиционеры": {he:"מזגנים", en:"Air Conditioning", ar:"تكييف الهواء"},
+    "Клининг и химчистка": {he:"ניקיון", en:"Cleaning", ar:"التنظيف"},
+    "Дизайн интерьера": {he:"עיצוב פנים", en:"Interior Design", ar:"تصميم الديكور"},
+    "Сборка и ремонт мебели": {he:"הרכבת רהיטים", en:"Furniture Assembly", ar:"تجميع الأثاث"},
+    "Ремонт и СТО": {he:"תיקון ומוסך", en:"Repair & Service", ar:"الإصلاح والخدمة"},
+    "Детейлинг и мойка": {he:"דיטיילינג ושטיפה", en:"Detailing & Wash", ar:"العناية والغسيل"},
+    "Автоподбор и продажа": {he:"מכירת רכב", en:"Car Sales", ar:"بيع السيارات"},
+    "Аренда авто": {he:"השכרת רכב", en:"Car Rental", ar:"تأجير السيارات"},
+    "Фото и видеосъемка": {he:"צילום ווידאו", en:"Photo & Video", ar:"التصوير"},
+    "Ведущие и музыканты": {he:"אמרגנים ומוזיקאים", en:"Hosts & Musicians", ar:"المحتفلون والموسيقيون"},
+    "Организация мероприятий": {he:"ארגון אירועים", en:"Event Organization", ar:"تنظيم الفعاليات"},
+    "Декораторы": {he:"עיצוב ופרחים", en:"Decorators", ar:"المزينون"},
+    "Фитнес и тренеры": {he:"כושר ומאמנים", en:"Fitness & Trainers", ar:"اللياقة البدنية"},
+    "Репетиторы и курсы": {he:"מורים פרטיים", en:"Tutors & Courses", ar:"المدرسون الخاصون"},
+    "Языковые школы": {he:"בתי ספר לשפות", en:"Language Schools", ar:"مدارس اللغات"},
+    "Детские кружки и секции": {he:"חוגים לילדים", en:"Kids Clubs", ar:"أنشطة الأطفال"},
+    "Ветеринария": {he:"וטרינריה", en:"Veterinary", ar:"بيطري"},
+    "Груминг": {he:"גרומינג", en:"Grooming", ar:"تجميل الحيوانات"},
+    "Зоомагазины": {he:"חנויות לחיות", en:"Pet Shops", ar:"متاجر الحيوانات"},
+    "Передержка и выгул": {he:"פנסיון לחיות", en:"Pet Sitting", ar:"رعاية الحيوانات"},
+    "Турагентства": {he:"סוכנויות נסיעות", en:"Travel Agencies", ar:"وكالات السفر"},
+    "Отели и апартаменты": {he:"מלונות ודירות", en:"Hotels & Apartments", ar:"الفنادق والشقق"},
+    "Гиды и экскурсии": {he:"מדריכים וסיורים", en:"Guides & Tours", ar:"المرشدون والجولات"},
+    "Маркетинг и SMM": {he:"שיווק ו-SMM", en:"Marketing & SMM", ar:"التسويق"},
+    "Разработка сайтов и ПО": {he:"פיתוח אתרים", en:"Web & Software Dev", ar:"تطوير المواقع"},
+    "Дизайн и брендинг": {he:"עיצוב ומיתוג", en:"Design & Branding", ar:"التصميم والعلامة"},
+    "Консалтинг и коучинг": {he:"ייעוץ וקואצ׳ינג", en:"Consulting & Coaching", ar:"الاستشارات"},
+    "Логистика и доставка": {he:"לוגיסטיקה", en:"Logistics & Delivery", ar:"اللوجستيات"},
+};
+
+function translateSubcat(ruName, targetLang) {
+    if (targetLang === 'ru' || !SUBCAT_TR[ruName]) return ruName;
+    return SUBCAT_TR[ruName][targetLang] || ruName;
+}
+
+function translateNiches(niche, targetLang) {
+    if (!niche || targetLang === 'ru') return niche;
+    if (Array.isArray(niche)) return niche.map(n => translateSubcat(n, targetLang)).join(', ');
+    if (typeof niche === 'string') return niche.split(',').map(n => translateSubcat(n.trim(), targetLang)).join(', ');
+    return niche;
+}
+
 function getCatName(sysName, targetLang) {
     if (targetLang === 'ru' || !CAT_TR[sysName]) return sysName;
     return CAT_TR[sysName][targetLang] || sysName;
@@ -942,8 +1029,7 @@ function setLang(l) {
     // Сдвигаем Wrapper если направление поменялось
     const curIdx = currentTabIndex();
     if(curIdx !== -1) {
-        const sign = (document.documentElement.dir === 'rtl') ? 1 : -1;
-        document.getElementById('viewsWrapper').style.transform = `translateX(${sign * curIdx * 20}%)`;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${-curIdx * 20}%)`;
     }
 
     if (dashData) renderAll();
@@ -1030,7 +1116,7 @@ function switchTab(tabId, btnEl) {
     const index = tabs.indexOf(tabId);
     if(index !== -1) {
         const isRTL = document.documentElement.dir === 'rtl';
-        const sign = isRTL ? 1 : -1;
+        const sign = -1;
         document.getElementById('viewsWrapper').style.transform = `translateX(${sign * index * 20}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1605,8 +1691,8 @@ function renderCatalog() {
         const translatedCat = getCatName(biz.category || '', lang);
         
         let nicheStr = '';
-        if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-        else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
+        const _nRaw1 = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
+        if (_nRaw1.length) nicheStr = ' · ' + _nRaw1.map(n=>translateSubcat(n,lang)).join(', ');
         
         const fullCat = `${translatedCat}${nicheStr}`.trim() || 'Бизнес';
         card.innerHTML = `
@@ -1624,8 +1710,8 @@ function openRecommend(biz) {
     document.getElementById('recBizName').textContent = biz.name;
     const translatedCat = getCatName(biz.category || '', lang);
     let nicheStr = '';
-    if (Array.isArray(biz.niche)&&biz.niche.length) nicheStr = ' · '+biz.niche.slice(0,2).join(', ');
-    else if (typeof biz.niche==='string'&&biz.niche&&biz.niche!=='—') nicheStr = ' · '+biz.niche;
+    const _nRaw2 = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='—' ? [biz.niche] : []);
+    if (_nRaw2.length) nicheStr = ' · ' + _nRaw2.map(n=>translateSubcat(n,lang)).join(', ');
     
     document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || 'Бизнес';
     
