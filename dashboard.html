@@ -1044,13 +1044,22 @@ function setLang(l) {
     // dir на html/body меняет координатную систему браузера и ломает translateX-слайдер
     document.body.classList.toggle('rtl', isRTL);
 
+    // Явно через JS — гарантированно, независимо от CSS-специфичности
+    const navEl = document.querySelector('.bottom-nav');
+    if (navEl) navEl.style.flexDirection = isRTL ? 'row-reverse' : 'row';
+
     applyLang();
 
-    // ФИХ: пересчёт offset по единой формуле независимо от RTL
+    // Сбрасываем активное состояние nav на текущий таб
+    // (без этого при смене языка active-класс остаётся на старом месте)
     const curIdx = currentTabIndex();
-    if (curIdx !== -1) {
-        document.getElementById('viewsWrapper').style.transform = `translateX(${-curIdx * 20}%)`;
-    }
+    const curTab = curIdx !== -1 ? tabs[curIdx] : 'home';
+    const navBtns = document.querySelectorAll('.nav-item');
+    navBtns.forEach(b => b.classList.remove('active'));
+    if (curIdx !== -1) navBtns[curIdx].classList.add('active');
+
+    // Пересчёт offset — единая формула для всех языков
+    document.getElementById('viewsWrapper').style.transform = `translateX(${-(curIdx !== -1 ? curIdx : 0) * 20}%)`;
 
     if (dashData) renderAll();
     extractNiches();
