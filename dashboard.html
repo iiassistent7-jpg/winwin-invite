@@ -982,11 +982,13 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
         const cur = currentTabIndex();
         const isRTL = document.documentElement.dir === 'rtl';
-        const isNext = isRTL ? dx > 0 : dx < 0; 
+        const isNext = isRTL ? dx > 0 : dx < 0;
         const next = isNext ? cur + 1 : cur - 1;
         if (next >= 0 && next < tabs.length) {
             const navBtns = document.querySelectorAll('.nav-item');
-            switchTab(tabs[next], navBtns[next]);
+            // При RTL бар визуально перевёрнут — берём кнопку с зеркальным индексом
+            const btnIdx = isRTL ? (tabs.length - 1 - next) : next;
+            switchTab(tabs[next], navBtns[btnIdx]);
         }
     }
 });
@@ -1115,18 +1117,24 @@ function applyLang() {
 
 // ── Navigation ────────────────────────────────────────────────────────────
 function switchTab(tabId, btnEl) {
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    if (btnEl) btnEl.classList.add('active');
-    
+    const isRTL = document.documentElement.dir === 'rtl';
+    const navBtns = document.querySelectorAll('.nav-item');
+    navBtns.forEach(b => b.classList.remove('active'));
+
+    // Если btnEl не передан — находим правильную кнопку с учётом RTL
     const index = tabs.indexOf(tabId);
+    if (!btnEl && index !== -1) {
+        const btnIdx = isRTL ? (tabs.length - 1 - index) : index;
+        btnEl = navBtns[btnIdx];
+    }
+    if (btnEl) btnEl.classList.add('active');
+
     if(index !== -1) {
-        const isRTL = document.documentElement.dir === 'rtl';
-        const sign = -1;
-        document.getElementById('viewsWrapper').style.transform = `translateX(${sign * index * 20}%)`;
+        document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-'+tabId).classList.add('active');
-        }, 50); 
+        }, 50);
     }
     window.scrollTo(0,0);
 }
