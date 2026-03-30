@@ -9,12 +9,12 @@
   <style>
     /* ── CSS Variables ──────────────────────────────────────────────── */
     :root {
-      --bg:#F7F7F9; --surface:#FFFFFF; --surface2:#F2F2F5;
-      --text:#1A1A2E; --text2:#8A8D9F; --border:rgba(0,0,0,0.06);
-      --shadow:0 4px 20px rgba(0,0,0,0.06); --shadow2:0 8px 32px rgba(0,0,0,0.12);
+      --bg:#EEF1F6; --surface:#FBFCFE; --surface2:#F4F6FA;
+      --text:#171A28; --text2:#747B91; --border:rgba(16,24,40,0.08);
+      --shadow:0 12px 28px rgba(19,25,44,0.06); --shadow2:0 18px 40px rgba(19,25,44,0.10);
       --accent1:#56CCF2; --accent2:#2F80ED; --green:#27AE60;
       --gold:#F2C94C; --red:#EB5757; --purple:#9B51E0;
-      --radius:20px; --nav-bg:rgba(255,255,255,0.82);
+      --radius:20px; --nav-bg:rgba(251,252,254,0.86);
     }
     body.brand-theme {
       --bg:#0F0F1A; --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
@@ -43,7 +43,7 @@
 
     /* ── Layout ─────────────────────────────────────────────────────── */
     .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
-    body.rtl .view, body.rtl nav, body.rtl .header { direction:rtl; }
+    body.rtl .view, body.rtl .header { direction:rtl; }
 
     /* ── Loader ─────────────────────────────────────────────────────── */
     .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
@@ -63,7 +63,7 @@
     .btn-back:active { opacity:.6; transform:translateX(-4px); }
 
     /* ── Header ─────────────────────────────────────────────────────── */
-    .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
+    .header { display:flex; align-items:center; justify-content:space-between; padding:18px 18px 10px; position:sticky; top:0; background:var(--bg); z-index:50; }
     .header-left .logo-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:2px; }
     .header-left .company-name { font-size:.85rem; color:var(--text); font-weight:600; }
     .header-right { display:flex; align-items:center; gap:8px; }
@@ -83,9 +83,9 @@
     .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:.5px; }
 
     /* ── Debt Banner ────────────────────────────────────────────────── */
-    .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
-    .debt-banner-text { color:var(--text); font-weight:600; font-size:.9rem; }
-    .debt-banner-sum { color:var(--red); font-weight:800; font-size:1.2rem; }
+    .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; }
+    .debt-banner-text { color:var(--text); font-weight:700; font-size:.88rem; }
+    .debt-banner-sum { color:var(--red); font-weight:800; font-size:1.08rem; }
 
     /* ── Deal Filter Tabs ───────────────────────────────────────────── */
     .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
@@ -133,9 +133,9 @@
     /* ── Stats ──────────────────────────────────────────────────────── */
     .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
     .stats-grid-3 { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
-    .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 8px; text-align:center; box-shadow:var(--shadow); }
-    .stat-val { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; color:var(--text); margin-bottom:4px; }
-    .stat-lbl { color:var(--text2); font-weight:600; font-size:.65rem; text-transform:uppercase; letter-spacing:.5px; }
+    .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:12px 8px; text-align:center; box-shadow:var(--shadow); }
+    .stat-val { font-family:'Sora',sans-serif; font-size:1.04rem; font-weight:800; color:var(--text); margin-bottom:3px; }
+    .stat-lbl { color:var(--text2); font-weight:700; font-size:.62rem; text-transform:uppercase; letter-spacing:.4px; }
 
     /* ── Funnel ─────────────────────────────────────────────────────── */
     .funnel-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
@@ -204,23 +204,23 @@
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
     /* ── Bottom Nav ─────────────────────────────────────────────────── */
-    .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; padding:10px 16px 22px; border-top:1px solid var(--border); z-index:100; }
-    body.rtl .bottom-nav { flex-direction:row-reverse; }
-    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 4px; font-family:inherit; }
+    .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; gap:2px; padding:10px 12px 20px; border-top:1px solid var(--border); z-index:100; direction:ltr !important; }
+    .nav-hidden { display:none !important; }
+    .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 2px; font-family:inherit; }
     .nav-item.active { color:var(--accent2); }
-    .nav-item svg { transition:.2s; width:22px; height:22px; }
+    .nav-item svg { transition:.2s; width:23px; height:23px; flex-shrink:0; }
     .nav-item.active svg { transform:translateY(-2px); }
-    .nav-item span { font-size:.58rem; font-weight:700; }
+    .nav-item span { font-size:.58rem; font-weight:700; line-height:1.08; text-align:center; display:block; width:100%; }
 
 
     /* ── Page Heroes / CTA ─────────────────────────────────────────── */
-    .page-hero { background:linear-gradient(135deg, rgba(86,204,242,.10), rgba(47,128,237,.08)); border:1px solid rgba(86,204,242,.18); border-radius:24px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow); }
-    .page-hero h3 { font-family:'Sora',sans-serif; font-size:1.18rem; font-weight:800; margin-bottom:8px; letter-spacing:-.02em; }
-    .page-hero p { font-size:.86rem; color:var(--text2); line-height:1.55; }
+    .page-hero { background:linear-gradient(135deg, rgba(86,204,242,.08), rgba(47,128,237,.06)); border:1px solid rgba(86,204,242,.16); border-radius:22px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .page-hero h3 { font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:6px; letter-spacing:-.02em; }
+    .page-hero p { font-size:.80rem; color:var(--text2); line-height:1.45; }
     .hero-actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
-    .ghost-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-size:.72rem; font-weight:700; }
-    .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:14px; box-shadow:var(--shadow); }
-    .seg-tab { flex:1; border:none; background:transparent; color:var(--text2); border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:700; font-size:.84rem; font-family:inherit; transition:.2s; }
+    .ghost-chip { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-size:.69rem; font-weight:700; margin-bottom:8px; }
+    .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:12px; box-shadow:var(--shadow); }
+    .seg-tab { flex:1; border:none; background:transparent; color:var(--text2); border-radius:10px; padding:9px 10px; cursor:pointer; font-weight:700; font-size:.82rem; font-family:inherit; transition:.2s; }
     .seg-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
     .reco-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
     .reco-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
@@ -228,15 +228,15 @@
     .reco-sub { font-size:.78rem; color:var(--text2); margin-top:4px; line-height:1.45; }
     .reco-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
     .meta-pill { display:inline-flex; align-items:center; gap:4px; padding:4px 9px; border-radius:999px; background:var(--surface2); border:1px solid var(--border); font-size:.72rem; font-weight:700; color:var(--text2); }
-    .mini-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
-    .mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 10px; text-align:center; box-shadow:var(--shadow); }
-    .mini-stat .val { font-family:'Sora',sans-serif; font-size:1.12rem; font-weight:800; color:var(--text); }
-    .mini-stat .lbl { font-size:.66rem; font-weight:700; color:var(--text2); text-transform:uppercase; margin-top:4px; }
-    .cta-block { background:linear-gradient(135deg, rgba(242,201,76,.08), rgba(242,153,74,.08)); border:1px solid rgba(242,201,76,.22); border-radius:22px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow); }
-    .cta-block h3 { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:8px; }
-    .cta-block p { font-size:.85rem; color:var(--text2); line-height:1.55; margin-bottom:14px; }
-    .soft-note { font-size:.76rem; color:var(--text2); margin-top:10px; line-height:1.45; }
-    .section-caption { font-size:.78rem; color:var(--text2); margin:-4px 0 12px; line-height:1.45; }
+    .mini-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
+    .mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:10px 8px; text-align:center; box-shadow:var(--shadow); }
+    .mini-stat .val { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; color:var(--text); }
+    .mini-stat .lbl { font-size:.62rem; font-weight:700; color:var(--text2); text-transform:uppercase; margin-top:3px; }
+    .cta-block { background:linear-gradient(135deg, rgba(242,201,76,.07), rgba(242,153,74,.07)); border:1px solid rgba(242,201,76,.20); border-radius:22px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .cta-block h3 { font-family:'Sora',sans-serif; font-size:1.04rem; font-weight:800; margin-bottom:6px; }
+    .cta-block p { font-size:.80rem; color:var(--text2); line-height:1.42; margin-bottom:12px; }
+    .soft-note { font-size:.73rem; color:var(--text2); margin-top:8px; line-height:1.38; }
+    .section-caption { font-size:.76rem; color:var(--text2); margin:-2px 0 10px; line-height:1.4; }
     body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
 
     /* ── Misc ───────────────────────────────────────────────────────── */
@@ -396,6 +396,7 @@
         <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche">—</div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Вознаграждение</div><div class="prof-val" id="pr_comm">—</div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay">—</div></div>
+        <div class="prof-row" id="pr_link_row"><div class="prof-lbl" id="t_pr_link">Instagram / сайт</div><div class="prof-val" id="pr_link">—</div></div>
         <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone">—</div></div>
       </div>
       <button class="btn-primary btn-outline" onclick="openProfileEdit()" style="margin-bottom:12px;">
@@ -410,12 +411,12 @@
   </div><!-- /views-wrapper -->
 
   <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
-    <button class="nav-item" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
-    <button class="nav-item" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Рекомендатели</span></button>
-    <button class="nav-item" onclick="switchTab('recommend',this)"><i data-feather="send"></i><span id="nav_recommend">Рекомендую</span></button>
-    <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
+    <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
+    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12l3-3a2.8 2.8 0 0 1 4 0l3 3"/><path d="M5 14l2.5 2.5a2 2 0 0 0 2.8 0L12 15"/><path d="M19 14l-2.5 2.5a2 2 0 0 1-2.8 0L12 15"/><path d="M3 10l3 3"/><path d="M21 10l-3 3"/></svg><span id="nav_recommenders">Рекомендатели</span></button>
+    <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><i data-feather="send"></i><span id="nav_recommend">Рекомендую</span></button>
+    <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
   <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
@@ -589,7 +590,7 @@ const i18n = {
     rd_title:"Зал Славы", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
     rd_promo_btn:"Подробнее о PRO", radar_loading:"Загрузка...",
     tab_profile:"Настройки бизнеса", sub_title:"Текущий тариф:", btn_upgrade:"Перейти на PRO (149 ₪)",
-    pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон",
+    pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_link:"Instagram / сайт", pr_phone:"Телефон",
     btn_edit:"Изменить данные", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:",
     m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_cancel:"Назад",
@@ -625,7 +626,7 @@ const i18n = {
     rd_title:"רדאר המשפיענים", rd_promo_title:"מחפשים שותפים חדשים?", rd_promo_desc:"עברו ל-PRO כדי לפתוח אנשי קשר של משפיענים.",
     rd_promo_btn:"גלה על PRO", radar_loading:"טוען...",
     tab_profile:"הגדרות עסק", sub_title:"מסלול נוכחי:", btn_upgrade:"שדרג ל-PRO (149 ₪)",
-    pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון",
+    pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_link:"אינסטגרם / אתר", pr_phone:"טלפון",
     btn_edit:"עריכת נתונים", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:",
     m_close:"סגור עסקה", m_reject:"דחה עסקה", m_cancel:"חזור",
@@ -661,7 +662,7 @@ const i18n = {
     rd_title:"Influencer Radar", rd_promo_title:"Looking for new partners?", rd_promo_desc:"Upgrade to PRO to unlock top influencer contacts.",
     rd_promo_btn:"Learn about PRO", radar_loading:"Loading...",
     tab_profile:"Business Settings", sub_title:"Current plan:", btn_upgrade:"Upgrade to PRO (149 ₪)",
-    pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone",
+    pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_link:"Instagram / website", pr_phone:"Phone",
     btn_edit:"Edit Data", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:",
     m_close:"Close Deal", m_reject:"Reject Deal", m_cancel:"Back",
@@ -697,7 +698,7 @@ const i18n = {
     rd_title:"رادار المؤثرين", rd_promo_title:"تبحث عن شركاء جدد?", rd_promo_desc:"قم بالترقية إلى PRO لفتح جهات اتصال أفضل المؤثرين.",
     rd_promo_btn:"ترقية PRO", radar_loading:"جاري...",
     tab_profile:"إعدادات العمل", sub_title:"الخطة الحالية:", btn_upgrade:"ترقية إلى PRO (149 ₪)",
-    pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف",
+    pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_link:"إنستغرام / موقع", pr_phone:"الهاتف",
     btn_edit:"تعديل البيانات", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:",
     m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_cancel:"رجوع",
@@ -764,6 +765,16 @@ function applyViewOrder(isRTL) {
   });
 }
 
+function applyNavOrder(isRTL) {
+  const nav = document.getElementById('bottomNav');
+  if (!nav) return;
+  const order = isRTL ? RTL_TABS : LTR_TABS;
+  order.forEach(tabId => {
+    const btn = nav.querySelector(`.nav-item[data-tab="${tabId}"]`);
+    if (btn) nav.appendChild(btn);
+  });
+}
+
 function syncWrapperToCurrentTab() {
   const wrapper = document.getElementById('viewsWrapper');
   if (!wrapper) return;
@@ -790,10 +801,11 @@ document.querySelector('.app').addEventListener('touchend', e => {
   if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
     const order = getTabOrder();
     const cur = order.indexOf(currentTab);
-    const next = isRTLLang() ? (dx < 0 ? cur - 1 : cur + 1) : (dx < 0 ? cur + 1 : cur - 1);
+    const goForward = isRTLLang() ? dx > 0 : dx < 0;
+    const next = goForward ? cur + 1 : cur - 1;
     if (next >= 0 && next < order.length) {
       const nextTab = order[next];
-      const navBtn = Array.from(document.querySelectorAll('.nav-item')).find(b => b.getAttribute('onclick')?.includes(`'${nextTab}'`));
+      const navBtn = document.querySelector(`.nav-item[data-tab="${nextTab}"]`);
       switchTab(nextTab, navBtn || null);
     }
   }
@@ -803,9 +815,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
 function switchTab(tabId, btnEl) {
   currentTab = tabId;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  const target = Array.from(document.querySelectorAll('.nav-item')).find(b =>
-    b.getAttribute('onclick')?.includes(`'${tabId}'`)
-  ) || btnEl;
+  const target = document.querySelector(`.nav-item[data-tab="${tabId}"]`) || btnEl;
   if (target) target.classList.add('active');
   syncWrapperToCurrentTab();
   window.scrollTo(0, 0);
@@ -846,10 +856,11 @@ function setLang(l) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`);
   if (btn) btn.classList.add('active');
+  applyNavOrder(isRTL);
   applyViewOrder(isRTL);
   applyI18n();
   populateCategories();
-  syncWrapperToCurrentTab();
+  switchTab(currentTab);
   if (bizData) renderAll();
 }
 
@@ -874,7 +885,7 @@ function applyI18n() {
     't_rec_list_title':'rec_list_title', 't_rec_list_sub':'rec_list_sub',
     't_tab_profile':'tab_profile', 't_sub_title':'sub_title', 't_btn_upgrade':'btn_upgrade',
     't_pr_name':'pr_name', 't_pr_niche':'pr_niche', 't_pr_comm':'pr_comm',
-    't_pr_pay':'pr_pay', 't_pr_phone':'pr_phone', 't_btn_edit':'btn_edit',
+    't_pr_pay':'pr_pay', 't_pr_link':'pr_link', 't_pr_phone':'pr_phone', 't_btn_edit':'btn_edit',
     't_wa_btn':'wa_btn', 't_tg_btn':'tg_btn',
     't_m_title':'m_title', 't_m_lbl_client':'m_client', 't_m_lbl_agent':'m_agent',
     't_m_lbl_date':'m_date', 't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject',
@@ -925,6 +936,7 @@ async function init() {
   applyTheme();
   populateCategories();
   applyI18n();
+  applyNavOrder(isRTLLang(lang));
   applyViewOrder(isRTLLang(lang));
   if (i18n[lang]) setLang(lang);
 
@@ -968,10 +980,10 @@ async function init() {
 
   // Deep link tab
   const urlTab = new URLSearchParams(window.location.search).get('tab');
-  if (urlTab && tabs.includes(urlTab)) {
-    const navBtns = document.querySelectorAll('.nav-item');
-    switchTab(urlTab, navBtns[tabs.indexOf(urlTab)]);
-    if (urlTab === 'radar') openLeaderboard(null);
+  const allTabs = [...LTR_TABS];
+  if (urlTab && allTabs.includes(urlTab)) {
+    const navBtn = document.querySelector(`.nav-item[data-tab="${urlTab}"]`);
+    switchTab(urlTab, navBtn);
   }
 
   feather.replace();
@@ -1402,11 +1414,23 @@ function formatDecision(decision, L) {
   return decision;
 }
 
-function openRecommendFlow() {
+async function openRecommendFlow() {
   const L = i18n[lang] || i18n.ru;
-  const phone = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
-  const prefill = L.rec_prefill || i18n.ru.rec_prefill;
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(prefill)}`, '_blank');
+  try {
+    const actorId = bizData && bizData.id;
+    if (!actorId) throw new Error('missing_id');
+    const res = await fetch(`${API_URL}/api/catalog/token?agent_id=${actorId}`);
+    if (!res.ok) throw new Error('catalog_token');
+    const data = await res.json();
+    const ct = data.token;
+    if (!ct) throw new Error('catalog_token');
+    const target = new URL('catalog.html', window.location.href);
+    target.searchParams.set('token', ct);
+    target.searchParams.set('lang', lang);
+    window.location.href = target.toString();
+  } catch (e) {
+    alert(L.radar_loading || 'Каталог временно недоступен.');
+  }
 }
 
 function formatShortDate(dateStr) {
@@ -1428,6 +1452,18 @@ function renderProfile() {
   document.getElementById('pr_comm').textContent  = bizData.commission || '—';
   document.getElementById('pr_pay').textContent   = bizData.payment_method || '—';
   document.getElementById('pr_phone').textContent = bizData.phone || '—';
+  const rawLink = bizData.business_info || bizData.social_link || bizData.website || bizData.instagram || '';
+  const linkRow = document.getElementById('pr_link_row');
+  const linkEl = document.getElementById('pr_link');
+  if (rawLink && linkEl && linkRow) {
+    let href = String(rawLink).trim();
+    if (href && !/^https?:\/\//i.test(href)) href = 'https://' + href.replace(/^@/, 'instagram.com/');
+    linkEl.innerHTML = `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent1);font-weight:800;text-decoration:none;">${String(rawLink).trim()}</a>`;
+    linkRow.style.display = 'flex';
+  } else if (linkRow && linkEl) {
+    linkEl.textContent = '—';
+    linkRow.style.display = 'none';
+  }
 
   // Niche as tags
   const nicheEl = document.getElementById('pr_niche');
