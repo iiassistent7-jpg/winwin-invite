@@ -1390,15 +1390,23 @@ async function submitDealAction(actionType) {
 }
 
 // ══ LEADERBOARD ══════════════════════════════════════════════════════
-function openLeaderboard(btnEl) {
-  // Highlight nav item
+async function openLeaderboard(btnEl) {
   if (btnEl) {
     document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
     btnEl.classList.add("active");
   }
-  // Navigate to leaderboard.html with current token and lang
+  // Try to get a dedicated leaderboard token for business
+  // Backend endpoint: /api/leaderboard/token?biz_id=X or accepts biz token directly
+  var lbToken = token;
+  try {
+    var bizId = bizData && bizData.id;
+    if (bizId) {
+      var r = await fetch(API_URL + '/api/leaderboard/token?biz_id=' + bizId);
+      if (r.ok) { var d = await r.json(); lbToken = d.token || token; }
+    }
+  } catch(e) { /* fallback to biz token */ }
   var url = "https://invite.winwinnetwork.pro/leaderboard.html" +
-            "?token=" + encodeURIComponent(token || "") +
+            "?token=" + encodeURIComponent(lbToken || "") +
             "&lang=" + lang;
   window.location.href = url;
 }
