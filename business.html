@@ -9,12 +9,12 @@
   <style>
     /* ── CSS Variables ──────────────────────────────────────────────── */
     :root {
-      --bg:#EEF1F6; --surface:#FBFCFE; --surface2:#F4F6FA;
-      --text:#171A28; --text2:#747B91; --border:rgba(16,24,40,0.08);
-      --shadow:0 12px 28px rgba(19,25,44,0.06); --shadow2:0 18px 40px rgba(19,25,44,0.10);
+      --bg:#E7EBF2; --surface:#F4F6FA; --surface2:#EDEFF4;
+      --text:#171A28; --text2:#6F778F; --border:rgba(16,24,40,0.09);
+      --shadow:0 10px 24px rgba(19,25,44,0.07); --shadow2:0 16px 36px rgba(19,25,44,0.11);
       --accent1:#56CCF2; --accent2:#2F80ED; --green:#27AE60;
       --gold:#F2C94C; --red:#EB5757; --purple:#9B51E0;
-      --radius:20px; --nav-bg:rgba(251,252,254,0.86);
+      --radius:20px; --nav-bg:rgba(239,242,248,0.92);
     }
     body.brand-theme {
       --bg:#0F0F1A; --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
@@ -206,11 +206,12 @@
     /* ── Bottom Nav ─────────────────────────────────────────────────── */
     .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; gap:2px; padding:10px 12px 20px; border-top:1px solid var(--border); z-index:100; direction:ltr !important; }
     .nav-hidden { display:none !important; }
-    .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 2px; font-family:inherit; }
+    .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 2px 0; font-family:inherit; }
     .nav-item.active { color:var(--accent2); }
-    .nav-item svg { transition:.2s; width:23px; height:23px; flex-shrink:0; }
-    .nav-item.active svg { transform:translateY(-2px); }
-    .nav-item span { font-size:.58rem; font-weight:700; line-height:1.08; text-align:center; display:block; width:100%; }
+    .nav-item svg { transition:.2s; width:22px; height:22px; flex-shrink:0; display:block; }
+    .nav-item .nav-svg { width:22px; height:22px; display:block; }
+    .nav-item.active svg { transform:translateY(-1px); }
+    .nav-item span { font-size:.56rem; font-weight:700; line-height:1.04; text-align:center; display:flex; align-items:flex-start; justify-content:center; width:100%; min-height:1.18rem; letter-spacing:-0.01em; }
 
 
     /* ── Page Heroes / CTA ─────────────────────────────────────────── */
@@ -362,7 +363,6 @@
         <h3 id="t_rec_title">Рекомендую</h3>
         <p id="t_rec_sub">Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.</p>
         <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
-          <i data-feather="send" style="width:17px;height:17px;"></i>
           <span id="t_rec_btn_label">Порекомендовать бизнес</span>
         </button>
         <div class="soft-note" id="t_rec_note">Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.</div>
@@ -414,7 +414,7 @@
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
     <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
-    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12l3-3a2.8 2.8 0 0 1 4 0l3 3"/><path d="M5 14l2.5 2.5a2 2 0 0 0 2.8 0L12 15"/><path d="M19 14l-2.5 2.5a2 2 0 0 1-2.8 0L12 15"/><path d="M3 10l3 3"/><path d="M21 10l-3 3"/></svg><span id="nav_recommenders">Рекомендатели</span></button>
+    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommenders">Рекомендатели</span></button>
     <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><i data-feather="send"></i><span id="nav_recommend">Рекомендую</span></button>
     <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
@@ -801,7 +801,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
   if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
     const order = getTabOrder();
     const cur = order.indexOf(currentTab);
-    const goForward = isRTLLang() ? dx > 0 : dx < 0;
+    const goForward = dx < 0;
     const next = goForward ? cur + 1 : cur - 1;
     if (next >= 0 && next < order.length) {
       const nextTab = order[next];
