@@ -834,7 +834,10 @@ async function init() {
       bizData = JSON.parse(cached);
       showApp();
       renderAll();
-    } catch(e) {}
+    } catch(e) {
+      console.error('[Win-Win Biz] cache parse error:', e);
+      sessionStorage.removeItem(cacheKey); // clear bad cache
+    }
   }
 
   // Fetch fresh data
@@ -842,14 +845,20 @@ async function init() {
     const res = await fetch(`${API_URL}/api/business?token=${token}`);
     if (!res.ok) throw new Error('auth');
     const fresh = await res.json();
+    // Log full API response to console — open DevTools to see field names
+    console.log('[Win-Win Biz] API response:', JSON.stringify(fresh).slice(0,500));
     const freshStr = JSON.stringify(fresh);
     if (freshStr !== cached) {
       bizData = fresh;
       sessionStorage.setItem(cacheKey, freshStr);
       if (!cached) showApp();
       renderAll();
+    } else if (cached) {
+      // Data unchanged — make sure app is shown
+      if (document.getElementById('globalLoader').style.display !== 'none') showApp();
     }
   } catch(e) {
+    console.error('[Win-Win Biz] fetch error:', e);
     if (!cached) showError();
   }
 
@@ -894,14 +903,42 @@ function showError() {
 // ══ RENDER ALL ════════════════════════════════════════════════════════
 function renderAll() {
   if (!bizData) return;
-  document.getElementById('companyName').textContent = bizData.name || '—';
-  renderDeals();
-  renderStats();
-  renderAgents();
-  renderProfile();
-  renderEditForm();
-  updateReturnBtns();
-  feather.replace();
+
+  // Log what we got from API — helps diagnose field name mismatches
+  console.log('[Win-Win Biz] bizData keys:', Object.keys(bizData));
+  console.log('[Win-Win Biz] deals count:', (bizData.deals||bizData.leads||[]).length);
+  console.log('[Win-Win Biz] stats:', bizData.stats);
+
+  // Normalize: backend may return "leads" instead of "deals"
+  if (!bizData.deals && bizData.leads) bizData.deals = bizData.leads;
+  if (!bizData.deals) bizData.deals = [];
+
+  // Normalize stats field names
+  if (!bizData.stats && (bizData.total_revenue !== undefined || bizData.total_earned !== undefined)) {
+    bizData.stats = {
+      total_revenue:    bizData.total_revenue    || 0,
+      total_commission: bizData.total_commission || 0,
+      total_earned:     bizData.total_earned     || 0,
+      active:           bizData.active_deals     || 0,
+      closed:           bizData.closed_deals     || bizData.success_deals || 0,
+      rejected:         bizData.rejected_deals   || 0,
+      agents_count:     bizData.agents_count     || 0,
+      avg_deal:         bizData.avg_deal         || 0,
+      pending_debt:     bizData.pending_debt     || 0,
+      pending_conf:     bizData.pending_conf     || 0,
+    };
+  }
+  if (!bizData.stats) bizData.stats = {};
+
+  document.getElementById('companyName').textContent = bizData.name || bizData.business_name || '—';
+
+  try { renderDeals(); } catch(e) { console.error('[Biz] renderDeals:', e); }
+  try { renderStats(); } catch(e) { console.error('[Biz] renderStats:', e); }
+  try { renderAgents(); } catch(e) { console.error('[Biz] renderAgents:', e); }
+  try { renderProfile(); } catch(e) { console.error('[Biz] renderProfile:', e); }
+  try { renderEditForm(); } catch(e) { console.error('[Biz] renderEditForm:', e); }
+  try { updateReturnBtns(); } catch(e) { console.error('[Biz] updateReturnBtns:', e); }
+  try { feather.replace(); } catch(e) {}
 }
 
 function updateReturnBtns() {
@@ -942,6 +979,17 @@ function renderDeals() {
   const L = i18n[lang] || i18n.ru;
   const deals = bizData.deals || [];
   const curr  = bizData.currency || '₪';
+
+  // Normalize each deal's field names — API may use different keys
+  deals.forEach(d => {
+    if (!d.client_name  && d.name)          d.client_name  = d.name;
+    if (!d.client_phone && d.phone)         d.client_phone = d.phone;
+    if (!d.agent_name   && d.sender_name)   d.agent_name   = d.sender_name;
+    if (!d.agent_name   && d.agent)         d.agent_name   = d.agent;
+    if (!d.date         && d.created_at)    d.date         = d.created_at.slice(0,10);
+    if (!d.amount       && d.deal_amount)   d.amount       = d.deal_amount;
+    if (!d.commission   && d.agent_reward)  d.commission   = d.agent_reward;
+  });
 
   const filtered = deals.filter(d => {
     return dealFilter === 'active'
