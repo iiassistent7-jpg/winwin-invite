@@ -1,205 +1,1385 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Win-Win · Бизнес Кабинет</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* ── Light theme ────────────────────────────────────────────── */
-        :root {
-            --bg:#F7F7F9; --surface:#FFFFFF; --surface2:#F2F2F5;
-            --text:#1A1A2E; --text2:#8A8D9F; --border:rgba(0,0,0,0.06);
-            --shadow:0 4px 20px rgba(0,0,0,0.06); --shadow2:0 8px 32px rgba(0,0,0,0.12);
-            --accent1:#56CCF2; --accent2:#2F80ED; --green:#27AE60;
-            --gold:#F2C94C; --red:#EB5757; --purple:#9B51E0; --radius:20px; --nav-bg:rgba(255,255,255,0.82);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Win-Win · Бизнес Кабинет</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    /* ── CSS Variables ──────────────────────────────────────────────── */
+    :root {
+      --bg:#F7F7F9; --surface:#FFFFFF; --surface2:#F2F2F5;
+      --text:#1A1A2E; --text2:#8A8D9F; --border:rgba(0,0,0,0.06);
+      --shadow:0 4px 20px rgba(0,0,0,0.06); --shadow2:0 8px 32px rgba(0,0,0,0.12);
+      --accent1:#56CCF2; --accent2:#2F80ED; --green:#27AE60;
+      --gold:#F2C94C; --red:#EB5757; --purple:#9B51E0;
+      --radius:20px; --nav-bg:rgba(255,255,255,0.82);
+    }
+    body.brand-theme {
+      --bg:#0F0F1A; --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+      --text:#FFFFFF; --text2:#A0A0B0; --border:rgba(255,255,255,0.07);
+      --shadow:0 4px 24px rgba(0,0,0,0.35); --shadow2:0 8px 40px rgba(0,0,0,0.55);
+      --nav-bg:rgba(15,15,26,0.85);
+    }
+
+    /* ── Reset ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html { -webkit-text-size-adjust:100%; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; transition:background .3s,color .3s; overscroll-behavior:none; }
+
+    /* ── RTL (agent cabinet pattern — body.rtl class) ───────────────── */
+    body.rtl { text-align:right; }
+    body.rtl .header-right { flex-direction:row-reverse; }
+    body.rtl .deal-card-header { flex-direction:row-reverse; }
+    body.rtl .receipt-line { flex-direction:row-reverse; }
+    body.rtl .prof-val { text-align:left; }
+    body.rtl .lb-agent-earned { text-align:left; }
+    body.rtl .f-val { text-align:left; }
+    body.rtl .stat-box { text-align:center; }
+    body.rtl .fullscreen { transform:translateX(-100%); }
+    body.rtl .fullscreen.slide-out { transform:translateX(-100%); }
+    body.rtl .btn-back i { transform:rotate(180deg); }
+
+    /* ── Layout ─────────────────────────────────────────────────────── */
+    .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
+    body.rtl .view, body.rtl nav, body.rtl .header { direction:rtl; }
+
+    /* ── Loader ─────────────────────────────────────────────────────── */
+    .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
+    .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
+    .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; font-weight:600; }
+    .spinner { border:4px solid rgba(86,204,242,0.1); border-left-color:var(--accent1); border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loader-err { display:none; text-align:center; padding:0 24px; width:100%; max-width:430px; }
+    .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
+    .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:32px; line-height:1.5; font-weight:500; }
+
+    /* ── Fullscreen Sheets (agent cabinet pattern) ──────────────────── */
+    .fullscreen { position:fixed; inset:0; background:var(--bg); z-index:500; overflow-y:auto; padding:24px 16px 40px; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); display:none; }
+    .fullscreen.active { transform:translateX(0) !important; display:block; }
+    .fullscreen.slide-out { transform:translateX(100%); display:block; }
+    .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; transition:.2s; }
+    .btn-back:active { opacity:.6; transform:translateX(-4px); }
+
+    /* ── Header ─────────────────────────────────────────────────────── */
+    .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
+    .header-left .logo-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:2px; }
+    .header-left .company-name { font-size:.85rem; color:var(--text); font-weight:600; }
+    .header-right { display:flex; align-items:center; gap:8px; }
+    .lang-row { display:flex; gap:4px; }
+    .lang-btn { padding:4px 7px; border-radius:8px; font-size:.65rem; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:.2s; }
+    .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+    .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
+    .icon-btn:active { transform:scale(.92); }
+
+    /* ── Swipe Views ────────────────────────────────────────────────── */
+    /* Wrapper ВСЕГДА LTR. Offset = -index * 20%. Nav зеркалится CSS в RTL. */
+    .views-wrapper { display:flex; width:500%; transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); will-change:transform; direction:ltr !important; }
+    .view { width:20%; flex-shrink:0; padding:0 16px; }
+
+    /* ── Cards & Common ─────────────────────────────────────────────── */
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:.5px; }
+
+    /* ── Debt Banner ────────────────────────────────────────────────── */
+    .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+    .debt-banner-text { color:var(--text); font-weight:600; font-size:.9rem; }
+    .debt-banner-sum { color:var(--red); font-weight:800; font-size:1.2rem; }
+
+    /* ── Deal Filter Tabs ───────────────────────────────────────────── */
+    .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
+    .filter-tab { flex:1; background:transparent; border:none; color:var(--text2); padding:10px; border-radius:10px; cursor:pointer; font-weight:600; font-size:.85rem; transition:.2s; font-family:inherit; }
+    .filter-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+
+    /* ── Deal Card ──────────────────────────────────────────────────── */
+    .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; }
+    .deal-card.pending { border-color:rgba(155,81,224,.4); background:rgba(155,81,224,.03); }
+    .deal-card.unpaid  { border-color:rgba(235,87,87,.4); box-shadow:0 0 15px rgba(235,87,87,.08); }
+    .deal-card-header  { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+    .deal-client { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:2px; }
+    .deal-date   { font-size:.75rem; color:var(--text2); font-weight:500; }
+    .status-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+    .st-new      { background:rgba(242,201,76,.15); color:var(--gold); }
+    .st-progress { background:rgba(86,204,242,.15); color:var(--accent1); }
+    .st-closed   { background:rgba(39,174,96,.15);  color:var(--green); }
+    .st-rejected { background:rgba(235,87,87,.15);  color:var(--red); }
+    .st-pending  { background:rgba(155,81,224,.15); color:var(--purple); }
+    .deal-pending-note { font-size:.75rem; color:var(--purple); background:rgba(155,81,224,.1); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
+    .deal-info { font-size:.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
+    .deal-info span { font-weight:600; color:var(--text); }
+    .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+    .deal-receipt { background:var(--surface2); border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid var(--border); }
+    .receipt-line { display:flex; justify-content:space-between; font-size:.8rem; color:var(--text2); margin-bottom:6px; }
+    .receipt-line:last-child { margin-bottom:0; }
+    .receipt-line.total { border-top:1px dashed var(--border); padding-top:8px; margin-top:4px; color:var(--text); font-weight:800; font-size:.95rem; }
+    .receipt-line .net-profit { color:var(--green); }
+    .receipt-line .unpaid-warn { color:var(--red); font-weight:700; }
+    .receipt-line .paid-ok { color:var(--green); font-size:.75rem; font-weight:700; }
+
+    /* ── Buttons ────────────────────────────────────────────────────── */
+    .btn-primary { display:flex; justify-content:center; align-items:center; gap:8px; width:100%; border:none; padding:14px 22px; border-radius:14px; font-weight:700; font-size:.95rem; cursor:pointer; transition:.2s; font-family:inherit; text-decoration:none; }
+    .btn-primary:active { transform:scale(.97); }
+    .btn-action  { background:var(--surface2); color:var(--text); border:1px solid var(--border); font-weight:600; font-size:.9rem; padding:12px; border-radius:12px; }
+    .btn-action:active { background:var(--border); }
+    .btn-accent  { background:var(--accent2); color:#fff; }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+    .btn-green   { background:rgba(39,174,96,.15); color:var(--green); border:1px solid rgba(39,174,96,.3); }
+    .btn-red     { background:rgba(235,87,87,.15); color:var(--red);   border:1px solid rgba(235,87,87,.3); }
+    .btn-gold    { background:linear-gradient(135deg,#F2C94C,#F2994A); color:#1A1A2E; border:none; }
+    .btn-wa      { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
+    .btn-tg      { background:#2F80ED; color:#fff; box-shadow:0 4px 16px rgba(47,128,237,.25); }
+
+    /* ── Stats ──────────────────────────────────────────────────────── */
+    .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+    .stats-grid-3 { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
+    .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 8px; text-align:center; box-shadow:var(--shadow); }
+    .stat-val { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; color:var(--text); margin-bottom:4px; }
+    .stat-lbl { color:var(--text2); font-weight:600; font-size:.65rem; text-transform:uppercase; letter-spacing:.5px; }
+
+    /* ── Funnel ─────────────────────────────────────────────────────── */
+    .funnel-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; font-size:.95rem; }
+    .funnel-conv { color:var(--green); background:rgba(39,174,96,.15); padding:4px 10px; border-radius:8px; font-size:.85rem; }
+    .f-bar-wrap { display:flex; align-items:center; margin-bottom:14px; gap:12px; }
+    .f-lbl { width:85px; font-size:.75rem; font-weight:600; color:var(--text2); flex-shrink:0; text-transform:uppercase; }
+    .f-bar-bg { flex:1; background:var(--surface2); height:10px; border-radius:5px; overflow:hidden; border:1px solid var(--border); }
+    .f-bar { height:100%; border-radius:5px; width:0; transition:width 1s cubic-bezier(.25,1,.5,1); }
+    .f-active { background:var(--accent1); } .f-closed { background:var(--green); } .f-rejected { background:var(--red); }
+    .f-val { width:35px; text-align:right; font-weight:700; font-size:.9rem; }
+
+    /* ── Agent List ─────────────────────────────────────────────────── */
+    .agent-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); margin-bottom:12px; }
+    .agent-avatar { width:46px; height:46px; border-radius:12px; background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; text-transform:uppercase; }
+    .agent-info  { flex:1; min-width:0; }
+    .agent-name  { font-weight:800; font-size:1rem; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .agent-deals { font-size:.75rem; color:var(--text2); }
+    .agent-deals span { color:var(--text); font-weight:700; }
+    .agent-comm  { text-align:right; flex-shrink:0; }
+    .agent-comm-lbl { font-size:.65rem; color:var(--text2); text-transform:uppercase; margin-bottom:2px; }
+    .agent-comm-val { font-size:1rem; font-weight:800; color:var(--gold); }
+
+    /* ── Radar / Leaderboard ────────────────────────────────────────── */
+    .lb-rank-badge { width:40px; height:40px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:12px; background:var(--bg); font-size:1.1rem; font-weight:800; color:var(--text2); border:1px solid var(--border); }
+    .lb-rank-1 { background:rgba(255,215,0,.15); color:#FFD700; border-color:rgba(255,215,0,.3); font-size:1.3rem; }
+    .lb-rank-2 { background:rgba(192,192,192,.15); color:#C0C0C0; border-color:rgba(192,192,192,.3); font-size:1.3rem; }
+    .lb-rank-3 { background:rgba(205,127,50,.15); color:#CD7F32; border-color:rgba(205,127,50,.3); font-size:1.3rem; }
+    .lb-blurred .agent-name { filter:blur(5px); opacity:.7; user-select:none; }
+    .lb-blurred { cursor:pointer; }
+    .lb-blurred:active { transform:scale(.98); }
+    .pro-promo { background:linear-gradient(135deg,rgba(242,201,76,.1),rgba(242,153,74,.1)); border:1px solid rgba(242,201,76,.3); border-radius:var(--radius); padding:24px; text-align:center; margin-bottom:24px; box-shadow:0 8px 32px rgba(242,201,76,.1); }
+    .pro-promo h3 { font-family:'Sora',sans-serif; font-size:1.2rem; margin-bottom:8px; }
+    .pro-promo p  { font-size:.85rem; color:var(--text2); margin-bottom:16px; line-height:1.5; }
+
+    /* ── Profile ────────────────────────────────────────────────────── */
+    .sub-card { background:linear-gradient(135deg,rgba(86,204,242,.1),rgba(47,128,237,.1)); border:1px solid rgba(47,128,237,.3); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+    .sub-card-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+    .sub-badge { font-size:.7rem; font-weight:700; background:var(--accent2); color:#fff; padding:3px 8px; border-radius:8px; }
+    .sub-desc  { font-size:.85rem; color:var(--text2); line-height:1.5; margin-bottom:16px; }
+    .profile-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:0 20px; margin-bottom:16px; box-shadow:var(--shadow); }
+    .prof-row { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); }
+    .prof-row:last-child { border-bottom:none; }
+    .prof-lbl { color:var(--text2); font-size:.85rem; font-weight:600; }
+    .prof-val { font-weight:700; font-size:.9rem; text-align:right; max-width:60%; word-break:break-word; }
+
+    /* ── Edit Form ──────────────────────────────────────────────────── */
+    .sheet-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
+    .sheet-title { font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; margin-bottom:20px; }
+    .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
+    .custom-input { width:100%; padding:14px 16px; border:1px solid var(--border); border-radius:12px; background:var(--surface2); color:var(--text); font-size:.95rem; margin-bottom:16px; outline:none; font-family:inherit; transition:.2s; }
+    .custom-input:focus { border-color:var(--accent2); background:var(--surface); }
+    select.custom-input { appearance:none; }
+    .pay-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .pay-btn { flex:1; min-width:80px; background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:12px 8px; border-radius:12px; cursor:pointer; font-weight:700; font-size:.85rem; transition:.2s; text-align:center; font-family:inherit; }
+    .pay-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+    .niche-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+    .niche-item { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer; transition:.2s; }
+    .niche-item.checked { background:rgba(86,204,242,.1); border-color:var(--accent1); }
+    .niche-item input { width:18px; height:18px; accent-color:var(--accent1); flex-shrink:0; cursor:pointer; }
+    .niche-item span { font-size:.85rem; font-weight:600; color:var(--text); }
+
+    /* ── Manage Deal Steps ──────────────────────────────────────────── */
+    .step-panel { display:none; }
+    .step-panel.active { display:block; animation:fadeIn .3s; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    /* ── Bottom Nav ─────────────────────────────────────────────────── */
+    .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; padding:10px 16px 22px; border-top:1px solid var(--border); z-index:100; }
+    body.rtl .bottom-nav { flex-direction:row-reverse; }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 4px; font-family:inherit; }
+    .nav-item.active { color:var(--accent2); }
+    .nav-item svg { transition:.2s; width:22px; height:22px; }
+    .nav-item.active svg { transform:translateY(-2px); }
+    .nav-item span { font-size:.58rem; font-weight:700; }
+
+    /* ── Misc ───────────────────────────────────────────────────────── */
+    .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
+    .sticky-footer { position:sticky; bottom:0; padding:10px 0 24px; background:linear-gradient(to top,var(--bg) 75%,transparent); display:flex; flex-direction:column; gap:10px; z-index:10; }
+    .niche-tags { display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+    .niche-tag  { display:inline-block; background:rgba(86,204,242,.1); border:1px solid rgba(86,204,242,.3); color:var(--accent1); border-radius:20px; padding:4px 12px; font-size:.85rem; font-weight:600; }
+  </style>
+</head>
+<body class="brand-theme">
+
+<!-- ══ LOADER ══════════════════════════════════════════════════════════ -->
+<div class="loader" id="globalLoader">
+  <div class="loader-brand">Win-Win</div>
+  <div class="loader-sub" id="t_loader_sub">Загрузка данных...</div>
+  <div class="spinner" id="loaderSpinner"></div>
+  <div class="loader-err" id="loaderErr">
+    <div class="loader-err-title" id="t_err_title">Сессия истекла</div>
+    <div class="loader-err-sub"   id="t_err_sub">Вернитесь в мессенджер и получите новую ссылку.</div>
+    <!-- Prefill message is silently baked into the button href — NOT shown to user -->
+    <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:280px;margin:0 auto 12px;display:none;">
+      <i data-feather="message-circle" style="width:18px;height:18px;"></i>
+      <span id="t_err_btn_wa">WhatsApp</span>
+    </a>
+    <a href="https://t.me/winwin_lead_bot?start=link" class="btn-primary btn-tg" id="errBtnTg" style="max-width:280px;margin:0 auto;display:none;">
+      <i data-feather="send" style="width:18px;height:18px;"></i>
+      <span id="t_err_btn_tg">Telegram</span>
+    </a>
+  </div>
+</div>
+
+<!-- ══ MAIN SHELL ═══════════════════════════════════════════════════════ -->
+<div class="app" style="display:none;" id="mainShell">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-text">Win-Win</div>
+      <div class="company-name" id="companyName">...</div>
+    </div>
+    <div class="header-right">
+      <div class="lang-row">
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('he')">HE</button>
+        <button class="lang-btn" onclick="setLang('ar')">AR</button>
+        <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+      </div>
+      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="sun"></i></button>
+    </div>
+  </header>
+
+  <!-- Views wrapper -->
+  <div class="views-wrapper" id="viewsWrapper">
+
+    <!-- ── VIEW: Deals ──────────────────────────────────────────── -->
+    <div id="view-deals" class="view active">
+      <div class="debt-banner" id="debtBanner" style="display:none;">
+        <div class="debt-banner-text" id="t_debt_label">🔴 Долг агентам:</div>
+        <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
+      </div>
+      <div class="deals-filter">
+        <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">В работе</button>
+        <button class="filter-tab"        onclick="setFilter('history')" id="t_filt_history">История</button>
+      </div>
+      <div id="dealsContainer"></div>
+    </div>
+
+    <!-- ── VIEW: Stats ──────────────────────────────────────────── -->
+    <div id="view-stats" class="view">
+      <div class="sec-title" id="t_st_fin_title">Финансы</div>
+      <div class="stats-grid-3">
+        <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red)">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_net"  style="color:var(--green)">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_pending_cnt" style="color:var(--purple)">0</div><div class="stat-lbl" id="t_st_pending_cnt">Ждут агента</div></div>
+      </div>
+      <div class="sec-title" id="t_st_funnel_title">Воронка конверсии</div>
+      <div class="funnel-box">
+        <div class="funnel-header">
+          <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:var(--text)">0</span></div>
+          <div class="funnel-conv" id="st_conversion">0%</div>
+        </div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_active">В процессе</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
+      </div>
+      <div class="stats-grid-2">
+        <div class="stat-box"><div class="stat-val" id="st_agents"   style="color:var(--accent1)">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--gold)">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: Agents ─────────────────────────────────────────── -->
+    <div id="view-agents" class="view">
+      <div class="sec-title" style="margin-top:4px;" id="t_ag_title">Мои Агенты</div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px;line-height:1.5;" id="t_ag_sub">Люди, которые уже рекомендуют ваш бизнес.</p>
+      <div id="agentsList"></div>
+    </div>
+
+    <!-- ── VIEW: Radar ──────────────────────────────────────────── -->
+    <div id="view-radar" class="view">
+      <div class="sec-title" style="margin-top:4px;" id="t_rd_title">Радар инфлюенсеров</div>
+      <div class="pro-promo" id="radarPromo" style="display:none;">
+        <h3 id="t_rd_promo_title">Ищите новых партнеров?</h3>
+        <p  id="t_rd_promo_desc">Перейдите на тариф PRO, чтобы открыть контакты лучших инфлюенсеров.</p>
+        <button class="btn-primary btn-gold" onclick="switchTab('profile', null)" id="t_rd_promo_btn">Подробнее о PRO</button>
+      </div>
+      <div id="radarList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
+    </div>
+
+    <!-- ── VIEW: Profile ────────────────────────────────────────── -->
+    <div id="view-profile" class="view">
+      <div class="sub-card" id="subCard">
+        <div class="sub-card-title">
+          <span id="t_sub_title">Текущий тариф:</span>
+          <span class="sub-badge" id="subBadge">Стандарт</span>
+        </div>
+        <div class="sub-desc" id="subDesc">Базовый функционал. Лимиты сделок учитываются платформой.</div>
+        <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="alert('Функция оплаты в разработке')">
+          <i data-feather="star" style="width:18px;height:18px;"></i>
+          <span id="t_btn_upgrade">Перейти на PRO (149 ₪)</span>
+        </button>
+      </div>
+      <div class="sec-title" id="t_tab_profile">Настройки бизнеса</div>
+      <div class="profile-card">
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Вознаграждение</div><div class="prof-val" id="pr_comm">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone">—</div></div>
+      </div>
+      <button class="btn-primary btn-outline" onclick="openProfileEdit()" style="margin-bottom:12px;">
+        <i data-feather="edit-2" style="width:16px;height:16px;"></i>
+        <span id="t_btn_edit">Изменить данные</span>
+      </button>
+      <div style="margin-top:8px;"></div>
+      <a href="#" id="btnWaReturn" class="btn-primary btn-wa"  style="display:none;margin-bottom:12px;"><i data-feather="message-circle" style="width:18px;height:18px;"></i> <span id="t_wa_btn">WhatsApp</span></a>
+      <a href="https://t.me/winwin_lead_bot" id="btnTgReturn" class="btn-primary btn-tg" target="_blank" style="display:none;"><i data-feather="send" style="width:18px;height:18px;"></i> <span id="t_tg_btn">Telegram</span></a>
+    </div>
+
+  </div><!-- /views-wrapper -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
+    <button class="nav-item"        onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
+    <button class="nav-item"        onclick="switchTab('agents',this)"><i data-feather="users"></i><span id="nav_agents">Агенты</span></button>
+    <button class="nav-item"        onclick="switchTab('radar',this);loadRadar();"><i data-feather="target"></i><span id="nav_radar">Радар</span></button>
+    <button class="nav-item"        onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
+  </nav>
+
+  <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
+  <div class="fullscreen" id="manageDealSheet">
+    <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+      <button class="btn-back" onclick="closeManageDeal()">
+        <i data-feather="arrow-left"></i><span id="t_m_back_top">Назад</span>
+      </button>
+      <div class="sheet-card">
+        <div class="sheet-title" id="t_m_title">Управление сделкой</div>
+        <div style="font-size:.9rem;color:var(--text2);margin-bottom:24px;line-height:1.6;">
+          <strong id="t_m_lbl_client" style="color:var(--text)">Клиент:</strong> <span id="m_val_client"></span><br>
+          <strong id="t_m_lbl_agent"  style="color:var(--text)">Агент:</strong>  <span id="m_val_agent"></span><br>
+          <strong id="t_m_lbl_date"   style="color:var(--text)">Дата:</strong>   <span id="m_val_date"></span>
+        </div>
+
+        <!-- Step: main -->
+        <div class="step-panel active" id="m_step_main">
+          <button class="btn-primary btn-green" style="margin-bottom:12px;" onclick="setStep('close')">
+            <i data-feather="check-circle" style="width:18px;height:18px;"></i>
+            <span id="t_m_btn_close">Закрыть сделку</span>
+          </button>
+          <button class="btn-primary btn-red" onclick="setStep('reject')">
+            <i data-feather="x-circle" style="width:18px;height:18px;"></i>
+            <span id="t_m_btn_reject">Отклонить сделку</span>
+          </button>
+        </div>
+
+        <!-- Step: close (enter amount) -->
+        <div class="step-panel" id="m_step_close">
+          <label class="input-label" id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
+          <input type="number" class="custom-input" id="m_amount" placeholder="Например: 1500">
+          <button class="btn-primary btn-accent" style="margin-bottom:12px;" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
+          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back1">Отмена</button>
+        </div>
+
+        <!-- Step: reject -->
+        <div class="step-panel" id="m_step_reject">
+          <p style="text-align:center;margin-bottom:16px;font-weight:600;" id="t_m_reject_sure">Уверены, что хотите отклонить?</p>
+          <button class="btn-primary" style="background:var(--red);color:#fff;margin-bottom:12px;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back2">Отмена</button>
+        </div>
+
+        <!-- Step: result -->
+        <div class="step-panel" id="m_step_result" style="text-align:center;padding:24px 0;">
+          <div class="spinner" style="margin:0 auto 16px;" id="m_spinner"></div>
+          <div id="m_result_msg" style="font-weight:600;white-space:pre-line;color:var(--text);">Обработка...</div>
+        </div>
+      </div>
+      <button class="btn-primary btn-accent" onclick="closeManageDeal()" id="t_m_cancel_bottom">Назад</button>
+    </div>
+  </div>
+
+  <!-- ══ FULLSCREEN: Edit Profile ═════════════════════════════════ -->
+  <div class="fullscreen" id="editProfileSheet" style="padding:0;">
+    <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
+      <div style="flex:1;padding:24px 16px;">
+        <button class="btn-back" onclick="closeProfileEdit()">
+          <i data-feather="arrow-left"></i><span id="t_edit_back">Назад</span>
+        </button>
+        <div class="sheet-card" style="margin-top:0;">
+          <div class="sheet-title" id="t_edit_title">Редактирование</div>
+
+          <label class="input-label" id="t_f_name">Название бизнеса</label>
+          <input type="text" class="custom-input" id="f_name">
+
+          <label class="input-label" id="t_f_niche">Категория бизнеса</label>
+          <select class="custom-input" id="f_niche" onchange="updateSubniches()">
+            <option value="" disabled>Выберите...</option>
+          </select>
+
+          <div id="f_subniche_group" style="display:none;margin-bottom:16px;">
+            <label class="input-label" id="t_f_subniche">Специализация</label>
+            <div class="niche-tags" id="f_subniche_tags"></div>
+            <div class="niche-list" id="f_subniche_list"></div>
+            <button type="button" onclick="confirmSubniches()" class="btn-primary btn-outline" id="btnSubcatDone" style="margin-bottom:8px;">✅ Подтвердить выбор</button>
+            <button type="button" onclick="editSubniches()"   class="btn-primary btn-outline" id="btnSubcatEdit" style="display:none;">✏️ Изменить</button>
+          </div>
+
+          <label class="input-label" id="t_f_comm">Вознаграждение (напр. 10% или 500)</label>
+          <input type="text" class="custom-input" id="f_comm">
+
+          <label class="input-label" id="t_f_pay">Способ выплаты</label>
+          <div class="pay-btns">
+            <button type="button" class="pay-btn" onclick="selectPay('Bit')">Bit</button>
+            <button type="button" class="pay-btn" onclick="selectPay('Paybox')">Paybox</button>
+            <button type="button" class="pay-btn" onclick="selectPay('PayPal')">PayPal</button>
+            <button type="button" class="pay-btn" id="f_pay_cash_btn" onclick="selectPay('Наличные')">Наличные</button>
+            <button type="button" class="pay-btn" id="f_pay_bank_btn" onclick="selectPay('Перевод')">Перевод</button>
+          </div>
+          <input type="hidden" id="f_pay">
+
+          <label class="input-label" id="t_f_link">Ссылка (Сайт / Соцсети)</label>
+          <input type="text" class="custom-input" id="f_link" placeholder="https://...">
+        </div>
+      </div>
+      <div class="sticky-footer" style="padding:10px 16px 24px;">
+        <button class="btn-primary" id="btnSaveProfile" onclick="submitEdit()" style="background:var(--green);color:#fff;" id="t_btn_save">Сохранить</button>
+        <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_edit">Назад</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ══ CATEGORIES ═══════════════════════════════════════════════════════
+const CATEGORIES = {
+  "Красота и эстетика":["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+  "Еда и рестораны":["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+  "Магазины и товары":["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+  "Здоровье и медицина":["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+  "Юриспруденция":["Коммерческое право","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+  "Недвижимость и финансы":["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+  "Дом и ремонт":["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+  "Автомобили":["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+  "Праздники и мероприятия":["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+  "Обучение и спорт":["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+  "Домашние питомцы":["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+  "Туризм и отдых":["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+  "Бизнес и B2B услуги":["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+};
+const CAT_TR = {
+  "Красота и эстетика":{he:"יופי ואסתטיקה",en:"Beauty & Aesthetics",ar:"الجمال والجماليات"},
+  "Еда и рестораны":{he:"אוכל ומסעדות",en:"Food & Restaurants",ar:"الطعام والمطاعم"},
+  "Магазины и товары":{he:"חנויות ומוצרים",en:"Shops & Goods",ar:"المتاجر والسلع"},
+  "Здоровье и медицина":{he:"בריאות ורפואה",en:"Health & Medicine",ar:"الصحة والطب"},
+  "Юриспруденция":{he:"משפטים",en:"Legal Services",ar:"القانونية"},
+  "Недвижимость и финансы":{he:"נדל״ן ופיננסים",en:"Real Estate & Finance",ar:"العقارات والتمويل"},
+  "Дом и ремонт":{he:"בית ושיפוצים",en:"Home & Repair",ar:"المنزل والإصلاح"},
+  "Автомобили":{he:"רכבים",en:"Automotive",ar:"السيارات"},
+  "Праздники и мероприятия":{he:"אירועים",en:"Events & Parties",ar:"الفعاليات"},
+  "Обучение и спорт":{he:"חינוך וספורט",en:"Education & Sports",ar:"التعليم والرياضة"},
+  "Домашние питомцы":{he:"חיות מחמד",en:"Pets",ar:"الحيوانات الأليفة"},
+  "Туризм и отдых":{he:"תיירות",en:"Tourism & Leisure",ar:"السياحة"},
+  "Бизнес и B2B услуги":{he:"עסקים B2B",en:"Business & B2B",ar:"الأعمال B2B"}
+};
+function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name][l]||name); }
+
+// ══ I18N ══════════════════════════════════════════════════════════════
+const i18n = {
+  ru:{
+    loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
+    err_prefill:"Код: WINWIN\nНажмите Отправить для получения новой ссылки {pointer}",
+    debt_label:"🔴 Долг агентам:", filt_active:"В работе", filt_history:"История",
+    st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
+    pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
+    st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента",
+    st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
+    st_agents:"Агенты", st_avg_deal:"Средний чек",
+    ag_title:"Мои Агенты", ag_sub:"Люди, которые уже рекомендуют ваш бизнес. Чем больше бонусов вы им платите, тем выше их мотивация.",
+    ag_deals:"Привел клиентов:", ag_comm:"Выплачено",
+    rd_title:"Радар инфлюенсеров", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
+    rd_promo_btn:"Подробнее о PRO", radar_loading:"Загрузка...",
+    tab_profile:"Настройки бизнеса", sub_title:"Текущий тариф:", btn_upgrade:"Перейти на PRO (149 ₪)",
+    pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон",
+    btn_edit:"Изменить данные", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:",
+    m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_cancel:"Назад",
+    m_lbl_amount:"Сумма сделки (только цифры)", m_confirm_close:"Подтвердить закрытие",
+    m_reject_sure:"Уверены, что хотите отклонить?", m_confirm_reject:"Да, отклонить",
+    edit_title:"Редактирование", f_name:"Название бизнеса", f_niche:"Категория бизнеса",
+    f_subniche:"Специализация", f_comm:"Вознаграждение (напр. 10% или 500)",
+    f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)",
+    f_pay_cash:"Наличные", f_pay_bank:"Перевод",
+    btn_save:"Сохранить", btn_cancel_edit:"Назад",
+    action_processing:"Обработка...", action_success:"Успешно!", action_close:"Закрыть",
+    save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
+    empty_deals:"Здесь пока пусто.",
+    nav_deals:"Сделки", nav_stats:"Отчеты", nav_agents:"Агенты", nav_radar:"Радар", nav_profile:"Профиль",
+    sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
+    sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
+    lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
+    lb_deals:"Сделок:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+  },
+  he:{
+    loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
+    err_prefill:"קוד: WINWIN\nלחץ שלח לקבלת קישור חדש {pointer}",
+    debt_label:"🔴 חוב לסוכנים:", filt_active:"פעיל", filt_history:"היסטוריה",
+    st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
+    pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
+    st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן",
+    st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
+    st_agents:"סוכנים", st_avg_deal:"עסקה ממוצעת",
+    ag_title:"הסוכנים שלי", ag_sub:"אנשים שממליצים על העסק שלך. ככל שתשלם יותר, המוטיבציה תעלה.",
+    ag_deals:"הביא לקוחות:", ag_comm:"שולם",
+    rd_title:"רדאר המשפיענים", rd_promo_title:"מחפשים שותפים חדשים?", rd_promo_desc:"עברו ל-PRO כדי לפתוח אנשי קשר של משפיענים.",
+    rd_promo_btn:"גלה על PRO", radar_loading:"טוען...",
+    tab_profile:"הגדרות עסק", sub_title:"מסלול נוכחי:", btn_upgrade:"שדרג ל-PRO (149 ₪)",
+    pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_phone:"טלפון",
+    btn_edit:"עריכת נתונים", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:",
+    m_close:"סגור עסקה", m_reject:"דחה עסקה", m_cancel:"חזור",
+    m_lbl_amount:"סכום העסקה", m_confirm_close:"אשר סגירה",
+    m_reject_sure:"האם אתה בטוח?", m_confirm_reject:"כן, לדחות",
+    edit_title:"עריכה", f_name:"שם העסק", f_niche:"תחום",
+    f_subniche:"התמחות", f_comm:"תגמול",
+    f_pay:"אופן תשלום", f_link:"קישור",
+    f_pay_cash:"מזומן", f_pay_bank:"העברה",
+    btn_save:"שמור", btn_cancel_edit:"חזור",
+    action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור",
+    save_ok:"נשמר!", save_err:"שגיאה",
+    empty_deals:"ריק כאן.",
+    nav_deals:"עסקאות", nav_stats:"דוחות", nav_agents:"סוכנים", nav_radar:"רדאר", nav_profile:"פרופיל",
+    sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
+    sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
+    lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
+    lb_deals:"עסקאות:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+  },
+  en:{
+    loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
+    err_prefill:"Code: WINWIN\nPress Send to get a new login link {pointer}",
+    debt_label:"🔴 Agent debt:", filt_active:"Active", filt_history:"History",
+    st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
+    pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
+    st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
+    st_funnel_title:"Conversion Funnel", st_total_leads:"Total leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected",
+    st_agents:"Agents", st_avg_deal:"Avg Deal",
+    ag_title:"My Agents", ag_sub:"People who already recommend your business. The more you pay them, the higher their motivation.",
+    ag_deals:"Brought clients:", ag_comm:"Paid",
+    rd_title:"Influencer Radar", rd_promo_title:"Looking for new partners?", rd_promo_desc:"Upgrade to PRO to unlock top influencer contacts.",
+    rd_promo_btn:"Learn about PRO", radar_loading:"Loading...",
+    tab_profile:"Business Settings", sub_title:"Current plan:", btn_upgrade:"Upgrade to PRO (149 ₪)",
+    pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_phone:"Phone",
+    btn_edit:"Edit Data", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:",
+    m_close:"Close Deal", m_reject:"Reject Deal", m_cancel:"Back",
+    m_lbl_amount:"Deal amount (digits only)", m_confirm_close:"Confirm closure",
+    m_reject_sure:"Are you sure you want to reject?", m_confirm_reject:"Yes, reject",
+    edit_title:"Edit Profile", f_name:"Business Name", f_niche:"Category",
+    f_subniche:"Specialization", f_comm:"Reward",
+    f_pay:"Payment Method", f_link:"Link (Website / Social)",
+    f_pay_cash:"Cash", f_pay_bank:"Transfer",
+    btn_save:"Save", btn_cancel_edit:"Back",
+    action_processing:"Processing...", action_success:"Done!", action_close:"Close",
+    save_ok:"Changes saved!", save_err:"Save error",
+    empty_deals:"Nothing here yet.",
+    nav_deals:"Deals", nav_stats:"Reports", nav_agents:"Agents", nav_radar:"Radar", nav_profile:"Profile",
+    sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
+    sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
+    lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
+    lb_deals:"Deals:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+  },
+  ar:{
+    loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
+    err_prefill:"الرمز: WINWIN\nاضغط إرسال للحصول على رابط جديد {pointer}",
+    debt_label:"🔴 دين للوكلاء:", filt_active:"نشط", filt_history:"السجل",
+    st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
+    pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
+    st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
+    st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة",
+    st_agents:"وكلاء", st_avg_deal:"متوسط الصفقة",
+    ag_title:"وكلائي", ag_sub:"الأشخاص الذين يوصون بعملك. كلما دفعت لهم أكثر، زادت حوافزهم.",
+    ag_deals:"العملاء:", ag_comm:"مدفوع",
+    rd_title:"رادار المؤثرين", rd_promo_title:"تبحث عن شركاء جدد?", rd_promo_desc:"قم بالترقية إلى PRO لفتح جهات اتصال أفضل المؤثرين.",
+    rd_promo_btn:"ترقية PRO", radar_loading:"جاري...",
+    tab_profile:"إعدادات العمل", sub_title:"الخطة الحالية:", btn_upgrade:"ترقية إلى PRO (149 ₪)",
+    pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_phone:"الهاتف",
+    btn_edit:"تعديل البيانات", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:",
+    m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_cancel:"رجوع",
+    m_lbl_amount:"مبلغ الصفقة (أرقام فقط)", m_confirm_close:"تأكيد الإغلاق",
+    m_reject_sure:"هل أنت متأكد من الرفض?", m_confirm_reject:"نعم، أرفض",
+    edit_title:"تعديل", f_name:"اسم العمل", f_niche:"الفئة",
+    f_subniche:"تخصص", f_comm:"مكافأة",
+    f_pay:"طريقة الدفع", f_link:"رابط (موقع / سوشيال)",
+    f_pay_cash:"نقداً", f_pay_bank:"تحويل",
+    btn_save:"حفظ", btn_cancel_edit:"رجوع",
+    action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق",
+    save_ok:"تم الحفظ!", save_err:"خطأ",
+    empty_deals:"فارغ هنا.",
+    nav_deals:"الصفقات", nav_stats:"تقارير", nav_agents:"وكلاء", nav_radar:"رادار", nav_profile:"الملف",
+    sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
+    sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
+    lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
+    lb_deals:"صفقات:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+  }
+};
+
+// ══ STATE ═════════════════════════════════════════════════════════════
+const API_URL  = "https://amlatsa-bot-production.up.railway.app";
+const token    = new URLSearchParams(window.location.search).get('token');
+let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
+let bizData    = null;
+let radarData  = null;
+let dealFilter = 'active';
+let activeDealId = null;
+
+const tabs = ['deals','stats','agents','radar','profile'];
+
+// ══ THEME ═════════════════════════════════════════════════════════════
+function applyTheme() {
+  const saved = localStorage.getItem('winwin_biz_theme');
+  const isDark = saved !== 'light';
+  document.body.classList.toggle('brand-theme', isDark);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.innerHTML = isDark ? '<i data-feather="sun"></i>' : '<i data-feather="moon"></i>';
+  if (typeof feather !== 'undefined') feather.replace();
+}
+function toggleTheme() {
+  const isDark = document.body.classList.contains('brand-theme');
+  document.body.classList.toggle('brand-theme', !isDark);
+  localStorage.setItem('winwin_biz_theme', isDark ? 'light' : 'dark');
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.innerHTML = isDark ? '<i data-feather="moon"></i>' : '<i data-feather="sun"></i>';
+  feather.replace();
+}
+
+// ══ SWIPE (agent cabinet pattern — wrapper always LTR) ═════════════════
+// dx < 0 = left = next tab; dx > 0 = right = prev tab. Always.
+let touchX = 0, touchY = 0, touchT = 0;
+document.querySelector('.app').addEventListener('touchstart', e => {
+  if (document.querySelector('.fullscreen.active')) return;
+  touchX = e.touches[0].clientX;
+  touchY = e.touches[0].clientY;
+  touchT = Date.now();
+}, {passive:true});
+document.querySelector('.app').addEventListener('touchend', e => {
+  if (document.querySelector('.fullscreen.active')) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  const dy = e.changedTouches[0].clientY - touchY;
+  const dt = Date.now() - touchT;
+  if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    const cur  = tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+    const next = dx < 0 ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.length) {
+      const navBtns = document.querySelectorAll('.nav-item');
+      switchTab(tabs[next], navBtns[next]);
+      if (tabs[next] === 'radar' && !radarData) loadRadar();
+    }
+  }
+});
+
+// ══ NAVIGATION ════════════════════════════════════════════════════════
+function switchTab(tabId, btnEl) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const target = Array.from(document.querySelectorAll('.nav-item')).find(b =>
+    b.getAttribute('onclick')?.includes(`'${tabId}'`)
+  ) || btnEl;
+  if (target) target.classList.add('active');
+  const idx = tabs.indexOf(tabId);
+  if (idx !== -1) {
+    document.getElementById('viewsWrapper').style.transform = `translateX(${-idx * 20}%)`;
+    setTimeout(() => {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-'+tabId).classList.add('active');
+    }, 50);
+  }
+  window.scrollTo(0, 0);
+}
+
+// ══ FULLSCREEN UTIL (agent cabinet pattern) ════════════════════════════
+function closeFullscreen(id) {
+  const el = document.getElementById(id);
+  el.classList.add('slide-out');
+  setTimeout(() => { el.classList.remove('active','slide-out'); document.body.style.overflow = ''; }, 300);
+}
+function openFullscreen(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0, 0);
+}
+
+// ══ ANIMATE NUMBER ════════════════════════════════════════════════════
+function animNum(id, to, suffix='', dur=1000) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = performance.now();
+  const step = ts => {
+    const p = Math.min((ts-start)/dur, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.floor(ease * to) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ══ LANG ══════════════════════════════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  const isRTL = l === 'he' || l === 'ar';
+  document.documentElement.lang = l;
+  document.body.classList.toggle('rtl', isRTL);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`);
+  if (btn) btn.classList.add('active');
+
+  // Sync swipe offset after lang/RTL switch
+  const idx = tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+  if (idx !== -1) document.getElementById('viewsWrapper').style.transform = `translateX(${-idx * 20}%)`;
+
+  applyI18n();
+  populateCategories();
+  if (bizData) renderAll();
+}
+
+function applyI18n() {
+  const L = i18n[lang] || i18n.ru;
+  const map = {
+    't_loader_sub':'loader_sub', 't_err_title':'err_title', 't_err_sub':'err_sub',
+    't_debt_label':'debt_label', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
+    't_st_fin_title':'st_fin_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
+    't_st_net':'st_net', 't_st_pending_cnt':'st_pending_cnt',
+    't_st_funnel_title':'st_funnel_title', 't_st_total_leads':'st_total_leads',
+    't_f_active':'f_active', 't_f_closed':'f_closed', 't_f_rejected':'f_rejected',
+    't_st_agents':'st_agents', 't_st_avg_deal':'st_avg_deal',
+    't_ag_title':'ag_title', 't_ag_sub':'ag_sub',
+    't_rd_title':'rd_title', 't_rd_promo_title':'rd_promo_title',
+    't_rd_promo_desc':'rd_promo_desc', 't_rd_promo_btn':'rd_promo_btn',
+    't_radar_loading':'radar_loading',
+    't_tab_profile':'tab_profile', 't_sub_title':'sub_title', 't_btn_upgrade':'btn_upgrade',
+    't_pr_name':'pr_name', 't_pr_niche':'pr_niche', 't_pr_comm':'pr_comm',
+    't_pr_pay':'pr_pay', 't_pr_phone':'pr_phone', 't_btn_edit':'btn_edit',
+    't_wa_btn':'wa_btn', 't_tg_btn':'tg_btn',
+    't_m_title':'m_title', 't_m_lbl_client':'m_client', 't_m_lbl_agent':'m_agent',
+    't_m_lbl_date':'m_date', 't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject',
+    't_m_cancel':'m_cancel', 't_m_back_top':'m_cancel', 't_m_cancel_bottom':'m_cancel',
+    't_m_lbl_amount':'m_lbl_amount', 't_m_btn_confirm_close':'m_confirm_close',
+    't_m_reject_sure':'m_reject_sure', 't_m_btn_confirm_reject':'m_confirm_reject',
+    't_m_back1':'m_cancel', 't_m_back2':'m_cancel',
+    't_edit_title':'edit_title', 't_edit_back':'m_cancel',
+    't_f_name':'f_name', 't_f_niche':'f_niche', 't_f_subniche':'f_subniche',
+    't_f_comm':'f_comm', 't_f_pay':'f_pay', 't_f_link':'f_link',
+    't_btn_save':'btn_save', 't_btn_cancel_edit':'btn_cancel_edit',
+    'nav_deals':'nav_deals', 'nav_stats':'nav_stats', 'nav_agents':'nav_agents',
+    'nav_radar':'nav_radar', 'nav_profile':'nav_profile',
+    't_err_btn_wa':'err_btn_wa', 't_err_btn_tg':'err_btn_tg'
+  };
+  for (const [id, key] of Object.entries(map)) {
+    const el = document.getElementById(id);
+    if (el && L[key]) el.textContent = L[key];
+  }
+  const payCash = document.getElementById('f_pay_cash_btn');
+  const payBank = document.getElementById('f_pay_bank_btn');
+  if (payCash) payCash.textContent = L.f_pay_cash;
+  if (payBank) payBank.textContent = L.f_pay_bank;
+
+  // Build prefill message silently — baked into WA button href, never shown to user
+  const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
+  const prefill = (L.err_prefill || i18n.ru.err_prefill).replace('{pointer}', pointer);
+  const phone   = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
+  const btnWa   = document.getElementById('errBtnWa');
+  if (btnWa) btnWa.href = `https://wa.me/${phone}?text=${encodeURIComponent(prefill)}`;
+}
+
+// ══ CATEGORIES POPULATE ═══════════════════════════════════════════════
+function populateCategories() {
+  const sel = document.getElementById('f_niche');
+  if (!sel) return;
+  sel.innerHTML = `<option value="" disabled selected>Выберите...</option>`;
+  for (const cat in CATEGORIES) {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = getCatName(cat, lang);
+    sel.appendChild(opt);
+  }
+}
+
+// ══ INIT ══════════════════════════════════════════════════════════════
+async function init() {
+  applyTheme();
+  populateCategories();
+  applyI18n();
+  if (i18n[lang]) setLang(lang);
+
+  if (!token) { showError(); return; }
+
+  // Try cache first for instant display
+  const cacheKey = `biz_cache_${token}`;
+  const cached = sessionStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      bizData = JSON.parse(cached);
+      showApp();
+      renderAll();
+    } catch(e) {}
+  }
+
+  // Fetch fresh data
+  try {
+    const res = await fetch(`${API_URL}/api/business?token=${token}`);
+    if (!res.ok) throw new Error('auth');
+    const fresh = await res.json();
+    const freshStr = JSON.stringify(fresh);
+    if (freshStr !== cached) {
+      bizData = fresh;
+      sessionStorage.setItem(cacheKey, freshStr);
+      if (!cached) showApp();
+      renderAll();
+    }
+  } catch(e) {
+    if (!cached) showError();
+  }
+
+  // Deep link tab
+  const urlTab = new URLSearchParams(window.location.search).get('tab');
+  if (urlTab && tabs.includes(urlTab)) {
+    const navBtns = document.querySelectorAll('.nav-item');
+    switchTab(urlTab, navBtns[tabs.indexOf(urlTab)]);
+    if (urlTab === 'radar') loadRadar();
+  }
+
+  feather.replace();
+}
+
+function showApp() {
+  document.getElementById('globalLoader').style.display = 'none';
+  document.getElementById('mainShell').style.display = 'block';
+}
+
+function showError() {
+  document.getElementById('loaderSpinner').style.display = 'none';
+  document.getElementById('loaderErr').style.display = 'block';
+  const isTg = bizData && bizData.channel === 'telegram';
+  if (isTg) {
+    document.getElementById('errBtnTg').style.display = 'flex';
+  } else {
+    document.getElementById('errBtnWa').style.display = 'flex';
+  }
+}
+
+// ══ RENDER ALL ════════════════════════════════════════════════════════
+function renderAll() {
+  if (!bizData) return;
+  document.getElementById('companyName').textContent = bizData.name || '—';
+  renderDeals();
+  renderStats();
+  renderAgents();
+  renderProfile();
+  renderEditForm();
+  updateReturnBtns();
+  feather.replace();
+}
+
+function updateReturnBtns() {
+  const phone   = bizData.bot_phone || '972534218573';
+  const channel = bizData.channel   || 'whatsapp';
+  if (channel === 'telegram') {
+    document.getElementById('btnTgReturn').style.display = 'flex';
+  } else {
+    const wa = document.getElementById('btnWaReturn');
+    wa.href  = `https://wa.me/${phone}`;
+    wa.style.display = 'flex';
+  }
+}
+
+// ══ DEALS ═════════════════════════════════════════════════════════════
+function setFilter(f) {
+  dealFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.filter-tab[onclick="setFilter('${f}')"]`);
+  if (btn) btn.classList.add('active');
+  renderDeals();
+}
+
+function getStatusData(status) {
+  const L = i18n[lang] || i18n.ru;
+  const map = {
+    new:                  { text:L.st_new,     cls:'st-new',      icon:'clock' },
+    in_progress:          { text:L.st_prog,    cls:'st-progress', icon:'clock' },
+    closed:               { text:L.st_closed,  cls:'st-closed',   icon:'check-circle' },
+    rejected:             { text:L.st_rej,     cls:'st-rejected', icon:'x-circle' },
+    pending_confirmation: { text:L.st_pending, cls:'st-pending',  icon:'alert-circle' },
+  };
+  return map[status] || { text:status, cls:'st-new', icon:'circle' };
+}
+
+function renderDeals() {
+  const container = document.getElementById('dealsContainer');
+  const L = i18n[lang] || i18n.ru;
+  const deals = bizData.deals || [];
+  const curr  = bizData.currency || '₪';
+
+  const filtered = deals.filter(d => {
+    return dealFilter === 'active'
+      ? ['new','in_progress','pending_confirmation'].includes(d.status)
+      : ['closed','rejected'].includes(d.status);
+  });
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(d => {
+    const st        = getStatusData(d.status);
+    const isPending = d.status === 'pending_confirmation';
+    const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
+    const waLink    = `https://wa.me/${cleanPhone}`;
+
+    const pendingNote = isPending
+      ? `<div class="deal-pending-note"><i data-feather="clock" style="width:14px;height:14px;"></i> ${L.pending_note}</div>`
+      : '';
+
+    let receipt = '';
+    if (d.amount || d.commission) {
+      const commRow = d.commission
+        ? (isPending
+            ? `<span class="unpaid-warn">-${d.commission} ${curr} ⚠️</span>`
+            : `<span class="paid-ok">-${d.commission} ${curr} ✅</span>`)
+        : '<span>—</span>';
+      receipt = `
+        <div class="deal-receipt">
+          ${d.amount ? `<div class="receipt-line"><span>💵 Сумма чека:</span><span>${d.amount} ${curr}</span></div>` : ''}
+          <div class="receipt-line"><span>🎁 Бонус агенту:</span>${commRow}</div>
+          ${(d.amount && d.commission) ? `<div class="receipt-line total"><span>✅ Заработано:</span><span class="net-profit">${Math.round((+d.amount - +d.commission)*10)/10} ${curr}</span></div>` : ''}
+        </div>`;
+    }
+
+    const manageBtn = (dealFilter === 'active' && !isPending)
+      ? `<button class="btn-primary btn-action" onclick="openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage}</button>`
+      : '';
+
+    return `
+      <div class="deal-card${isPending ? ' pending unpaid' : ''}">
+        <div class="deal-card-header">
+          <div>
+            <div class="deal-client">${d.client_name}</div>
+            <div class="deal-date">${d.date}</div>
+          </div>
+          <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
+        </div>
+        ${pendingNote}
+        <div class="deal-info">
+          ${L.card_agent} <span>${d.agent_name || '—'}</span><br>
+          <a href="${waLink}" class="deal-wa-link" target="_blank"><i data-feather="message-circle" style="width:14px;height:14px;"></i> ${d.client_phone || '—'}</a>
+        </div>
+        ${receipt}
+        ${manageBtn}
+      </div>`;
+  }).join('');
+
+  feather.replace();
+}
+
+// ══ STATS ════════════════════════════════════════════════════════════
+function renderStats() {
+  const s    = bizData.stats || {};
+  const curr = bizData.currency || '₪';
+  const active   = s.active   || 0;
+  const closed   = s.closed   || 0;
+  const rejected = s.rejected || 0;
+  const total    = active + closed + rejected;
+
+  animNum('st_revenue',    s.total_revenue   || 0, ' '+curr);
+  animNum('st_commission', s.total_commission || 0, ' '+curr);
+  animNum('st_net',        s.total_earned    || 0, ' '+curr);
+
+  const pendingCnt = (bizData.deals || []).filter(d => d.status === 'pending_confirmation').length;
+  document.getElementById('st_pending_cnt').textContent = s.pending_conf !== undefined ? s.pending_conf : pendingCnt;
+
+  document.getElementById('st_total_leads').textContent = total;
+  const conv = total > 0 ? Math.round(closed / total * 100) : 0;
+  document.getElementById('st_conversion').textContent  = conv + '%';
+
+  animNum('st_f_active',   active,   '');
+  animNum('st_f_closed',   closed,   '');
+  animNum('st_f_rejected', rejected, '');
+
+  animNum('st_agents',   s.agents_count || 0, '');
+  animNum('st_avg_deal', s.avg_deal     || 0, ' '+curr);
+
+  setTimeout(() => {
+    const pct = n => (total > 0 ? n / total * 100 : 0) + '%';
+    document.getElementById('bar_active').style.width   = pct(active);
+    document.getElementById('bar_closed').style.width   = pct(closed);
+    document.getElementById('bar_rejected').style.width = pct(rejected);
+  }, 80);
+
+  // Debt banner
+  const debt   = s.pending_debt || 0;
+  const banner = document.getElementById('debtBanner');
+  if (debt > 0) {
+    banner.style.display = 'flex';
+    document.getElementById('debtAmount').textContent = debt + ' ' + curr;
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+// ══ AGENTS ════════════════════════════════════════════════════════════
+function renderAgents() {
+  const container = document.getElementById('agentsList');
+  const L    = i18n[lang] || i18n.ru;
+  const curr = bizData.currency || '₪';
+  const deals = bizData.deals || [];
+
+  // Build agent map from deals
+  const agentMap = {};
+  deals.forEach(d => {
+    if (!d.agent_name) return;
+    if (!agentMap[d.agent_name]) agentMap[d.agent_name] = { name: d.agent_name, count: 0, comm: 0 };
+    agentMap[d.agent_name].count++;
+    if (d.commission && d.status === 'closed') {
+      agentMap[d.agent_name].comm += parseFloat(d.commission) || 0;
+    }
+  });
+
+  const agents = Object.values(agentMap).sort((a,b) => b.count - a.count);
+
+  if (!agents.length) {
+    container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
+    return;
+  }
+
+  container.innerHTML = agents.map(a => `
+    <div class="agent-card">
+      <div class="agent-avatar">${a.name.charAt(0).toUpperCase()}</div>
+      <div class="agent-info">
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-deals">${L.ag_deals} <span>${a.count}</span></div>
+      </div>
+      <div class="agent-comm">
+        <div class="agent-comm-lbl">${L.ag_comm}</div>
+        <div class="agent-comm-val">${Math.round(a.comm)} ${curr}</div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+// ══ RADAR ════════════════════════════════════════════════════════════
+async function loadRadar() {
+  if (radarData) { renderRadar(); return; }
+  const container = document.getElementById('radarList');
+  const L = i18n[lang] || i18n.ru;
+  container.innerHTML = `<div class="empty-state">${L.radar_loading}</div>`;
+  try {
+    const res = await fetch(`${API_URL}/api/leaderboard?token=${token}`);
+    if (!res.ok) throw new Error();
+    radarData = await res.json();
+    renderRadar();
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state" style="color:var(--red);">Ошибка сети</div>`;
+  }
+}
+
+function renderRadar() {
+  if (!radarData || !bizData) return;
+  const L    = i18n[lang] || i18n.ru;
+  const isPro = bizData.is_pro || bizData.subscription === 'pro';
+  const curr = bizData.currency || '₪';
+
+  document.getElementById('radarPromo').style.display = isPro ? 'none' : 'block';
+
+  const container = document.getElementById('radarList');
+  const agents    = radarData.top_agents || [];
+  if (!agents.length) { container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`; return; }
+
+  container.innerHTML = agents.map(a => {
+    let badge = a.rank, rankClass = '';
+    if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
+    const blurClass = !isPro ? 'lb-blurred' : '';
+    const click     = !isPro ? `onclick="alert('${L.lb_blur_alert.replace(/'/g,"\\'")}')"` : '';
+    return `
+      <div class="agent-card">
+        <div class="lb-rank-badge ${rankClass}">${badge}</div>
+        <div class="agent-info ${blurClass}" ${click}>
+          <div class="agent-name">${a.name}</div>
+          <div class="agent-deals">${L.lb_deals} <span>${a.deals_count}</span></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ══ PROFILE ═══════════════════════════════════════════════════════════
+function renderProfile() {
+  const L    = i18n[lang] || i18n.ru;
+  document.getElementById('pr_name').textContent  = bizData.name || '—';
+  document.getElementById('pr_comm').textContent  = bizData.commission || '—';
+  document.getElementById('pr_pay').textContent   = bizData.payment_method || '—';
+  document.getElementById('pr_phone').textContent = bizData.phone || '—';
+
+  // Niche as tags
+  const nicheEl = document.getElementById('pr_niche');
+  const niches  = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
+  if (niches.length) {
+    nicheEl.innerHTML = niches.map(n =>
+      `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${getCatName(n,lang)}</span>`
+    ).join(' ');
+  } else {
+    nicheEl.textContent = '—';
+  }
+
+  // Subscription
+  const isPro  = bizData.is_pro || bizData.subscription === 'pro';
+  const badge  = document.getElementById('subBadge');
+  const desc   = document.getElementById('subDesc');
+  const btnUp  = document.getElementById('btnUpgrade');
+  if (isPro) {
+    badge.textContent     = 'PRO';
+    badge.style.background = 'var(--gold)';
+    badge.style.color      = '#1A1A2E';
+    desc.textContent      = L.sub_desc_pro;
+    btnUp.style.display   = 'none';
+  } else {
+    badge.textContent     = L.sub_standard;
+    badge.style.background = 'var(--accent2)';
+    badge.style.color      = '#fff';
+    desc.textContent      = L.sub_desc_standard;
+    btnUp.style.display   = 'flex';
+  }
+}
+
+// ══ EDIT FORM ════════════════════════════════════════════════════════
+function renderEditForm() {
+  if (!bizData) return;
+  document.getElementById('f_name').value = bizData.name || '';
+  document.getElementById('f_comm').value = bizData.commission || '';
+  document.getElementById('f_link').value = bizData.business_info || '';
+
+  const catSel = document.getElementById('f_niche');
+  const cat    = bizData.category || '';
+  for (let i = 0; i < catSel.options.length; i++) {
+    if (catSel.options[i].value === cat) { catSel.selectedIndex = i; break; }
+  }
+  const currentNiches = Array.isArray(bizData.niche) ? bizData.niche
+    : (bizData.niche ? bizData.niche.split(',').map(s=>s.trim()).filter(Boolean) : []);
+  if (cat) updateSubniches(currentNiches);
+
+  const pm = bizData.payment_method || '';
+  document.getElementById('f_pay').value = pm;
+  document.querySelectorAll('.pay-btn').forEach(b => b.classList.toggle('active', !!pm && b.textContent.includes(pm)));
+}
+
+function openProfileEdit() { renderEditForm(); openFullscreen('editProfileSheet'); }
+function closeProfileEdit() { closeFullscreen('editProfileSheet'); }
+
+function updateSubniches(preselected = []) {
+  const cat   = document.getElementById('f_niche').value;
+  const group = document.getElementById('f_subniche_group');
+  const list  = document.getElementById('f_subniche_list');
+  const subs  = CATEGORIES[cat] || [];
+  list.innerHTML = '';
+  subs.forEach(s => {
+    const item = document.createElement('label');
+    item.className = 'niche-item' + (preselected.includes(s) ? ' checked' : '');
+    const cb = document.createElement('input');
+    cb.type    = 'checkbox';
+    cb.value   = s;
+    cb.checked = preselected.includes(s);
+    cb.addEventListener('change', () => item.classList.toggle('checked', cb.checked));
+    const span = document.createElement('span');
+    span.textContent = s;
+    item.appendChild(cb); item.appendChild(span);
+    list.appendChild(item);
+  });
+  group.style.display = subs.length ? 'block' : 'none';
+  // Reset confirm/edit state
+  document.getElementById('f_subniche_list').style.display  = 'flex';
+  document.getElementById('f_subniche_tags').style.display  = 'none';
+  document.getElementById('btnSubcatDone').style.display    = 'block';
+  document.getElementById('btnSubcatEdit').style.display    = 'none';
+}
+
+function confirmSubniches() {
+  const checked = getSelectedSubniches();
+  if (!checked.length) return;
+  const tags = document.getElementById('f_subniche_tags');
+  tags.innerHTML = checked.map(s =>
+    `<span class="niche-tag">${s}</span>`
+  ).join('');
+  tags.style.display = 'flex';
+  document.getElementById('f_subniche_list').style.display = 'none';
+  document.getElementById('btnSubcatDone').style.display   = 'none';
+  document.getElementById('btnSubcatEdit').style.display   = 'flex';
+  document.getElementById('btnSubcatEdit').style.justifyContent = 'center';
+}
+
+function editSubniches() {
+  document.getElementById('f_subniche_tags').style.display  = 'none';
+  document.getElementById('f_subniche_list').style.display  = 'flex';
+  document.getElementById('btnSubcatDone').style.display    = 'block';
+  document.getElementById('btnSubcatEdit').style.display    = 'none';
+}
+
+function getSelectedSubniches() {
+  return Array.from(document.querySelectorAll('#f_subniche_list input[type=checkbox]:checked')).map(cb => cb.value);
+}
+
+function selectPay(method) {
+  document.getElementById('f_pay').value = method;
+  document.querySelectorAll('.pay-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(method)));
+}
+
+async function submitEdit() {
+  const btn     = document.getElementById('btnSaveProfile');
+  const L       = i18n[lang] || i18n.ru;
+  const origTxt = btn.textContent;
+  btn.textContent  = L.action_processing;
+  btn.style.opacity = '0.7';
+
+  const catEl = document.getElementById('f_niche');
+  const subs  = getSelectedSubniches();
+  const payload = {
+    name:           document.getElementById('f_name').value,
+    niche:          subs.length ? subs : (catEl.value ? [catEl.value] : []),
+    category:       catEl.value,
+    commission:     document.getElementById('f_comm').value,
+    payment_method: document.getElementById('f_pay').value,
+    business_info:  document.getElementById('f_link').value,
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/api/business/update?token=${token}`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error();
+    bizData = { ...bizData, ...payload };
+    const cacheKey = `biz_cache_${token}`;
+    sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
+    renderProfile();
+    btn.textContent      = L.save_ok;
+    btn.style.background = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent  = origTxt;
+      btn.style.opacity = '1';
+      closeProfileEdit();
+    }, 1500);
+  } catch(e) {
+    btn.textContent      = L.save_err;
+    btn.style.background = 'var(--red)';
+    setTimeout(() => {
+      btn.textContent      = origTxt;
+      btn.style.opacity    = '1';
+      btn.style.background = 'var(--green)';
+    }, 2000);
+  }
+}
+
+// ══ MANAGE DEAL ════════════════════════════════════════════════════════
+function openManageDeal(id) {
+  activeDealId = id;
+  const L    = i18n[lang] || i18n.ru;
+  const deal = (bizData.deals || []).find(d => d.id === id);
+  if (!deal) return;
+  document.getElementById('m_val_client').textContent = `${deal.client_name} (${deal.client_phone})`;
+  document.getElementById('m_val_agent').textContent  = deal.agent_name || '—';
+  document.getElementById('m_val_date').textContent   = deal.date;
+  document.getElementById('m_amount').value = '';
+  setStep('main');
+  document.getElementById('t_m_cancel_bottom').style.display = 'flex';
+  openFullscreen('manageDealSheet');
+}
+
+function closeManageDeal() {
+  closeFullscreen('manageDealSheet');
+  activeDealId = null;
+}
+
+function setStep(step) {
+  document.querySelectorAll('.step-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById(`m_step_${step}`).classList.add('active');
+  document.getElementById('t_m_cancel_bottom').style.display = step === 'result' ? 'none' : 'flex';
+}
+
+async function submitDealAction(actionType) {
+  const L = i18n[lang] || i18n.ru;
+  if (actionType === 'close' && !document.getElementById('m_amount').value) return;
+  setStep('result');
+  document.getElementById('m_spinner').style.display = 'block';
+  document.getElementById('m_result_msg').textContent  = L.action_processing;
+  document.getElementById('m_result_msg').style.color  = 'var(--text)';
+
+  const payload = { token, deal_id: activeDealId, action: actionType };
+  if (actionType === 'close') payload.amount = document.getElementById('m_amount').value;
+
+  try {
+    const res = await fetch(`${API_URL}/api/deals/action`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error();
+    const data = await res.json().catch(() => ({}));
+    document.getElementById('m_spinner').style.display = 'none';
+
+    if (actionType === 'close' && data.message === 'agent_notified') {
+      // Pending confirmation flow
+      const agentName = data.agent_name || '—';
+      const commStr   = data.comm_str   || '—';
+      const msgs = {
+        ru:`⏳ Отлично! Уведомили агента ${agentName}.\n\nОжидаем его решение по вознаграждению ${commStr}.\n\nКак только решит — придёт уведомление.`,
+        he:`⏳ מצוין! הודענו לסוכן ${agentName}.\n\nממתינים להחלטתו לגבי ${commStr}.`,
+        en:`⏳ Done! Notified agent ${agentName}.\n\nWaiting for decision on ${commStr} reward.`,
+        ar:`⏳ تم! أبلغنا الوكيل ${agentName}.\n\nننتظر قراره بشأن ${commStr}.`,
+      };
+      document.getElementById('m_result_msg').textContent = msgs[lang] || msgs.ru;
+      document.getElementById('m_result_msg').style.color = 'var(--purple)';
+      const deal = (bizData.deals || []).find(d => d.id === activeDealId);
+      if (deal) deal.status = 'pending_confirmation';
+    } else {
+      document.getElementById('m_result_msg').textContent = L.action_success;
+      document.getElementById('m_result_msg').style.color = 'var(--green)';
+      const deal = (bizData.deals || []).find(d => d.id === activeDealId);
+      if (deal) {
+        deal.status = actionType === 'close' ? 'closed' : 'rejected';
+        if (bizData.stats) {
+          bizData.stats.active = Math.max(0, (bizData.stats.active || 0) - 1);
+          if (actionType === 'close') bizData.stats.closed = (bizData.stats.closed || 0) + 1;
+          else bizData.stats.rejected = (bizData.stats.rejected || 0) + 1;
         }
-        /* ── Brand dark theme ───────────────────────────────────────── */
-        body.brand-theme {
-            --bg:#0F0F1A; --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
-            --text:#FFFFFF; --text2:#A0A0B0; --border:rgba(255,255,255,0.07);
-            --shadow:0 4px 24px rgba(0,0,0,0.35); --shadow2:0 8px 40px rgba(0,0,0,0.55);
-            --nav-bg:rgba(15,15,26,0.85);
-        }
+      }
+    }
 
-        /* ── Reset & Base ───────────────────────────────────────────── */
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        html { -webkit-text-size-adjust:100%; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; min-height: 100vh; transition: background .3s, color .3s; overscroll-behavior: none; }
-        
-        /* ── RTL Support ────────────────────────────────────────────── */
-        [dir="rtl"] { text-align: right; }
-        [dir="rtl"] .header-right { flex-direction: row-reverse; }
-        [dir="rtl"] .btn-back i { transform: rotate(180deg); }
-        [dir="rtl"] .f-val { text-align: left; }
-        [dir="rtl"] .receipt-line { flex-direction: row-reverse; }
-        [dir="rtl"] .prof-val { text-align: left; }
-        [dir="rtl"] .lb-agent-earned { text-align: left; }
+    // Update cache
+    const cacheKey = `biz_cache_${token}`;
+    sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
+    renderDeals();
+    renderStats();
 
-        .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; }
+  } catch(e) {
+    document.getElementById('m_spinner').style.display = 'none';
+    document.getElementById('m_result_msg').textContent = 'Ошибка. Попробуйте ещё раз.';
+    document.getElementById('m_result_msg').style.color = 'var(--red)';
+  }
 
-        /* ── Loader & Expired Session ───────────────────────────────── */
-        .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
-        .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
-        .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; font-weight:600; }
-        .spinner { border: 4px solid rgba(86,204,242,0.1); border-left-color: var(--accent1); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .loader-err { display:none; text-align:center; padding:0 24px; width: 100%; max-width: 430px; }
-        .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
-        .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:28px; line-height: 1.5; font-weight: 500; }
+  setTimeout(closeManageDeal, 3000);
+}
 
-        /* ── Header ─────────────────────────────────────────────────── */
-        .header { display:flex; align-items:center; justify-content:space-between; padding:24px 20px 12px; position:sticky; top:0; background:var(--bg); z-index:50; }
-        .header-left .logo-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:2px;}
-        .header-left .company-name { font-size:.85rem; color:var(--text); font-weight:600; }
-        .header-right { display:flex; align-items:center; gap:8px; }
-        .lang-row { display:flex; gap:4px; }
-        .lang-btn { padding:4px 7px; border-radius:8px; font-size:.65rem; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:.2s; }
-        .lang-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
-        .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
-        .icon-btn:active { transform:scale(.92); }
-
-        /* ── Views (Swipe tabs) ─────────────────────────────────────── */
-        .views-wrapper { display: flex; width: 500%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; direction: ltr; }
-        .view { width: 20%; flex-shrink: 0; padding: 0 16px; }
-
-        /* ── Common Cards & Sections ────────────────────────────────── */
-        .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
-        .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:0.5px; }
-
-        /* ── Debt Banner ────────────────────────────────────────────── */
-        .debt-alert { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
-        .debt-alert .debt-text { color:var(--text); font-weight:600; font-size:0.9rem; }
-        .debt-alert .debt-sum { color:var(--red); font-weight:800; font-size:1.2rem; }
-
-        /* ── Filters ────────────────────────────────────────────────── */
-        .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
-        .filter-btn-tab { flex:1; background:transparent; border:none; color:var(--text2); padding:10px; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:.2s; }
-        .filter-btn-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.05); }
-
-        /* ── Deal Card ──────────────────────────────────────────────── */
-        .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; }
-        .deal-card.pending { border-color:rgba(155,81,224,0.4); background:rgba(155,81,224,0.03); }
-        .deal-card.unpaid { border-color:rgba(235,87,87,0.4); box-shadow:0 0 15px rgba(235,87,87,0.08); }
-        
-        .deal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
-        .deal-client { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:2px; }
-        .deal-date { font-size:0.75rem; color:var(--text2); font-weight:500; }
-        
-        .status-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.7rem; font-weight:700; white-space:nowrap; }
-        .st-new { background:rgba(242,201,76,0.15); color:var(--gold); }
-        .st-progress { background:rgba(86,204,242,0.15); color:var(--accent1); }
-        .st-closed { background:rgba(39,174,96,0.15); color:var(--green); }
-        .st-rejected { background:rgba(235,87,87,0.15); color:var(--red); }
-        .st-pending { background:rgba(155,81,224,0.15); color:var(--purple); }
-        
-        .deal-pending-note { font-size:0.75rem; color:var(--purple); background:rgba(155,81,224,0.1); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
-        
-        .deal-info { font-size:0.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
-        .deal-info span { font-weight:600; color:var(--text); }
-        .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; }
-        
-        .deal-receipt { background:var(--surface2); border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid var(--border); }
-        .receipt-line { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text2); margin-bottom:6px; }
-        .receipt-line.agent { color:var(--text); font-weight:500; }
-        .receipt-line.agent .unpaid-warn { color:var(--red); font-weight:700; }
-        .receipt-line.agent .paid-ok { color:var(--green); font-size:0.75rem; font-weight:700; }
-        .receipt-line.total { border-top:1px dashed var(--border); padding-top:8px; margin-top:4px; margin-bottom:0; color:var(--text); font-weight:800; font-size:0.95rem; }
-        .receipt-line.total .net-profit { color:var(--green); }
-        
-        .btn-action { display:flex; justify-content:center; align-items:center; gap:8px; width:100%; background:var(--surface2); color:var(--text); border:1px solid var(--border); font-weight:600; font-size:0.9rem; padding:12px; border-radius:12px; cursor:pointer; transition:.2s; }
-        .btn-action:active { transform:scale(0.98); background:var(--border); }
-
-        /* ── Stats View ─────────────────────────────────────────────── */
-        .stats-grid-3 { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:16px; }
-        .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
-        .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 8px; text-align:center; box-shadow:var(--shadow); }
-        .stats-grid-2 .stat-box { padding:20px; border-radius:20px; }
-        .stat-val { font-family:'Sora',sans-serif; font-weight:800; color:var(--text); margin-bottom:4px; }
-        .stats-grid-3 .stat-val { font-size:1.15rem; }
-        .stats-grid-2 .stat-val { font-size:1.8rem; }
-        .stat-lbl { color:var(--text2); font-weight:600; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.5px; }
-        
-        .funnel-container { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:24px; box-shadow:var(--shadow); }
-        .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; font-size:0.95rem; }
-        .funnel-conv { color:var(--green); background:rgba(39,174,96,0.15); padding:4px 10px; border-radius:8px; font-size:0.85rem; }
-        .f-bar-wrap { display:flex; align-items:center; margin-bottom:14px; gap:12px; }
-        .f-lbl { width:85px; font-size:0.75rem; font-weight:600; color:var(--text2); flex-shrink:0; text-transform:uppercase; }
-        .f-bar-bg { flex:1; background:var(--surface2); height:10px; border-radius:5px; overflow:hidden; border:1px solid var(--border); }
-        .f-bar { height:100%; border-radius:5px; width:0%; transition:width 1s cubic-bezier(0.25,1,0.5,1); }
-        [dir="rtl"] .f-bar { float:right; }
-        .f-active { background:var(--accent1); } .f-closed { background:var(--green); } .f-rejected { background:var(--red); }
-        .f-val { width:35px; text-align:right; font-weight:700; font-size:0.9rem; }
-
-        /* ── Radar / My Agents View ─────────────────────────────────── */
-        .agent-list-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); margin-bottom:12px; position:relative; overflow:hidden;}
-        .agent-list-card .avatar { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; text-transform: uppercase; }
-        .agent-list-card .info { flex: 1; min-width: 0; z-index:2;}
-        .agent-list-card .name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-        .agent-list-card .deals { font-size: 0.75rem; color: var(--text2); }
-        .agent-list-card .deals span { color: var(--text); font-weight: 700; }
-        .agent-list-card .comm { text-align: right; flex-shrink: 0; z-index:2;}
-        .agent-list-card .comm-lbl { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 2px; }
-        .agent-list-card .comm-val { font-size: 1rem; font-weight: 800; color: var(--gold); }
-        
-        .lb-agent-rank { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--bg); font-size: 1.1rem; font-weight: 800; color: var(--text2); border: 1px solid var(--border); }
-        .lb-rank-1 { background: rgba(255, 215, 0, 0.15); color: #FFD700; border-color: rgba(255, 215, 0, 0.3); font-size: 1.3rem; }
-        .lb-rank-2 { background: rgba(192, 192, 192, 0.15); color: #C0C0C0; border-color: rgba(192, 192, 192, 0.3); font-size: 1.3rem; }
-        .lb-rank-3 { background: rgba(205, 127, 50, 0.15); color: #CD7F32; border-color: rgba(205, 127, 50, 0.3); font-size: 1.3rem; }
-        
-        .lb-blurred .name { filter: blur(5px); opacity: 0.7; user-select: none; }
-        .lb-blurred { cursor: pointer; }
-        .lb-blurred:active { transform: scale(0.98); }
-
-        .pro-overlay-card { background: linear-gradient(135deg, rgba(242, 201, 76, 0.1), rgba(242, 153, 74, 0.1)); border: 1px solid rgba(242, 201, 76, 0.3); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(242, 201, 76, 0.1); }
-        .pro-overlay-card h3 { font-family: 'Sora', sans-serif; font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
-        .pro-overlay-card p { font-size: 0.85rem; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
-
-        /* ── Profile View ───────────────────────────────────────────── */
-        .profile-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:0 20px; margin-bottom:16px; box-shadow:var(--shadow); }
-        .prof-row { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); }
-        .prof-row:last-child { border-bottom:none; }
-        .prof-lbl { color:var(--text2); font-size:0.85rem; font-weight:600; }
-        .prof-val { font-weight:700; font-size:0.9rem; text-align:right; max-width:60%; word-break:break-word; }
-        
-        .sub-card { background: linear-gradient(135deg, rgba(86,204,242,0.1), rgba(47,128,237,0.1)); border: 1px solid rgba(47,128,237,0.3); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-        .sub-card .sub-title { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; display:flex; justify-content:space-between; }
-        .sub-card .sub-badge { font-size: 0.7rem; font-weight: 700; background: var(--accent2); color: #fff; padding: 3px 8px; border-radius: 8px; }
-        .sub-card .sub-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.5; margin-bottom: 16px; }
-
-        /* ── Buttons ────────────────────────────────────────────────── */
-        .btn-primary { background:var(--text); color:var(--bg); border:none; padding:14px 22px; border-radius:14px; font-weight:700; font-size:0.95rem; width:100%; cursor:pointer; transition:.2s; font-family:inherit; display:flex; justify-content:center; align-items:center; gap:8px; }
-        .btn-primary:active { transform:scale(.97); }
-        .btn-accent { background:var(--accent2); color:#fff; }
-        .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); padding: 13px 22px; border-radius: 13px; font-weight: 700; font-size: .85rem; }
-        .btn-gold { background: linear-gradient(135deg, #F2C94C, #F2994A); color: #1A1A2E; border: none; }
-        
-        .btn-wa { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); text-decoration:none; margin-top:14px; display:none; }
-        .btn-tg { background:#2F80ED; color:#fff; box-shadow:0 4px 16px rgba(47,128,237,.25); text-decoration:none; margin-top:14px; display:none; }
-
-        /* ── Bottom Nav ─────────────────────────────────────────────── */
-        .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; padding:10px 16px 22px; border-top:1px solid var(--border); z-index:100; }
-        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 4px; }
-        .nav-item.active { color:var(--accent2); }
-        .nav-item span { font-size:.58rem; font-weight:700; }
-        .nav-item svg { transition:.2s; width: 22px; height: 22px; }
-        .nav-item.active svg { transform:translateY(-2px); }
-
-        /* ── Full Screen Sheets (Slide-over) ────────────────────────── */
-        .fullscreen { display:none; position:fixed; inset:0; background:var(--bg); z-index:500; overflow-y:auto; padding:24px 16px 40px; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); }
-        [dir="rtl"] .fullscreen { transform: translateX(-100%); }
-        .fullscreen.active { display:block; transform: translateX(0) !important; }
-        .fullscreen.slide-out-left { display:block; transform: translateX(-100%); }
-        [dir="rtl"] .fullscreen.slide-out-left { display:block; transform: translateX(100%); }
-        
-        .btn-back { background:transparent; border:none; color:var(--text2); font-size:0.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; transition:.2s; }
-        .btn-back:active { opacity: 0.6; transform: translateX(-4px); }
-        .sheet-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
-        .sheet-title { font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; margin-bottom:20px; }
-
-        /* ── Form Inputs ────────────────────────────────────────────── */
-        .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
-        .custom-input { width:100%; padding:14px 16px
+// ══ BOOT ══════════════════════════════════════════════════════════════
+window.onload = init;
+</script>
+</body>
+</html>
