@@ -979,6 +979,21 @@ let currentNiche = '__all__';
 let leaderboardData = null;
 
 const tabs = ['home', 'catalog', 'history', 'wallet', 'profile'];
+const rtlTabs = ['profile', 'wallet', 'history', 'catalog', 'home'];
+
+function isCurrentRTL() {
+    return lang === 'he' || lang === 'ar';
+}
+function getTabsOrder() {
+    return isCurrentRTL() ? rtlTabs : tabs;
+}
+function getActiveTabId() {
+    const active = document.querySelector('.view.active');
+    return active ? active.id.replace('view-', '') : 'home';
+}
+function getDomTabIndex(tabId) {
+    return tabs.indexOf(tabId);
+}
 
 // ── Swipe Logic ───────────────────────────────────────────────────────────
 // ПРАВИЛО: wrapper всегда LTR. Offset = -index * 20% независимо от языка.
@@ -988,7 +1003,8 @@ const tabs = ['home', 'catalog', 'history', 'wallet', 'profile'];
 let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
 
 function currentTabIndex() {
-    return tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
+    const activeTabId = getActiveTabId();
+    return getTabsOrder().indexOf(activeTabId);
 }
 
 document.querySelector('.app').addEventListener('touchstart', e => {
@@ -1004,13 +1020,14 @@ document.querySelector('.app').addEventListener('touchend', e => {
     const dy = e.changedTouches[0].clientY - touchStartY;
     const dt = Date.now() - touchStartTime;
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        const order = getTabsOrder();
         const cur = currentTabIndex();
-        // Wrapper всегда LTR — свайп влево всегда = следующий таб, для всех языков
-        const isNext = dx < 0;
-        const next = isNext ? cur + 1 : cur - 1;
-        if (next >= 0 && next < tabs.length) {
-            const navBtns = document.querySelectorAll('.nav-item');
-            switchTab(tabs[next], navBtns[next]);
+        const next = isCurrentRTL()
+            ? (dx < 0 ? cur - 1 : cur + 1)
+            : (dx < 0 ? cur + 1 : cur - 1);
+
+        if (next >= 0 && next < order.length) {
+            switchTab(order[next]);
         }
     }
 });
@@ -1055,6 +1072,7 @@ function applyNavOrder(isRTL) {
 
 // ── Lang ──────────────────────────────────────────────────────────────────
 function setLang(l) {
+    const currentTabId = getActiveTabId();
     lang = l;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
@@ -1064,24 +1082,22 @@ function setLang(l) {
     // dir на html/body меняет координатную систему браузера и ломает translateX-слайдер
     document.body.classList.toggle('rtl', isRTL);
 
-    // Физически переставляем кнопки nav в DOM
+    // Переключаем физику нижнего бара для RTL
     applyNavOrder(isRTL);
 
     applyLang();
 
-    // Восстанавливаем активное состояние на текущий таб
-    const curIdx = currentTabIndex();
-    const curTabId = curIdx !== -1 ? tabs[curIdx] : 'home';
-    // switchTab обновит активную кнопку по имени таба — не по индексу в DOM
-    const navBtns = document.querySelectorAll('.nav-item');
-    navBtns.forEach(b => b.classList.remove('active'));
-    const activeBtn = Array.from(navBtns).find(b =>
-        b.getAttribute('onclick')?.includes(`'${curTabId}'`)
-    );
-    if (activeBtn) activeBtn.classList.add('active');
+    // Сохраняем активный таб по имени, а не по старому индексу
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => {
+        if (b.getAttribute('onclick')?.includes(`'${currentTabId}'`)) {
+            b.classList.add('active');
+        }
+    });
 
-    // Пересчёт offset — единая формула
-    document.getElementById('viewsWrapper').style.transform = `translateX(${-(curIdx !== -1 ? curIdx : 0) * 20}%)`;
+    // Offset всегда считается по DOM-порядку view, а не по RTL-порядку свайпа
+    const domIdx = getDomTabIndex(currentTabId);
+    document.getElementById('viewsWrapper').style.transform = `translateX(${-(domIdx !== -1 ? domIdx : 0) * 20}%)`;
 
     if (dashData) renderAll();
     extractNiches();
@@ -1177,7 +1193,7 @@ function switchTab(tabId, btnEl) {
         }
     });
 
-    const index = tabs.indexOf(tabId);
+    const index = getDomTabIndex(tabId);
     if (index !== -1) {
         document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
