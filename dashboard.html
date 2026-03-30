@@ -1896,8 +1896,11 @@ async function init() {
         dashData = await res.json();
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
-        // Повторно применяем порядок nav после показа mainShell
-        applyNavOrder(document.body.classList.contains('rtl'));
+        // requestAnimationFrame гарантирует что браузер уже отрендерил mainShell
+        // до того как мы меняем display на nav элементах
+        requestAnimationFrame(() => {
+            applyNavOrder(document.body.classList.contains('rtl'));
+        });
         renderAll();
         loadCatalog();
     } catch(e) { showError(); }
