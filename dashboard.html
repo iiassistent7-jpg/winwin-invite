@@ -542,12 +542,22 @@
             <a href="#" class="btn-primary btn-wa" id="ctaBtnProfile" style="display:none;text-decoration:none;margin-top:4px;"></a>
         </div>
 
-    </div><nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span id="t_nav_home">Главная</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span id="t_nav_catalog">Каталог</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span id="t_nav_history">История</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span id="t_nav_wallet">Кошелёк</span></button>
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span id="t_nav_profile">Профиль</span></button>
+    </div>
+    <!-- NAV LTR: Home | Catalog | History | Wallet | Profile -->
+    <nav class="bottom-nav" id="nav-ltr">
+        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">Главная</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
+    </nav>
+    <!-- NAV RTL: Profile | Wallet | History | Catalog | Home -->
+    <nav class="bottom-nav" id="nav-rtl" style="display:none;">
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">Главная</span></button>
     </nav>
 
     <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
@@ -1036,28 +1046,10 @@ function toggleTheme() {
 // Физически переставляет кнопки в DOM.
 // RTL: Профиль | Кошелёк | История | Каталог | Главная (право→лево)
 // LTR: Главная | Каталог | История | Кошелёк | Профиль (лево→право)
-// ── Nav order (RTL mirror) ────────────────────────────────────────────────
-// Используем CSS order — надёжнее чем appendChild в цикле
-// LTR: home=1 catalog=2 history=3 wallet=4 profile=5
-// RTL: home=5 catalog=4 history=3 wallet=2 profile=1
-const NAV_ORDER_LTR = {home:1, catalog:2, history:3, wallet:4, profile:5};
-const NAV_ORDER_RTL = {home:5, catalog:4, history:3, wallet:2, profile:1};
-
+// ── Nav switcher ──────────────────────────────────────────────────────────
 function applyNavOrder(isRTL) {
-    const nav = document.querySelector('.bottom-nav');
-    if (!nav) return;
-    // flex + order работает только если nav display:flex
-    nav.style.display = 'flex';
-    const order = isRTL ? NAV_ORDER_RTL : NAV_ORDER_LTR;
-    nav.querySelectorAll('.nav-item').forEach(btn => {
-        const onclick = btn.getAttribute('onclick') || '';
-        for (const tabId in order) {
-            if (onclick.includes(`'${tabId}'`)) {
-                btn.style.order = order[tabId];
-                break;
-            }
-        }
-    });
+    document.getElementById('nav-ltr').style.display = isRTL ? 'none' : 'flex';
+    document.getElementById('nav-rtl').style.display = isRTL ? 'flex' : 'none';
 }
 
 // ── Lang ──────────────────────────────────────────────────────────────────
@@ -1110,7 +1102,7 @@ function applyLang() {
         't_biz_info':'biz_info','t_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub','t_pro_locked':'pro_locked','t_pro_desc':'pro_desc',
         't_pro_progress_lbl':'pro_progress_lbl','t_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc','t_base_rate':'base_rate',
         't_add_niche':'add_niche','t_sheet_title':'sheet_title','t_sheet_cat':'sheet_cat','t_sheet_rate':'sheet_rate','t_sheet_save':'sheet_save',
-        't_nav_home':'nav_home','t_nav_catalog':'nav_catalog','t_nav_history':'nav_history','t_nav_wallet':'nav_wallet','t_nav_profile':'nav_profile',
+        't_nav_home':'nav_home_SKIP','t_nav_catalog':'nav_catalog_SKIP','t_nav_history':'nav_history_SKIP','t_nav_wallet':'nav_wallet_SKIP','t_nav_profile':'nav_profile_SKIP',
         't_deal_title':'deal_title','t_edit_profile':'edit_profile','t_edit_name':'edit_name','t_edit_payment':'edit_payment','t_edit_link':'edit_link',
         't_biz_reg_title':'biz_reg_title','t_biz_reg_submit':'biz_reg_submit','t_biz_reg_name':'biz_reg_name','t_biz_reg_niche':'biz_reg_niche','t_biz_reg_subniche':'biz_reg_subniche','t_biz_reg_pay':'biz_reg_pay',
         't_pay_cash':'pay_cash','t_pay_bank':'pay_bank','t_pay_cash_reg':'pay_cash','t_pay_bank_reg':'pay_bank','t_lb_title':'lb_title','t_lb_widget_title':'lb_widget_title',
@@ -1124,6 +1116,14 @@ function applyLang() {
     for (const [id,key] of Object.entries(map)) {
         const el = document.getElementById(id);
         if (el && L[key]) el.textContent = L[key];
+    }
+    // Nav spans теперь по классу (два nav в DOM)
+    const navClassMap = {
+        't_nav_home':'nav_home','t_nav_catalog':'nav_catalog',
+        't_nav_history':'nav_history','t_nav_wallet':'nav_wallet','t_nav_profile':'nav_profile'
+    };
+    for (const [cls,key] of Object.entries(navClassMap)) {
+        document.querySelectorAll('.' + cls).forEach(el => { if (L[key]) el.textContent = L[key]; });
     }
     const catSearch = document.getElementById('catSearch'); if (catSearch) catSearch.placeholder = L.cat_search || 'Search...';
     const copyBtn = document.getElementById('copyBtn'); if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
@@ -1166,15 +1166,15 @@ function applyLang() {
 
 // ── Navigation ────────────────────────────────────────────────────────────
 function switchTab(tabId, btnEl) {
-    const navBtns = document.querySelectorAll('.nav-item');
-    navBtns.forEach(b => b.classList.remove('active'));
+    // Снимаем active со всех кнопок в обоих навах
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
 
-    // Ищем кнопку по onclick-атрибуту, а не по индексу в DOM
-    // Это работает корректно и когда nav в прямом, и когда в обратном порядке
-    const targetBtn = Array.from(navBtns).find(b =>
-        b.getAttribute('onclick')?.includes(`'${tabId}'`)
-    ) || btnEl;
-    if (targetBtn) targetBtn.classList.add('active');
+    // Подсвечиваем кнопку с нужным tabId в обоих навах
+    document.querySelectorAll('.nav-item').forEach(b => {
+        if (b.getAttribute('onclick')?.includes(`'${tabId}'`)) {
+            b.classList.add('active');
+        }
+    });
 
     const index = tabs.indexOf(tabId);
     if (index !== -1) {
