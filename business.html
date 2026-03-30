@@ -212,6 +212,33 @@
     .nav-item.active svg { transform:translateY(-2px); }
     .nav-item span { font-size:.58rem; font-weight:700; }
 
+
+    /* ── Page Heroes / CTA ─────────────────────────────────────────── */
+    .page-hero { background:linear-gradient(135deg, rgba(86,204,242,.10), rgba(47,128,237,.08)); border:1px solid rgba(86,204,242,.18); border-radius:24px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow); }
+    .page-hero h3 { font-family:'Sora',sans-serif; font-size:1.18rem; font-weight:800; margin-bottom:8px; letter-spacing:-.02em; }
+    .page-hero p { font-size:.86rem; color:var(--text2); line-height:1.55; }
+    .hero-actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+    .ghost-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-size:.72rem; font-weight:700; }
+    .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .seg-tab { flex:1; border:none; background:transparent; color:var(--text2); border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:700; font-size:.84rem; font-family:inherit; transition:.2s; }
+    .seg-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .reco-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
+    .reco-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
+    .reco-title { font-weight:800; font-size:1rem; }
+    .reco-sub { font-size:.78rem; color:var(--text2); margin-top:4px; line-height:1.45; }
+    .reco-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .meta-pill { display:inline-flex; align-items:center; gap:4px; padding:4px 9px; border-radius:999px; background:var(--surface2); border:1px solid var(--border); font-size:.72rem; font-weight:700; color:var(--text2); }
+    .mini-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+    .mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 10px; text-align:center; box-shadow:var(--shadow); }
+    .mini-stat .val { font-family:'Sora',sans-serif; font-size:1.12rem; font-weight:800; color:var(--text); }
+    .mini-stat .lbl { font-size:.66rem; font-weight:700; color:var(--text2); text-transform:uppercase; margin-top:4px; }
+    .cta-block { background:linear-gradient(135deg, rgba(242,201,76,.08), rgba(242,153,74,.08)); border:1px solid rgba(242,201,76,.22); border-radius:22px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow); }
+    .cta-block h3 { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; margin-bottom:8px; }
+    .cta-block p { font-size:.85rem; color:var(--text2); line-height:1.55; margin-bottom:14px; }
+    .soft-note { font-size:.76rem; color:var(--text2); margin-top:10px; line-height:1.45; }
+    .section-caption { font-size:.78rem; color:var(--text2); margin:-4px 0 12px; line-height:1.45; }
+    body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
+
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
     .sticky-footer { position:sticky; bottom:0; padding:10px 0 24px; background:linear-gradient(to top,var(--bg) 75%,transparent); display:flex; flex-direction:column; gap:10px; z-index:10; }
@@ -302,18 +329,52 @@
       </div>
     </div>
 
-    <!-- ── VIEW: Agents ─────────────────────────────────────────── -->
-    <div id="view-agents" class="view">
-      <div class="sec-title" style="margin-top:4px;" id="t_ag_title">Мои Агенты</div>
-      <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px;line-height:1.5;" id="t_ag_sub">Люди, которые уже рекомендуют ваш бизнес.</p>
-      <div id="agentsList"></div>
+    <!-- ── VIEW: Recommenders ───────────────────────────────────── -->
+    <div id="view-recommenders" class="view">
+      <div class="page-hero">
+        <div class="ghost-chip" id="t_ag_chip">Источники доверия</div>
+        <h3 id="t_ag_title">Рекомендатели</h3>
+        <p id="t_ag_sub">Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.</p>
+      </div>
+      <div class="segmented-tabs">
+        <button class="seg-tab active" id="agTabMine" onclick="setRecommendersMode('mine')">Мои</button>
+        <button class="seg-tab" id="agTabLeaders" onclick="setRecommendersMode('leaders')">Лидеры в моей нише</button>
+      </div>
+      <div id="recommendersMinePanel">
+        <div class="section-caption" id="t_ag_mine_caption">Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.</div>
+        <div id="agentsList"></div>
+      </div>
+      <div id="recommendersLeadersPanel" style="display:none;">
+        <div class="section-caption" id="t_ag_leaders_caption">Сильные рекомендатели в вашей нише — ориентир для сотрудничества.</div>
+        <div id="leadersInlinePromo" class="pro-promo" style="display:none;">
+          <h3 id="t_rd_promo_title">Ищете новых партнёров?</h3>
+          <p id="t_rd_promo_desc">Перейдите на PRO, чтобы открыть контакты лидеров в вашей нише.</p>
+          <button class="btn-primary btn-gold" onclick="switchTab('profile', null)" id="t_rd_promo_btn">Подробнее о PRO</button>
+        </div>
+        <div id="leadersInlineList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
+      </div>
     </div>
 
-    <!-- ── VIEW: Radar ──────────────────────────────────────────── -->
-    <div id="view-radar" class="view" style="padding-bottom:0;">
-      <div class="sec-title" style="margin-top:4px;" id="t_rd_title">Зал Славы</div>
-      <div id="radarNicheTabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;"></div>
-      <div id="radarList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
+    <!-- ── VIEW: Recommend ───────────────────────────────────────── -->
+    <div id="view-recommend" class="view">
+      <div class="cta-block">
+        <div class="ghost-chip" id="t_rec_chip">Ваш социальный капитал</div>
+        <h3 id="t_rec_title">Рекомендую</h3>
+        <p id="t_rec_sub">Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.</p>
+        <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
+          <i data-feather="send" style="width:17px;height:17px;"></i>
+          <span id="t_rec_btn_label">Порекомендовать бизнес</span>
+        </button>
+        <div class="soft-note" id="t_rec_note">Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.</div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Рекомендаций</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Ждут благодарности</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_done">0</div><div class="lbl" id="t_rec_stat_done">Завершено</div></div>
+      </div>
+      <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Мои рекомендации</div>
+      <div class="section-caption" id="t_rec_list_sub">Активные и завершённые исходящие рекомендации.</div>
+      <div id="recommendList"></div>
     </div>
 
     <!-- ── VIEW: Profile ────────────────────────────────────────── -->
@@ -351,12 +412,13 @@
   <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
-    <button class="nav-item"        onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
-    <button class="nav-item"        onclick="switchTab('agents',this)"><i data-feather="users"></i><span id="nav_agents">Агенты</span></button>
-    <button class="nav-item"        onclick="switchTab('radar',this)"><i data-feather="award"></i><span id="nav_radar">Радар</span></button>
-    <button class="nav-item"        onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
+    <button class="nav-item" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
+    <button class="nav-item" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Рекомендатели</span></button>
+    <button class="nav-item" onclick="switchTab('recommend',this)"><i data-feather="send"></i><span id="nav_recommend">Рекомендую</span></button>
+    <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
+  <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
   <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
   <div class="fullscreen" id="manageDealSheet">
     <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
@@ -457,6 +519,22 @@
       </div>
     </div>
   </div>
+
+  <div class="fullscreen" id="leaderboardSheet" style="padding:0;">
+    <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
+      <div style="flex:1;padding:24px 16px;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="font-size:2.2rem;margin-bottom:8px;margin-top:20px;">🏆</div>
+          <h2 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:800;" id="t_lb_title">Зал Славы</h2>
+        </div>
+        <div id="lbContent"></div>
+      </div>
+      <div style="position:sticky;bottom:0;padding:10px 16px 24px;z-index:600;margin-top:auto;background:linear-gradient(to top,var(--bg) 75%,transparent);">
+        <button class="btn-primary btn-accent" onclick="closeFullscreen('leaderboardSheet')" id="t_btn_back_lb">Назад</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /app -->
 
 <script>
@@ -496,6 +574,8 @@ function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name]
 // ══ I18N ══════════════════════════════════════════════════════════════
 const i18n = {
   ru:{
+    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендую", rec_sub:"Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.", rec_btn_label:"Порекомендовать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_chip:"Источники доверия", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
+
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
     debt_label:"🔴 Долг агентам:", filt_active:"В работе", filt_history:"История",
@@ -503,9 +583,9 @@ const i18n = {
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента",
     st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
-    st_agents:"Агенты", st_avg_deal:"Средний чек",
-    ag_title:"Мои Агенты", ag_sub:"Люди, которые уже рекомендуют ваш бизнес. Чем больше бонусов вы им платите, тем выше их мотивация.",
-    ag_deals:"Привел клиентов:", ag_comm:"Выплачено",
+    st_agents:"Рекомендатели", st_avg_deal:"Средний чек",
+    ag_title:"Рекомендатели", ag_sub:"Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.",
+    ag_deals:"Привёл клиентов:", ag_comm:"Выплачено",
     rd_title:"Зал Славы", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
     rd_promo_btn:"Подробнее о PRO", radar_loading:"Загрузка...",
     tab_profile:"Настройки бизнеса", sub_title:"Текущий тариф:", btn_upgrade:"Перейти на PRO (149 ₪)",
@@ -523,13 +603,15 @@ const i18n = {
     action_processing:"Обработка...", action_success:"Успешно!", action_close:"Закрыть",
     save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
     empty_deals:"Здесь пока пусто.",
-    nav_deals:"Сделки", nav_stats:"Отчеты", nav_agents:"Агенты", nav_radar:"Зал Славы", nav_profile:"Профиль",
+    nav_deals:"Сделки", nav_stats:"Отчеты", nav_recommenders:"Рекомендатели", nav_recommend:"Рекомендую", nav_profile:"Профиль",
     sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
     sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
     lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
     lb_deals:"Сделок:", filt_all:"Все", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   he:{
+    rec_chip:"ההון החברתי שלך", rec_title:"ממליץ", rec_sub:"כשאתם ממליצים על עסק טוב, אתם מחזקים את רשת האמון ויכולים לבחור איך להשתמש בתגמול.", rec_btn_label:"להמליץ על עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_chip:"מקורות אמון", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
+
     loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
     err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
     debt_label:"🔴 חוב לסוכנים:", filt_active:"פעיל", filt_history:"היסטוריה",
@@ -537,8 +619,8 @@ const i18n = {
     pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
     st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן",
     st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
-    st_agents:"סוכנים", st_avg_deal:"עסקה ממוצעת",
-    ag_title:"הסוכנים שלי", ag_sub:"אנשים שממליצים על העסק שלך. ככל שתשלם יותר, המוטיבציה תעלה.",
+    st_agents:"ממליצים", st_avg_deal:"עסקה ממוצעת",
+    ag_title:"ממליצים", ag_sub:"כאן נמצאים הממליצים שלכם והמובילים בנישה שלכם, שאיתם אפשר להתחיל שיתוף פעולה.",
     ag_deals:"הביא לקוחות:", ag_comm:"שולם",
     rd_title:"רדאר המשפיענים", rd_promo_title:"מחפשים שותפים חדשים?", rd_promo_desc:"עברו ל-PRO כדי לפתוח אנשי קשר של משפיענים.",
     rd_promo_btn:"גלה על PRO", radar_loading:"טוען...",
@@ -557,13 +639,15 @@ const i18n = {
     action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור",
     save_ok:"נשמר!", save_err:"שגיאה",
     empty_deals:"ריק כאן.",
-    nav_deals:"עסקאות", nav_stats:"דוחות", nav_agents:"סוכנים", nav_radar:"היכל התהילה", nav_profile:"פרופיל",
+    nav_deals:"עסקאות", nav_stats:"דוחות", nav_recommenders:"ממליצים", nav_recommend:"ממליץ על עסק", nav_profile:"פרופיל",
     sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
     sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
     lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
     lb_deals:"עסקאות:", filt_all:"הכל", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   en:{
+    rec_chip:"Your social capital", rec_title:"I Recommend", rec_sub:"When you recommend a great business, you strengthen the trust network and choose how to use the gratitude.", rec_btn_label:"Recommend a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_chip:"Sources of trust", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
+
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
     debt_label:"🔴 Agent debt:", filt_active:"Active", filt_history:"History",
@@ -571,8 +655,8 @@ const i18n = {
     pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
     st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
     st_funnel_title:"Conversion Funnel", st_total_leads:"Total leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected",
-    st_agents:"Agents", st_avg_deal:"Avg Deal",
-    ag_title:"My Agents", ag_sub:"People who already recommend your business. The more you pay them, the higher their motivation.",
+    st_agents:"Recommenders", st_avg_deal:"Avg Deal",
+    ag_title:"Recommenders", ag_sub:"Your recommenders and the strong people in your niche you may want to collaborate with.",
     ag_deals:"Brought clients:", ag_comm:"Paid",
     rd_title:"Influencer Radar", rd_promo_title:"Looking for new partners?", rd_promo_desc:"Upgrade to PRO to unlock top influencer contacts.",
     rd_promo_btn:"Learn about PRO", radar_loading:"Loading...",
@@ -591,13 +675,15 @@ const i18n = {
     action_processing:"Processing...", action_success:"Done!", action_close:"Close",
     save_ok:"Changes saved!", save_err:"Save error",
     empty_deals:"Nothing here yet.",
-    nav_deals:"Deals", nav_stats:"Reports", nav_agents:"Agents", nav_radar:"Leaderboard", nav_profile:"Profile",
+    nav_deals:"Deals", nav_stats:"Reports", nav_recommenders:"Recommenders", nav_recommend:"Recommend", nav_profile:"Profile",
     sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
     sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
     lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
     lb_deals:"Deals:", filt_all:"All", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   ar:{
+    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصي", rec_sub:"عندما توصي بعمل جيد، فأنت تعزز شبكة الثقة ويمكنك اختيار كيف تستفيد من الشكر.", rec_btn_label:"التوصية بعمل", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_chip:"مصادر الثقة", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
+
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
     debt_label:"🔴 دين للوكلاء:", filt_active:"نشط", filt_history:"السجل",
@@ -605,8 +691,8 @@ const i18n = {
     pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
     st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
     st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة",
-    st_agents:"وكلاء", st_avg_deal:"متوسط الصفقة",
-    ag_title:"وكلائي", ag_sub:"الأشخاص الذين يوصون بعملك. كلما دفعت لهم أكثر، زادت حوافزهم.",
+    st_agents:"موصون", st_avg_deal:"متوسط الصفقة",
+    ag_title:"الموصون", ag_sub:"هنا الموصون بك والأشخاص الأقوى في مجالك الذين يمكن بدء تعاون معهم.",
     ag_deals:"العملاء:", ag_comm:"مدفوع",
     rd_title:"رادار المؤثرين", rd_promo_title:"تبحث عن شركاء جدد?", rd_promo_desc:"قم بالترقية إلى PRO لفتح جهات اتصال أفضل المؤثرين.",
     rd_promo_btn:"ترقية PRO", radar_loading:"جاري...",
@@ -625,7 +711,7 @@ const i18n = {
     action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق",
     save_ok:"تم الحفظ!", save_err:"خطأ",
     empty_deals:"فارغ هنا.",
-    nav_deals:"الصفقات", nav_stats:"تقارير", nav_agents:"وكلاء", nav_radar:"قاعة المشاهير", nav_profile:"الملف",
+    nav_deals:"الصفقات", nav_stats:"تقارير", nav_recommenders:"الموصون", nav_recommend:"أوصي بعمل", nav_profile:"الملف",
     sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
     sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
     lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
@@ -638,11 +724,16 @@ const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
 let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
 let bizData    = null;
-let radarData  = null;
+let leaderboardData = null;
 let dealFilter = 'active';
 let activeDealId = null;
+let currentTab = 'deals';
+let recommendersMode = 'mine';
 
-const tabs = ['deals','stats','agents','radar','profile'];
+const LTR_TABS = ['deals','stats','recommenders','recommend','profile'];
+const RTL_TABS = ['profile','recommend','recommenders','stats','deals'];
+function isRTLLang(targetLang = lang) { return targetLang === 'he' || targetLang === 'ar'; }
+function getTabOrder(targetLang = lang) { return isRTLLang(targetLang) ? RTL_TABS : LTR_TABS; }
 
 // ══ THEME ═════════════════════════════════════════════════════════════
 function applyTheme() {
@@ -662,8 +753,28 @@ function toggleTheme() {
   feather.replace();
 }
 
-// ══ SWIPE (agent cabinet pattern — wrapper always LTR) ═════════════════
-// dx < 0 = left = next tab; dx > 0 = right = prev tab. Always.
+// ══ VIEW ORDER / SWIPE ═════════════════════════════════════════════
+function applyViewOrder(isRTL) {
+  const wrapper = document.getElementById('viewsWrapper');
+  if (!wrapper) return;
+  const order = isRTL ? RTL_TABS : LTR_TABS;
+  order.forEach(tabId => {
+    const view = document.getElementById('view-' + tabId);
+    if (view) wrapper.appendChild(view);
+  });
+}
+
+function syncWrapperToCurrentTab() {
+  const wrapper = document.getElementById('viewsWrapper');
+  if (!wrapper) return;
+  const order = getTabOrder();
+  const idx = order.indexOf(currentTab);
+  wrapper.style.transform = `translateX(${-Math.max(idx,0) * 20}%)`;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const activeView = document.getElementById('view-' + currentTab);
+  if (activeView) activeView.classList.add('active');
+}
+
 let touchX = 0, touchY = 0, touchT = 0;
 document.querySelector('.app').addEventListener('touchstart', e => {
   if (document.querySelector('.fullscreen.active')) return;
@@ -677,31 +788,26 @@ document.querySelector('.app').addEventListener('touchend', e => {
   const dy = e.changedTouches[0].clientY - touchY;
   const dt = Date.now() - touchT;
   if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-    const cur  = tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
-    const next = dx < 0 ? cur + 1 : cur - 1;
-    if (next >= 0 && next < tabs.length) {
-      const navBtns = document.querySelectorAll('.nav-item');
-      switchTab(tabs[next], navBtns[next]);
-      if (tabs[next] === 'radar') loadRadar();
+    const order = getTabOrder();
+    const cur = order.indexOf(currentTab);
+    const next = isRTLLang() ? (dx < 0 ? cur - 1 : cur + 1) : (dx < 0 ? cur + 1 : cur - 1);
+    if (next >= 0 && next < order.length) {
+      const nextTab = order[next];
+      const navBtn = Array.from(document.querySelectorAll('.nav-item')).find(b => b.getAttribute('onclick')?.includes(`'${nextTab}'`));
+      switchTab(nextTab, navBtn || null);
     }
   }
 });
 
 // ══ NAVIGATION ════════════════════════════════════════════════════════
 function switchTab(tabId, btnEl) {
+  currentTab = tabId;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   const target = Array.from(document.querySelectorAll('.nav-item')).find(b =>
     b.getAttribute('onclick')?.includes(`'${tabId}'`)
   ) || btnEl;
   if (target) target.classList.add('active');
-  const idx = tabs.indexOf(tabId);
-  if (idx !== -1) {
-    document.getElementById('viewsWrapper').style.transform = `translateX(${-idx * 20}%)`;
-    setTimeout(() => {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-'+tabId).classList.add('active');
-    }, 50);
-  }
+  syncWrapperToCurrentTab();
   window.scrollTo(0, 0);
 }
 
@@ -734,19 +840,16 @@ function animNum(id, to, suffix='', dur=1000) {
 // ══ LANG ══════════════════════════════════════════════════════════════
 function setLang(l) {
   lang = l;
-  const isRTL = l === 'he' || l === 'ar';
+  const isRTL = isRTLLang(l);
   document.documentElement.lang = l;
   document.body.classList.toggle('rtl', isRTL);
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`);
   if (btn) btn.classList.add('active');
-
-  // Sync swipe offset after lang/RTL switch
-  const idx = tabs.findIndex(t => document.getElementById('view-'+t)?.classList.contains('active'));
-  if (idx !== -1) document.getElementById('viewsWrapper').style.transform = `translateX(${-idx * 20}%)`;
-
+  applyViewOrder(isRTL);
   applyI18n();
   populateCategories();
+  syncWrapperToCurrentTab();
   if (bizData) renderAll();
 }
 
@@ -760,10 +863,15 @@ function applyI18n() {
     't_st_funnel_title':'st_funnel_title', 't_st_total_leads':'st_total_leads',
     't_f_active':'f_active', 't_f_closed':'f_closed', 't_f_rejected':'f_rejected',
     't_st_agents':'st_agents', 't_st_avg_deal':'st_avg_deal',
-    't_ag_title':'ag_title', 't_ag_sub':'ag_sub',
-    't_rd_title':'rd_title', 't_rd_promo_title':'rd_promo_title',
-    't_rd_promo_desc':'rd_promo_desc', 't_rd_promo_btn':'rd_promo_btn',
-    't_radar_loading':'radar_loading',
+    't_ag_chip':'ag_chip', 't_ag_title':'ag_title', 't_ag_sub':'ag_sub',
+    'agTabMine':'ag_tab_mine', 'agTabLeaders':'ag_tab_leaders',
+    't_ag_mine_caption':'ag_mine_caption', 't_ag_leaders_caption':'ag_leaders_caption',
+    't_rd_promo_title':'rd_promo_title', 't_rd_promo_desc':'rd_promo_desc',
+    't_rd_promo_btn':'rd_promo_btn', 't_radar_loading':'radar_loading',
+    't_rec_chip':'rec_chip', 't_rec_title':'rec_title', 't_rec_sub':'rec_sub',
+    't_rec_btn_label':'rec_btn_label', 't_rec_note':'rec_note',
+    't_rec_stat_total':'rec_stat_total', 't_rec_stat_waiting':'rec_stat_waiting', 't_rec_stat_done':'rec_stat_done',
+    't_rec_list_title':'rec_list_title', 't_rec_list_sub':'rec_list_sub',
     't_tab_profile':'tab_profile', 't_sub_title':'sub_title', 't_btn_upgrade':'btn_upgrade',
     't_pr_name':'pr_name', 't_pr_niche':'pr_niche', 't_pr_comm':'pr_comm',
     't_pr_pay':'pr_pay', 't_pr_phone':'pr_phone', 't_btn_edit':'btn_edit',
@@ -778,8 +886,8 @@ function applyI18n() {
     't_f_name':'f_name', 't_f_niche':'f_niche', 't_f_subniche':'f_subniche',
     't_f_comm':'f_comm', 't_f_pay':'f_pay', 't_f_link':'f_link',
     't_btn_save':'btn_save', 't_btn_cancel_edit':'btn_cancel_edit',
-    'nav_deals':'nav_deals', 'nav_stats':'nav_stats', 'nav_agents':'nav_agents',
-    'nav_radar':'nav_radar', 'nav_profile':'nav_profile',
+    'nav_deals':'nav_deals', 'nav_stats':'nav_stats', 'nav_recommenders':'nav_recommenders',
+    'nav_recommend':'nav_recommend', 'nav_profile':'nav_profile',
     't_err_btn_wa':'err_btn_wa', 't_err_btn_tg':'err_btn_tg'
   };
   for (const [id, key] of Object.entries(map)) {
@@ -817,6 +925,7 @@ async function init() {
   applyTheme();
   populateCategories();
   applyI18n();
+  applyViewOrder(isRTLLang(lang));
   if (i18n[lang]) setLang(lang);
 
   if (!token) { showError(); return; }
@@ -862,7 +971,7 @@ async function init() {
   if (urlTab && tabs.includes(urlTab)) {
     const navBtns = document.querySelectorAll('.nav-item');
     switchTab(urlTab, navBtns[tabs.indexOf(urlTab)]);
-    if (urlTab === 'radar') loadRadar();
+    if (urlTab === 'radar') openLeaderboard(null);
   }
 
   feather.replace();
@@ -929,7 +1038,8 @@ function renderAll() {
 
   try { renderDeals(); } catch(e) { console.error('[Biz] renderDeals:', e); }
   try { renderStats(); } catch(e) { console.error('[Biz] renderStats:', e); }
-  try { renderAgents(); } catch(e) { console.error('[Biz] renderAgents:', e); }
+  try { renderRecommenders(); } catch(e) { console.error('[Biz] renderRecommenders:', e); }
+  try { renderRecommend(); } catch(e) { console.error('[Biz] renderRecommend:', e); }
   try { renderProfile(); } catch(e) { console.error('[Biz] renderProfile:', e); }
   try { renderEditForm(); } catch(e) { console.error('[Biz] renderEditForm:', e); }
   try { updateReturnBtns(); } catch(e) { console.error('[Biz] updateReturnBtns:', e); }
@@ -1093,185 +1203,224 @@ function renderStats() {
   }
 }
 
-// ══ AGENTS ════════════════════════════════════════════════════════════
-function renderAgents() {
+// ══ RECOMMENDERS ═══════════════════════════════════════════════════════
+function setRecommendersMode(mode) {
+  recommendersMode = mode;
+  document.getElementById('agTabMine').classList.toggle('active', mode === 'mine');
+  document.getElementById('agTabLeaders').classList.toggle('active', mode === 'leaders');
+  document.getElementById('recommendersMinePanel').style.display = mode === 'mine' ? 'block' : 'none';
+  document.getElementById('recommendersLeadersPanel').style.display = mode === 'leaders' ? 'block' : 'none';
+  if (mode === 'leaders') loadLeadersInline();
+}
+
+function renderRecommenders() {
+  renderMyRecommenders();
+  if (recommendersMode === 'leaders') loadLeadersInline();
+}
+
+function renderMyRecommenders() {
   const container = document.getElementById('agentsList');
-  const L    = i18n[lang] || i18n.ru;
+  const L = i18n[lang] || i18n.ru;
   const curr = bizData.currency || '₪';
   const deals = bizData.deals || [];
-
-  // Build agent map from deals
   const agentMap = {};
   deals.forEach(d => {
-    if (!d.agent_name) return;
-    if (!agentMap[d.agent_name]) agentMap[d.agent_name] = { name: d.agent_name, count: 0, comm: 0 };
-    agentMap[d.agent_name].count++;
-    if (d.commission && d.status === 'closed') {
-      agentMap[d.agent_name].comm += parseFloat(d.commission) || 0;
-    }
+    const name = d.agent_name || d.sender_name || d.agent;
+    if (!name) return;
+    if (!agentMap[name]) agentMap[name] = { name, count: 0, comm: 0, last: d.date || d.created_at || '', waiting: 0 };
+    agentMap[name].count++;
+    if (d.commission && d.status === 'closed') agentMap[name].comm += parseFloat(d.commission) || 0;
+    if (d.status === 'pending_confirmation') agentMap[name].waiting++;
   });
-
-  const agents = Object.values(agentMap).sort((a,b) => b.count - a.count);
-
+  const agents = Object.values(agentMap).sort((a,b) => b.count - a.count || b.comm - a.comm);
   if (!agents.length) {
     container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
     return;
   }
-
   container.innerHTML = agents.map(a => `
-    <div class="agent-card">
-      <div class="agent-avatar">${a.name.charAt(0).toUpperCase()}</div>
-      <div class="agent-info">
-        <div class="agent-name">${a.name}</div>
-        <div class="agent-deals">${L.ag_deals} <span>${a.count}</span></div>
+    <div class="reco-card">
+      <div class="reco-top">
+        <div style="display:flex;gap:12px;min-width:0;align-items:center;">
+          <div class="agent-avatar">${a.name.charAt(0).toUpperCase()}</div>
+          <div class="agent-info">
+            <div class="agent-name">${a.name}</div>
+            <div class="reco-sub">${L.ag_deals} <b>${a.count}</b>${a.last ? ' · ' + formatShortDate(a.last) : ''}</div>
+          </div>
+        </div>
+        <div class="agent-comm">
+          <div class="agent-comm-lbl">${L.ag_comm}</div>
+          <div class="agent-comm-val">${Math.round(a.comm)} ${curr}</div>
+        </div>
       </div>
-      <div class="agent-comm">
-        <div class="agent-comm-lbl">${L.ag_comm}</div>
-        <div class="agent-comm-val">${Math.round(a.comm)} ${curr}</div>
+      <div class="reco-meta">
+        <span class="meta-pill">👥 ${a.count}</span>
+        <span class="meta-pill">🎁 ${Math.round(a.comm)} ${curr}</span>
+        ${a.waiting ? `<span class="meta-pill">⏳ ${a.waiting}</span>` : ''}
       </div>
-    </div>`
-  ).join('');
+    </div>`).join('');
 }
 
-// ══ RADAR ════════════════════════════════════════════════════════════
-let radarActiveNiche = 'all';
-
-async function loadRadar() {
-  if (radarData) { renderRadar(); return; }
-  const container = document.getElementById('radarList');
+async function loadLeadersInline() {
+  const container = document.getElementById('leadersInlineList');
+  const promo = document.getElementById('leadersInlinePromo');
   const L = i18n[lang] || i18n.ru;
-  container.innerHTML = `<div class="empty-state">${L.radar_loading || 'Загрузка...'}</div>`;
+  const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  if (promo) promo.style.display = isPro ? 'none' : 'block';
+  if (leaderboardData) { renderLeadersInline(); return; }
+  container.innerHTML = `<div class="empty-state">${L.radar_loading}</div>`;
   try {
-    var lbToken = token;
-    var bizId = bizData && bizData.id;
+    let lbToken = token;
+    const bizId = bizData && bizData.id;
     if (bizId) {
-      var r = await fetch(API_URL + '/api/leaderboard/token?biz_id=' + bizId);
-      if (r.ok) { var d = await r.json(); lbToken = d.token || token; }
+      const tRes = await fetch(`${API_URL}/api/leaderboard/token?biz_id=${bizId}`);
+      if (tRes.ok) {
+        const tData = await tRes.json();
+        lbToken = tData.token || token;
+      }
     }
     const res = await fetch(`${API_URL}/api/leaderboard?token=${lbToken}`);
-    if (!res.ok) throw new Error();
-    radarData = await res.json();
-    renderRadar();
-  } catch(e) {
-    container.innerHTML = `<div class="empty-state" style="color:var(--red);">Ошибка сети</div>`;
+    if (!res.ok) throw new Error('leaderboard');
+    leaderboardData = await res.json();
+    renderLeadersInline();
+  } catch (e) {
+    container.innerHTML = `<div class="empty-state" style="color:var(--red);">${L.save_err}</div>`;
   }
 }
 
-function renderRadar() {
-  if (!radarData || !bizData) return;
-  const L      = i18n[lang] || i18n.ru;
-  const isPro  = bizData.is_pro || bizData.subscription === 'pro';
-  const agents = radarData.top_agents || [];
-
-  // Ниши
-  const allNiches = [];
-  agents.forEach(function(a) {
-    (a.niche_categories || []).forEach(function(n) {
-      if (n && !allNiches.includes(n)) allNiches.push(n);
-    });
-  });
-
-  // Ниша-табы
-  const tabsEl = document.getElementById('radarNicheTabs');
-  if (isPro && allNiches.length > 1) {
-    var tabsHtml = `<button onclick="filterRadarNiche('all')" id="rnTab_all"
-      style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent1);background:var(--accent1);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;">
-      ${L.filt_all || 'Все'}</button>`;
-    allNiches.forEach(function(n) {
-      var label = (typeof getCatName === 'function') ? getCatName(n, lang) : n;
-      var safeId = n.replace(/[^a-zA-Z\u0400-\u04FF0-9]/g,'_');
-      tabsHtml += `<button onclick="filterRadarNiche('${n.replace(/'/g,"\\'")}') " id="rnTab_${safeId}"
-        style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap;">
-        ${label}</button>`;
-    });
-    tabsEl.innerHTML = tabsHtml;
-    tabsEl.style.display = 'flex';
-  } else {
-    tabsEl.innerHTML = '';
-    tabsEl.style.display = 'none';
-  }
-
-  renderRadarAgents(agents, isPro, L, radarActiveNiche);
-
-  // Промо для Standard
-  var oldPromo = document.getElementById('radarPromoBlock');
-  if (oldPromo) oldPromo.remove();
-  if (!isPro) {
-    var promoDiv = document.createElement('div');
-    promoDiv.id = 'radarPromoBlock';
-    promoDiv.className = 'pro-promo';
-    promoDiv.style.marginTop = '20px';
-    promoDiv.innerHTML = `<h3>${L.rd_promo_title || 'Ищете новых партнеров?'}</h3>
-      <p style="margin-bottom:12px;">${L.rd_promo_desc || 'Перейдите на PRO, чтобы открыть контакты.'}</p>
-      <button class="btn-primary btn-gold" style="width:100%;max-width:240px;" onclick="switchTab('profile',null)">${L.rd_promo_btn || 'Подробнее о PRO'}</button>`;
-    document.getElementById('radarList').after(promoDiv);
-  }
-}
-
-function renderRadarAgents(agents, isPro, L, nicheFilter) {
-  var filtered = nicheFilter && nicheFilter !== 'all'
-    ? agents.filter(function(a) { return (a.niche_categories || []).includes(nicheFilter); })
-    : agents;
-  const container = document.getElementById('radarList');
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state">${L.empty_deals || 'Нет данных'}</div>`;
+function renderLeadersInline() {
+  const container = document.getElementById('leadersInlineList');
+  const L = i18n[lang] || i18n.ru;
+  const curr = bizData && bizData.currency ? bizData.currency : '₪';
+  const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  const agents = (leaderboardData && leaderboardData.top_agents) ? leaderboardData.top_agents : [];
+  if (!agents.length) {
+    container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
     return;
   }
-  container.innerHTML = filtered.map(function(a) {
-    var badge = a.rank, rankClass = '';
+  container.innerHTML = agents.map(a => {
+    let badge = a.rank, rankClass = '';
     if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
     else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
     else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
-    var blurClass = !isPro ? 'lb-blurred' : '';
-    var clickAttr = !isPro ? `onclick="alert('${(L.lb_blur_alert||'Доступно на PRO').replace(/'/g,"\\'")}') "` : '';
-    var trust = (a.trust_score !== undefined && a.trust_score !== null) ? a.trust_score : 100;
-    var trustColor = trust >= 80 ? 'var(--green)' : trust >= 50 ? '#f2c94c' : 'var(--red)';
-    var niches = (a.niche_categories || []).map(function(n) {
-      return `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.25);color:var(--accent1);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:2px 2px 0 0;">${(typeof getCatName==='function')?getCatName(n,lang):n}</span>`;
-    }).join('');
-    var contactBtn = '';
+    const niches = (a.niche_categories || []).map(n => `<span class="meta-pill">${(typeof getCatName==='function') ? getCatName(n,lang) : n}</span>`).join('');
+    let cta = `<button class="btn-primary btn-outline" onclick="switchTab('profile', null)">${L.rd_promo_btn}</button>`;
     if (isPro && a.wa_phone) {
-      var waLink = 'https://wa.me/' + a.wa_phone.replace(/\D/g,'');
-      contactBtn = `<a href="${waLink}" target="_blank"
-        style="display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.4);color:#25d366;font-size:.78rem;font-weight:700;text-decoration:none;margin-top:6px;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.115 1.528 5.845L0 24l6.335-1.508A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.36-.214-3.728.888.916-3.636-.234-.373A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818 0 5.423-4.394 9.818-9.818 9.818z"/></svg>
-        WhatsApp</a>`;
+      const waLink = 'https://wa.me/' + String(a.wa_phone).replace(/\D/g,'');
+      cta = `<a class="btn-primary btn-wa" href="${waLink}" target="_blank"><i data-feather="message-circle" style="width:16px;height:16px;"></i> ${L.ag_cta_partner || 'Предложить сотрудничество'}</a>`;
     }
-    return `<div class="agent-card" style="flex-direction:column;align-items:stretch;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div class="lb-rank-badge ${rankClass}">${badge}</div>
-        <div class="agent-info ${blurClass}" style="flex:1;min-width:0;" ${clickAttr}>
-          <div class="agent-name" style="font-weight:700;font-size:.95rem;">${a.name}</div>
-          <div style="display:flex;gap:12px;margin-top:3px;flex-wrap:wrap;">
-            <span style="font-size:.8rem;color:var(--text2);">${L.lb_deals||'Сделок:'} <b>${a.deals_count}</b></span>
-            <span style="font-size:.8rem;font-weight:700;color:${trustColor};">★ ${trust}</span>
+    return `
+      <div class="reco-card">
+        <div class="reco-top">
+          <div style="display:flex;gap:12px;min-width:0;align-items:center;">
+            <div class="lb-rank-badge ${rankClass}">${badge}</div>
+            <div class="agent-info ${!isPro ? 'lb-blurred' : ''}">
+              <div class="agent-name">${a.name}</div>
+              <div class="reco-sub">${L.lb_deals} <b>${a.deals_count}</b></div>
+            </div>
           </div>
-          ${niches ? `<div style="margin-top:4px;">${niches}</div>` : ''}
-          ${contactBtn}
+          <div class="agent-comm">
+            <div class="agent-comm-lbl">${L.lb_earned || 'Заработано'}</div>
+            <div class="agent-comm-val">${Math.round(a.earned || 0)} ${curr}</div>
+          </div>
         </div>
-      </div>
-    </div>`;
+        <div class="reco-meta">${niches}</div>
+        <div class="hero-actions">${cta}</div>
+      </div>`;
+  }).join('');
+  feather.replace();
+}
+
+// ══ RECOMMEND ═══════════════════════════════════════════════════════════
+function normalizeOutgoingRecommendations() {
+  const raw = bizData.outgoing_recommendations || bizData.recommendations_sent || bizData.outgoing_deals || bizData.sent_recommendations || [];
+  return raw.map((r, idx) => ({
+    id: r.id || idx,
+    business_name: r.business_name || r.receiver_name || r.partner_name || r.recommended_business || '—',
+    client_name: r.client_name || r.invited_client_name || r.name || '—',
+    status: r.status || r.reward_status || r.decision_status || 'in_progress',
+    date: r.date || r.created_at || '',
+    reward: r.reward || r.commission || r.reward_amount || '',
+    decision: r.agent_decision || r.decision || ''
+  }));
+}
+
+function renderRecommend() {
+  const listEl = document.getElementById('recommendList');
+  const totalEl = document.getElementById('rec_stat_total');
+  const waitingEl = document.getElementById('rec_stat_waiting');
+  const doneEl = document.getElementById('rec_stat_done');
+  const L = i18n[lang] || i18n.ru;
+  const curr = bizData.currency || '₪';
+  const rows = normalizeOutgoingRecommendations();
+  const waiting = rows.filter(r => ['in_progress','pending','pending_confirmation','awaiting_reward'].includes(r.status)).length;
+  const done = rows.filter(r => ['closed','completed','done'].includes(r.status)).length;
+  if (totalEl) totalEl.textContent = rows.length;
+  if (waitingEl) waitingEl.textContent = waiting;
+  if (doneEl) doneEl.textContent = done;
+  if (!rows.length) {
+    listEl.innerHTML = `<div class="empty-state">${L.rec_empty || L.empty_deals}</div>`;
+    return;
+  }
+  listEl.innerHTML = rows.map(r => {
+    const statusText = getRecommendStatusLabel(r.status, L);
+    const rewardLine = r.reward ? `<span class="meta-pill">🎁 ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
+    const decisionLine = r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '';
+    return `
+      <div class="reco-card">
+        <div class="reco-top">
+          <div>
+            <div class="reco-title">${r.business_name}</div>
+            <div class="reco-sub">${L.rec_client || 'Клиент'}: <b>${r.client_name}</b>${r.date ? ' · ' + formatShortDate(r.date) : ''}</div>
+          </div>
+          <div class="status-badge ${statusText.cls}">${statusText.text}</div>
+        </div>
+        <div class="reco-meta">
+          ${rewardLine}
+          ${decisionLine}
+        </div>
+      </div>`;
   }).join('');
 }
 
-function filterRadarNiche(niche) {
-  radarActiveNiche = niche;
-  var tabsEl = document.getElementById('radarNicheTabs');
-  if (tabsEl) {
-    tabsEl.querySelectorAll('button').forEach(function(btn) {
-      btn.style.background = 'var(--surface)';
-      btn.style.color = 'var(--text)';
-      btn.style.borderColor = 'var(--border)';
-    });
-    var safeId = 'rnTab_' + (niche === 'all' ? 'all' : niche.replace(/[^a-zA-Z\u0400-\u04FF0-9]/g,'_'));
-    var ab = document.getElementById(safeId);
-    if (ab) { ab.style.background='var(--accent1)'; ab.style.color='#fff'; ab.style.borderColor='var(--accent1)'; }
-  }
-  const L    = i18n[lang] || i18n.ru;
-  const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
-  renderRadarAgents(radarData ? radarData.top_agents || [] : [], isPro, L, niche);
+function getRecommendStatusLabel(status, L) {
+  const map = {
+    in_progress: { text: L.rec_waiting || 'В работе', cls: 'st-progress' },
+    pending: { text: L.rec_waiting || 'В работе', cls: 'st-progress' },
+    pending_confirmation: { text: L.rec_waiting || 'В работе', cls: 'st-pending' },
+    awaiting_reward: { text: L.rec_waiting || 'В работе', cls: 'st-pending' },
+    closed: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
+    completed: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
+    done: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
+  };
+  return map[status] || { text: status, cls: 'st-new' };
 }
 
+function formatDecision(decision, L) {
+  if (decision === 'take') return '💳 ' + (L.dec_take || 'Забрать себе');
+  if (decision === 'gift_client') return '🎁 ' + (L.dec_gift || 'Подарить клиенту');
+  if (decision === 'support_business') return '🤝 ' + (L.dec_support || 'Поддержать бизнес');
+  return decision;
+}
+
+function openRecommendFlow() {
+  const L = i18n[lang] || i18n.ru;
+  const phone = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
+  const prefill = L.rec_prefill || i18n.ru.rec_prefill;
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(prefill)}`, '_blank');
+}
+
+function formatShortDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return String(dateStr).slice(0,10);
+    return d.toLocaleDateString(lang === 'he' ? 'he-IL' : lang === 'ar' ? 'ar' : lang === 'en' ? 'en-GB' : 'ru-RU', { day:'2-digit', month:'2-digit' });
+  } catch(e) {
+    return String(dateStr).slice(0,10);
+  }
+}
+
+// ══ PROFILE ═══════════════════════════════════════════════════════════
 // ══ PROFILE ═══════════════════════════════════════════════════════════
 function renderProfile() {
   const L    = i18n[lang] || i18n.ru;
@@ -1526,8 +1675,170 @@ async function submitDealAction(actionType) {
 }
 
 // ══ LEADERBOARD ══════════════════════════════════════════════════════
-let leaderboardData = null;
 
+async function openLeaderboard(btnEl) {
+  if (btnEl) {
+    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+    btnEl.classList.add("active");
+  }
+  document.getElementById('leaderboardSheet').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0, 0);
+
+  const L = i18n[lang] || i18n.ru;
+  const contentBox = document.getElementById('lbContent');
+
+  if (!leaderboardData) {
+    contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2);">Загрузка...</div>`;
+    try {
+      var bizId = bizData && bizData.id;
+      var lbToken = token;
+      if (bizId) {
+        var r = await fetch(API_URL + '/api/leaderboard/token?biz_id=' + bizId);
+        if (r.ok) { var d = await r.json(); lbToken = d.token || token; }
+      }
+      var res = await fetch(API_URL + '/api/leaderboard?token=' + lbToken);
+      if (res.ok) {
+        leaderboardData = await res.json();
+        renderLeaderboardUI();
+      } else {
+        contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка загрузки рейтинга.</div>`;
+      }
+    } catch(e) {
+      contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка сети.</div>`;
+    }
+  } else {
+    renderLeaderboardUI();
+  }
+}
+
+let lbActiveNiche = 'all';
+
+function renderLeaderboardUI() {
+  if (!leaderboardData) return;
+  const L      = i18n[lang] || i18n.ru;
+  const curr   = bizData && bizData.currency ? bizData.currency : '₪';
+  const isPro  = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  const agents = leaderboardData.top_agents || [];
+
+  // Собираем уникальные ниши из всех агентов
+  const allNiches = [];
+  agents.forEach(function(a) {
+    (a.niche_categories || []).forEach(function(n) {
+      if (n && !allNiches.includes(n)) allNiches.push(n);
+    });
+  });
+
+  let html = '';
+
+  // PRO: фильтр по нишам — горизонтальный скролл табов
+  if (isPro && allNiches.length > 1) {
+    html += `<div id="lbNicheTabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;scrollbar-width:none;">`;
+    html += `<button onclick="filterLbNiche('all')" id="lbTab_all"
+      style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent1);background:var(--accent1);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;"
+    >${L.filt_all || 'Все'}</button>`;
+    allNiches.forEach(function(n) {
+      var label = (typeof getCatName === 'function') ? getCatName(n, lang) : n;
+      html += `<button onclick="filterLbNiche('${n.replace(/'/g,"\'")}')" id="lbTab_${n.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')}"
+        style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;"
+      >${label}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  // Список агентов
+  html += `<div id="lbAgentList" style="display:flex;flex-direction:column;gap:10px;">`;
+  html += buildLbAgents(agents, isPro, curr, L, lbActiveNiche);
+  html += `</div>`;
+
+  // Standard: промо блок
+  if (!isPro) {
+    html += `<div class="pro-promo" style="margin-top:20px;">
+      <h3>🌟 ${L.rd_promo_title || 'Откройте полный доступ'}</h3>
+      <p>${L.rd_promo_desc || 'Перейдите на PRO, чтобы видеть контакты агентов и фильтровать по нишам.'}</p>
+      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');switchTab('profile',null)">${L.rd_promo_btn || 'Подробнее о PRO'}</button>
+    </div>`;
+  }
+
+  document.getElementById('lbContent').innerHTML = html;
+}
+
+function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
+  var filtered = agents;
+  if (nicheFilter && nicheFilter !== 'all') {
+    filtered = agents.filter(function(a) {
+      return (a.niche_categories || []).includes(nicheFilter);
+    });
+  }
+  if (!filtered.length) {
+    return `<div style="text-align:center;padding:30px;color:var(--text2);">${L.empty_deals || 'Нет данных'}</div>`;
+  }
+  return filtered.map(function(a) {
+    var badge = a.rank, rankClass = '';
+    if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
+
+    var blurClass = !isPro ? 'lb-blurred' : '';
+    var clickAttr = !isPro ? `onclick="alert('${(L.lb_blur_alert||'Доступно на PRO').replace(/'/g,"\\'")}')"`  : '';
+
+    // Кнопка связи — только PRO и если есть wa_phone
+    var contactBtn = '';
+    if (isPro && a.wa_phone) {
+      var waLink = 'https://wa.me/' + a.wa_phone.replace(/\D/g,'');
+      contactBtn = `<a href="${waLink}" target="_blank"
+        style="display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.4);color:#25d366;font-size:.78rem;font-weight:700;text-decoration:none;margin-top:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.115 1.528 5.845L0 24l6.335-1.508A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.36-.214-3.728.888.916-3.636-.234-.373A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818 0 5.423-4.394 9.818-9.818 9.818z"/></svg>
+        WhatsApp</a>`;
+    }
+
+    var niches = (a.niche_categories || []).map(function(n) {
+      return `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.25);color:var(--accent1);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:2px 2px 0 0;">${(typeof getCatName==='function')?getCatName(n,lang):n}</span>`;
+    }).join('');
+
+    return `<div style="background:var(--surface);border-radius:14px;padding:12px 14px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="lb-rank-badge ${rankClass}">${badge}</div>
+        <div class="agent-info ${blurClass}" style="flex:1;" ${clickAttr}>
+          <div class="agent-name" style="font-weight:700;font-size:.95rem;">${a.name}</div>
+          <div style="font-size:.8rem;color:var(--text2);margin-top:2px;">${L.lb_deals||'Сделок:'} <b>${a.deals_count}</b></div>
+          ${niches ? `<div style="margin-top:4px;">${niches}</div>` : ''}
+          ${contactBtn}
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:.72rem;color:var(--text2);">${L.lb_earned||'Заработано'}</div>
+          <div style="font-weight:800;font-size:.95rem;">${Math.round(a.earned)} ${curr}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterLbNiche(niche) {
+  lbActiveNiche = niche;
+  // Обновляем стили табов
+  var tabs = document.getElementById('lbNicheTabs');
+  if (tabs) {
+    tabs.querySelectorAll('button').forEach(function(btn) {
+      btn.style.background = 'var(--surface)';
+      btn.style.color = 'var(--text)';
+      btn.style.borderColor = 'var(--border)';
+    });
+    var activeId = 'lbTab_' + (niche === 'all' ? 'all' : niche.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_'));
+    var activeBtn = document.getElementById(activeId);
+    if (activeBtn) {
+      activeBtn.style.background = 'var(--accent1)';
+      activeBtn.style.color = '#fff';
+      activeBtn.style.borderColor = 'var(--accent1)';
+    }
+  }
+  // Перерисовываем только список агентов
+  const L     = i18n[lang] || i18n.ru;
+  const curr  = bizData && bizData.currency ? bizData.currency : '₪';
+  const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  var listEl  = document.getElementById('lbAgentList');
+  if (listEl) listEl.innerHTML = buildLbAgents(leaderboardData.top_agents || [], isPro, curr, L, niche);
+}
 
 // ══ BOOT ══════════════════════════════════════════════════════════════
 // Global error handler — if any JS crashes before init, show error screen
