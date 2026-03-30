@@ -311,7 +311,7 @@
 
     <!-- ── VIEW: Radar ──────────────────────────────────────────── -->
     <div id="view-radar" class="view">
-      <div class="sec-title" style="margin-top:4px;" id="t_rd_title">Радар инфлюенсеров</div>
+      <div class="sec-title" style="margin-top:4px;" id="t_rd_title">Зал Славы</div>
       <div class="pro-promo" id="radarPromo" style="display:none;">
         <h3 id="t_rd_promo_title">Ищите новых партнеров?</h3>
         <p  id="t_rd_promo_desc">Перейдите на тариф PRO, чтобы открыть контакты лучших инфлюенсеров.</p>
@@ -357,7 +357,7 @@
     <button class="nav-item active" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
     <button class="nav-item"        onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
     <button class="nav-item"        onclick="switchTab('agents',this)"><i data-feather="users"></i><span id="nav_agents">Агенты</span></button>
-    <button class="nav-item"        onclick="switchTab('radar',this);loadRadar();"><i data-feather="target"></i><span id="nav_radar">Радар</span></button>
+    <button class="nav-item"        onclick="openLeaderboard(this);"><i data-feather="award"></i><span id="nav_radar">Радар</span></button>
     <button class="nav-item"        onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
@@ -511,7 +511,7 @@ const i18n = {
     st_agents:"Агенты", st_avg_deal:"Средний чек",
     ag_title:"Мои Агенты", ag_sub:"Люди, которые уже рекомендуют ваш бизнес. Чем больше бонусов вы им платите, тем выше их мотивация.",
     ag_deals:"Привел клиентов:", ag_comm:"Выплачено",
-    rd_title:"Радар инфлюенсеров", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
+    rd_title:"Зал Славы", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
     rd_promo_btn:"Подробнее о PRO", radar_loading:"Загрузка...",
     tab_profile:"Настройки бизнеса", sub_title:"Текущий тариф:", btn_upgrade:"Перейти на PRO (149 ₪)",
     pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_phone:"Телефон",
@@ -528,7 +528,7 @@ const i18n = {
     action_processing:"Обработка...", action_success:"Успешно!", action_close:"Закрыть",
     save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
     empty_deals:"Здесь пока пусто.",
-    nav_deals:"Сделки", nav_stats:"Отчеты", nav_agents:"Агенты", nav_radar:"Радар", nav_profile:"Профиль",
+    nav_deals:"Сделки", nav_stats:"Отчеты", nav_agents:"Агенты", nav_radar:"Зал Славы", nav_profile:"Профиль",
     sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
     sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
     lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
@@ -562,7 +562,7 @@ const i18n = {
     action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור",
     save_ok:"נשמר!", save_err:"שגיאה",
     empty_deals:"ריק כאן.",
-    nav_deals:"עסקאות", nav_stats:"דוחות", nav_agents:"סוכנים", nav_radar:"רדאר", nav_profile:"פרופיל",
+    nav_deals:"עסקאות", nav_stats:"דוחות", nav_agents:"סוכנים", nav_radar:"היכל התהילה", nav_profile:"פרופיל",
     sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
     sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
     lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
@@ -596,7 +596,7 @@ const i18n = {
     action_processing:"Processing...", action_success:"Done!", action_close:"Close",
     save_ok:"Changes saved!", save_err:"Save error",
     empty_deals:"Nothing here yet.",
-    nav_deals:"Deals", nav_stats:"Reports", nav_agents:"Agents", nav_radar:"Radar", nav_profile:"Profile",
+    nav_deals:"Deals", nav_stats:"Reports", nav_agents:"Agents", nav_radar:"Leaderboard", nav_profile:"Profile",
     sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
     sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
     lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
@@ -630,7 +630,7 @@ const i18n = {
     action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق",
     save_ok:"تم الحفظ!", save_err:"خطأ",
     empty_deals:"فارغ هنا.",
-    nav_deals:"الصفقات", nav_stats:"تقارير", nav_agents:"وكلاء", nav_radar:"رادار", nav_profile:"الملف",
+    nav_deals:"الصفقات", nav_stats:"تقارير", nav_agents:"وكلاء", nav_radar:"قاعة المشاهير", nav_profile:"الملف",
     sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
     sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
     lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
@@ -687,7 +687,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
     if (next >= 0 && next < tabs.length) {
       const navBtns = document.querySelectorAll('.nav-item');
       switchTab(tabs[next], navBtns[next]);
-      if (tabs[next] === 'radar' && !radarData) loadRadar();
+      if (tabs[next] === 'radar') openLeaderboard(null);
     }
   }
 });
@@ -858,7 +858,7 @@ async function init() {
   if (urlTab && tabs.includes(urlTab)) {
     const navBtns = document.querySelectorAll('.nav-item');
     switchTab(urlTab, navBtns[tabs.indexOf(urlTab)]);
-    if (urlTab === 'radar') loadRadar();
+    if (urlTab === 'radar') openLeaderboard(null);
   }
 
   feather.replace();
@@ -1387,6 +1387,20 @@ async function submitDealAction(actionType) {
   }
 
   setTimeout(closeManageDeal, 3000);
+}
+
+// ══ LEADERBOARD ══════════════════════════════════════════════════════
+function openLeaderboard(btnEl) {
+  // Highlight nav item
+  if (btnEl) {
+    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+    btnEl.classList.add("active");
+  }
+  // Navigate to leaderboard.html with current token and lang
+  var url = "https://invite.winwinnetwork.pro/leaderboard.html" +
+            "?token=" + encodeURIComponent(token || "") +
+            "&lang=" + lang;
+  window.location.href = url;
 }
 
 // ══ BOOT ══════════════════════════════════════════════════════════════
