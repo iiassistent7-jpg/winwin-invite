@@ -552,13 +552,13 @@
         <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
     </nav>
-    <!-- NAV RTL: Profile | Wallet | History | Catalog | Home -->
+    <!-- NAV RTL: visually mirrored by RTL direction, so HOME stays on the right -->
     <nav class="bottom-nav nav-hidden" id="nav-rtl">
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
         <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">Главная</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
     </nav>
 
     <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
@@ -978,33 +978,40 @@ let catalogBotPhone = "972534218573";
 let currentNiche = '__all__';
 let leaderboardData = null;
 
-const tabs = ['home', 'catalog', 'history', 'wallet', 'profile'];
-const rtlTabs = ['profile', 'wallet', 'history', 'catalog', 'home'];
+const LTR_TABS = ['home', 'catalog', 'history', 'wallet', 'profile'];
+const RTL_TABS = ['profile', 'wallet', 'history', 'catalog', 'home'];
 
-function isCurrentRTL() {
-    return lang === 'he' || lang === 'ar';
+function isRTLLang(targetLang = lang) {
+    return targetLang === 'he' || targetLang === 'ar';
 }
-function getTabsOrder() {
-    return isCurrentRTL() ? rtlTabs : tabs;
+
+function getTabOrder(targetLang = lang) {
+    return isRTLLang(targetLang) ? RTL_TABS : LTR_TABS;
 }
+
 function getActiveTabId() {
-    const active = document.querySelector('.view.active');
-    return active ? active.id.replace('view-', '') : 'home';
+    const activeView = document.querySelector('.view.active');
+    return activeView ? activeView.id.replace('view-', '') : 'home';
 }
-function getDomTabIndex(tabId) {
-    return tabs.indexOf(tabId);
+
+function applyViewOrder(isRTL) {
+    const wrapper = document.getElementById('viewsWrapper');
+    const order = isRTL ? RTL_TABS : LTR_TABS;
+    order.forEach(tabId => {
+        const view = document.getElementById('view-' + tabId);
+        if (view) wrapper.appendChild(view);
+    });
 }
 
 // ── Swipe Logic ───────────────────────────────────────────────────────────
-// ПРАВИЛО: wrapper всегда LTR. Offset = -index * 20% независимо от языка.
-// Свайп: dx < 0 (влево) = index+1; dx > 0 (вправо) = index-1. Всегда одинаково.
-// Nav зеркалится визуально через flex-direction:row-reverse в RTL, но index не меняется.
+// LTR:  home -> catalog -> history -> wallet -> profile
+// RTL:  profile -> wallet -> history -> catalog -> home
+// Для RTL переворачиваем физический порядок экранов и инвертируем свайп.
 
 let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
 
 function currentTabIndex() {
-    const activeTabId = getActiveTabId();
-    return getTabsOrder().indexOf(activeTabId);
+    return getTabOrder().indexOf(getActiveTabId());
 }
 
 document.querySelector('.app').addEventListener('touchstart', e => {
@@ -1020,12 +1027,10 @@ document.querySelector('.app').addEventListener('touchend', e => {
     const dy = e.changedTouches[0].clientY - touchStartY;
     const dt = Date.now() - touchStartTime;
     if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        const order = getTabsOrder();
+        const order = getTabOrder();
         const cur = currentTabIndex();
-        const next = isCurrentRTL()
-            ? (dx < 0 ? cur - 1 : cur + 1)
-            : (dx < 0 ? cur + 1 : cur - 1);
-
+        const goForward = isRTLLang() ? dx > 0 : dx < 0;
+        const next = goForward ? cur + 1 : cur - 1;
         if (next >= 0 && next < order.length) {
             switchTab(order[next]);
         }
@@ -1077,27 +1082,18 @@ function setLang(l) {
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`)?.classList.add('active');
     document.documentElement.lang = l;
-    const isRTL = (l === 'he' || l === 'ar');
+
+    const isRTL = isRTLLang(l);
     // Используем CSS-класс вместо dir-атрибута на html/body
     // dir на html/body меняет координатную систему браузера и ломает translateX-слайдер
     document.body.classList.toggle('rtl', isRTL);
 
-    // Переключаем физику нижнего бара для RTL
+    // Для RTL меняем не только видимую навигацию, но и физический порядок экранов
     applyNavOrder(isRTL);
+    applyViewOrder(isRTL);
 
     applyLang();
-
-    // Сохраняем активный таб по имени, а не по старому индексу
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(b => {
-        if (b.getAttribute('onclick')?.includes(`'${currentTabId}'`)) {
-            b.classList.add('active');
-        }
-    });
-
-    // Offset всегда считается по DOM-порядку view, а не по RTL-порядку свайпа
-    const domIdx = getDomTabIndex(currentTabId);
-    document.getElementById('viewsWrapper').style.transform = `translateX(${-(domIdx !== -1 ? domIdx : 0) * 20}%)`;
+    switchTab(currentTabId);
 
     if (dashData) renderAll();
     extractNiches();
@@ -1193,7 +1189,7 @@ function switchTab(tabId, btnEl) {
         }
     });
 
-    const index = getDomTabIndex(tabId);
+    const index = getTabOrder().indexOf(tabId);
     if (index !== -1) {
         document.getElementById('viewsWrapper').style.transform = `translateX(${-index * 20}%)`;
         setTimeout(() => {
