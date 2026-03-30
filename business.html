@@ -547,7 +547,7 @@ const i18n = {
     sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
     sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
     lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
-    lb_deals:"Сделок:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    lb_deals:"Сделок:", filt_all:"Все", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   he:{
     loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
@@ -581,7 +581,7 @@ const i18n = {
     sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
     sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
     lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
-    lb_deals:"עסקאות:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    lb_deals:"עסקאות:", filt_all:"הכל", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   en:{
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
@@ -615,7 +615,7 @@ const i18n = {
     sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
     sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
     lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
-    lb_deals:"Deals:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    lb_deals:"Deals:", filt_all:"All", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   ar:{
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
@@ -649,7 +649,7 @@ const i18n = {
     sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
     sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
     lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
-    lb_deals:"صفقات:", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    lb_deals:"صفقات:", filt_all:"الكل", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   }
 };
 
@@ -1491,36 +1491,132 @@ async function openLeaderboard(btnEl) {
   }
 }
 
+let lbActiveNiche = 'all';
+
 function renderLeaderboardUI() {
   if (!leaderboardData) return;
-  const L = i18n[lang] || i18n.ru;
-  const curr = bizData && bizData.currency ? bizData.currency : '₪';
+  const L      = i18n[lang] || i18n.ru;
+  const curr   = bizData && bizData.currency ? bizData.currency : '₪';
+  const isPro  = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  const agents = leaderboardData.top_agents || [];
+
+  // Собираем уникальные ниши из всех агентов
+  const allNiches = [];
+  agents.forEach(function(a) {
+    (a.niche_categories || []).forEach(function(n) {
+      if (n && !allNiches.includes(n)) allNiches.push(n);
+    });
+  });
+
   let html = '';
-  if (leaderboardData.top_agents && leaderboardData.top_agents.length > 0) {
-    html += `<div style="display:flex;flex-direction:column;gap:10px;">`;
-    leaderboardData.top_agents.forEach(function(a) {
-      var badge = a.rank;
-      var rankClass = '';
-      if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
-      else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
-      else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
-      html += `<div style="display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:14px;padding:12px 14px;border:1px solid var(--border);">
-        <div class="lb-rank-badge ${rankClass}">${badge}</div>
-        <div style="flex:1;">
-          <div style="font-weight:700;font-size:.95rem;">${a.name}</div>
-          <div style="font-size:.8rem;color:var(--text2);">${L.lb_deals || 'Сделок:'} ${a.deals_count}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:.75rem;color:var(--text2);">${L.lb_earned || 'Заработано'}</div>
-          <div style="font-weight:700;font-size:.9rem;">${Math.round(a.earned)} ${curr}</div>
-        </div>
-      </div>`;
+
+  // PRO: фильтр по нишам — горизонтальный скролл табов
+  if (isPro && allNiches.length > 1) {
+    html += `<div id="lbNicheTabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;scrollbar-width:none;">`;
+    html += `<button onclick="filterLbNiche('all')" id="lbTab_all"
+      style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent1);background:var(--accent1);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;"
+    >${L.filt_all || 'Все'}</button>`;
+    allNiches.forEach(function(n) {
+      var label = (typeof getCatName === 'function') ? getCatName(n, lang) : n;
+      html += `<button onclick="filterLbNiche('${n.replace(/'/g,"\'")}')" id="lbTab_${n.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')}"
+        style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;"
+      >${label}</button>`;
     });
     html += `</div>`;
-  } else {
-    html = `<div style="text-align:center;padding:40px;color:var(--text2);">Нет данных</div>`;
   }
+
+  // Список агентов
+  html += `<div id="lbAgentList" style="display:flex;flex-direction:column;gap:10px;">`;
+  html += buildLbAgents(agents, isPro, curr, L, lbActiveNiche);
+  html += `</div>`;
+
+  // Standard: промо блок
+  if (!isPro) {
+    html += `<div class="pro-promo" style="margin-top:20px;">
+      <h3>🌟 ${L.rd_promo_title || 'Откройте полный доступ'}</h3>
+      <p>${L.rd_promo_desc || 'Перейдите на PRO, чтобы видеть контакты агентов и фильтровать по нишам.'}</p>
+      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');switchTab('profile',null)">${L.rd_promo_btn || 'Подробнее о PRO'}</button>
+    </div>`;
+  }
+
   document.getElementById('lbContent').innerHTML = html;
+}
+
+function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
+  var filtered = agents;
+  if (nicheFilter && nicheFilter !== 'all') {
+    filtered = agents.filter(function(a) {
+      return (a.niche_categories || []).includes(nicheFilter);
+    });
+  }
+  if (!filtered.length) {
+    return `<div style="text-align:center;padding:30px;color:var(--text2);">${L.empty_deals || 'Нет данных'}</div>`;
+  }
+  return filtered.map(function(a) {
+    var badge = a.rank, rankClass = '';
+    if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
+
+    var blurClass = !isPro ? 'lb-blurred' : '';
+    var clickAttr = !isPro ? `onclick="alert('${(L.lb_blur_alert||'Доступно на PRO').replace(/'/g,"\\'")}')"`  : '';
+
+    // Кнопка связи — только PRO и если есть wa_phone
+    var contactBtn = '';
+    if (isPro && a.wa_phone) {
+      var waLink = 'https://wa.me/' + a.wa_phone.replace(/\D/g,'');
+      contactBtn = `<a href="${waLink}" target="_blank"
+        style="display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.4);color:#25d366;font-size:.78rem;font-weight:700;text-decoration:none;margin-top:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.115 1.528 5.845L0 24l6.335-1.508A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.36-.214-3.728.888.916-3.636-.234-.373A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818 0 5.423-4.394 9.818-9.818 9.818z"/></svg>
+        WhatsApp</a>`;
+    }
+
+    var niches = (a.niche_categories || []).map(function(n) {
+      return `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.25);color:var(--accent1);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:2px 2px 0 0;">${(typeof getCatName==='function')?getCatName(n,lang):n}</span>`;
+    }).join('');
+
+    return `<div style="background:var(--surface);border-radius:14px;padding:12px 14px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="lb-rank-badge ${rankClass}">${badge}</div>
+        <div class="agent-info ${blurClass}" style="flex:1;" ${clickAttr}>
+          <div class="agent-name" style="font-weight:700;font-size:.95rem;">${a.name}</div>
+          <div style="font-size:.8rem;color:var(--text2);margin-top:2px;">${L.lb_deals||'Сделок:'} <b>${a.deals_count}</b></div>
+          ${niches ? `<div style="margin-top:4px;">${niches}</div>` : ''}
+          ${contactBtn}
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:.72rem;color:var(--text2);">${L.lb_earned||'Заработано'}</div>
+          <div style="font-weight:800;font-size:.95rem;">${Math.round(a.earned)} ${curr}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterLbNiche(niche) {
+  lbActiveNiche = niche;
+  // Обновляем стили табов
+  var tabs = document.getElementById('lbNicheTabs');
+  if (tabs) {
+    tabs.querySelectorAll('button').forEach(function(btn) {
+      btn.style.background = 'var(--surface)';
+      btn.style.color = 'var(--text)';
+      btn.style.borderColor = 'var(--border)';
+    });
+    var activeId = 'lbTab_' + (niche === 'all' ? 'all' : niche.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_'));
+    var activeBtn = document.getElementById(activeId);
+    if (activeBtn) {
+      activeBtn.style.background = 'var(--accent1)';
+      activeBtn.style.color = '#fff';
+      activeBtn.style.borderColor = 'var(--accent1)';
+    }
+  }
+  // Перерисовываем только список агентов
+  const L     = i18n[lang] || i18n.ru;
+  const curr  = bizData && bizData.currency ? bizData.currency : '₪';
+  const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
+  var listEl  = document.getElementById('lbAgentList');
+  if (listEl) listEl.innerHTML = buildLbAgents(leaderboardData.top_agents || [], isPro, curr, L, niche);
 }
 
 // ══ BOOT ══════════════════════════════════════════════════════════════
