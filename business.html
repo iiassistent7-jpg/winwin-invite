@@ -870,13 +870,24 @@ function showApp() {
 }
 
 function showError() {
-  document.getElementById('loaderSpinner').style.display = 'none';
+  // Hide loading state completely — prevents white/stuck loader
+  var spinner = document.getElementById('loaderSpinner');
+  var subTxt  = document.getElementById('t_loader_sub');
+  if (spinner) spinner.style.display = 'none';
+  if (subTxt)  subTxt.style.display  = 'none';
   document.getElementById('loaderErr').style.display = 'block';
-  const isTg = bizData && bizData.channel === 'telegram';
-  if (isTg) {
-    document.getElementById('errBtnTg').style.display = 'flex';
-  } else {
-    document.getElementById('errBtnWa').style.display = 'flex';
+  var isTg  = bizData && bizData.channel === 'telegram';
+  var btnWa = document.getElementById('errBtnWa');
+  var btnTg = document.getElementById('errBtnTg');
+  if (isTg) { if (btnTg) btnTg.style.display = 'flex'; }
+  else       { if (btnWa) btnWa.style.display = 'flex'; }
+  // Always set WA href with prefill message
+  if (btnWa) {
+    var L       = i18n[lang] || i18n.ru;
+    var arrow   = (lang === 'he' || lang === 'ar') ? String.fromCodePoint(128072) : String.fromCodePoint(128073);
+    var prefill = (L.err_prefill || i18n.ru.err_prefill).replace('{pointer}', arrow);
+    var phone   = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
+    btnWa.href  = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(prefill);
   }
 }
 
@@ -1379,6 +1390,22 @@ async function submitDealAction(actionType) {
 }
 
 // ══ BOOT ══════════════════════════════════════════════════════════════
+// Global error handler — if any JS crashes before init, show error screen
+window.onerror = function(msg, src, line, col, err) {
+  console.error('Win-Win biz error:', msg, src, line);
+  try {
+    var spinner = document.getElementById('loaderSpinner');
+    var sub     = document.getElementById('t_loader_sub');
+    var errBlk  = document.getElementById('loaderErr');
+    var btnWa   = document.getElementById('errBtnWa');
+    if (spinner) spinner.style.display = 'none';
+    if (sub)     sub.style.display     = 'none';
+    if (errBlk)  errBlk.style.display  = 'block';
+    if (btnWa)   { btnWa.style.display = 'flex'; btnWa.href = 'https://wa.me/972534218573'; }
+  } catch(e2) {}
+  return true; // prevent browser default error
+};
+
 window.onload = init;
 </script>
 </body>
