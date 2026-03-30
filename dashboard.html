@@ -217,6 +217,7 @@
             position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display:flex; justify-content:space-between; padding:10px 20px 22px; border-top:1px solid var(--border); z-index:100;
         }
         /* Nav order управляется через JS applyNavOrder() — CSS row-reverse не нужен */
+        .bottom-nav.nav-hidden { display:none !important; }
         .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 6px; }
         .nav-item.active { color:var(--accent2); }
         .nav-item span { font-size:.6rem; font-weight:700; }
@@ -552,7 +553,7 @@
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
     </nav>
     <!-- NAV RTL: Profile | Wallet | History | Catalog | Home -->
-    <nav class="bottom-nav" id="nav-rtl" style="display:none;">
+    <nav class="bottom-nav nav-hidden" id="nav-rtl">
         <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
         <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
         <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
@@ -1048,8 +1049,8 @@ function toggleTheme() {
 // LTR: Главная | Каталог | История | Кошелёк | Профиль (лево→право)
 // ── Nav switcher ──────────────────────────────────────────────────────────
 function applyNavOrder(isRTL) {
-    document.getElementById('nav-ltr').style.display = isRTL ? 'none' : 'flex';
-    document.getElementById('nav-rtl').style.display = isRTL ? 'flex' : 'none';
+    document.getElementById('nav-ltr').classList.toggle('nav-hidden', isRTL);
+    document.getElementById('nav-rtl').classList.toggle('nav-hidden', !isRTL);
 }
 
 // ── Lang ──────────────────────────────────────────────────────────────────
