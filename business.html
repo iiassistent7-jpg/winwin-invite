@@ -256,6 +256,25 @@
 
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
+
+    .deals-empty-hero { background:linear-gradient(135deg, rgba(47,128,237,.10), rgba(86,204,242,.08)); border:1px solid rgba(86,204,242,.18); border-radius:24px; padding:18px; box-shadow:var(--shadow); margin-top:4px; }
+    .deals-empty-title { font-family:'Sora',sans-serif; font-size:1.18rem; font-weight:800; margin-bottom:8px; }
+    .deals-empty-sub { color:var(--text2); line-height:1.5; font-size:.88rem; margin-bottom:14px; }
+    .deals-empty-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+    .deals-empty-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:12px 10px; text-align:center; }
+    .deals-empty-stat .val { font-family:'Sora',sans-serif; font-weight:800; font-size:1.15rem; }
+    .deals-empty-stat .lbl { color:var(--text2); font-size:.66rem; font-weight:700; text-transform:uppercase; margin-top:4px; line-height:1.25; }
+    .deals-empty-actions { display:flex; flex-direction:column; gap:10px; }
+    .stats-hero { background:linear-gradient(135deg, rgba(39,174,96,.13), rgba(47,128,237,.06)); border:1px solid rgba(39,174,96,.20); border-radius:24px; padding:18px 18px 16px; box-shadow:var(--shadow); margin-bottom:14px; text-align:center; }
+    .stats-hero .eyebrow { color:var(--text2); font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.7px; margin-bottom:8px; }
+    .stats-hero .hero-val { font-family:'Sora',sans-serif; font-size:2.6rem; line-height:1; font-weight:900; color:var(--green); margin-bottom:6px; }
+    .stats-hero .hero-sub { color:var(--text2); font-size:.84rem; }
+    .stats-trio { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+    .stats-trio .stat-box { padding:14px 10px; min-height:96px; display:flex; flex-direction:column; justify-content:center; }
+    .stats-trio .stat-lbl { line-height:1.25; }
+    .stats-bottom-row { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
+    .stats-bottom-row .stat-box { padding:14px 10px; }
+    @media (max-width:380px){ .deals-empty-stats,.stats-trio,.stats-bottom-row{gap:8px;} .stats-hero .hero-val{font-size:2.2rem;} }
     .sticky-footer { position:sticky; bottom:0; padding:10px 0 24px; background:linear-gradient(to top,var(--bg) 75%,transparent); display:flex; flex-direction:column; gap:10px; z-index:10; }
     .niche-tags { display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
     .niche-tag  { display:inline-block; background:rgba(86,204,242,.1); border:1px solid rgba(86,204,242,.3); color:var(--accent1); border-radius:20px; padding:4px 12px; font-size:.85rem; font-weight:600; }
@@ -322,10 +341,14 @@
     <!-- ── VIEW: Stats ──────────────────────────────────────────── -->
     <div id="view-stats" class="view">
       <div class="sec-title" id="t_st_fin_title">Финансы</div>
-      <div class="stats-grid-3">
+      <div class="stats-hero">
+        <div class="eyebrow" id="t_st_net_big">Главный показатель</div>
+        <div class="hero-val" id="st_net_big">0 ₪</div>
+        <div class="hero-sub" id="t_st_net_big_sub">Чистый доход — деньги, которые реально остаются у вас после выплат</div>
+      </div>
+      <div class="stats-trio">
         <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
         <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red)">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_net"  style="color:var(--green)">0 ₪</div><div class="stat-lbl" id="t_st_net">Чистый доход</div></div>
         <div class="stat-box"><div class="stat-val" id="st_pending_cnt" style="color:var(--purple)">0</div><div class="stat-lbl" id="t_st_pending_cnt">Ждут агента</div></div>
       </div>
       <div class="sec-title" id="t_st_funnel_title">Воронка конверсии</div>
@@ -338,8 +361,8 @@
         <div class="f-bar-wrap"><div class="f-lbl" id="t_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
         <div class="f-bar-wrap"><div class="f-lbl" id="t_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
       </div>
-      <div class="stats-grid-2">
-        <div class="stat-box"><div class="stat-val" id="st_agents"   style="color:var(--accent1)">0</div><div class="stat-lbl" id="t_st_agents">Агенты</div></div>
+      <div class="stats-bottom-row">
+        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent1)">0</div><div class="stat-lbl" id="t_st_agents">Рекомендатели</div></div>
         <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--gold)">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
       </div>
     </div>
@@ -601,7 +624,7 @@ const i18n = {
     debt_label:"🔴 Долг агентам:", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
-    st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента",
+    st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
     st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
     st_agents:"Рекомендатели", st_avg_deal:"Средний чек",
     ag_title:"Рекомендатели", ag_sub:"Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.",
@@ -637,7 +660,7 @@ const i18n = {
     debt_label:"🔴 חוב לסוכנים:", filt_active:"פעיל", filt_history:"היסטוריה",
     st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
     pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
-    st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן",
+    st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן", st_net_big:"המדד המרכזי", st_net_big_sub:"הרווח הנקי — הכסף שנשאר בפועל אחרי התשלומים",
     st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
     st_agents:"ממליצים", st_avg_deal:"עסקה ממוצעת",
     ag_title:"ממליצים", ag_sub:"כאן נמצאים הממליצים שלכם והמובילים בנישה שלכם, שאיתם אפשר להתחיל שיתוף פעולה.",
@@ -910,7 +933,7 @@ function applyI18n() {
     't_debt_label':'debt_label', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
     't_st_fin_title':'st_fin_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
     't_st_net':'st_net', 't_st_pending_cnt':'st_pending_cnt',
-    't_st_funnel_title':'st_funnel_title', 't_st_total_leads':'st_total_leads',
+    't_st_funnel_title':'st_funnel_title', 't_st_net_big':'st_net_big', 't_st_net_big_sub':'st_net_big_sub', 't_st_total_leads':'st_total_leads',
     't_f_active':'f_active', 't_f_closed':'f_closed', 't_f_rejected':'f_rejected',
     't_st_agents':'st_agents', 't_st_avg_deal':'st_avg_deal',
     't_ag_chip':'ag_chip', 't_ag_title':'ag_title', 't_ag_sub':'ag_sub',
@@ -1193,7 +1216,6 @@ function renderDeals() {
   const deals = bizData.deals || [];
   const curr  = bizData.currency || '₪';
 
-  // Normalize each deal's field names — API may use different keys
   deals.forEach(d => {
     if (!d.client_name  && d.name)          d.client_name  = d.name;
     if (!d.client_phone && d.phone)         d.client_phone = d.phone;
@@ -1211,7 +1233,40 @@ function renderDeals() {
   });
 
   if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
+    const s = bizData.stats || {};
+    const totalClosed = s.closed || 0;
+    const totalRevenue = Math.round(s.total_revenue || 0);
+    const recommenders = s.agents_count || 0;
+    const titleMap = {
+      ru: dealFilter === 'active' ? 'Пока нет активных сделок' : 'История сделок пока пуста',
+      he: dealFilter === 'active' ? 'כרגע אין עסקאות פעילות' : 'היסטוריית העסקאות עדיין ריקה',
+      en: dealFilter === 'active' ? 'No active deals yet' : 'Deal history is still empty',
+      ar: dealFilter === 'active' ? 'لا توجد صفقات نشطة حالياً' : 'سجل الصفقات ما زال فارغاً'
+    };
+    const subMap = {
+      ru: dealFilter === 'active' ? 'Запустите новую рекомендацию или откройте вкладку рекомендателей, чтобы усилить поток тёплых клиентов.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
+      he: dealFilter === 'active' ? 'זה זמן טוב להמליץ על עסק חדש או לבדוק מי כבר מביא לכם לקוחות.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
+      en: dealFilter === 'active' ? 'A good moment to send a new recommendation or see who already brings you clients.' : 'Completed deals will appear here.',
+      ar: dealFilter === 'active' ? 'هذا وقت مناسب لبدء توصية جديدة أو לראות מי כבר מביא لك عملاء.' : 'ستظهر هنا الصفقات المكتملة.'
+    };
+    const primaryMap = { ru:'Порекомендовать бизнес', he:'להמליץ על עסק', en:'Recommend a business', ar:'أوصِ بعمل' };
+    const secondaryMap = { ru:'Открыть рекомендателей', he:'פתח ממליצים', en:'Open recommenders', ar:'افتح الموصين' };
+    const closedLbl = {ru:'Закрыто',he:'נסגרו',en:'Closed',ar:'مغلقة'};
+    container.innerHTML = `
+      <div class="deals-empty-hero">
+        <div class="deals-empty-title">${titleMap[lang] || titleMap.ru}</div>
+        <div class="deals-empty-sub">${subMap[lang] || subMap.ru}</div>
+        <div class="deals-empty-stats">
+          <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
+          <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${(i18n[lang]||i18n.ru).nav_recommenders || 'Recommenders'}</div></div>
+          <div class="deals-empty-stat"><div class="val">${totalRevenue} ${curr}</div><div class="lbl">${(i18n[lang]||i18n.ru).t_st_revenue || 'Revenue'}</div></div>
+        </div>
+        <div class="deals-empty-actions">
+          <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
+          ${dealFilter === 'active' ? `<button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>` : ''}
+        </div>
+      </div>`;
+    feather.replace();
     return;
   }
 
@@ -1219,30 +1274,20 @@ function renderDeals() {
     const st        = getStatusData(d.status);
     const isPending = d.status === 'pending_confirmation';
     const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
-    const waLink    = `https://wa.me/${cleanPhone}`;
+    const waLink    = cleanPhone ? `https://wa.me/${cleanPhone}` : '#';
     const nextStep  = getDealNextStep(d.status);
+    const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
+    const commVal = d.commission ? `${d.commission} ${curr}` : '—';
+    const incomeVal = (d.amount && d.commission) ? `${Math.round((+d.amount - +d.commission)*10)/10} ${curr}` : '—';
 
-    let receipt = '';
-    if (d.amount || d.commission) {
-      const commRow = d.commission
-        ? (isPending
-            ? `<span class="unpaid-warn">-${d.commission} ${curr} ⚠️</span>`
-            : `<span class="paid-ok">-${d.commission} ${curr} ✅</span>`)
-        : '<span>—</span>';
-      receipt = `
-        <div class="deal-receipt">
-          ${d.amount ? `<div class="receipt-line"><span>💵 Чек:</span><span>${d.amount} ${curr}</span></div>` : ''}
-          <div class="receipt-line"><span>🎁 Бонус:</span>${commRow}</div>
-          ${(d.amount && d.commission) ? `<div class="receipt-line total"><span>✅ Доход:</span><span class="net-profit">${Math.round((+d.amount - +d.commission)*10)/10} ${curr}</span></div>` : ''}
-        </div>`;
-    }
-
-    let actionBtn = '';
+    let innerAction = '';
     if (dealFilter === 'active') {
       if (isPending) {
-        actionBtn = `<button class="btn-primary btn-outline" onclick="remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${getDealActionLabel(d.status)}</button>`;
+        const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
+        innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
-        actionBtn = `<button class="btn-primary btn-action" onclick="openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${getDealActionLabel(d.status)}</button>`;
+        const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
+        innerAction = `<button class="btn-primary btn-action" onclick="event.stopPropagation();openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${manageLabel[lang] || manageLabel.ru}</button>`;
       }
     }
 
@@ -1261,24 +1306,20 @@ function renderDeals() {
         <div class="deal-pending-note"><i data-feather="${isPending ? 'clock' : 'check-circle'}" style="width:14px;height:14px;"></i> ${nextStep}</div>
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
-          ${d.amount ? `<span class="meta-pill">💵 ${d.amount} ${curr}</span>` : ''}
-          ${d.commission ? `<span class="meta-pill">🎁 ${d.commission} ${curr}</span>` : ''}
+          <span class="meta-pill">💵 ${amountVal}</span>
+          <span class="meta-pill">🎁 ${commVal}</span>
         </div>
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
-            <div class="deal-mini-box">
-              <div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div>
-              <div class="deal-mini-val">${d.agent_name || '—'}</div>
-            </div>
-            <div class="deal-mini-box">
-              <div class="deal-mini-lbl">WhatsApp</div>
-              <div class="deal-mini-val"><a href="${waLink}" class="deal-wa-link" target="_blank" onclick="event.stopPropagation()">${d.client_phone || '—'}</a></div>
-            </div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">WhatsApp</div><div class="deal-mini-val">${cleanPhone ? `<a href="${waLink}" class="deal-wa-link" target="_blank" onclick="event.stopPropagation()">${d.client_phone || '—'}</a>` : '—'}</div></div>
           </div>
-          ${receipt}
-          <div class="deal-actions-row" style="margin-top:12px;">
-            ${actionBtn ? actionBtn.replace('onclick="', 'onclick="event.stopPropagation();') : ''}
+          <div class="deal-receipt">
+            <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
+            <div class="receipt-line"><span>🎁 Бонус:</span><span>${commVal}</span></div>
+            <div class="receipt-line total"><span>✅ Доход:</span><span class="net-profit">${incomeVal}</span></div>
           </div>
+          <div class="deal-actions-row" style="margin-top:12px;">${innerAction}</div>
         </div>
       </div>`;
   }).join('');
@@ -1295,9 +1336,10 @@ function renderStats() {
   const rejected = s.rejected || 0;
   const total    = active + closed + rejected;
 
-  animNum('st_revenue',    s.total_revenue   || 0, ' '+curr);
+  animNum('st_revenue',    s.total_revenue    || 0, ' '+curr);
   animNum('st_commission', s.total_commission || 0, ' '+curr);
-  animNum('st_net',        s.total_earned    || 0, ' '+curr);
+  animNum('st_net',        s.total_earned     || 0, ' '+curr);
+  animNum('st_net_big',    s.total_earned     || 0, ' '+curr);
 
   const pendingCnt = (bizData.deals || []).filter(d => d.status === 'pending_confirmation').length;
   document.getElementById('st_pending_cnt').textContent = s.pending_conf !== undefined ? s.pending_conf : pendingCnt;
@@ -1320,7 +1362,6 @@ function renderStats() {
     document.getElementById('bar_rejected').style.width = pct(rejected);
   }, 80);
 
-  // Debt banner
   const debt   = s.pending_debt || 0;
   const banner = document.getElementById('debtBanner');
   if (debt > 0) {
