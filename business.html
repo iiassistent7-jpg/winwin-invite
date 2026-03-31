@@ -234,7 +234,10 @@
     .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:12px; box-shadow:var(--shadow); }
     .seg-tab { flex:1; border:none; background:transparent; color:var(--text2); border-radius:10px; padding:9px 10px; cursor:pointer; font-weight:700; font-size:.82rem; font-family:inherit; transition:.2s; }
     .seg-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
-    .reco-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
+    .reco-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow); margin-bottom:12px; cursor:pointer; }
+    .deal-card { cursor:pointer; }
+    .card-toggle-hint { display:flex; align-items:center; gap:6px; color:var(--text2); font-size:.78rem; font-weight:700; }
+    .card-toggle-hint i { width:16px; height:16px; }
     .reco-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
     .reco-title { font-weight:800; font-size:1rem; }
     .reco-sub { font-size:.78rem; color:var(--text2); margin-top:4px; line-height:1.45; }
@@ -361,7 +364,7 @@
         <div id="leadersInlinePromo" class="pro-promo" style="display:none;">
           <h3 id="t_rd_promo_title">Ищете новых партнёров?</h3>
           <p id="t_rd_promo_desc">Перейдите на PRO, чтобы открыть контакты лидеров в вашей нише.</p>
-          <button class="btn-primary btn-gold" onclick="switchTab('profile', null)" id="t_rd_promo_btn">Подробнее о PRO</button>
+          <button class="btn-primary btn-gold" onclick="openUpgradePage()" id="t_rd_promo_btn">Подробнее о PRO</button>
         </div>
         <div id="leadersInlineList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
       </div>
@@ -396,7 +399,7 @@
           <span class="sub-badge" id="subBadge">Стандарт</span>
         </div>
         <div class="sub-desc" id="subDesc">Базовый функционал. Лимиты сделок учитываются платформой.</div>
-        <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="alert('Функция оплаты в разработке')">
+        <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="openUpgradePage()">
           <i data-feather="star" style="width:18px;height:18px;"></i>
           <span id="t_btn_upgrade">Перейти на PRO (149 ₪)</span>
         </button>
@@ -849,6 +852,26 @@ function openFullscreen(id) {
   window.scrollTo(0, 0);
 }
 
+function showNotice(msg) {
+  const box = document.getElementById('uiNotice');
+  if (!box) return;
+  box.textContent = msg || '';
+  box.style.opacity = '1';
+  box.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(showNotice._t);
+  showNotice._t = setTimeout(() => {
+    box.style.opacity = '0';
+    box.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 1800);
+}
+
+function openUpgradePage() {
+  const target = new URL('pro_payment.html', window.location.href);
+  target.searchParams.set('token', token || '');
+  target.searchParams.set('lang', lang || 'ru');
+  window.location.href = target.toString();
+}
+
 // ══ ANIMATE NUMBER ════════════════════════════════════════════════════
 function animNum(id, to, suffix='', dur=1000) {
   const el = document.getElementById(id);
@@ -1110,7 +1133,7 @@ function getStatusData(status) {
 
 function getDealActionLabel(status) {
   const map = {
-    ru: { new:'Взять в работу', in_progress:'Управлять', pending_confirmation:'Напомнить о выборе', closed:'Детали', rejected:'Детали' },
+    ru: { new:'Взять в работу', in_progress:'Завершить или отклонить', pending_confirmation:'Ждём решения', closed:'Сделка завершена', rejected:'Сделка отклонена' },
     he: { new:'לקבל לטיפול', in_progress:'ניהול', pending_confirmation:'להזכיר החלטה', closed:'פרטים', rejected:'פרטים' },
     en: { new:'Take into work', in_progress:'Manage', pending_confirmation:'Remind decision', closed:'Details', rejected:'Details' },
     ar: { new:'قبول للعمل', in_progress:'إدارة', pending_confirmation:'تذكير بالقرار', closed:'تفاصيل', rejected:'تفاصيل' }
@@ -1151,7 +1174,7 @@ async function remindDecision(id) {
       en:'Reminder sent to recommender.',
       ar:'تم إرسال تذكير إلى الموصي.'
     };
-    alert((msg[lang] || msg.ru));
+    showNotice((msg[lang] || msg.ru));
   } catch(e) {
     const msg = {
       ru:'Не удалось отправить напоминание.',
@@ -1159,7 +1182,7 @@ async function remindDecision(id) {
       en:'Could not send reminder.',
       ar:'تعذر إرسال التذكير.'
     };
-    alert((msg[lang] || msg.ru));
+    showNotice((msg[lang] || msg.ru));
   }
 }
 
@@ -1224,23 +1247,22 @@ function renderDeals() {
     }
 
     return `
-      <div class="deal-card${isPending ? ' pending unpaid' : ''}">
+      <div class="deal-card${isPending ? ' pending unpaid' : ''}" onclick="toggleDealExtra(${d.id})">
         <div class="deal-card-header">
           <div>
             <div class="deal-client">${d.client_name}</div>
             <div class="deal-date">${d.date}</div>
           </div>
-          <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
+            <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
+          </div>
         </div>
         <div class="deal-pending-note"><i data-feather="${isPending ? 'clock' : 'check-circle'}" style="width:14px;height:14px;"></i> ${nextStep}</div>
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
           ${d.amount ? `<span class="meta-pill">💵 ${d.amount} ${curr}</span>` : ''}
           ${d.commission ? `<span class="meta-pill">🎁 ${d.commission} ${curr}</span>` : ''}
-        </div>
-        <div class="deal-actions-row">
-          ${actionBtn}
-          <button class="btn-primary btn-outline" onclick="toggleDealExtra(${d.id})"><i data-feather="chevron-down" style="width:16px;height:16px;"></i> ${(lang==='he')?'פרטים':(lang==='en')?'Details':(lang==='ar')?'تفاصيل':'Подробнее'}</button>
         </div>
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
@@ -1250,10 +1272,13 @@ function renderDeals() {
             </div>
             <div class="deal-mini-box">
               <div class="deal-mini-lbl">WhatsApp</div>
-              <div class="deal-mini-val"><a href="${waLink}" class="deal-wa-link" target="_blank">${d.client_phone || '—'}</a></div>
+              <div class="deal-mini-val"><a href="${waLink}" class="deal-wa-link" target="_blank" onclick="event.stopPropagation()">${d.client_phone || '—'}</a></div>
             </div>
           </div>
           ${receipt}
+          <div class="deal-actions-row" style="margin-top:12px;">
+            ${actionBtn ? actionBtn.replace('onclick="', 'onclick="event.stopPropagation();') : ''}
+          </div>
         </div>
       </div>`;
   }).join('');
@@ -1341,7 +1366,7 @@ function renderMyRecommenders() {
     return;
   }
   container.innerHTML = agents.map((a, idx) => `
-    <div class="reco-card">
+    <div class="reco-card" onclick="toggleRecommenderExtra(${idx})">
       <div class="reco-top">
         <div style="display:flex;gap:12px;min-width:0;align-items:center;">
           <div class="agent-avatar">${a.name.charAt(0).toUpperCase()}</div>
@@ -1350,18 +1375,18 @@ function renderMyRecommenders() {
             <div class="reco-sub">${L.ag_deals} <b>${a.count}</b>${a.last ? ' · ' + formatShortDate(a.last) : ''}</div>
           </div>
         </div>
-        <div class="agent-comm">
-          <div class="agent-comm-lbl">${L.ag_comm}</div>
-          <div class="agent-comm-val">${Math.round(a.comm)} ${curr}</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="agent-comm">
+            <div class="agent-comm-lbl">${L.ag_comm}</div>
+            <div class="agent-comm-val">${Math.round(a.comm)} ${curr}</div>
+          </div>
+          <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
         </div>
       </div>
       <div class="reco-meta">
         <span class="meta-pill">👥 ${a.count}</span>
         <span class="meta-pill">🎁 ${Math.round(a.comm)} ${curr}</span>
         ${a.waiting ? `<span class="meta-pill">⏳ ${a.waiting}</span>` : ''}
-      </div>
-      <div class="deal-actions-row" style="margin-top:12px;">
-        <button class="btn-primary btn-outline" onclick="toggleRecommenderExtra(${idx})"><i data-feather="bar-chart-2" style="width:16px;height:16px;"></i> ${(lang==='he')?'סטטיסטיקה':(lang==='en')?'Stats':(lang==='ar')?'الإحصاءات':'Статистика'}</button>
       </div>
       <div class="deal-extra" id="reco_extra_${idx}">
         <div class="deal-inline-meta">
@@ -1523,7 +1548,7 @@ async function openRecommendFlow() {
   try {
     const actorId = bizData && bizData.id;
     if (!actorId) throw new Error('missing_id');
-    const res = await fetch(`${API_URL}/api/catalog/token?agent_id=${actorId}`);
+    const res = await fetch(`${API_URL}/api/catalog/token?biz_id=${actorId}`);
     if (!res.ok) throw new Error('catalog_token');
     const data = await res.json();
     const ct = data.token;
@@ -1533,7 +1558,7 @@ async function openRecommendFlow() {
     target.searchParams.set('lang', lang);
     window.location.href = target.toString();
   } catch (e) {
-    alert(L.radar_loading || 'Каталог временно недоступен.');
+    showNotice((L.catalog_err || 'Каталог временно недоступен.'));
   }
 }
 
@@ -1908,7 +1933,7 @@ function renderLeaderboardUI() {
     html += `<div class="pro-promo" style="margin-top:20px;">
       <h3>🌟 ${L.rd_promo_title || 'Откройте полный доступ'}</h3>
       <p>${L.rd_promo_desc || 'Перейдите на PRO, чтобы видеть контакты агентов и фильтровать по нишам.'}</p>
-      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');switchTab('profile',null)">${L.rd_promo_btn || 'Подробнее о PRO'}</button>
+      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');openUpgradePage()">${L.rd_promo_btn || 'Подробнее о PRO'}</button>
     </div>`;
   }
 
@@ -2011,5 +2036,8 @@ window.onerror = function(msg, src, line, col, err) {
 
 window.onload = init;
 </script>
+
+  <div id="uiNotice" style="position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:1200;max-width:88vw;min-width:220px;background:rgba(22,27,38,.96);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.35);padding:14px 16px;color:#fff;font-weight:700;text-align:center;transition:all .22s ease;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);"></div>
+
 </body>
 </html>
