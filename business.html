@@ -217,12 +217,12 @@
     /* ── Bottom Nav ─────────────────────────────────────────────────── */
     .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; gap:2px; padding:10px 12px 20px; border-top:1px solid var(--border); z-index:100; direction:ltr !important; }
     .nav-hidden { display:none !important; }
-    .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 2px 0; font-family:inherit; }
+    .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 0 0; font-family:inherit; }
     .nav-item.active { color:var(--accent2); }
     .nav-item svg { transition:.2s; width:22px; height:22px; flex-shrink:0; display:block; }
     .nav-item .nav-svg { width:22px; height:22px; display:block; }
     .nav-item.active svg { transform:translateY(-1px); }
-    .nav-item span { font-size:.50rem; font-weight:700; line-height:1.0; text-align:center; display:flex; align-items:flex-start; justify-content:center; width:100%; min-height:1.12rem; max-width:54px; letter-spacing:-0.01em; }
+    .nav-item span { font-size:.47rem; font-weight:700; line-height:1.02; text-align:center; display:flex; align-items:flex-start; justify-content:center; width:100%; min-height:1.18rem; max-width:48px; letter-spacing:-0.02em; white-space:normal; word-break:keep-all; }
 
 
     /* ── Page Heroes / CTA ─────────────────────────────────────────── */
@@ -243,10 +243,10 @@
     .reco-sub { font-size:.78rem; color:var(--text2); margin-top:4px; line-height:1.45; }
     .reco-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
     .meta-pill { display:inline-flex; align-items:center; gap:4px; padding:4px 9px; border-radius:999px; background:var(--surface2); border:1px solid var(--border); font-size:.72rem; font-weight:700; color:var(--text2); }
-    .mini-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
-    .mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:10px 8px; text-align:center; box-shadow:var(--shadow); }
+    .mini-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:1fr; align-items:stretch; gap:6px; margin-bottom:14px; }
+    .mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:10px 8px; text-align:center; box-shadow:var(--shadow); min-height:92px; display:flex; flex-direction:column; justify-content:center; }
     .mini-stat .val { font-family:'Sora',sans-serif; font-size:1rem; font-weight:800; color:var(--text); }
-    .mini-stat .lbl { font-size:.62rem; font-weight:700; color:var(--text2); text-transform:uppercase; margin-top:3px; }
+    .mini-stat .lbl { font-size:.60rem; font-weight:700; color:var(--text2); text-transform:uppercase; margin-top:3px; line-height:1.12; min-height:1.7rem; display:flex; align-items:center; justify-content:center; }
     .cta-block { background:linear-gradient(135deg, rgba(242,201,76,.07), rgba(242,153,74,.07)); border:1px solid rgba(242,201,76,.20); border-radius:22px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow); }
     .cta-block h3 { font-family:'Sora',sans-serif; font-size:1.04rem; font-weight:800; margin-bottom:6px; }
     .cta-block p { font-size:.80rem; color:var(--text2); line-height:1.42; margin-bottom:12px; }
@@ -454,7 +454,7 @@
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
     <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
-    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommenders">Агенты</span></button>
+    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Агенты</span></button>
     <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommend">Рекомендую</span></button>
     <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
@@ -1398,9 +1398,11 @@ function renderMyRecommenders() {
   deals.forEach(d => {
     const name = d.agent_name || d.sender_name || d.agent;
     if (!name) return;
-    if (!agentMap[name]) agentMap[name] = { name, count: 0, comm: 0, last: d.date || d.created_at || '', waiting: 0 };
+    if (!agentMap[name]) agentMap[name] = { name, count: 0, comm: 0, income: 0, last: d.date || d.created_at || '', waiting: 0 };
     agentMap[name].count++;
-    if (d.commission && d.status === 'closed') agentMap[name].comm += parseFloat(d.commission) || 0;
+    const isClosedLike = ['closed','confirmed','gift_closed'].includes(d.status);
+    if (d.commission && isClosedLike) agentMap[name].comm += parseFloat(d.commission) || 0;
+    if (d.amount && d.commission && isClosedLike) agentMap[name].income += Math.max(0, (parseFloat(d.amount) || 0) - (parseFloat(d.commission) || 0));
     if (d.status === 'pending_confirmation') agentMap[name].waiting++;
   });
   const agents = Object.values(agentMap).sort((a,b) => b.count - a.count || b.comm - a.comm);
@@ -1437,6 +1439,7 @@ function renderMyRecommenders() {
           <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'Ждут решения':(lang==='en')?'Awaiting':(lang==='ar')?'قيد الانتظار':'Ждут решения'}</div><div class="deal-mini-val">${a.waiting || 0}</div></div>
         </div>
         <div class="deal-receipt">
+          <div class="receipt-line"><span>💼 ${lang==='ru' ? 'Доход для бизнеса' : (lang==='en' ? 'Business income' : (lang==='he' ? 'Доход для бизнеса' : 'دخل العمل'))}:</span><span>${Math.round(a.income || 0)} ${curr}</span></div>
           <div class="receipt-line"><span>🎁 ${L.ag_comm || 'Выплачено'}:</span><span>${Math.round(a.comm)} ${curr}</span></div>
           <div class="receipt-line"><span>${(lang==='he')?'Последняя активность':(lang==='en')?'Last activity':(lang==='ar')?'آخر نشاط':'Последняя активность'}:</span><span>${a.last ? formatShortDate(a.last) : '—'}</span></div>
         </div>
