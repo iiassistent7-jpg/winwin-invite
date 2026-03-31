@@ -132,7 +132,10 @@
 
     /* ── Stats ──────────────────────────────────────────────────────── */
     .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
-    .stats-grid-3 { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
+    .stats-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+    .income-hero { background:linear-gradient(135deg, rgba(39,174,96,.12), rgba(86,204,242,.08)); border:1px solid rgba(39,174,96,.22); border-radius:20px; padding:16px 18px; text-align:center; margin-bottom:12px; box-shadow:var(--shadow); }
+    .income-kicker { font-size:.82rem; font-weight:800; color:var(--text2); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+    .income-value { font-family:'Sora',sans-serif; font-size:2.3rem; line-height:1; font-weight:800; color:var(--green); }
     .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 8px; text-align:center; box-shadow:var(--shadow); }
     .stat-val { font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:800; color:var(--text); margin-bottom:4px; }
     .stat-lbl { color:var(--text2); font-weight:600; font-size:.65rem; text-transform:uppercase; letter-spacing:.5px; }
@@ -221,7 +224,7 @@
     .ghost-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-size:.72rem; font-weight:700; }
     .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:14px; box-shadow:var(--shadow); }
     .seg-tab { flex:1; border:none; background:transparent; color:var(--text2); border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:700; font-size:.84rem; font-family:inherit; transition:.2s; }
-    .seg-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .seg-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); border:1px solid rgba(255,255,255,.12); }
     .reco-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
     .reco-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
     .reco-title { font-weight:800; font-size:1rem; }
@@ -237,22 +240,6 @@
     .cta-block p { font-size:.85rem; color:var(--text2); line-height:1.55; margin-bottom:14px; }
     .soft-note { font-size:.76rem; color:var(--text2); margin-top:10px; line-height:1.45; }
     .section-caption { font-size:.78rem; color:var(--text2); margin:-4px 0 12px; line-height:1.45; }
-
-    .stats-hero { background:linear-gradient(135deg, rgba(39,174,96,.13), rgba(86,204,242,.06)); border:1px solid rgba(39,174,96,.2); border-radius:22px; padding:18px 16px; margin-bottom:12px; box-shadow:var(--shadow); text-align:center; }
-    .stats-hero .hero-kicker { font-size:.78rem; color:var(--text2); font-weight:800; margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; }
-    .stats-hero .hero-value { font-family:'Sora',sans-serif; font-size:2.45rem; line-height:1; font-weight:900; color:var(--green); }
-    .stats-mini-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-    .stats-mini-row .stat-box { padding:14px 8px; }
-    .empty-rich-state { background:var(--surface); border:1px solid var(--border); border-radius:22px; padding:18px 16px; box-shadow:var(--shadow); }
-    .empty-rich-state h3 { font-family:'Sora',sans-serif; font-size:1.18rem; margin-bottom:8px; line-height:1.15; }
-    .empty-rich-state p { color:var(--text2); line-height:1.5; margin-bottom:14px; font-size:.9rem; }
-    .empty-rich-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-    .empty-rich-actions { display:flex; flex-direction:column; gap:10px; }
-    .segmented-tabs { border:1px solid rgba(255,255,255,.1); }
-    .seg-tab { border:1px solid transparent; }
-    .seg-tab.active { border-color:rgba(255,255,255,.08); }
-    .icon-emoji { font-size:17px; line-height:1; display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; }
-
     body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
 
     /* ── Misc ───────────────────────────────────────────────────────── */
@@ -323,11 +310,11 @@
     <!-- ── VIEW: Stats ──────────────────────────────────────────── -->
     <div id="view-stats" class="view">
       <div class="sec-title" id="t_st_fin_title">Финансы</div>
-      <div class="stats-hero">
-        <div class="hero-kicker" id="t_st_hero_kicker">Мой доход</div>
-        <div class="hero-value" id="st_net_hero">0 ₪</div>
+      <div class="income-hero">
+        <div class="income-kicker" id="t_st_hero_title">Мой доход</div>
+        <div class="income-value" id="st_net_big">0 ₪</div>
       </div>
-      <div class="stats-mini-row">
+      <div class="stats-grid-3">
         <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
         <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red)">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
         <div class="stat-box"><div class="stat-val" id="st_pending_cnt" style="color:var(--purple)">0</div><div class="stat-lbl" id="t_st_pending_cnt">Ждут агента</div></div>
@@ -368,7 +355,7 @@
         <div id="leadersInlinePromo" class="pro-promo" style="display:none;">
           <h3 id="t_rd_promo_title">Ищете новых партнёров?</h3>
           <p id="t_rd_promo_desc">Перейдите на PRO, чтобы открыть контакты лидеров в вашей нише.</p>
-          <button class="btn-primary btn-gold" onclick="openProPage()" id="t_rd_promo_btn">Подробнее о PRO</button>
+          <button class="btn-primary btn-gold" onclick="switchTab('profile', null)" id="t_rd_promo_btn">Подробнее о PRO</button>
         </div>
         <div id="leadersInlineList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
       </div>
@@ -381,7 +368,6 @@
         <h3 id="t_rec_title">Рекомендую</h3>
         <p id="t_rec_sub">Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.</p>
         <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
-          <span class="icon-emoji">🤝</span>
           <span id="t_rec_btn_label">Порекомендовать бизнес</span>
         </button>
         <div class="soft-note" id="t_rec_note">Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.</div>
@@ -404,7 +390,7 @@
           <span class="sub-badge" id="subBadge">Стандарт</span>
         </div>
         <div class="sub-desc" id="subDesc">Базовый функционал. Лимиты сделок учитываются платформой.</div>
-        <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="openProPage()">
+        <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="window.location.href='pro_payment.html?token='+encodeURIComponent(token)+'&lang='+encodeURIComponent(lang)">
           <i data-feather="star" style="width:18px;height:18px;"></i>
           <span id="t_btn_upgrade">Перейти на PRO (149 ₪)</span>
         </button>
@@ -433,7 +419,7 @@
     <button class="nav-item active" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
     <button class="nav-item" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
     <button class="nav-item" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Рекомендатели</span></button>
-    <button class="nav-item" onclick="switchTab('recommend',this)"><span class="icon-emoji">🤝</span><span id="nav_recommend">Рекомендую</span></button>
+    <button class="nav-item" onclick="switchTab('recommend',this)"><i data-feather="send"></i><span id="nav_recommend">Рекомендую</span></button>
     <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
@@ -593,14 +579,14 @@ function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name]
 // ══ I18N ══════════════════════════════════════════════════════════════
 const i18n = {
   ru:{
-    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендую", rec_sub:"Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.", rec_btn_label:"Порекомендовать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_chip:"Источники доверия", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", deals_empty_title:"Развивайте свой бизнес", deals_empty_sub:"Найдите тех, кто уже рекомендует в ваших нишах, и усиливайте поток тёплых клиентов.", deals_empty_open:"Открыть рекомендателей", deals_empty_go:"Порекомендовать бизнес", st_hero_kicker:"Мой доход", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
+    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендую", rec_sub:"Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.", rec_btn_label:"Порекомендовать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_chip:"Источники доверия", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
     debt_label:"🔴 Долг агентам:", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
-    st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента",
+    st_fin_title:"Финансы", st_hero_title:"Мой доход", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента",
     st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
     st_agents:"Рекомендатели", st_avg_deal:"Средний чек",
     ag_title:"Рекомендатели", ag_sub:"Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.",
@@ -629,14 +615,14 @@ const i18n = {
     lb_deals:"Сделок:", filt_all:"Все", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   he:{
-    rec_chip:"ההון החברתי שלך", rec_title:"ממליץ", rec_sub:"כשאתם ממליצים על עסק טוב, אתם מחזקים את רשת האמון ויכולים לבחור איך להשתמש בתגמול.", rec_btn_label:"להמליץ על עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_chip:"מקורות אמון", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", deals_empty_title:"פתחו את העסק", deals_empty_sub:"מצאו מי כבר ממליץ בתחומים שלכם וחזקו את זרם הלקוחות החמים.", deals_empty_open:"פתחו ממליצים", deals_empty_go:"המליצו על עסק", st_hero_kicker:"ההכנסה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
+    rec_chip:"ההון החברתי שלך", rec_title:"ממליץ", rec_sub:"כשאתם ממליצים על עסק טוב, אתם מחזקים את רשת האמון ויכולים לבחור איך להשתמש בתגמול.", rec_btn_label:"להמליץ על עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_chip:"מקורות אמון", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
 
     loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
     err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
     debt_label:"🔴 חוב לסוכנים:", filt_active:"פעיל", filt_history:"היסטוריה",
     st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
     pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
-    st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן",
+    st_fin_title:"פיננסים", st_hero_title:"הרווח שלי", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן",
     st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
     st_agents:"ממליצים", st_avg_deal:"עסקה ממוצעת",
     ag_title:"ממליצים", ag_sub:"כאן נמצאים הממליצים שלכם והמובילים בנישה שלכם, שאיתם אפשר להתחיל שיתוף פעולה.",
@@ -665,14 +651,14 @@ const i18n = {
     lb_deals:"עסקאות:", filt_all:"הכל", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   en:{
-    rec_chip:"Your social capital", rec_title:"I Recommend", rec_sub:"When you recommend a great business, you strengthen the trust network and choose how to use the gratitude.", rec_btn_label:"Recommend a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_chip:"Sources of trust", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", deals_empty_title:"Grow your business", deals_empty_sub:"Find people who already recommend businesses in your niches and strengthen the flow of warm clients.", deals_empty_open:"Open recommenders", deals_empty_go:"Recommend a business", st_hero_kicker:"My income", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
+    rec_chip:"Your social capital", rec_title:"I Recommend", rec_sub:"When you recommend a great business, you strengthen the trust network and choose how to use the gratitude.", rec_btn_label:"Recommend a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_chip:"Sources of trust", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
 
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
     debt_label:"🔴 Agent debt:", filt_active:"Active", filt_history:"History",
     st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
     pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
-    st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
+    st_fin_title:"Finance", st_hero_title:"My income", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
     st_funnel_title:"Conversion Funnel", st_total_leads:"Total leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected",
     st_agents:"Recommenders", st_avg_deal:"Avg Deal",
     ag_title:"Recommenders", ag_sub:"Your recommenders and the strong people in your niche you may want to collaborate with.",
@@ -701,14 +687,14 @@ const i18n = {
     lb_deals:"Deals:", filt_all:"All", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   ar:{
-    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصي", rec_sub:"عندما توصي بعمل جيد، فأنت تعزز شبكة الثقة ويمكنك اختيار كيف تستفيد من الشكر.", rec_btn_label:"التوصية بعمل", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_chip:"مصادر الثقة", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", deals_empty_title:"نمّ عملك", deals_empty_sub:"اعثر على من يوصون بالفعل في مجالاتك وعزّز تدفق العملاء الدافئين.", deals_empty_open:"افتح الموصين", deals_empty_go:"أوصِ بعمل", st_hero_kicker:"دخلي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
+    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصي", rec_sub:"عندما توصي بعمل جيد، فأنت تعزز شبكة الثقة ويمكنك اختيار كيف تستفيد من الشكر.", rec_btn_label:"التوصية بعمل", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_chip:"مصادر الثقة", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
 
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
     debt_label:"🔴 دين للوكلاء:", filt_active:"نشط", filt_history:"السجل",
     st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
     pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
-    st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
+    st_fin_title:"المالية", st_hero_title:"دخلي", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
     st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة",
     st_agents:"موصون", st_avg_deal:"متوسط الصفقة",
     ag_title:"الموصون", ag_sub:"هنا الموصون بك والأشخاص الأقوى في مجالك الذين يمكن بدء تعاون معهم.",
@@ -877,13 +863,13 @@ function applyI18n() {
   const map = {
     't_loader_sub':'loader_sub', 't_err_title':'err_title', 't_err_sub':'err_sub',
     't_debt_label':'debt_label', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
-    't_st_fin_title':'st_fin_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
+    't_st_fin_title':'st_fin_title', 't_st_hero_title':'st_hero_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
     't_st_net':'st_net', 't_st_pending_cnt':'st_pending_cnt',
     't_st_funnel_title':'st_funnel_title', 't_st_total_leads':'st_total_leads',
     't_f_active':'f_active', 't_f_closed':'f_closed', 't_f_rejected':'f_rejected',
     't_st_agents':'st_agents', 't_st_avg_deal':'st_avg_deal',
     't_ag_chip':'ag_chip', 't_ag_title':'ag_title', 't_ag_sub':'ag_sub',
-    'agTabMine':'ag_tab_mine', 'agTabLeaders':'ag_tab_leaders', 't_st_hero_kicker':'st_hero_kicker',
+    'agTabMine':'ag_tab_mine', 'agTabLeaders':'ag_tab_leaders',
     't_ag_mine_caption':'ag_mine_caption', 't_ag_leaders_caption':'ag_leaders_caption',
     't_rd_promo_title':'rd_promo_title', 't_rd_promo_desc':'rd_promo_desc',
     't_rd_promo_btn':'rd_promo_btn', 't_radar_loading':'radar_loading',
@@ -1124,25 +1110,35 @@ function renderDeals() {
   if (!filtered.length) {
     if (dealFilter === 'active') {
       const s = bizData.stats || {};
-      const currSym = bizData.currency || '₪';
+      const curr = bizData.currency || '₪';
+      const closed = s.closed || 0;
+      const recommenders = s.agents_count || 0;
+      const revenue = s.total_revenue || 0;
+      const msgMap = {
+        ru:'Найдите тех, кто уже рекомендует в ваших нишах, чтобы усилить поток тёплых клиентов.',
+        he:'מצאו מי שכבר ממליץ בתחומים שלכם כדי לחזק את זרם הלקוחות החמים.',
+        en:'Find people who already recommend businesses in your niches to strengthen your warm client flow.',
+        ar:'اعثر على من يوصون بالفعل في مجالاتك لتعزيز تدفق العملاء الدافئين.'
+      };
+      const secondaryMap = { ru:'Открыть рекомендателей', he:'פתח ממליצים', en:'Open recommenders', ar:'افتح الموصين' };
+      const primaryMap = { ru:'Порекомендовать бизнес', he:'להמליץ על עסק', en:'Recommend a business', ar:'أوصِ بعمل' };
+      const revenueLbl = { ru:'Оборот', he:'הכנסות', en:'Revenue', ar:'الإيرادات' };
       container.innerHTML = `
-        <div class="empty-rich-state">
-          <h3>${L.deals_empty_title || 'Развивайте свой бизнес'}</h3>
-          <p>${L.deals_empty_sub || 'Найдите тех, кто уже рекомендует в ваших нишах, и усиливайте поток тёплых клиентов.'}</p>
-          <div class="empty-rich-grid">
-            <div class="stat-box"><div class="stat-val">${s.closed || 0}</div><div class="stat-lbl">${L.t_f_closed || 'Закрыто'}</div></div>
-            <div class="stat-box"><div class="stat-val">${s.agents_count || 0}</div><div class="stat-lbl">${L.t_st_agents || 'Рекомендатели'}</div></div>
-            <div class="stat-box"><div class="stat-val">${s.total_revenue || 0} ${currSym}</div><div class="stat-lbl">${L.t_st_revenue || 'Оборот'}</div></div>
+        <div class="cta-block">
+          <p style="margin-bottom:12px;font-size:.92rem;color:var(--text);">${msgMap[lang] || msgMap.ru}</p>
+          <div class="mini-stats" style="margin-bottom:12px;">
+            <div class="mini-stat"><div class="val">${closed}</div><div class="lbl">${(i18n[lang]||i18n.ru).f_closed || 'Закрыто'}</div></div>
+            <div class="mini-stat"><div class="val">${recommenders}</div><div class="lbl">${(i18n[lang]||i18n.ru).nav_recommenders || 'Рекомендатели'}</div></div>
+            <div class="mini-stat"><div class="val">${revenue} ${curr}</div><div class="lbl">${revenueLbl[lang] || revenueLbl.ru}</div></div>
           </div>
-          <div class="empty-rich-actions">
-            <button class="btn-primary btn-accent" onclick="openRecommendFlow()"><span class="icon-emoji">🤝</span> ${L.deals_empty_go || 'Порекомендовать бизнес'}</button>
-            <button class="btn-primary btn-outline" onclick="switchTab('recommenders', null)">${L.deals_empty_open || 'Открыть рекомендателей'}</button>
+          <div class="hero-actions" style="margin-top:0;">
+            <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
+            <button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>
           </div>
         </div>`;
     } else {
       container.innerHTML = `<div class="empty-state">${L.empty_deals}</div>`;
     }
-    feather.replace();
     return;
   }
 
@@ -1208,7 +1204,8 @@ function renderStats() {
 
   animNum('st_revenue',    s.total_revenue   || 0, ' '+curr);
   animNum('st_commission', s.total_commission || 0, ' '+curr);
-  animNum('st_net_hero',   s.total_earned    || 0, ' '+curr);
+  animNum('st_net_big',    s.total_earned    || 0, ' '+curr);
+  animNum('st_net',        s.total_earned    || 0, ' '+curr);
 
   const pendingCnt = (bizData.deals || []).filter(d => d.status === 'pending_confirmation').length;
   document.getElementById('st_pending_cnt').textContent = s.pending_conf !== undefined ? s.pending_conf : pendingCnt;
@@ -1342,7 +1339,7 @@ function renderLeadersInline() {
     else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
     else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
     const niches = (a.niche_categories || []).map(n => `<span class="meta-pill">${(typeof getCatName==='function') ? getCatName(n,lang) : n}</span>`).join('');
-    let cta = `<button class="btn-primary btn-outline" onclick="openProPage()">${L.rd_promo_btn}</button>`;
+    let cta = `<button class="btn-primary btn-outline" onclick="switchTab('profile', null)">${L.rd_promo_btn}</button>`;
     if (isPro && a.wa_phone) {
       const waLink = 'https://wa.me/' + String(a.wa_phone).replace(/\D/g,'');
       cta = `<a class="btn-primary btn-wa" href="${waLink}" target="_blank"><i data-feather="message-circle" style="width:16px;height:16px;"></i> ${L.ag_cta_partner || 'Предложить сотрудничество'}</a>`;
@@ -1441,12 +1438,19 @@ function formatDecision(decision, L) {
   return decision;
 }
 
-function openRecommendFlow() {
-  window.location.href = `catalog.html?token=${encodeURIComponent(token)}&lang=${encodeURIComponent(lang)}`;
-}
-
-function openProPage() {
-  window.location.href = `pro_payment.html?token=${encodeURIComponent(token)}&lang=${encodeURIComponent(lang)}`;
+async function openRecommendFlow() {
+  let catalogToken = token;
+  try {
+    const bizId = bizData && bizData.id;
+    if (bizId) {
+      const r = await fetch(`${API_URL}/api/catalog/token?biz_id=${bizId}`);
+      if (r.ok) {
+        const d = await r.json();
+        catalogToken = d.token || token;
+      }
+    }
+  } catch(e) {}
+  window.location.href = `catalog.html?token=${encodeURIComponent(catalogToken)}&lang=${encodeURIComponent(lang)}`;
 }
 
 function formatShortDate(dateStr) {
