@@ -9,7 +9,7 @@
     :root{--bg:#0F0F1A;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.08);--text:#fff;--text2:#a0a0b0;--accent:#2F80ED;--accent2:#56CCF2;--green:#27AE60;--gold:#F2C94C;--radius:22px;--shadow:0 12px 34px rgba(0,0,0,.35)}
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
     body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center}
-    .app{width:100%;max-width:430px;min-height:100vh;padding:22px 16px 34px}
+    .app{width:100%;max-width:430px;min-height:100vh;padding:22px 16px 110px}
     .lang-row{display:flex;justify-content:center;gap:8px;margin-bottom:18px}
     .lang-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:999px;padding:8px 14px;font-size:.82rem;font-weight:800;cursor:pointer}
     .lang-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -23,7 +23,7 @@
     .search{position:relative;margin-bottom:14px}
     .search input{width:100%;padding:18px 18px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1rem;outline:none}
     .search input::placeholder{color:var(--text2)}
-    .filters{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:8px}
+    .filters{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:8px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 75%,rgba(15,15,26,0));z-index:5}
     .filters::-webkit-scrollbar{display:none}
     .filter-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:10px 16px;border-radius:999px;white-space:nowrap;font-weight:700;font-size:.84rem;cursor:pointer}
     .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -52,10 +52,10 @@
 <body>
 <div class="app">
   <div class="lang-row">
-    <button class="lang-btn" onclick="setLang('en')">GB EN</button>
-    <button class="lang-btn" onclick="setLang('he')">IL עב</button>
-    <button class="lang-btn" onclick="setLang('ar')">SA ع</button>
-    <button class="lang-btn active" onclick="setLang('ru')">RU PY</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('he')">HE</button>
+    <button class="lang-btn" onclick="setLang('ar')">AR</button>
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
   </div>
   <div class="logo">
     <div class="logo-main">Win-Win</div>
@@ -70,6 +70,7 @@
   <div class="filters" id="filters"></div>
   <div class="grid" id="grid"><div class="empty">Загрузка каталога...</div></div>
 </div>
+<div class="footer-bar"><a class="footer-back" href="javascript:history.back()" id="backBtn">Назад</a></div>
 <div class="sheet" id="sheet" onclick="closeSheet(event)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="handle"></div>
@@ -90,27 +91,27 @@ const token=new URLSearchParams(location.search).get('token')||'';
 let lang=new URLSearchParams(location.search).get('lang')||'ru';
 let allBusinesses=[]; let currentCat='__all__'; let actorId=null; let currentBiz=null;
 const i18n={
- ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy:'Скопировать ссылку для рекомендации',copied:'Ссылка скопирована ✅',back:'Назад',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win'},
- en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy:'Copy referral link',copied:'Referral link copied ✅',back:'Back',bonus:'Bonus',invite:'Invite business to Win-Win'},
- he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy:'העתק קישור להמלצה',copied:'הקישור הועתק ✅',back:'חזרה',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win'},
- ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy:'انسخ رابط التوصية',copied:'تم نسخ الرابط ✅',back:'رجوع',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win‑Win'}
+ ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy:'Скопировать ссылку для рекомендации',copied:'Ссылка скопирована ✅',back:'Назад',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win',cats:['Косметология','Инъекционная косметология','Лазерная эпиляция','Удаление тату и татуажа','Недвижимость','Юридические услуги']},
+ en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy:'Copy referral link',copied:'Referral link copied ✅',back:'Back',bonus:'Bonus',invite:'Invite business to Win-Win',cats:['Cosmetology','Injection cosmetology','Laser hair removal','Tattoo removal','Real estate','Legal services']},
+ he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy:'העתק קישור להמלצה',copied:'הקישור הועתק ✅',back:'חזרה',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win',cats:['קוסמטולוגיה','קוסמטולוגיה בהזרקות','הסרת שיער בלייזר','הסרת קעקועים','נדל״ן','שירותים משפטיים']},
+ ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy:'انسخ رابط التوصية',copied:'تم نسخ الرابط ✅',back:'رجوع',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win‑Win',cats:['التجميل','التجميل بالحقن','إزالة الشعر بالليزر','إزالة الوشم','العقارات','الخدمات القانونية']}
 };
 function L(){return i18n[lang]||i18n.ru}
 function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event?.target?.classList.add('active');applyI18n();renderFilters();renderCatalog();}
-function applyI18n(){document.documentElement.lang=lang;const t=L();document.getElementById('t_head').textContent=t.head;document.getElementById('t_sub1').textContent=t.sub1;document.getElementById('t_sub2').textContent=t.sub2;document.getElementById('q').placeholder=t.search;document.getElementById('copyBtn').textContent=t.copy;}
+function applyI18n(){document.documentElement.lang=lang;const t=L();document.getElementById('t_head').textContent=t.head;document.getElementById('t_sub1').textContent=t.sub1;document.getElementById('t_sub2').textContent=t.sub2;document.getElementById('q').placeholder=t.search;document.getElementById('copyBtn').textContent=t.copy;document.getElementById('backBtn').textContent=t.back;}
 async function loadCatalog(){
   try{
     const res=await fetch(`${API_URL}/api/catalog?token=${encodeURIComponent(token)}`);
     if(!res.ok) throw new Error('catalog');
     const data=await res.json();
-    allBusinesses=data.businesses||[]; actorId=data.agent_id||null;
+    allBusinesses=data.businesses||[]; actorId=data.actor_id||data.agent_id||data.biz_id||data.business_id||null;
     renderFilters(); renderCatalog();
   }catch(e){ document.getElementById('grid').innerHTML=`<div class="empty">${L().empty}</div>`; }
 }
 function categoryOf(b){return b.category || (Array.isArray(b.niche)&&b.niche.length?b.niche[0]:'—');}
 function renderFilters(){
   const t=L();
-  const cats=[t.all,...new Set(allBusinesses.map(categoryOf).filter(Boolean))];
+  const dynamicCats=[...new Set(allBusinesses.map(categoryOf).filter(Boolean))]; const fallback=(t.cats||[]).filter(Boolean); const cats=[t.all,...new Set([...dynamicCats,...fallback])];
   const box=document.getElementById('filters');
   box.innerHTML='';
   cats.forEach(cat=>{const btn=document.createElement('button'); btn.className='filter-btn'+(((cat===t.all&&currentCat==='__all__')||cat===currentCat)?' active':''); btn.textContent=cat; btn.onclick=()=>{currentCat=(cat===t.all?'__all__':cat); renderFilters(); renderCatalog();}; box.appendChild(btn);});
