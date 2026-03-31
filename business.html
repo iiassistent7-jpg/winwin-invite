@@ -229,6 +229,8 @@
     .page-hero { background:linear-gradient(135deg, rgba(86,204,242,.08), rgba(47,128,237,.06)); border:1px solid rgba(86,204,242,.16); border-radius:22px; padding:11px 14px; margin-bottom:12px; box-shadow:var(--shadow); }
     .page-hero h3 { font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:6px; letter-spacing:-.02em; }
     .page-hero p { font-size:.76rem; color:var(--text2); line-height:1.38; }
+    #view-recommend h3, #view-recommenders h3 { display:none; }
+    #view-recommend .ghost-chip, #view-recommenders .ghost-chip { margin-bottom:10px; }
     .hero-actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
     .ghost-chip { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text2); font-size:.69rem; font-weight:700; margin-bottom:8px; }
     .segmented-tabs { display:flex; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:12px; box-shadow:var(--shadow); }
@@ -374,7 +376,7 @@
     <div id="view-recommenders" class="view">
       <div class="page-hero">
         <div class="ghost-chip" id="t_ag_chip">Источники доверия</div>
-        <h3 id="t_ag_title">Рекомендатели</h3>
+        <h3 id="t_ag_title"></h3>
         <p id="t_ag_sub">Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.</p>
       </div>
       <div class="segmented-tabs">
@@ -400,7 +402,7 @@
     <div id="view-recommend" class="view">
       <div class="cta-block">
         <div class="ghost-chip" id="t_rec_chip">Ваш социальный капитал</div>
-        <h3 id="t_rec_title">Рекомендую</h3>
+        <h3 id="t_rec_title"></h3>
         <p id="t_rec_sub">Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.</p>
         <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
           <span id="t_rec_btn_label">Порекомендовать бизнес</span>
@@ -1187,18 +1189,6 @@ function toggleRecommenderExtra(id) {
   el.classList.toggle('open');
   try { feather.replace(); } catch(e) {}
 }
-function toggleEmptyHeroCopy(btn) {
-  const box = btn && btn.parentElement ? btn.parentElement.querySelector('.empty-copy') : null;
-  if (!box) return;
-  const open = box.classList.toggle('open');
-  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  const label = btn.querySelector('.toggle-label');
-  const labels = {ru:['Подробнее','Скрыть'], he:['עוד','הסתר'], en:['Details','Hide'], ar:['تفاصيل','إخفاء']};
-  const pair = labels[lang] || labels.ru;
-  if (label) label.textContent = open ? pair[1] : pair[0];
-  const icon = btn.querySelector('svg');
-  if (icon) icon.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
-}
 async function remindDecision(id) {
   const payload = { token, deal_id: id, action: 'remind' };
   try {
@@ -1253,54 +1243,47 @@ function renderDeals() {
     const totalRevenue = Math.round(s.total_revenue || 0);
     const recommenders = s.agents_count || 0;
     const titleMap = {
-      ru: dealFilter === 'active' ? 'Пока нет активных сделок' : 'История сделок пока пуста',
-      he: dealFilter === 'active' ? 'כרגע אין עסקאות פעילות' : 'היסטוריית העסקאות עדיין ריקה',
-      en: dealFilter === 'active' ? 'No active deals yet' : 'Deal history is still empty',
-      ar: dealFilter === 'active' ? 'لا توجد صفقات نشطة حالياً' : 'سجل الصفقات ما زال فارغاً'
+      ru: dealFilter === 'active' ? 'Тёплые клиенты начинаются с доверия' : 'История сделок пока пуста',
+      he: dealFilter === 'active' ? 'לקוחות חמים מתחילים באמון' : 'היסטוריית העסקאות עדיין ריקה',
+      en: dealFilter === 'active' ? 'Warm clients start with trust' : 'Deal history is still empty',
+      ar: dealFilter === 'active' ? 'العملاء الدافئون يبدأون بالثقة' : 'سجل الصفقات ما زال فارغاً'
     };
     const subMap = {
-      ru: dealFilter === 'active' ? 'Запустите новую рекомендацию или откройте вкладку рекомендателей, чтобы усилить поток тёплых клиентов.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
-      he: dealFilter === 'active' ? 'זה זמן טוב להמליץ על עסק חדש או לבדוק מי כבר מביא לכם לקוחות.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
-      en: dealFilter === 'active' ? 'A good moment to send a new recommendation or see who already brings you clients.' : 'Completed deals will appear here.',
-      ar: dealFilter === 'active' ? 'هذا وقت مناسب لبدء توصية جديدة أو לראות מי כבר מביא لك عملاء.' : 'ستظهر هنا الصفقات المكتملة.'
+      ru: dealFilter === 'active' ? 'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
+      he: dealFilter === 'active' ? 'הפעילו המלצות וצרפו ממליצים חזקים בנישה שלכם כדי להביא לקוחות חמים בלי תנועה קרה.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
+      en: dealFilter === 'active' ? 'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.' : 'Completed deals will appear here.',
+      ar: dealFilter === 'active' ? 'ابدأ التوصيات واربط موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.' : 'ستظهر هنا الصفقات المكتملة.'
+    };
+    const noteMap = {
+      ru: 'Найдите тех, кто уже рекомендует в ваших нишах, чтобы усилить поток тёплых клиентов.',
+      he: 'מצאו מי כבר ממליץ בנישות שלכם כדי לחזק את זרם הלקוחות החמים.',
+      en: 'Find who already recommends in your niches to strengthen your warm client flow.',
+      ar: 'اعثر على من يوصي بالفعل في مجالاتك لتعزيز تدفق العملاء الدافئين.'
     };
     const primaryMap = { ru:'Порекомендовать бизнес', he:'להמליץ על עסק', en:'Recommend a business', ar:'أوصِ بعمل' };
     const secondaryMap = { ru:'Открыть агентов', he:'פתח ממליצים', en:'Open agents', ar:'افتح الموصين' };
     const closedLbl = {ru:'Закрыто',he:'נסגרו',en:'Closed',ar:'مغلقة'};
-    const revenueLbl = {ru:'Оборот',he:'מחזור',en:'Revenue',ar:'الإيراد'};
     const agentsLbl = {ru:'Агенты',he:'ממליצים',en:'Agents',ar:'وكلاء'};
-    const heroTitle = {
-      ru:'Тёплые клиенты начинаются с доверия',
-      he:'לקוחות חמים מתחילים באמון',
-      en:'Warm clients start with trust',
-      ar:'العملاء الدافئون يبدأون بالثقة'
-    };
-    const heroText = {
-      ru:'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.',
-      he:'הפעילו המלצות וצרפו ממליצים חזקים בנישה שלכם כדי להביא לקוחות חמים בלי תנועה קרה.',
-      en:'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.',
-      ar:'ابدأ التوصيات واربط موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.'
-    };
-    const detailsLbl = {ru:'Подробнее', he:'עוד', en:'Details', ar:'تفاصيل'};
-    container.innerHTML = `
-      <div class="page-hero deals-empty-hero">
-        <h3>${heroTitle[lang] || heroTitle.ru}</h3>
-        <button type="button" class="ghost-chip empty-copy-toggle" aria-expanded="false" onclick="event.stopPropagation();toggleEmptyHeroCopy(this)">
-          <span class="toggle-label">${detailsLbl[lang] || detailsLbl.ru}</span>
-          <i data-feather="chevron-down" style="width:14px;height:14px;transition:.2s"></i>
-        </button>
-        <div class="empty-copy">${heroText[lang] || heroText.ru}</div>
-        <div class="revenue-pill"><span class="pill-label">${revenueLbl[lang] || revenueLbl.ru}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
-        <div class="deals-empty-stats">
-          <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
-          <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
-        </div>
-        <div class="deals-empty-actions">
-          <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
-          <button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>
-        </div>
-        <div class="soft-note">${msgMap[lang] || msgMap.ru}</div>
-      </div>`;
+    if (dealFilter === 'active') {
+      container.innerHTML = `
+        <div class="deals-empty-hero">
+          <div class="deals-empty-title">${titleMap[lang] || titleMap.ru}</div>
+          <div class="deals-empty-sub">${subMap[lang] || subMap.ru}</div>
+          <div class="revenue-pill"><span class="pill-label">${(i18n[lang]||i18n.ru).t_st_revenue || 'Revenue'}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
+          <div class="deals-empty-stats">
+            <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
+            <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
+          </div>
+          <div class="deals-empty-actions">
+            <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
+            <button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>
+          </div>
+          <div class="soft-note">${noteMap[lang] || noteMap.ru}</div>
+        </div>`;
+      feather.replace();
+      return;
+    }
+    container.innerHTML = `<div class="deals-empty-hero"><div class="deals-empty-title">${titleMap[lang] || titleMap.ru}</div><div class="deals-empty-sub">${subMap[lang] || subMap.ru}</div></div>`;
     feather.replace();
     return;
   }
