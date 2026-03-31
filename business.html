@@ -1241,32 +1241,41 @@ function renderDeals() {
     const totalRevenue = Math.round(s.total_revenue || 0);
     const recommenders = s.agents_count || 0;
     const titleMap = {
-      ru: dealFilter === 'active' ? 'Пока нет активных сделок' : 'История сделок пока пуста',
-      he: dealFilter === 'active' ? 'כרגע אין עסקאות פעילות' : 'היסטוריית העסקאות עדיין ריקה',
-      en: dealFilter === 'active' ? 'No active deals yet' : 'Deal history is still empty',
-      ar: dealFilter === 'active' ? 'لا توجد صفقات نشطة حالياً' : 'سجل الصفقات ما زال فارغاً'
+      ru: dealFilter === 'active' ? 'Тёплые клиенты начинаются с доверия' : 'История сделок пока пуста',
+      he: dealFilter === 'active' ? 'לקוחות חמים מתחילים מאמון' : 'היסטוריית העסקאות עדיין ריקה',
+      en: dealFilter === 'active' ? 'Warm clients start with trust' : 'Deal history is still empty',
+      ar: dealFilter === 'active' ? 'العملاء الدافئون يبدأون بالثقة' : 'سجل الصفقات ما زال فارغاً'
     };
     const subMap = {
-      ru: dealFilter === 'active' ? 'Запустите новую рекомендацию или откройте вкладку рекомендателей, чтобы усилить поток тёплых клиентов.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
-      he: dealFilter === 'active' ? 'זה זמן טוב להמליץ על עסק חדש או לבדוק מי כבר מביא לכם לקוחות.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
-      en: dealFilter === 'active' ? 'A good moment to send a new recommendation or see who already brings you clients.' : 'Completed deals will appear here.',
-      ar: dealFilter === 'active' ? 'هذا وقت مناسب لبدء توصية جديدة أو לראות מי כבר מביא لك عملاء.' : 'ستظهر هنا الصفقات المكتملة.'
+      ru: dealFilter === 'active' ? 'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
+      he: dealFilter === 'active' ? 'הפעילו המלצות וצרפו ממליצים חזקים בתחום שלכם כדי למשוך לקוחות חמים בלי תנועה קרה.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
+      en: dealFilter === 'active' ? 'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.' : 'Completed deals will appear here.',
+      ar: dealFilter === 'active' ? 'ابدأ التوصيات واضف موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.' : 'ستظهر هنا الصفقات المكتملة.'
+    };
+    const footMap = {
+      ru: 'Найдите тех, кто уже рекомендует в ваших нишах, и усиливайте поток тёплых клиентов.',
+      he: 'מצאו מי שכבר ממליץ בתחומים שלכם והגדילו את זרם הלקוחות החמים.',
+      en: 'Find who is already recommending in your niches and strengthen your flow of warm clients.',
+      ar: 'اعثر على من يوصي بالفعل في مجالك وعزز تدفق العملاء الدافئين.'
     };
     const primaryMap = { ru:'Порекомендовать бизнес', he:'להמליץ על עסק', en:'Recommend a business', ar:'أوصِ بعمل' };
-    const secondaryMap = { ru:'Открыть агентов', he:'פתח ממליצים', en:'Open agents', ar:'افتح الموصين' };
+    const secondaryMap = { ru:'Открыть агентов', he:'פתח סוכנים', en:'Open agents', ar:'افتح الوكلاء' };
     const closedLbl = {ru:'Закрыто',he:'נסגרו',en:'Closed',ar:'مغلقة'};
+    const agentsLbl = {ru:'Агенты',he:'סוכנים',en:'Agents',ar:'الوكلاء'};
     container.innerHTML = `
       <div class="deals-empty-hero">
-        <div class="revenue-pill"><span class="pill-label">${(i18n[lang]||i18n.ru).t_st_revenue || 'Revenue'}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
+        <div class="deals-empty-title">${titleMap[lang] || titleMap.ru}</div>
+        <div class="deals-empty-sub">${subMap[lang] || subMap.ru}</div>
+        <div class="revenue-pill"><span class="pill-label">${(i18n[lang]||i18n.ru).t_st_revenue || 'Оборот'}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
         <div class="deals-empty-stats">
           <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
-          <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${(lang==='ru'?'Агенты':((i18n[lang]||i18n.ru).nav_recommenders || 'Agents'))}</div></div>
+          <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
         </div>
         <div class="deals-empty-actions">
           <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
           ${dealFilter === 'active' ? `<button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>` : ''}
         </div>
-        <div class="soft-note">${msgMap[lang] || msgMap.ru}</div>
+        <div class="soft-note">${footMap[lang] || footMap.ru}</div>
       </div>`;
     feather.replace();
     return;
