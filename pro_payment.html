@@ -3,42 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win · PRO</title>
+  <title>Win-Win · Тарифы</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0F0F1A;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#fff;--text2:#a0a0b0;--accent:#2F80ED;--gold:#F2C94C;--radius:22px;}
+    :root{--bg:#0F0F1A;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.08);--text:#fff;--text2:#a0a0b0;--accent:#2F80ED;--accent2:#56CCF2;--gold:#F2C94C;--green:#27AE60;--radius:22px;--shadow:0 14px 34px rgba(0,0,0,.35)}
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
     body{background:var(--bg);color:var(--text);min-height:100vh;padding:20px 16px 40px}
     .shell{max-width:430px;margin:0 auto}
-    .logo{font-family:Sora,sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(90deg,#56CCF2,var(--accent));-webkit-background-clip:text;color:transparent;margin-bottom:8px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 12px 34px rgba(0,0,0,.35);margin-bottom:14px}
-    .chip{display:inline-block;background:rgba(242,201,76,.15);color:var(--gold);border:1px solid rgba(242,201,76,.25);padding:6px 12px;border-radius:999px;font-weight:800;font-size:.78rem;margin-bottom:12px}
-    h1{font-size:2.1rem;line-height:1.06;margin-bottom:10px}
-    p{color:var(--text2);line-height:1.6;margin-bottom:10px}
-    ul{padding-left:18px;color:var(--text2);line-height:1.7}
+    .logo{font-family:Sora,sans-serif;font-size:2.15rem;font-weight:800;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;color:transparent;margin-bottom:14px}
+    .hero{background:linear-gradient(135deg,rgba(47,128,237,.08),rgba(86,204,242,.05));border:1px solid rgba(86,204,242,.18);border-radius:28px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px}
+    .hero h1{font-family:Sora,sans-serif;font-size:2rem;line-height:1.04;margin-bottom:10px}
+    .hero p{color:var(--text2);line-height:1.55}
+    .plans{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+    .plan{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:18px;box-shadow:var(--shadow)}
+    .plan.featured{border-color:rgba(242,201,76,.34);background:linear-gradient(135deg,rgba(242,201,76,.08),rgba(242,153,74,.04))}
+    .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid var(--border);padding:6px 12px;border-radius:999px;font-weight:800;font-size:.78rem;margin-bottom:12px}
+    .featured .chip{background:rgba(242,201,76,.15);border-color:rgba(242,201,76,.25);color:var(--gold)}
+    .plan h2{font-size:1.45rem;font-weight:800;margin-bottom:6px}
+    .sub{color:var(--text2);font-size:.92rem;line-height:1.5;margin-bottom:14px}
+    .price{font-family:Sora,sans-serif;font-size:2.4rem;line-height:1;color:var(--text);margin-bottom:4px}
+    .price.gold{color:var(--gold)}
+    .save{font-size:.78rem;color:var(--green);font-weight:700;margin-bottom:12px}
+    ul{padding-left:18px;color:var(--text2);line-height:1.65}
     li{margin:6px 0}
-    .price{font-size:2.4rem;font-weight:900;color:var(--gold);margin:10px 0 2px}
-    .btn{display:flex;justify-content:center;align-items:center;width:100%;padding:16px;border-radius:16px;text-decoration:none;font-weight:800;font-size:1rem;margin-top:12px}
+    .compare{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:18px;box-shadow:var(--shadow);margin:16px 0}
+    .compare h3,.extras h3{font-size:1.06rem;font-weight:800;margin-bottom:10px}
+    .cmp-row{display:grid;grid-template-columns:1.5fr .8fr .8fr .8fr;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.84rem}
+    .cmp-row:last-child{border-bottom:none}
+    .cmp-head{color:var(--text2);font-weight:800;text-transform:uppercase;font-size:.7rem;letter-spacing:.8px}
+    .yes{color:var(--green);font-weight:800}
+    .no{color:var(--text2)}
+    .extras{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:18px;box-shadow:var(--shadow);margin:16px 0}
+    .extras p{color:var(--text2);line-height:1.55;margin-bottom:8px}
+    .actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+    .btn{display:flex;justify-content:center;align-items:center;width:100%;padding:16px;border-radius:16px;text-decoration:none;font-weight:800;font-size:1rem}
     .btn-primary{background:var(--accent);color:#fff}
+    .btn-gold{background:linear-gradient(135deg,#F2C94C,#F2994A);color:#141624}
     .btn-outline{border:1px solid var(--border);color:var(--text);background:transparent}
+    .tiny{font-size:.74rem;color:var(--text2);text-align:center;line-height:1.45;margin-top:12px}
   </style>
 </head>
 <body>
   <div class="shell">
     <div class="logo">Win-Win</div>
-    <div class="card">
-      <div class="chip">PRO</div>
-      <h1>Полный доступ к сильным рекомендателям</h1>
-      <p>PRO открывает лидеров в вашей нише, контакты рекомендателей и расширенные возможности роста через сеть доверия.</p>
-      <div class="price">149 ₪ <span style="font-size:1rem;color:var(--text2);font-weight:700">/ месяц</span></div>
-      <ul>
-        <li>Доступ к лидерам в вашей нише</li>
-        <li>Видимость контактов рекомендателей</li>
-        <li>Больше возможностей для сотрудничества</li>
-      </ul>
-      <a class="btn btn-primary" href="https://wa.me/972534218573?text=%F0%9F%91%8B%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B8%D1%82%D1%8C%20PRO%20%D0%B2%20Win-Win">Подключить PRO</a>
+    <div class="hero">
+      <h1>Выберите тариф, который усиливает ваш бизнес</h1>
+      <p>Все платные тарифы дают доступ к возможностям роста через сеть доверия. Чем длиннее период, тем выгоднее цена и выше приоритет в каталоге.</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="chip">STANDARD</div>
+        <h2>Стандарт</h2>
+        <div class="sub">Для старта и проверки модели без большого чека.</div>
+        <div class="price">99 ₪</div>
+        <div class="save">Помесячно</div>
+        <ul>
+          <li>Базовый доступ к платформе</li>
+          <li>Работа со сделками и статистикой</li>
+          <li>Подходит, чтобы протестировать поток рекомендаций</li>
+        </ul>
+      </div>
+
+      <div class="plan">
+        <div class="chip">BUSINESS · 6 месяцев</div>
+        <h2>Пакет Business</h2>
+        <div class="sub">Для тех, кто уже понял логику и хочет закрепиться в системе.</div>
+        <div class="price">499 ₪</div>
+        <div class="save">Экономия по сравнению с помесячной оплатой</div>
+        <ul>
+          <li>Доступ к PRO-возможностям на 6 месяцев</li>
+          <li>Выше видимость в каталоге</li>
+          <li>Больше возможностей для сотрудничества</li>
+        </ul>
+      </div>
+
+      <div class="plan featured">
+        <div class="chip">VIP · 12 месяцев</div>
+        <h2>Пакет VIP</h2>
+        <div class="sub">Максимальный приоритет и полный набор преимуществ для роста.</div>
+        <div class="price gold">899 ₪</div>
+        <div class="save">Самый выгодный вариант для долгой игры</div>
+        <ul>
+          <li>Максимальный PRO-приоритет в каталоге</li>
+          <li>Полный доступ к сильным рекомендателям</li>
+          <li>Дополнительные дизайнерские карточки бизнеса</li>
+          <li>Расширенная подача информации о бизнесе</li>
+          <li>Мини-лендинг внутри платформы вместо голой ссылки</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="compare">
+      <h3>Быстрое сравнение</h3>
+      <div class="cmp-row cmp-head"><div>Возможность</div><div>99 ₪</div><div>499 ₪</div><div>899 ₪</div></div>
+      <div class="cmp-row"><div>Работа со сделками и отчётами</div><div class="yes">Да</div><div class="yes">Да</div><div class="yes">Да</div></div>
+      <div class="cmp-row"><div>Лидеры в вашей нише</div><div class="no">Ограничено</div><div class="yes">Да</div><div class="yes">Да</div></div>
+      <div class="cmp-row"><div>Контакты сильных рекомендателей</div><div class="no">Ограничено</div><div class="yes">Да</div><div class="yes">Да</div></div>
+      <div class="cmp-row"><div>Приоритет в каталоге</div><div class="no">Базовый</div><div class="yes">Повышенный</div><div class="yes">Максимальный</div></div>
+      <div class="cmp-row"><div>Расширенная карточка бизнеса</div><div class="no">Нет</div><div class="yes">Да</div><div class="yes">Да</div></div>
+      <div class="cmp-row"><div>Мини-лендинг бизнеса</div><div class="no">Нет</div><div class="no">Нет</div><div class="yes">Да</div></div>
+    </div>
+
+    <div class="extras">
+      <h3>Почему это сильнее обычной подписки</h3>
+      <p>Платформа не просто открывает доступ к функциям. Она делает ваш бизнес заметнее, понятнее и привлекательнее для рекомендателей.</p>
+      <p>VIP особенно силён тем, что даёт не только доступ, но и более выигрышную упаковку бизнеса внутри каталога платформы.</p>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="https://wa.me/972534218573?text=%F0%9F%91%8B%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B8%D1%82%D1%8C%20%D0%BF%D0%B0%D0%BA%D0%B5%D1%82%20Business%20%D0%BD%D0%B0%206%20%D0%BC%D0%B5%D1%81%D1%8F%D1%86%D0%B5%D0%B2%20%D0%B2%20Win-Win">Выбрать пакет Business · 499 ₪</a>
+      <a class="btn btn-gold" href="https://wa.me/972534218573?text=%F0%9F%91%8B%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B8%D1%82%D1%8C%20VIP%20%D0%BD%D0%B0%2012%20%D0%BC%D0%B5%D1%81%D1%8F%D1%86%D0%B5%D0%B2%20%D0%B2%20Win-Win">Выбрать VIP · 899 ₪</a>
       <a class="btn btn-outline" href="javascript:history.back()">Назад</a>
     </div>
+    <div class="tiny">Пока цены отображаются только в шекелях. Оплата и подключение подтверждаются через команду Win-Win.</div>
   </div>
 </body>
 </html>
