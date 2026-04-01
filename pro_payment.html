@@ -45,7 +45,7 @@
 <body>
   <div class="shell">
     <div class="logo">Win-Win</div>
-    <div class="top-sub">Выберите тариф, который усилит ваш бизнес. Два уровня доступа: <b>Стандарт</b> и <b>PRO</b>. Чем длиннее период, тем выгоднее стоимость месяца.</div>
+    <div class="top-sub">Выберите тариф, который усилит ваш бизнес. Два уровня доступа: <b>Стандарт</b> и <b>PRO</b>. Чем длиннее период, тем выгоднее стоимость месяца. Trust Index, место в каталоге и ранжирование не покупаются.</div>
     <div class="currency-tabs">
       <button class="currency-tab active" onclick="setCurrency('ils', this)">₪ Шекели</button>
       <button class="currency-tab" onclick="setCurrency('usd', this)">$ Доллары</button>
@@ -60,7 +60,7 @@
       <div class="plan-card pro">
         <div class="badge pro">PRO</div>
         <div class="plan-title">PRO</div>
-        <div class="plan-desc">Полный доступ к сильным рекомендателям, приоритет в каталоге, расширенные карточки бизнеса и мини-лендинг прямо внутри платформы.</div>
+        <div class="plan-desc">Дополнительные инструменты для бизнеса: расширенная карточка, мини-лендинг внутри платформы и более удобная работа с рекомендателями. PRO не покупает Trust Index, ранжирование или приоритет в каталоге.</div>
         <div class="option-list" id="proOptions"></div>
       </div>
     </div>
@@ -72,7 +72,6 @@
         <tr><td>Базовая аналитика</td><td class="ok">Да</td><td class="ok">Да</td></tr>
         <tr><td>Лидеры в вашей нише</td><td>Ограничено</td><td class="ok">Полный доступ</td></tr>
         <tr><td>Контакты рекомендателей</td><td>Нет</td><td class="ok">Да</td></tr>
-        <tr><td>Приоритет в каталоге</td><td>Нет</td><td class="ok">Да</td></tr>
         <tr><td>Расширенная карточка бизнеса</td><td>База</td><td class="ok">Да</td></tr>
         <tr><td>Мини-лендинг бизнеса</td><td>Нет</td><td class="ok">Да</td></tr>
       </table>
@@ -90,19 +89,19 @@
       pro:[
         {period:'1 месяц', price:'149 ₪', note:'Полный PRO-доступ на месяц для быстрого старта.'},
         {period:'6 месяцев', price:'749 ₪', note:'Удобный формат для системного роста и сотрудничества.'},
-        {period:'12 месяцев', price:'1349 ₪', note:'VIP-приоритет в каталоге и все PRO-плюшки на год вперёд.'}
+        {period:'12 месяцев', price:'1349 ₪', note:'Все PRO-инструменты для бизнеса на год вперёд.'}
       ]
     },
     usd: {
       standard:[
-        {period:'1 month', price:'$39', note:'A minimal entry ticket to test the system.'},
-        {period:'6 months', price:'$199', note:'Lower monthly price and a fixed plan.'},
-        {period:'12 months', price:'$349', note:'About 25% cheaper than paying monthly.'}
+        {period:'1 month', price:'$29', note:'A minimal entry ticket to test the system.'},
+        {period:'6 months', price:'$149', note:'Lower monthly price and a fixed plan.'},
+        {period:'12 months', price:'$279', note:'About 25% cheaper than paying monthly.'}
       ],
       pro:[
         {period:'1 month', price:'$49', note:'Full PRO access for one month.'},
         {period:'6 months', price:'$249', note:'A stronger format for consistent growth.'},
-        {period:'12 months', price:'$449', note:'Priority in the catalog and all PRO benefits for a year.'}
+        {period:'12 months', price:'$449', note:'All PRO business tools for a full year.'}
       ]
     }
   };
