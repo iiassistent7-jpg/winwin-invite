@@ -23,6 +23,10 @@
     .badge.pro{background:rgba(242,201,76,.14);color:var(--gold);border:1px solid rgba(242,201,76,.22)}
     .plan-title{font-family:Sora,sans-serif;font-size:1.5rem;margin-bottom:8px}
     .plan-desc{color:var(--text2);line-height:1.55;font-size:.92rem;margin-bottom:14px}
+    .plan-desc p{margin:0 0 10px}
+    .plan-desc p:last-of-type{margin-bottom:0}
+    .plan-desc ul{margin:0 0 12px 18px;padding:0}
+    .plan-desc li{margin:0 0 4px}
     .option-list{display:grid;gap:10px;margin-bottom:14px}
     .option{border:1px solid var(--border);border-radius:16px;padding:14px;background:var(--surface2)}
     .option-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;margin-bottom:10px}
@@ -53,13 +57,11 @@
     <div class="grid">
       <div class="plan-card">
         <div class="badge std" id="standardBadge"></div>
-        <div class="plan-title" id="standardTitle"></div>
         <div class="plan-desc" id="standardDesc"></div>
         <div class="option-list" id="standardOptions"></div>
       </div>
       <div class="plan-card pro">
         <div class="badge pro" id="proBadge"></div>
-        <div class="plan-title" id="proTitle"></div>
         <div class="plan-desc" id="proDesc"></div>
         <div class="option-list" id="proOptions"></div>
       </div>
@@ -84,8 +86,12 @@
       currencyUsd: '$ Доллары',
       standard: 'Стандарт',
       pro: 'PRO',
-      standardDesc: 'Для бизнеса, которому нужен понятный старт: сделки, рекомендации, базовая аналитика и рабочий кабинет. Первые 10 сделок — без комиссии платформы. Вы платите только агентам по согласованным условиям.',
-      proDesc: 'Для бизнеса, которому нужно больше инструментов: расширенная карточка, мини-лендинг внутри платформы и более удобная работа с рекомендателями. PRO не влияет на Trust Index, место в каталоге и порядок выдачи.',
+      standardLead: 'Для бизнеса, которому нужен понятный старт:',
+      standardPoints: ['сделки', 'рекомендации', 'базовая аналитика', 'рабочий кабинет'],
+      standardExtra: ['Первые 10 сделок — без комиссии платформы.', 'Вы платите только агентам по согласованным условиям.'],
+      proLead: 'Для бизнеса, которому нужно больше инструментов:',
+      proPoints: ['всё, что входит в тариф Стандарт', 'расширенная карточка', 'мини-лендинг внутри платформы', 'работа с рекомендателями'],
+      proExtra: ['PRO не влияет на Trust Index, место в каталоге и порядок выдачи.'],
       compareTitle: 'Что даёт PRO сверх Стандарта',
       compareHeadFeature: 'Возможность',
       compareRows: [
@@ -113,8 +119,12 @@
       currencyUsd: '$ USD',
       standard: 'Standard',
       pro: 'PRO',
-      standardDesc: 'For businesses that need a clear start: deals, referrals, core analytics, and a practical dashboard. Your first 10 deals come with no platform commission. You only pay agents under the agreed terms.',
-      proDesc: 'For businesses that need more tools: an expanded business profile, a mini landing page inside the platform, and smoother work with referrers. PRO does not affect Trust Index, catalog placement, or ranking.',
+      standardLead: 'For businesses that need a clear start:',
+      standardPoints: ['deals', 'referrals', 'core analytics', 'working dashboard'],
+      standardExtra: ['Your first 10 deals come with no platform commission.', 'You only pay agents under the agreed terms.'],
+      proLead: 'For businesses that need more tools:',
+      proPoints: ['everything included in Standard', 'expanded business profile', 'mini landing page inside the platform', 'work with referrers'],
+      proExtra: ['PRO does not affect Trust Index, catalog placement, or ranking.'],
       compareTitle: 'What PRO adds beyond Standard',
       compareHeadFeature: 'Feature',
       compareRows: [
@@ -142,8 +152,12 @@
       currencyUsd: '$ דולרים',
       standard: 'סטנדרט',
       pro: 'PRO',
-      standardDesc: 'לעסקים שצריכים התחלה ברורה: עסקאות, המלצות, אנליטיקה בסיסית ולוח עבודה נוח. 10 העסקאות הראשונות ללא עמלת פלטפורמה. אתם משלמים רק לסוכנים לפי התנאים שסוכמו.',
-      proDesc: 'לעסקים שצריכים יותר כלים: כרטיס עסק מורחב, מיני-לנדינג בתוך הפלטפורמה ועבודה נוחה יותר עם ממליצים. PRO לא משפיע על Trust Index, מיקום בקטלוג או סדר הדירוג.',
+      standardLead: 'לעסקים שצריכים התחלה ברורה:',
+      standardPoints: ['עסקאות', 'המלצות', 'אנליטיקה בסיסית', 'לוח עבודה'],
+      standardExtra: ['10 העסקאות הראשונות ללא עמלת פלטפורמה.', 'אתם משלמים רק לסוכנים לפי התנאים שסוכמו.'],
+      proLead: 'לעסקים שצריכים יותר כלים:',
+      proPoints: ['כל מה שכלול במסלול סטנדרט', 'כרטיס עסק מורחב', 'מיני-לנדינג בתוך הפלטפורמה', 'עבודה עם ממליצים'],
+      proExtra: ['PRO לא משפיע על Trust Index, מיקום בקטלוג או סדר הדירוג.'],
       compareTitle: 'מה מקבלים ב-PRO מעבר לסטנדרט',
       compareHeadFeature: 'יכולת',
       compareRows: [
@@ -171,8 +185,12 @@
       currencyUsd: '$ دولار',
       standard: 'القياسية',
       pro: 'PRO',
-      standardDesc: 'للأعمال التي تحتاج إلى بداية واضحة: الصفقات، التوصيات، التحليلات الأساسية ولوحة عمل عملية. أول 10 صفقات بدون عمولة للمنصة. أنتم تدفعون فقط للوكلاء وفق الشروط المتفق عليها.',
-      proDesc: 'للأعمال التي تحتاج إلى أدوات أكثر: بطاقة نشاط موسعة، صفحة هبوط مصغرة داخل المنصة، والعمل بشكل أسهل مع الموصين. باقة PRO لا تؤثر على Trust Index أو موقع الظهور في الدليل أو الترتيب.',
+      standardLead: 'للأعمال التي تحتاج إلى بداية واضحة:',
+      standardPoints: ['الصفقات', 'التوصيات', 'التحليلات الأساسية', 'لوحة عمل'],
+      standardExtra: ['أول 10 صفقات بدون عمولة للمنصة.', 'أنتم تدفعون فقط للوكلاء وفق الشروط المتفق عليها.'],
+      proLead: 'للأعمال التي تحتاج إلى أدوات أكثر:',
+      proPoints: ['كل ما يتضمنه مسار القياسية', 'بطاقة نشاط موسعة', 'صفحة هبوط مصغرة داخل المنصة', 'العمل مع الموصين'],
+      proExtra: ['باقة PRO لا تؤثر على Trust Index أو موقع الظهور في الدليل أو الترتيب.'],
       compareTitle: 'ماذا تضيف PRO فوق الباقة القياسية',
       compareHeadFeature: 'الميزة',
       compareRows: [
@@ -195,14 +213,14 @@
 
   const PRICING = {
     standard: {
-      m1: { ils: '99 ₪', usd: '$29', pair: '99 ₪ / $29' },
-      m6: { ils: '499 ₪', usd: '$149', pair: '499 ₪ / $149', instead: '594 ₪ / $174', savings: '95 ₪ / $25', monthly: '≈ 83 ₪ / $24.8' },
-      m12: { ils: '899 ₪', usd: '$279', pair: '899 ₪ / $279', instead: '1188 ₪ / $348', savings: '289 ₪ / $69', monthly: '≈ 75 ₪ / $23.3' }
+      m1: { ils: '99 ₪', usd: '$29' },
+      m6: { ils: '499 ₪', usd: '$149', instead: { ils: '594 ₪', usd: '$174' }, savings: { ils: '95 ₪', usd: '$25' }, monthly: { ils: '≈ 83 ₪', usd: '≈ $24.8' } },
+      m12: { ils: '899 ₪', usd: '$279', instead: { ils: '1188 ₪', usd: '$348' }, savings: { ils: '289 ₪', usd: '$69' }, monthly: { ils: '≈ 75 ₪', usd: '≈ $23.3' } }
     },
     pro: {
-      m1: { ils: '149 ₪', usd: '$49', pair: '149 ₪ / $49' },
-      m6: { ils: '749 ₪', usd: '$249', pair: '749 ₪ / $249', instead: '894 ₪ / $294', savings: '145 ₪ / $45', monthly: '≈ 125 ₪ / $41.5' },
-      m12: { ils: '1349 ₪', usd: '$449', pair: '1349 ₪ / $449', instead: '1788 ₪ / $588', savings: '439 ₪ / $139', monthly: '≈ 112 ₪ / $37.4' }
+      m1: { ils: '149 ₪', usd: '$49' },
+      m6: { ils: '749 ₪', usd: '$249', instead: { ils: '894 ₪', usd: '$294' }, savings: { ils: '145 ₪', usd: '$45' }, monthly: { ils: '≈ 125 ₪', usd: '≈ $41.5' } },
+      m12: { ils: '1349 ₪', usd: '$449', instead: { ils: '1788 ₪', usd: '$588' }, savings: { ils: '439 ₪', usd: '$139' }, monthly: { ils: '≈ 112 ₪', usd: '≈ $37.4' } }
     }
   };
 
@@ -220,8 +238,14 @@
   }
 
   function buildNote(t, item) {
-    if (!item.instead) return item.pair;
-    return `${item.pair}<br>${t.insteadOf} ${item.instead}<br>${t.savings} ${item.savings}<br>${t.effectiveMonthly} ${item.monthly}`;
+    if (!item.instead) return '';
+    return `${t.insteadOf} ${item.instead[currency]}<br>${t.savings} ${item.savings[currency]}<br>${t.effectiveMonthly} ${item.monthly[currency]}`;
+  }
+
+  function buildPlanDesc(lead, points, extra) {
+    const list = points.map(item => `<li>${item}</li>`).join('');
+    const lines = extra.map(item => `<p>${item}</p>`).join('');
+    return `<p>${lead}</p><ul>${list}</ul>${lines}`;
   }
 
   function getPlanItems(planKey) {
@@ -245,7 +269,7 @@
     document.getElementById(containerId).innerHTML = items.map(item => `
       <div class="option">
         <div class="option-top"><div class="option-period">${item.period}</div><div class="option-price">${item.price}</div></div>
-        <div class="option-note">${item.note}</div>
+        ${item.note ? `<div class="option-note">${item.note}</div>` : ''}
         <a class="btn ${pro?'btn-gold':'btn-primary'}" href="${payLink(planKey, item.period)}" target="_blank">${t.pay}</a>
       </div>`).join('');
   }
@@ -267,11 +291,9 @@
     document.getElementById('currencyIls').textContent = t.currencyIls;
     document.getElementById('currencyUsd').textContent = t.currencyUsd;
     document.getElementById('standardBadge').textContent = t.standard;
-    document.getElementById('standardTitle').textContent = t.standard;
-    document.getElementById('standardDesc').textContent = t.standardDesc;
+    document.getElementById('standardDesc').innerHTML = buildPlanDesc(t.standardLead, t.standardPoints, t.standardExtra);
     document.getElementById('proBadge').textContent = t.pro;
-    document.getElementById('proTitle').textContent = t.pro;
-    document.getElementById('proDesc').textContent = t.proDesc;
+    document.getElementById('proDesc').innerHTML = buildPlanDesc(t.proLead, t.proPoints, t.proExtra);
     document.getElementById('compareTitle').textContent = t.compareTitle;
     document.getElementById('compareHeadFeature').textContent = t.compareHeadFeature;
     document.getElementById('compareHeadStandard').textContent = t.standard;
