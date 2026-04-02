@@ -35,8 +35,8 @@
     .compare{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow);margin-top:14px}
     .compare h3{font-family:Sora,sans-serif;font-size:1.1rem;margin-bottom:12px}
     .compare-table{width:100%;border-collapse:collapse;font-size:.82rem}
-    .compare-table th,.compare-table td{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;vertical-align:top}
-    .compare-table td:last-child,.compare-table th:last-child{text-align:right}
+    .compare-table th,.compare-table td{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);text-align:start;vertical-align:top}
+    .compare-table td:last-child,.compare-table th:last-child{text-align:end}
     .ok{color:var(--green);font-weight:800}
     .footer-bar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:430px;padding:12px 16px 18px;background:linear-gradient(180deg,rgba(15,15,26,0),rgba(15,15,26,.92) 30%,rgba(15,15,26,.98))}
     .back-btn{display:flex;justify-content:center;align-items:center;width:100%;padding:15px 16px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-weight:800;box-shadow:var(--shadow)}
@@ -45,89 +45,254 @@
 <body>
   <div class="shell">
     <div class="logo">Win-Win</div>
-    <div class="top-sub">Выберите тариф, который усилит ваш бизнес. Два уровня доступа: <b>Стандарт</b> и <b>PRO</b>. Чем длиннее период, тем выгоднее стоимость месяца. Trust Index, место в каталоге и ранжирование не покупаются.</div>
+    <div class="top-sub" id="topSub"></div>
     <div class="currency-tabs">
-      <button class="currency-tab active" onclick="setCurrency('ils', this)">₪ Шекели</button>
-      <button class="currency-tab" onclick="setCurrency('usd', this)">$ Доллары</button>
+      <button class="currency-tab active" id="currencyIls" onclick="setCurrency('ils', this)"></button>
+      <button class="currency-tab" id="currencyUsd" onclick="setCurrency('usd', this)"></button>
     </div>
     <div class="grid">
       <div class="plan-card">
-        <div class="badge std">Стандарт</div>
-        <div class="plan-title">Стандарт</div>
-        <div class="plan-desc">Для первого входа в экосистему Win-Win: сделки, рекомендации, статистика и прозрачная математика благодарности.</div>
+        <div class="badge std" id="standardBadge"></div>
+        <div class="plan-title" id="standardTitle"></div>
+        <div class="plan-desc" id="standardDesc"></div>
         <div class="option-list" id="standardOptions"></div>
       </div>
       <div class="plan-card pro">
-        <div class="badge pro">PRO</div>
-        <div class="plan-title">PRO</div>
-        <div class="plan-desc">Дополнительные инструменты для бизнеса: расширенная карточка, мини-лендинг внутри платформы и более удобная работа с рекомендателями. PRO не покупает Trust Index, ранжирование или приоритет в каталоге.</div>
+        <div class="badge pro" id="proBadge"></div>
+        <div class="plan-title" id="proTitle"></div>
+        <div class="plan-desc" id="proDesc"></div>
         <div class="option-list" id="proOptions"></div>
       </div>
     </div>
     <div class="compare">
-      <h3>Что даёт PRO сверх Стандарта</h3>
+      <h3 id="compareTitle"></h3>
       <table class="compare-table">
-        <tr><th>Возможность</th><th>Стандарт</th><th>PRO</th></tr>
-        <tr><td>Каталог и сделки</td><td class="ok">Да</td><td class="ok">Да</td></tr>
-        <tr><td>Базовая аналитика</td><td class="ok">Да</td><td class="ok">Да</td></tr>
-        <tr><td>Лидеры в вашей нише</td><td>Ограничено</td><td class="ok">Полный доступ</td></tr>
-        <tr><td>Контакты рекомендателей</td><td>Нет</td><td class="ok">Да</td></tr>
-        <tr><td>Расширенная карточка бизнеса</td><td>База</td><td class="ok">Да</td></tr>
-        <tr><td>Мини-лендинг бизнеса</td><td>Нет</td><td class="ok">Да</td></tr>
+        <tr><th id="compareHeadFeature"></th><th id="compareHeadStandard"></th><th id="compareHeadPro"></th></tr>
+        <tbody id="compareRows"></tbody>
       </table>
     </div>
   </div>
-  <div class="footer-bar"><a class="back-btn" href="javascript:history.back()">Назад</a></div>
+  <div class="footer-bar"><a class="back-btn" id="backBtn" href="javascript:history.back()"></a></div>
 <script>
-  const plans = {
-    ils: {
-      standard:[
-        {period:'1 месяц', price:'99 ₪', note:'Минимальный вход для теста системы и первых сделок.'},
-        {period:'6 месяцев', price:'499 ₪', note:'Фиксация цены и более выгодная стоимость месяца.'},
-        {period:'12 месяцев', price:'899 ₪', note:'Максимальная экономия — около 25% по сравнению с помесячной оплатой.'}
+  const TEXTS = {
+    ru: {
+      lang: 'ru',
+      dir: 'ltr',
+      title: 'Win-Win · Тарифы',
+      topSub: 'Выберите тариф для бизнеса. Два уровня доступа: <b>Стандарт</b> и <b>PRO</b>. Чем длиннее срок, тем ниже стоимость месяца. Trust Index, место в каталоге и порядок выдачи не продаются.',
+      currencyIls: '₪ Шекели',
+      currencyUsd: '$ Доллары',
+      standard: 'Стандарт',
+      pro: 'PRO',
+      standardDesc: 'Для бизнеса, которому нужен понятный старт: сделки, рекомендации, базовая аналитика и рабочий кабинет. Первые 10 сделок — без комиссии платформы. Вы платите только агентам по согласованным условиям.',
+      proDesc: 'Для бизнеса, которому нужно больше инструментов: расширенная карточка, мини-лендинг внутри платформы и более удобная работа с рекомендателями. PRO не влияет на Trust Index, место в каталоге и порядок выдачи.',
+      compareTitle: 'Что даёт PRO сверх Стандарта',
+      compareHeadFeature: 'Возможность',
+      compareRows: [
+        ['Каталог и сделки', 'Да', 'Да'],
+        ['Базовая аналитика', 'Да', 'Да'],
+        ['Лидеры в вашей нише', 'Ограничено', 'Полный доступ'],
+        ['Контакты рекомендателей', 'Нет', 'Да'],
+        ['Расширенная карточка бизнеса', 'База', 'Да'],
+        ['Мини-лендинг бизнеса', 'Нет', 'Да']
       ],
-      pro:[
-        {period:'1 месяц', price:'149 ₪', note:'Полный PRO-доступ на месяц для быстрого старта.'},
-        {period:'6 месяцев', price:'749 ₪', note:'Удобный формат для системного роста и сотрудничества.'},
-        {period:'12 месяцев', price:'1349 ₪', note:'Все PRO-инструменты для бизнеса на год вперёд.'}
-      ]
+      periods: { m1: '1 месяц', m6: '6 месяцев', m12: '12 месяцев' },
+      insteadOf: 'вместо',
+      savings: 'экономия',
+      effectiveMonthly: 'в месяц',
+      pay: 'Оплатить',
+      back: 'Назад',
+      payMessage: (plan, period) => `Здравствуйте! Хочу оплатить тариф ${plan} / ${period} в Win-Win.`
     },
-    usd: {
-      standard:[
-        {period:'1 month', price:'$29', note:'A minimal entry ticket to test the system.'},
-        {period:'6 months', price:'$149', note:'Lower monthly price and a fixed plan.'},
-        {period:'12 months', price:'$279', note:'About 25% cheaper than paying monthly.'}
+    en: {
+      lang: 'en',
+      dir: 'ltr',
+      title: 'Win-Win · Pricing',
+      topSub: 'Choose the plan that fits your business. Two access levels: <b>Standard</b> and <b>PRO</b>. Longer terms lower the monthly cost. Trust Index, catalog placement, and ranking are not for sale.',
+      currencyIls: '₪ ILS',
+      currencyUsd: '$ USD',
+      standard: 'Standard',
+      pro: 'PRO',
+      standardDesc: 'For businesses that need a clear start: deals, referrals, core analytics, and a practical dashboard. Your first 10 deals come with no platform commission. You only pay agents under the agreed terms.',
+      proDesc: 'For businesses that need more tools: an expanded business profile, a mini landing page inside the platform, and smoother work with referrers. PRO does not affect Trust Index, catalog placement, or ranking.',
+      compareTitle: 'What PRO adds beyond Standard',
+      compareHeadFeature: 'Feature',
+      compareRows: [
+        ['Catalog and deals', 'Yes', 'Yes'],
+        ['Core analytics', 'Yes', 'Yes'],
+        ['Top businesses in your niche', 'Limited', 'Full access'],
+        ['Referrer contacts', 'No', 'Yes'],
+        ['Expanded business profile', 'Basic', 'Yes'],
+        ['Business mini landing page', 'No', 'Yes']
       ],
-      pro:[
-        {period:'1 month', price:'$49', note:'Full PRO access for one month.'},
-        {period:'6 months', price:'$249', note:'A stronger format for consistent growth.'},
-        {period:'12 months', price:'$449', note:'All PRO business tools for a full year.'}
-      ]
+      periods: { m1: '1 month', m6: '6 months', m12: '12 months' },
+      insteadOf: 'instead of',
+      savings: 'save',
+      effectiveMonthly: 'per month',
+      pay: 'Pay',
+      back: 'Back',
+      payMessage: (plan, period) => `Hello! I want to pay for the ${plan} plan / ${period} in Win-Win.`
+    },
+    he: {
+      lang: 'he',
+      dir: 'rtl',
+      title: 'Win-Win · מחירים',
+      topSub: 'בחרו את המסלול שמתאים לעסק שלכם. יש שתי רמות גישה: <b>סטנדרט</b> ו-<b>PRO</b>. ככל שהתקופה ארוכה יותר, העלות החודשית נמוכה יותר. Trust Index, מיקום בקטלוג וסדר הדירוג אינם למכירה.',
+      currencyIls: '₪ שקלים',
+      currencyUsd: '$ דולרים',
+      standard: 'סטנדרט',
+      pro: 'PRO',
+      standardDesc: 'לעסקים שצריכים התחלה ברורה: עסקאות, המלצות, אנליטיקה בסיסית ולוח עבודה נוח. 10 העסקאות הראשונות ללא עמלת פלטפורמה. אתם משלמים רק לסוכנים לפי התנאים שסוכמו.',
+      proDesc: 'לעסקים שצריכים יותר כלים: כרטיס עסק מורחב, מיני-לנדינג בתוך הפלטפורמה ועבודה נוחה יותר עם ממליצים. PRO לא משפיע על Trust Index, מיקום בקטלוג או סדר הדירוג.',
+      compareTitle: 'מה מקבלים ב-PRO מעבר לסטנדרט',
+      compareHeadFeature: 'יכולת',
+      compareRows: [
+        ['קטלוג ועסקאות', 'כן', 'כן'],
+        ['אנליטיקה בסיסית', 'כן', 'כן'],
+        ['עסקים מובילים בתחום שלכם', 'מוגבל', 'גישה מלאה'],
+        ['פרטי קשר של ממליצים', 'לא', 'כן'],
+        ['כרטיס עסק מורחב', 'בסיסי', 'כן'],
+        ['מיני-לנדינג לעסק', 'לא', 'כן']
+      ],
+      periods: { m1: 'חודש אחד', m6: '6 חודשים', m12: '12 חודשים' },
+      insteadOf: 'במקום',
+      savings: 'חיסכון של',
+      effectiveMonthly: 'לחודש',
+      pay: 'לתשלום',
+      back: 'חזרה',
+      payMessage: (plan, period) => `שלום! אני רוצה לשלם על מסלול ${plan} / ${period} ב-Win-Win.`
+    },
+    ar: {
+      lang: 'ar',
+      dir: 'rtl',
+      title: 'Win-Win · الأسعار',
+      topSub: 'اختر الباقة المناسبة لعملك. هناك مستويان: <b>القياسية</b> و<b>PRO</b>. كلما طالت المدة انخفضت الكلفة الشهرية. لا يمكن شراء Trust Index أو موقع الظهور في الدليل أو الترتيب.',
+      currencyIls: '₪ شيكل',
+      currencyUsd: '$ دولار',
+      standard: 'القياسية',
+      pro: 'PRO',
+      standardDesc: 'للأعمال التي تحتاج إلى بداية واضحة: الصفقات، التوصيات، التحليلات الأساسية ولوحة عمل عملية. أول 10 صفقات بدون عمولة للمنصة. أنتم تدفعون فقط للوكلاء وفق الشروط المتفق عليها.',
+      proDesc: 'للأعمال التي تحتاج إلى أدوات أكثر: بطاقة نشاط موسعة، صفحة هبوط مصغرة داخل المنصة، والعمل بشكل أسهل مع الموصين. باقة PRO لا تؤثر على Trust Index أو موقع الظهور في الدليل أو الترتيب.',
+      compareTitle: 'ماذا تضيف PRO فوق الباقة القياسية',
+      compareHeadFeature: 'الميزة',
+      compareRows: [
+        ['الدليل والصفقات', 'نعم', 'نعم'],
+        ['التحليلات الأساسية', 'نعم', 'نعم'],
+        ['الأعمال الأبرز في مجالك', 'محدود', 'وصول كامل'],
+        ['بيانات تواصل الموصين', 'لا', 'نعم'],
+        ['بطاقة نشاط موسعة', 'أساسي', 'نعم'],
+        ['صفحة هبوط مصغرة للنشاط', 'لا', 'نعم']
+      ],
+      periods: { m1: 'شهر واحد', m6: '6 أشهر', m12: '12 شهراً' },
+      insteadOf: 'بدلاً من',
+      savings: 'توفير',
+      effectiveMonthly: 'شهرياً',
+      pay: 'ادفع الآن',
+      back: 'رجوع',
+      payMessage: (plan, period) => `مرحباً! أريد دفع باقة ${plan} / ${period} في Win-Win.`
     }
   };
+
+  const PRICING = {
+    standard: {
+      m1: { ils: '99 ₪', usd: '$29', pair: '99 ₪ / $29' },
+      m6: { ils: '499 ₪', usd: '$149', pair: '499 ₪ / $149', instead: '594 ₪ / $174', savings: '95 ₪ / $25', monthly: '≈ 83 ₪ / $24.8' },
+      m12: { ils: '899 ₪', usd: '$279', pair: '899 ₪ / $279', instead: '1188 ₪ / $348', savings: '289 ₪ / $69', monthly: '≈ 75 ₪ / $23.3' }
+    },
+    pro: {
+      m1: { ils: '149 ₪', usd: '$49', pair: '149 ₪ / $49' },
+      m6: { ils: '749 ₪', usd: '$249', pair: '749 ₪ / $249', instead: '894 ₪ / $294', savings: '145 ₪ / $45', monthly: '≈ 125 ₪ / $41.5' },
+      m12: { ils: '1349 ₪', usd: '$449', pair: '1349 ₪ / $449', instead: '1788 ₪ / $588', savings: '439 ₪ / $139', monthly: '≈ 112 ₪ / $37.4' }
+    }
+  };
+
   let currency = 'ils';
-  function payLink(plan, period){
-    const text = encodeURIComponent(`Здравствуйте! Хочу оплатить тариф ${plan} / ${period} в Win-Win.`);
+  let lang = 'ru';
+
+  function detectLang() {
+    const urlLang = new URLSearchParams(location.search).get('lang');
+    if (urlLang && TEXTS[urlLang]) return urlLang;
+    const n = navigator.language || '';
+    if (n.startsWith('he') || n.startsWith('iw')) return 'he';
+    if (n.startsWith('ar')) return 'ar';
+    if (n.startsWith('ru') || n.startsWith('uk')) return 'ru';
+    return 'en';
+  }
+
+  function buildNote(t, item) {
+    if (!item.instead) return item.pair;
+    return `${item.pair}<br>${t.insteadOf} ${item.instead}<br>${t.savings} ${item.savings}<br>${t.effectiveMonthly} ${item.monthly}`;
+  }
+
+  function getPlanItems(planKey) {
+    const t = TEXTS[lang];
+    const plan = PRICING[planKey];
+    return [
+      { period: t.periods.m1, price: plan.m1[currency], note: buildNote(t, plan.m1) },
+      { period: t.periods.m6, price: plan.m6[currency], note: buildNote(t, plan.m6) },
+      { period: t.periods.m12, price: plan.m12[currency], note: buildNote(t, plan.m12) }
+    ];
+  }
+
+  function payLink(planKey, period){
+    const t = TEXTS[lang];
+    const text = encodeURIComponent(t.payMessage(t[planKey], period));
     return `https://wa.me/972534218573?text=${text}`;
   }
-  function renderPlanOptions(containerId, items, planName, pro=false){
+
+  function renderPlanOptions(containerId, items, planKey, pro=false){
+    const t = TEXTS[lang];
     document.getElementById(containerId).innerHTML = items.map(item => `
       <div class="option">
         <div class="option-top"><div class="option-period">${item.period}</div><div class="option-price">${item.price}</div></div>
         <div class="option-note">${item.note}</div>
-        <a class="btn ${pro?'btn-gold':'btn-primary'}" href="${payLink(planName, item.period)}" target="_blank">Оплатить</a>
+        <a class="btn ${pro?'btn-gold':'btn-primary'}" href="${payLink(planKey, item.period)}" target="_blank">${t.pay}</a>
       </div>`).join('');
   }
-  function render(){
-    renderPlanOptions('standardOptions', plans[currency].standard, 'Стандарт');
-    renderPlanOptions('proOptions', plans[currency].pro, 'PRO', true);
+
+  function renderCompareRows() {
+    const t = TEXTS[lang];
+    const goodValues = new Set(['Да', 'Yes', 'כן', 'نعم', 'Полный доступ', 'Full access', 'גישה מלאה', 'وصول كامل']);
+    document.getElementById('compareRows').innerHTML = t.compareRows.map(row => `
+      <tr><td>${row[0]}</td><td class="${goodValues.has(row[1]) ? 'ok' : ''}">${row[1]}</td><td class="${goodValues.has(row[2]) ? 'ok' : ''}">${row[2]}</td></tr>
+    `).join('');
   }
+
+  function applyLang() {
+    const t = TEXTS[lang];
+    document.documentElement.lang = t.lang;
+    document.body.dir = t.dir;
+    document.title = t.title;
+    document.getElementById('topSub').innerHTML = t.topSub;
+    document.getElementById('currencyIls').textContent = t.currencyIls;
+    document.getElementById('currencyUsd').textContent = t.currencyUsd;
+    document.getElementById('standardBadge').textContent = t.standard;
+    document.getElementById('standardTitle').textContent = t.standard;
+    document.getElementById('standardDesc').textContent = t.standardDesc;
+    document.getElementById('proBadge').textContent = t.pro;
+    document.getElementById('proTitle').textContent = t.pro;
+    document.getElementById('proDesc').textContent = t.proDesc;
+    document.getElementById('compareTitle').textContent = t.compareTitle;
+    document.getElementById('compareHeadFeature').textContent = t.compareHeadFeature;
+    document.getElementById('compareHeadStandard').textContent = t.standard;
+    document.getElementById('compareHeadPro').textContent = t.pro;
+    document.getElementById('backBtn').textContent = t.back;
+    renderCompareRows();
+  }
+
+  function render(){
+    applyLang();
+    renderPlanOptions('standardOptions', getPlanItems('standard'), 'standard');
+    renderPlanOptions('proOptions', getPlanItems('pro'), 'pro', true);
+  }
+
   function setCurrency(cur, btn){
     currency = cur;
     document.querySelectorAll('.currency-tab').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     render();
   }
+  lang = detectLang();
   render();
 </script>
 </body>
