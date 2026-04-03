@@ -1227,32 +1227,100 @@ function animNum(id, to, dur=1200) {
 }
 
 // ── Status helpers ────────────────────────────────────────────────────────
-function statusPill(s) {
-    const L = i18n[lang]||i18n.ru;
-    const m = { new:['pill-blue',L.status_new], in_progress:['pill-gold',L.status_in_progress], closed:['pill-gold',L.status_closed], confirmed:['pill-green',L.status_confirmed], rejected:['pill-red',L.status_rejected] };
-    const [cls,label] = m[s]||['pill-blue',s];
-    return `<span class="pill ${cls}">${label}</span>`;
+function normalizeDashboardLead(lead) {
+    const normalized = Object.assign({}, lead || {});
+    normalized.status = String(normalized.status || normalized.reward_status || normalized.decision_status || '').trim().toLowerCase();
+    normalized.decision = String(normalized.decision || normalized.agent_decision || normalized.reward_decision || '').trim().toLowerCase();
+    if (!normalized.biz_name) normalized.biz_name = normalized.business_name || normalized.business || '—';
+    if (!normalized.client_name) normalized.client_name = normalized.name || normalized.receiver_name || '—';
+    if (!normalized.date && normalized.created_at) normalized.date = String(normalized.created_at).slice(0, 10);
+    return normalized;
 }
-function iconForStatus(s) {
-    const icons = { new:'clock', in_progress:'clock', closed:'alert-circle', confirmed:'check-circle', rejected:'x-circle' };
-    const colors = { new:'var(--accent2)', in_progress:'var(--gold)', closed:'var(--gold)', confirmed:'var(--green)', rejected:'var(--red)' };
-    return `<i data-feather="${icons[s]||'circle'}" style="color:${colors[s]||'var(--text2)'};width:20px;height:20px;"></i>`;
+
+function getDashboardLeads() {
+    return Array.isArray(dashData?.leads) ? dashData.leads.map(normalizeDashboardLead) : [];
+}
+
+function getDealProjection(lead) {
+    const status = String(lead?.status || '').toLowerCase();
+    const decision = String(lead?.decision || '').toLowerCase();
+    const labels = {
+        new: { ru:'Новая', he:'חדשה', en:'New', ar:'جديدة' },
+        in_progress: { ru:'В работе', he:'בעבודה', en:'In progress', ar:'قيد التنفيذ' },
+        awaiting_decision: { ru:'Ждём решение', he:'ממתין להחלטה', en:'Awaiting decision', ar:'بانتظار القرار' },
+        awaiting_payment: { ru:'Ожидаем выплату', he:'ממתין לתשלום', en:'Awaiting payout', ar:'بانتظار الدفع' },
+        awaiting_client: { ru:'Ждём подтверждение клиента', he:'ממתין לאישור הלקוח', en:'Awaiting client confirmation', ar:'بانتظار تأكيد العميل' },
+        support_in_progress: { ru:'Поддержка бизнеса в процессе', he:'תמיכת העסק בתהליך', en:'Business support in progress', ar:'دعم النشاط قيد التنفيذ' },
+        completed: { ru:'Завершено', he:'הושלם', en:'Completed', ar:'مكتمل' },
+        rejected: { ru:'Отклонён', he:'נדחה', en:'Rejected', ar:'مرفوض' }
+    };
+    const getLabel = key => ((labels[key] || labels.in_progress)[lang]) || (labels[key] || labels.in_progress).ru;
+
+    const finalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed']);
+    const rejectedStatuses = new Set(['rejected']);
+    const pendingPaymentStatuses = new Set(['pending_business_payment']);
+    const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation']);
+    const awaitingDecisionStatuses = new Set(['closed', 'pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward']);
+    const isSupportFinal = (status.includes('support') || decision === 'support_business') && (
+        /waiv/.test(status) ||
+        /no[_-]?further/.test(status) ||
+        /(support|business_support).*(confirm|complete|completed|done|final|closed|settled)/.test(status)
+    );
+
+    if (rejectedStatuses.has(status)) {
+        return { bucket:'history', counter:'rejected', debt:false, remind:false, cls:'pill-red', icon:'x-circle', color:'var(--red)', label:getLabel('rejected') };
+    }
+    if (isSupportFinal) {
+        return { bucket:'history', counter:'closed', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
+    }
+    if (finalStatuses.has(status)) {
+        return { bucket:'history', counter:'closed', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
+    }
+    if (pendingPaymentStatuses.has(status) || (status === 'closed' && decision === 'take')) {
+        return { bucket:'active', counter:'active', debt:true, remind:true, cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', label:getLabel('awaiting_payment') };
+    }
+    if (awaitingClientStatuses.has(status) || (status === 'closed' && decision === 'gift_client')) {
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_client') };
+    }
+    if ((status && status.includes('support')) || (status === 'closed' && decision === 'support_business')) {
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('support_in_progress') };
+    }
+    if (awaitingDecisionStatuses.has(status)) {
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_decision') };
+    }
+    if (status === 'new') {
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-blue', icon:'clock', color:'var(--accent2)', label:getLabel('new') };
+    }
+    return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('in_progress') };
+}
+
+function statusPill(leadOrStatus) {
+    const lead = typeof leadOrStatus === 'object' ? normalizeDashboardLead(leadOrStatus) : normalizeDashboardLead({ status: leadOrStatus });
+    const projection = getDealProjection(lead);
+    return `<span class="pill ${projection.cls}">${projection.label}</span>`;
+}
+function iconForStatus(leadOrStatus) {
+    const lead = typeof leadOrStatus === 'object' ? normalizeDashboardLead(leadOrStatus) : normalizeDashboardLead({ status: leadOrStatus });
+    const projection = getDealProjection(lead);
+    return `<i data-feather="${projection.icon}" style="color:${projection.color};width:20px;height:20px;"></i>`;
 }
 
 // ── Deal card & detail ────────────────────────────────────────────────────
 function dealItemHtml(lead) {
+    lead = normalizeDashboardLead(lead);
+    const projection = getDealProjection(lead);
     const curr = dashData?.currency || '₪';
     const hasComm = lead.commission != null;
-    const commColor = lead.status === 'closed' ? 'var(--gold)' : 'var(--green)';
+    const commColor = projection.debt ? 'var(--gold)' : 'var(--green)';
     return `
     <div class="activity-item" onclick='openDealDetail(${JSON.stringify(lead).replace(/'/g,"&#39;")})'>
-        <div class="act-icon">${iconForStatus(lead.status)}</div>
+        <div class="act-icon">${iconForStatus(lead)}</div>
         <div style="flex:1;min-width:0;">
             <div class="act-title">${lead.biz_name}</div>
             <div class="act-sub">👤 ${lead.client_name}</div>
         </div>
         <div class="act-right">
-            ${statusPill(lead.status)}
+            ${statusPill(lead)}
             <div class="act-date">${lead.date}</div>
             ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
         </div>
@@ -1260,6 +1328,8 @@ function dealItemHtml(lead) {
 }
 
 function openDealDetail(lead) {
+    lead = normalizeDashboardLead(lead);
+    const projection = getDealProjection(lead);
     const L = i18n[lang]||i18n.ru;
     const curr = dashData?.currency || '₪';
     
@@ -1279,16 +1349,16 @@ function openDealDetail(lead) {
         <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('biz')}</div><div class="deal-detail-val">${lead.biz_name}</div></div>
         <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
     if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${statusPill(lead.status)}</div></div>`;
+    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${statusPill(lead)}</div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('date')}</div><div class="deal-detail-val">${lead.date}</div></div>`;
     if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('amount')}</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
-    if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:var(--green)">+${lead.commission} ${curr}</div></div>`;
+    if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:${projection.debt ? 'var(--gold)' : 'var(--green)'}">+${lead.commission} ${curr}</div></div>`;
     
     document.getElementById('dealDetailContent').innerHTML = rows;
     
     const actionsContainer = document.getElementById('dealActionButtons');
     actionsContainer.innerHTML = '';
-    if (lead.status === 'closed') {
+    if (projection.remind) {
         const btnText = L.remind_debt || 'Напомнить о долге';
         const safeBizName = lead.biz_name.replace(/'/g, "\\'");
         actionsContainer.innerHTML = `
@@ -1381,7 +1451,8 @@ async function openLeaderboard() {
 function renderLeaderboardUI() {
     if (!leaderboardData) return;
     const L = i18n[lang] || i18n.ru;
-    const isPro = (dashData && dashData.success_deals >= 50);
+    const stats = getDashboardProjectionStats();
+    const isPro = (stats.leads.length ? stats.closedCount : (dashData?.success_deals || 0)) >= 50;
     const curr = dashData?.currency || '₪';
     let html = '';
 
@@ -1436,21 +1507,46 @@ function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
 }
 
 // ── Stat detail sheet ─────────────────────────────────────────────────────
+function getDashboardProjectionStats() {
+    const leads = getDashboardLeads();
+    const stats = {
+        leads,
+        activeLeads: [],
+        debtLeads: [],
+        historyLeads: [],
+        closedCount: 0,
+        activeCount: 0,
+        rejectedCount: 0
+    };
+    leads.forEach(lead => {
+        const projection = getDealProjection(lead);
+        if (projection.counter === 'closed') stats.closedCount++;
+        else if (projection.counter === 'rejected') stats.rejectedCount++;
+        else stats.activeCount++;
+        if (projection.debt) stats.debtLeads.push(lead);
+        if (projection.bucket === 'history') stats.historyLeads.push(lead);
+        else if (!projection.debt) stats.activeLeads.push(lead);
+    });
+    return stats;
+}
+
 function openStatDetail(type) {
     const L = i18n[lang]||i18n.ru;
+    const stats = getDashboardProjectionStats();
     const curr = dashData?.currency || '₪';
     let title = '', content = '';
     if (type === 'deals') {
         title = L.stat_deals;
-        const confirmed = (dashData?.leads||[]).filter(l => l.status==='confirmed'||l.status==='closed');
-        content = confirmed.length ? confirmed.map(l => dealItemHtml(l)).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
+        const closedDeals = stats.historyLeads.filter(l => getDealProjection(l).counter === 'closed');
+        content = closedDeals.length ? closedDeals.map(l => dealItemHtml(l)).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     } else if (type === 'pending') {
         title = L.stat_pending;
         const pbs = dashData?.pending_businesses || [];
         content = pbs.length ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('') : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
+        if (!pbs.length && stats.debtLeads.length) content = stats.debtLeads.map(l => dealItemHtml(l)).join('');
     } else if (type === 'active') {
         title = L.stat_active;
-        const active = (dashData?.leads||[]).filter(l => l.status==='new'||l.status==='in_progress');
+        const active = stats.leads.filter(l => getDealProjection(l).counter === 'active');
         content = active.length ? active.map(l => dealItemHtml(l)).join('') : `<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     }
     document.getElementById('statSheetTitle').textContent = title;
@@ -1794,26 +1890,31 @@ function copyInviteLink() {
 
 // ── Main render ───────────────────────────────────────────────────────────
 function renderAll() {
+    const projectionStats = getDashboardProjectionStats();
+    const leads = projectionStats.leads;
     const d = dashData;
     const L = i18n[lang]||i18n.ru;
+    const closed = leads.length ? projectionStats.closedCount : (d.success_deals||0);
+    const active = leads.length ? projectionStats.activeCount : (d.active_deals||0);
+    const rejected = leads.length ? projectionStats.rejectedCount : (d.rejected_deals||0);
     const curr = d.currency || '₪';
     document.getElementById('t_name').textContent = d.user_name || '—';
 
     animNum('v_earned', Math.round(d.total_earned||0));
-    document.getElementById('v_deals').textContent = d.success_deals || 0;
+    document.getElementById('v_deals').textContent = closed;
     document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
-    document.getElementById('v_active').textContent = d.active_deals || 0;
+    document.getElementById('v_active').textContent = active;
 
-    const proProgress = Math.min(((d.success_deals||0)/50)*100, 100);
-    document.getElementById('pro_progress_txt').textContent = `${d.success_deals||0} / 50`;
+    const proProgress = Math.min((closed/50)*100, 100);
+    document.getElementById('pro_progress_txt').textContent = `${closed} / 50`;
     setTimeout(() => { const b=document.getElementById('proBar'); if(b) b.style.width=proProgress+'%'; }, 300);
-    if ((d.success_deals||0) >= 50) { document.getElementById('pro-locked').style.display='none'; document.getElementById('pro-unlocked').style.display='block'; }
+    if (closed >= 50) { document.getElementById('pro-locked').style.display='none'; document.getElementById('pro-unlocked').style.display='block'; }
 
     const actList = document.getElementById('activityList');
-    if (!d.leads||!d.leads.length) {
+    if (!leads.length) {
         actList.innerHTML = `<div class="empty-state"><div class="empty-title">${L.no_deals}</div><div class="empty-sub">${L.no_deals_sub}</div></div>`;
     } else {
-        actList.innerHTML = d.leads.slice(0,6).map(dealItemHtml).join('');
+        actList.innerHTML = leads.slice(0,6).map(dealItemHtml).join('');
     }
 
     const listActive  = document.getElementById('list_active');
@@ -1822,14 +1923,17 @@ function renderAll() {
     if (listActive && listDebt && listHistory) {
         listActive.innerHTML=''; listDebt.innerHTML=''; listHistory.innerHTML='';
         const emptyRow = `<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">—</div>`;
-        if (!d.leads||!d.leads.length) {
+        if (!leads.length) {
             listActive.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
         } else {
-            d.leads.forEach(lead => {
-                const html=`<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
-                if (lead.status==='new'||lead.status==='in_progress') listActive.innerHTML+=html;
-                else if (lead.status==='closed') listDebt.innerHTML+=html;
-                else listHistory.innerHTML+=html;
+            projectionStats.activeLeads.forEach(lead => {
+                listActive.innerHTML += `<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
+            });
+            projectionStats.debtLeads.forEach(lead => {
+                listDebt.innerHTML += `<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
+            });
+            projectionStats.historyLeads.forEach(lead => {
+                listHistory.innerHTML += `<div class="card" style="padding:0 16px;">${dealItemHtml(lead)}</div>`;
             });
         }
         if (!listActive.innerHTML)  listActive.innerHTML=emptyRow;
@@ -1837,7 +1941,6 @@ function renderAll() {
         if (!listHistory.innerHTML) listHistory.innerHTML=emptyRow;
     }
 
-    const closed = d.success_deals||0;
     document.getElementById('v_avg').textContent = closed>0 ? Math.round((d.total_earned||0)/closed) : 0;
 
     const pct = d.efficiency_pct, avgPct = d.platform_avg_pct||0;
@@ -1853,7 +1956,7 @@ function renderAll() {
         else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
     }
 
-    const active=d.active_deals||0, rejected=d.rejected_deals||0, total=active+closed+rejected;
+    const total=active+closed+rejected;
     document.getElementById('t_total_leads').textContent=`${L.total_leads} ${total}`;
     document.getElementById('v_conv').textContent=(total>0?Math.round(closed/total*100):0)+'%';
     animNum('st_active',active); animNum('st_closed',closed); animNum('st_rejected',rejected);
