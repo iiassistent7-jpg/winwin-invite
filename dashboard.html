@@ -1256,11 +1256,11 @@ function getDealProjection(lead) {
     };
     const getLabel = key => ((labels[key] || labels.in_progress)[lang]) || (labels[key] || labels.in_progress).ru;
 
-    const finalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed']);
+    const finalStatuses = new Set(['closed', 'confirmed', 'completed', 'done', 'gift_closed']);
     const rejectedStatuses = new Set(['rejected']);
     const pendingPaymentStatuses = new Set(['pending_business_payment']);
     const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation']);
-    const awaitingDecisionStatuses = new Set(['closed', 'pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward']);
+    const awaitingDecisionStatuses = new Set(['pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward']);
     const isSupportFinal = (status.includes('support') || decision === 'support_business') && (
         /waiv/.test(status) ||
         /no[_-]?further/.test(status) ||
@@ -1276,13 +1276,13 @@ function getDealProjection(lead) {
     if (finalStatuses.has(status)) {
         return { bucket:'history', counter:'closed', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
     }
-    if (pendingPaymentStatuses.has(status) || (status === 'closed' && decision === 'take')) {
+    if (pendingPaymentStatuses.has(status)) {
         return { bucket:'active', counter:'active', debt:true, remind:true, cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', label:getLabel('awaiting_payment') };
     }
-    if (awaitingClientStatuses.has(status) || (status === 'closed' && decision === 'gift_client')) {
+    if (awaitingClientStatuses.has(status)) {
         return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_client') };
     }
-    if ((status && status.includes('support')) || (status === 'closed' && decision === 'support_business')) {
+    if (status && status.includes('support')) {
         return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('support_in_progress') };
     }
     if (awaitingDecisionStatuses.has(status)) {
