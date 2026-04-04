@@ -127,6 +127,10 @@
     .deal-info { font-size:.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
     .deal-info span { font-weight:600; color:var(--text); }
     .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; min-height:32px; padding:2px 0; }
+    .deal-contact-stack { display:flex; flex-direction:column; gap:8px; }
+    .deal-contact-number { color:var(--text); font-weight:700; line-height:1.25; word-break:break-word; }
+    .deal-contact-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .deal-contact-btn { display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding:7px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--accent2); text-decoration:none; font-size:.78rem; font-weight:800; }
     .deal-receipt { background:var(--surface2); border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid var(--border); }
 
 .deal-inline-meta { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
@@ -830,6 +834,16 @@ function getPhoneFieldLabel() {
     he: 'טלפון',
     en: 'Phone',
     ar: 'الهاتف'
+  };
+  return map[lang] || map.ru;
+}
+
+function getPhoneActionLabels() {
+  const map = {
+    ru: { call:'Позвонить', wa:'WhatsApp' },
+    he: { call:'להתקשר', wa:'WhatsApp' },
+    en: { call:'Call', wa:'WhatsApp' },
+    ar: { call:'اتصال', wa:'WhatsApp' }
   };
   return map[lang] || map.ru;
 }
@@ -1578,6 +1592,40 @@ function renderPhoneLink(phone, opts = {}) {
   return `<a href="tel:${digits}" class="deal-wa-link"${attrs}>${raw}</a>`;
 }
 
+function renderPhoneContact(phone, opts = {}) {
+  const raw = String(phone || '').trim();
+  const digits = getPhoneDigits(raw);
+  if (!digits) return '—';
+  const labels = getPhoneActionLabels();
+  const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  return `
+    <div class="deal-contact-stack">
+      <div class="deal-contact-number">${raw}</div>
+      <div class="deal-contact-actions">
+        <a href="tel:${digits}" class="deal-contact-btn"${attrs}>${labels.call}</a>
+        <a href="https://wa.me/${digits}" class="deal-contact-btn" target="_blank" rel="noopener"${attrs}>${labels.wa}</a>
+      </div>
+    </div>`;
+}
+
+function renderNamedPhoneContact(name, phone, opts = {}) {
+  const rawName = String(name || '').trim() || '—';
+  const raw = String(phone || '').trim();
+  const digits = getPhoneDigits(raw);
+  if (!digits) return rawName;
+  const labels = getPhoneActionLabels();
+  const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  return `
+    <div class="deal-contact-stack">
+      <div class="deal-contact-number">${rawName}</div>
+      <div class="deal-contact-number" style="font-size:.92rem;color:var(--text2);font-weight:600;">${raw}</div>
+      <div class="deal-contact-actions">
+        <a href="tel:${digits}" class="deal-contact-btn"${attrs}>${labels.call}</a>
+        <a href="https://wa.me/${digits}" class="deal-contact-btn" target="_blank" rel="noopener"${attrs}>${labels.wa}</a>
+      </div>
+    </div>`;
+}
+
 function getDealAgentPhone(deal) {
   return deal.agent_phone || deal.sender_phone || deal.recommender_phone || deal.agent_whatsapp || deal.agent_wa_phone || deal.wa_phone || '';
 }
@@ -1807,7 +1855,7 @@ function renderDeals() {
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${getPhoneFieldLabel()}</div><div class="deal-mini-val">${renderPhoneLink(d.client_phone, { stopPropagation:true })}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${getPhoneFieldLabel()}</div><div class="deal-mini-val">${renderPhoneContact(d.client_phone, { stopPropagation:true })}</div></div>
           </div>
           <div class="deal-receipt">
             <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
@@ -2169,7 +2217,7 @@ function openRecommendDetail(index) {
   const labels = getRecommendDetailLabels();
   const curr = bizData.currency || '₪';
   const statusText = getRecommendStatusLabel(row.status, L).text;
-  const clientPhone = renderPhoneLink(row.client_phone);
+  const clientPhone = renderPhoneContact(row.client_phone);
   document.getElementById('recommendDetailContent').innerHTML = `
     <div class="sheet-card" style="margin-top:0;">
       <div class="sheet-title">${labels.title}</div>
@@ -2411,12 +2459,9 @@ function openManageDeal(id) {
   if (!deal) return;
   const curr = bizData.currency || '₪';
   const statusMeta = getStatusData(getDisplayDealStatus(deal));
-  const clientPhoneHtml = renderPhoneLink(deal.client_phone);
-  const agentPhoneHtml = renderPhoneLink(getDealAgentPhone(deal));
-  const clientName = deal.client_name || '—';
-  document.getElementById('m_val_client').innerHTML = clientPhoneHtml === '—'
-    ? clientName
-    : `${clientName} · ${clientPhoneHtml}`;
+  const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
+  const agentPhoneHtml = renderPhoneContact(getDealAgentPhone(deal));
+  document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_agent').textContent  = deal.agent_name || deal.sender_name || '—';
   document.getElementById('m_val_agent_phone').innerHTML = agentPhoneHtml;
   document.getElementById('m_val_date').textContent   = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
