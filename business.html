@@ -83,9 +83,27 @@
     .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:.5px; }
 
     /* ── Debt Banner ────────────────────────────────────────────────── */
-    .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; }
+    .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:14px; }
     .debt-banner-text { color:var(--text); font-weight:700; font-size:.88rem; }
     .debt-banner-sum { color:var(--red); font-weight:800; font-size:1.08rem; }
+    .debt-banner-meta { display:flex; align-items:center; gap:10px; margin-left:auto; }
+    .debt-banner-hint { color:var(--text2); font-size:.75rem; font-weight:700; white-space:nowrap; }
+    .debt-list { display:flex; flex-direction:column; gap:12px; }
+    .debt-deal-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--shadow2); }
+    .debt-deal-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .debt-deal-name { font-weight:800; color:var(--text); }
+    .debt-deal-date { color:var(--text2); font-size:.8rem; margin-top:4px; }
+    .debt-deal-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .debt-mini { background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:10px 12px; }
+    .debt-mini-lbl { color:var(--text2); font-size:.74rem; margin-bottom:4px; }
+    .debt-mini-val { color:var(--text); font-weight:700; word-break:break-word; }
+    .debt-empty { color:var(--text2); line-height:1.5; }
+    @media (max-width:420px){
+      .debt-banner { align-items:flex-start; }
+      .debt-banner-meta { width:100%; justify-content:space-between; margin-left:0; }
+      .debt-banner-hint { white-space:normal; }
+      .debt-deal-grid { grid-template-columns:1fr; }
+    }
 
     /* ── Deal Filter Tabs ───────────────────────────────────────────── */
     .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
@@ -330,9 +348,12 @@
 
     <!-- ── VIEW: Deals ──────────────────────────────────────────── -->
     <div id="view-deals" class="view active">
-      <div class="debt-banner" id="debtBanner" style="display:none;">
+      <div class="debt-banner" id="debtBanner" style="display:none;" role="button" tabindex="0" onclick="openDebtDealsSheet()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealsSheet();}">
         <div class="debt-banner-text" id="t_debt_label">🔴 Долг агентам:</div>
-        <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
+        <div class="debt-banner-meta">
+          <div class="debt-banner-hint" id="t_debt_open">Открыть список</div>
+          <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
+        </div>
       </div>
       <div class="deals-filter">
         <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">В работе</button>
@@ -516,6 +537,20 @@
     </div>
   </div>
 
+  <div class="fullscreen" id="debtDealsSheet" style="padding:0;">
+    <div style="max-width:430px; margin:0 auto; padding:20px 16px 32px;">
+      <button class="btn-back" onclick="closeFullscreen('debtDealsSheet')">
+        <i data-feather="arrow-left"></i>
+        <span id="t_debt_back">Назад</span>
+      </button>
+      <div class="sheet-card" style="margin-top:0;">
+        <div class="sheet-title" id="t_debt_sheet_title">Долг агентам</div>
+        <div class="soft-note" id="t_debt_sheet_sub" style="margin-bottom:16px;">Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.</div>
+        <div id="debtDealsList" class="debt-list"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ FULLSCREEN: Edit Profile ═════════════════════════════════ -->
   <div class="fullscreen" id="editProfileSheet" style="padding:0;">
     <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
@@ -624,7 +659,7 @@ const i18n = {
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
-    debt_label:"🔴 Долг агентам:", filt_active:"В работе", filt_history:"История",
+    debt_label:"🔴 Долг агентам:", debt_open:"Открыть список", debt_sheet_title:"Долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Выплата агенту", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
@@ -660,7 +695,7 @@ const i18n = {
 
     loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
     err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
-    debt_label:"🔴 חוב לסוכנים:", filt_active:"פעיל", filt_history:"היסטוריה",
+    debt_label:"🔴 חוב לסוכנים:", debt_open:"פתיחת הרשימה", debt_sheet_title:"חוב לסוכנים", debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן עדיין צריך לשלם לסוכן את התגמול.", debt_sheet_empty:"כרגע אין עסקאות פעילות עם חוב לסוכן.", debt_client:"לקוח", debt_agent:"סוכן", debt_reward:"תשלום לסוכן", debt_status:"סטטוס", filt_active:"פעיל", filt_history:"היסטוריה",
     st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
     pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
     st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן", st_net_big:"המדד המרכזי", st_net_big_sub:"הרווח הנקי — הכסף שנשאר בפועל אחרי התשלומים",
@@ -696,7 +731,7 @@ const i18n = {
 
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
-    debt_label:"🔴 Agent debt:", filt_active:"Active", filt_history:"History",
+    debt_label:"🔴 Agent debt:", debt_open:"Open list", debt_sheet_title:"Agent debt", debt_sheet_sub:"Only active deals where the agent payout is still owed are shown here.", debt_sheet_empty:"There are no active deals with unpaid agent payout right now.", debt_client:"Client", debt_agent:"Agent", debt_reward:"Agent payout", debt_status:"Status", filt_active:"Active", filt_history:"History",
     st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
     pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
     st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
@@ -732,7 +767,7 @@ const i18n = {
 
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
-    debt_label:"🔴 دين للوكلاء:", filt_active:"نشط", filt_history:"السجل",
+    debt_label:"🔴 دين للوكلاء:", debt_open:"فتح القائمة", debt_sheet_title:"دين للوكلاء", debt_sheet_sub:"يظهر هنا فقط الصفقات النشطة التي ما زالت تتطلب دفع مكافأة الوكيل.", debt_sheet_empty:"لا توجد الآن صفقات نشطة عليها دين للوكيل.", debt_client:"العميل", debt_agent:"الوكيل", debt_reward:"دفعة الوكيل", debt_status:"الحالة", filt_active:"نشط", filt_history:"السجل",
     st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
     pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
     st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
@@ -933,7 +968,7 @@ function applyI18n() {
   const L = i18n[lang] || i18n.ru;
   const map = {
     't_loader_sub':'loader_sub', 't_err_title':'err_title', 't_err_sub':'err_sub',
-    't_debt_label':'debt_label', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
+    't_debt_label':'debt_label', 't_debt_open':'debt_open', 't_debt_sheet_title':'debt_sheet_title', 't_debt_sheet_sub':'debt_sheet_sub', 't_debt_back':'m_cancel', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
     't_st_fin_title':'st_fin_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
     't_st_net':'st_net', 't_st_pending_cnt':'st_pending_cnt',
     't_st_funnel_title':'st_funnel_title', 't_st_net_big':'st_net_big', 't_st_net_big_sub':'st_net_big_sub', 't_st_total_leads':'st_total_leads',
@@ -1146,14 +1181,190 @@ function setFilter(f) {
 
 function getStatusData(status) {
   const L = i18n[lang] || i18n.ru;
+  const payoutPendingText = {
+    ru:'Ожидаем выплату агенту',
+    he:'ממתינים לתשלום לסוכן',
+    en:'Awaiting agent payout',
+    ar:'بانتظار دفع الوكيل'
+  };
+  const receiptPendingText = {
+    ru:'Ждём подтверждение получения',
+    he:'ממתינים לאישור קבלה',
+    en:'Awaiting receipt confirmation',
+    ar:'بانتظار تأكيد الاستلام'
+  };
   const map = {
     new:                  { text:L.st_new,     cls:'st-new',      icon:'clock' },
     in_progress:          { text:L.st_prog,    cls:'st-progress', icon:'clock' },
     closed:               { text:L.st_closed,  cls:'st-closed',   icon:'check-circle' },
     rejected:             { text:L.st_rej,     cls:'st-rejected', icon:'x-circle' },
     pending_confirmation: { text:L.st_pending, cls:'st-pending',  icon:'alert-circle' },
+    pending_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
+    awaiting_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
+    pending_reward_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
+    awaiting_reward: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
+    pending_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
+    awaiting_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
+    pending_agent_confirmation: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
   };
   return map[status] || { text:status, cls:'st-new', icon:'circle' };
+}
+
+function getDealStatusCodes(deal) {
+  return [
+    deal.status,
+    deal.reward_status,
+    deal.decision_status,
+    deal.settlement_status
+  ].map(v => String(v || '').trim().toLowerCase()).filter(Boolean);
+}
+
+function getPrimaryDealStatus(deal) {
+  return getDealStatusCodes(deal)[0] || 'in_progress';
+}
+
+function hasOwn(obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj || {}, key);
+}
+
+function parseTruthBool(value) {
+  if (value === true || value === false) return value;
+  if (value === 1 || value === '1') return true;
+  if (value === 0 || value === '0') return false;
+  if (typeof value === 'string') {
+    const v = value.trim().toLowerCase();
+    if (['true','yes','y'].includes(v)) return true;
+    if (['false','no','n'].includes(v)) return false;
+  }
+  return null;
+}
+
+function parseTruthNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function hasExplicitDealTruth(deal) {
+  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount']
+    .some(key => hasOwn(deal, key));
+}
+
+function getDealTruth(deal) {
+  const explicit = hasExplicitDealTruth(deal);
+  const historyReady = parseTruthBool(deal.history_ready);
+  const hasOpenSettlement = parseTruthBool(deal.has_open_settlement);
+  const hasOpenAgentPayout = parseTruthBool(deal.has_open_agent_payout);
+  const debtAmount = parseTruthNumber(deal.debt_amount);
+  const settlementStatus = String(deal.settlement_status || '').trim().toLowerCase();
+  const settlementMode = String(deal.settlement_mode || '').trim().toLowerCase();
+  return {
+    explicit,
+    historyReady,
+    hasOpenSettlement,
+    hasOpenAgentPayout,
+    debtAmount,
+    settlementStatus,
+    settlementMode
+  };
+}
+
+function getDisplayDealStatus(deal) {
+  const truth = getDealTruth(deal);
+  if (truth.explicit) {
+    if (truth.settlementStatus && [
+      'pending_business_payment',
+      'awaiting_business_payment',
+      'pending_reward_payment',
+      'awaiting_reward',
+      'pending_receipt',
+      'awaiting_receipt',
+      'pending_agent_confirmation',
+      'confirmed',
+      'gift_closed',
+      'completed',
+      'done',
+      'rejected',
+      'closed'
+    ].includes(truth.settlementStatus)) {
+      return truth.settlementStatus;
+    }
+    if (truth.historyReady === true) return 'closed';
+    if (truth.hasOpenAgentPayout === true) return 'pending_business_payment';
+    if (truth.hasOpenSettlement === true) {
+      return truth.settlementMode === 'take' ? 'pending_receipt' : 'awaiting_receipt';
+    }
+  }
+  const statuses = getDealStatusCodes(deal);
+  const priority = [
+    'pending_business_payment',
+    'awaiting_business_payment',
+    'pending_reward_payment',
+    'awaiting_reward',
+    'pending_receipt',
+    'awaiting_receipt',
+    'pending_agent_confirmation'
+  ];
+  return priority.find(code => statuses.includes(code)) || getPrimaryDealStatus(deal);
+}
+
+function isDebtRelevantActiveDeal(deal) {
+  const truth = getDealTruth(deal);
+  if (truth.explicit) {
+    if (truth.historyReady === true) return false;
+    if (truth.hasOpenAgentPayout === true) return true;
+    if (truth.debtAmount > 0) return true;
+    if (truth.hasOpenSettlement === true) return truth.historyReady !== true;
+  }
+  const statuses = getDealStatusCodes(deal);
+  const decision = String(deal.agent_decision || deal.decision || '').trim().toLowerCase();
+  const numericDebt = [
+    deal.pending_payout,
+    deal.pending_debt,
+    deal.debt_amount,
+    deal.debt
+  ].some(v => Number(v) > 0);
+  const hasPaymentPendingStatus = statuses.some(s => [
+    'pending_business_payment',
+    'awaiting_business_payment',
+    'pending_reward_payment',
+    'awaiting_reward',
+    'pending_receipt',
+    'awaiting_receipt',
+    'pending_agent_confirmation'
+  ].includes(s));
+  const isFinal = statuses.some(s => [
+    'confirmed',
+    'gift_closed',
+    'completed',
+    'done',
+    'rejected'
+  ].includes(s));
+  if (isFinal) return false;
+  if (hasPaymentPendingStatus) return true;
+  if (numericDebt) return true;
+  return decision === 'take' && statuses.includes('pending_business_payment');
+}
+
+function isBusinessActiveDeal(deal) {
+  const truth = getDealTruth(deal);
+  if (truth.explicit && truth.historyReady !== null) {
+    return truth.historyReady !== true;
+  }
+  const status = getPrimaryDealStatus(deal);
+  return ['new','in_progress','pending_confirmation'].includes(status) || isDebtRelevantActiveDeal(deal);
+}
+
+function isBusinessHistoryDeal(deal) {
+  const truth = getDealTruth(deal);
+  if (truth.explicit && truth.historyReady !== null) {
+    return truth.historyReady === true;
+  }
+  const status = getPrimaryDealStatus(deal);
+  return !isDebtRelevantActiveDeal(deal) && ['closed','rejected','confirmed','gift_closed','completed','done'].includes(status);
+}
+
+function getDebtVisibleDeals() {
+  return (bizData.deals || []).filter(isDebtRelevantActiveDeal);
 }
 
 
@@ -1167,13 +1378,75 @@ function getDealActionLabel(status) {
   return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || 'Управлять';
 }
 function getDealNextStep(status) {
+  const payoutPendingText = {
+    ru:'Нужно выплатить агенту вознаграждение',
+    he:'יש לשלם לסוכן את התגמול',
+    en:'The agent payout still needs to be paid',
+    ar:'ما زال يجب دفع مكافأة الوكيل'
+  };
+  const receiptPendingText = {
+    ru:'Ждём подтверждение получения от агента',
+    he:'ממתינים לאישור קבלה מהסוכן',
+    en:'Waiting for the agent to confirm receipt',
+    ar:'بانتظار تأكيد الاستلام من الوكيل'
+  };
   const map = {
     ru: { new:'Нужно принять или отклонить', in_progress:'Нужно завершить или отклонить', pending_confirmation:'Ждём решение рекомендателя', closed:'Сделка завершена', rejected:'Сделка отклонена' },
     he: { new:'יש לקבל או לדחות', in_progress:'יש לסיים או לדחות', pending_confirmation:'ממתינים להחלטת הממליץ', closed:'העסקה הושלמה', rejected:'העסקה נדחתה' },
     en: { new:'Accept or reject', in_progress:'Complete or reject', pending_confirmation:'Waiting for recommender decision', closed:'Deal completed', rejected:'Deal rejected' },
     ar: { new:'اقبل أو ارفض', in_progress:'أكمل أو ارفض', pending_confirmation:'بانتظار قرار الموصي', closed:'اكتملت الصفقة', rejected:'تم رفض الصفقة' }
   };
+  if (['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(status)) {
+    return payoutPendingText[lang] || payoutPendingText.ru;
+  }
+  if (['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(status)) {
+    return receiptPendingText[lang] || receiptPendingText.ru;
+  }
   return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || '';
+}
+function openDebtDealsSheet() {
+  renderDebtDealsSheet();
+  openFullscreen('debtDealsSheet');
+}
+function renderDebtDealsSheet() {
+  const box = document.getElementById('debtDealsList');
+  if (!box) return;
+  const L = i18n[lang] || i18n.ru;
+  const curr = bizData.currency || '₪';
+  const deals = getDebtVisibleDeals();
+  if (!deals.length) {
+    box.innerHTML = `<div class="debt-empty">${L.debt_sheet_empty || i18n.ru.debt_sheet_empty}</div>`;
+    try { feather.replace(); } catch(e) {}
+    return;
+  }
+  box.innerHTML = deals.map(d => {
+    const statusCode = getDisplayDealStatus(d);
+    const statusMeta = getStatusData(statusCode);
+    const clientName = d.client_name || d.name || '—';
+    const agentName = d.agent_name || d.sender_name || d.agent || '—';
+    const rewardVal = d.debt_amount || d.commission || d.agent_reward || d.reward_amount || d.pending_payout || d.pending_debt || d.debt || '—';
+    const rewardText = rewardVal === '—'
+      ? rewardVal
+      : (Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${curr}` : rewardVal);
+    const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : '—');
+    return `
+      <div class="debt-deal-card">
+        <div class="debt-deal-head">
+          <div>
+            <div class="debt-deal-name">${clientName}</div>
+            <div class="debt-deal-date">${dateText}</div>
+          </div>
+          <div class="status-badge ${statusMeta.cls}"><i data-feather="${statusMeta.icon}" style="width:12px;height:12px;"></i> ${statusMeta.text}</div>
+        </div>
+        <div class="debt-deal-grid">
+          <div class="debt-mini"><div class="debt-mini-lbl">${L.debt_client || i18n.ru.debt_client}</div><div class="debt-mini-val">${clientName}</div></div>
+          <div class="debt-mini"><div class="debt-mini-lbl">${L.debt_agent || i18n.ru.debt_agent}</div><div class="debt-mini-val">${agentName}</div></div>
+          <div class="debt-mini"><div class="debt-mini-lbl">${L.debt_reward || i18n.ru.debt_reward}</div><div class="debt-mini-val">${rewardText}</div></div>
+          <div class="debt-mini"><div class="debt-mini-lbl">${L.debt_status || i18n.ru.debt_status}</div><div class="debt-mini-val">${statusMeta.text}</div></div>
+        </div>
+      </div>`;
+  }).join('');
+  try { feather.replace(); } catch(e) {}
 }
 function toggleDealExtra(id) {
   const el = document.getElementById('deal_extra_' + id);
@@ -1243,8 +1516,8 @@ function renderDeals() {
 
   const filtered = deals.filter(d => {
     return dealFilter === 'active'
-      ? ['new','in_progress','pending_confirmation'].includes(d.status)
-      : ['closed','rejected'].includes(d.status);
+      ? isBusinessActiveDeal(d)
+      : isBusinessHistoryDeal(d);
   });
 
   if (!filtered.length) {
@@ -1307,11 +1580,12 @@ function renderDeals() {
   }
 
   container.innerHTML = filtered.map(d => {
-    const st        = getStatusData(d.status);
+    const statusCode = getDisplayDealStatus(d);
+    const st        = getStatusData(statusCode);
     const isPending = d.status === 'pending_confirmation';
     const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
     const waLink    = cleanPhone ? `https://wa.me/${cleanPhone}` : '#';
-    const nextStep  = getDealNextStep(d.status);
+    const nextStep  = getDealNextStep(statusCode);
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
     const incomeVal = (d.amount && d.commission) ? `${Math.round((+d.amount - +d.commission)*10)/10} ${curr}` : '—';
@@ -1398,9 +1672,13 @@ function renderStats() {
     document.getElementById('bar_rejected').style.width = pct(rejected);
   }, 80);
 
-  const debt   = s.pending_debt || 0;
+  const explicitDebtDeals = getDebtVisibleDeals();
+  const explicitDebtAmount = explicitDebtDeals.reduce((sum, deal) => sum + Math.max(0, parseTruthNumber(deal.debt_amount)), 0);
+  const debt = explicitDebtDeals.length
+    ? (explicitDebtAmount > 0 ? explicitDebtAmount : (s.pending_debt || 0))
+    : (s.pending_debt || 0);
   const banner = document.getElementById('debtBanner');
-  if (debt > 0) {
+  if (debt > 0 || explicitDebtDeals.length > 0) {
     banner.style.display = 'flex';
     document.getElementById('debtAmount').textContent = debt + ' ' + curr;
   } else {

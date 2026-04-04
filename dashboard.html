@@ -367,6 +367,23 @@
             color:var(--text2);
             margin:-4px 0 12px;
         }
+        .biz-reg-options {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-bottom:16px;
+        }
+        .biz-reg-options .pay-btn {
+            flex:1 1 calc(50% - 4px);
+            min-width:120px;
+            white-space:normal;
+            line-height:1.25;
+        }
+        @media (max-width:380px) {
+            .biz-reg-options .pay-btn {
+                flex-basis:100%;
+            }
+        }
         .biz-reg-actions {
             display:flex;
             flex-direction:column;
@@ -781,11 +798,11 @@
                     </div>
 
                     <div class="biz-reg-section">
-                        <div class="biz-reg-section-title" id="t_biz_reg_section_reward">Условия благодарности</div>
+                        <div class="biz-reg-section-title" id="t_biz_reg_section_reward">Предпочитаемый вид выплаты благодарности агенту</div>
                         <label class="input-label"><span id="t_rew_type">Тип благодарности</span> <span class="req-mark">*</span></label>
-                        <div style="display:flex; gap:8px; margin-bottom:16px;">
+                        <div class="biz-reg-options">
                             <button class="pay-btn" id="btnRewPct" onclick="setBizRewardType('pct', this)"><span id="t_rew_pct">Процент (%)</span></button>
-                            <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">Фиксировано (₪)</span></button>
+                            <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">Фиксированная сумма</span></button>
                             <button class="pay-btn" id="btnRewGift" onclick="setBizRewardType('gift', this)"><span id="t_rew_gift">Подарок</span></button>
                         </div>
                         <input type="hidden" id="bizRegRewardType" onchange="checkBizRegForm()">
@@ -797,8 +814,8 @@
                     <div class="biz-reg-section">
                         <div class="biz-reg-section-title" id="t_biz_reg_section_payment">Как выплачивать благодарность</div>
                         <label class="input-label"><span id="t_biz_reg_pay">Способ выплаты благодарности</span> <span class="req-mark">*</span></label>
-                        <div class="biz-reg-helper" id="t_biz_reg_pay_note">Выберите любой удобный способ выплаты. PayBox можно указать как предпочтительный вариант, но это не обязательно.</div>
-                        <div style="display:flex; gap:8px; margin-bottom:0; flex-wrap:wrap;">
+                        <div class="biz-reg-helper" id="t_biz_reg_pay_note">Выберите удобный способ оплаты благодарности агенту</div>
+                        <div class="biz-reg-options" style="margin-bottom:0;">
                             <button class="pay-btn" onclick="setBizRegPay('Bit', this)">Bit</button>
                             <button class="pay-btn" onclick="setBizRegPay('Paybox', this)">Paybox</button>
                             <button class="pay-btn" onclick="setBizRegPay('PayPal', this)">PayPal</button>
@@ -1100,7 +1117,7 @@ const i18n = {
     edit_link:"Ссылка (сайт / соцсеть)",
     biz_reg_title:"Добавить бизнес",
     biz_reg_section_business:"О бизнесе",
-    biz_reg_section_reward:"Условия благодарности",
+    biz_reg_section_reward:"Предпочитаемый вид выплаты благодарности агенту",
     biz_reg_section_payment:"Как выплачивать благодарность",
     biz_reg_section_link:"Ссылка для доверия",
     biz_reg_submit:"Отправить",
@@ -1110,7 +1127,7 @@ const i18n = {
     biz_reg_subcat_done:"Подтвердить выбор",
     biz_reg_subcat_edit:"Изменить выбор",
     biz_reg_pay:"Способ выплаты благодарности",
-    biz_reg_pay_note:"Выберите любой удобный способ выплаты. PayBox можно указать как предпочтительный вариант, но это не обязательно.",
+    biz_reg_pay_note:"Выберите удобный способ оплаты благодарности агенту",
     biz_reg_success_title:"Заявка сохранена",
     biz_reg_success_sub:"Чтобы завершить регистрацию, перейдите в WhatsApp и отправьте готовое сообщение.",
     biz_reg_success_entry_label:"Текст для WhatsApp",
@@ -1163,7 +1180,7 @@ const i18n = {
     btn_back_invite:"Назад в каталог",
     rew_type:"Тип благодарности",
     rew_pct:"Процент (%)",
-    rew_fix:"Фиксировано (₪)",
+    rew_fix:"Фиксированная сумма",
     rew_gift:"Подарок (🎁)",
     rew_pct_ph:"Например: 10",
     rew_fix_ph:"Например: 100",
@@ -1325,7 +1342,7 @@ const CLEAN_I18N = {
     edit_link:"קישור",
     biz_reg_title:"הוספת עסק",
     biz_reg_section_business:"על העסק",
-    biz_reg_section_reward:"תנאי התגמול",
+    biz_reg_section_reward:"הדרך המועדפת לתשלום התגמול לסוכן",
     biz_reg_section_payment:"איך משלמים את התגמול",
     biz_reg_section_link:"קישור לאמון",
     biz_reg_submit:"שליחה",
@@ -1335,7 +1352,7 @@ const CLEAN_I18N = {
     biz_reg_subcat_done:"אישור הבחירה",
     biz_reg_subcat_edit:"שינוי הבחירה",
     biz_reg_pay:"אופן תשלום",
-    biz_reg_pay_note:"בחרו כל דרך נוחה לתשלום. אפשר לציין PayBox כהעדפה, אבל זה לא חובה.",
+    biz_reg_pay_note:"בחרו דרך נוחה לתשלום התגמול לסוכן",
     biz_reg_success_title:"הבקשה נשמרה",
     biz_reg_success_sub:"כדי להשלים את הרישום, עברו ל-WhatsApp ושלחו את ההודעה המוכנה.",
     biz_reg_success_entry_label:"הטקסט ל-WhatsApp",
@@ -1388,7 +1405,7 @@ const CLEAN_I18N = {
     btn_back_invite:"חזרה לקטלוג",
     rew_type:"סוג התגמול",
     rew_pct:"אחוז (%)",
-    rew_fix:"סכום קבוע (₪)",
+    rew_fix:"סכום קבוע",
     rew_gift:"מתנה",
     rew_pct_ph:"למשל: 10",
     rew_fix_ph:"למשל: 100",
@@ -1474,7 +1491,7 @@ const CLEAN_I18N = {
     edit_link:"Link",
     biz_reg_title:"Add business",
     biz_reg_section_business:"About the business",
-    biz_reg_section_reward:"Reward terms",
+    biz_reg_section_reward:"Preferred way to pay the agent reward",
     biz_reg_section_payment:"How the reward will be paid",
     biz_reg_section_link:"Trust link",
     biz_reg_submit:"Submit",
@@ -1484,7 +1501,7 @@ const CLEAN_I18N = {
     biz_reg_subcat_done:"Confirm selection",
     biz_reg_subcat_edit:"Change selection",
     biz_reg_pay:"Payout method",
-    biz_reg_pay_note:"Choose any payout method that works for you. PayBox can be marked as preferred, but it is not required.",
+    biz_reg_pay_note:"Choose a convenient way to pay the agent reward",
     biz_reg_success_title:"Request saved",
     biz_reg_success_sub:"To finish registration, continue to WhatsApp and send the prepared message.",
     biz_reg_success_entry_label:"WhatsApp text",
@@ -1537,7 +1554,7 @@ const CLEAN_I18N = {
     btn_back_invite:"Back to catalog",
     rew_type:"Reward type",
     rew_pct:"Percent (%)",
-    rew_fix:"Fixed amount (₪)",
+    rew_fix:"Fixed amount",
     rew_gift:"Gift",
     rew_pct_ph:"Example: 10",
     rew_fix_ph:"Example: 100",
@@ -1623,7 +1640,7 @@ const CLEAN_I18N = {
     edit_link:"الرابط",
     biz_reg_title:"إضافة عمل",
     biz_reg_section_business:"عن العمل",
-    biz_reg_section_reward:"شروط المكافأة",
+    biz_reg_section_reward:"الطريقة المفضلة لدفع مكافأة الوكيل",
     biz_reg_section_payment:"كيف سيتم دفع المكافأة",
     biz_reg_section_link:"رابط الثقة",
     biz_reg_submit:"إرسال",
@@ -1633,7 +1650,7 @@ const CLEAN_I18N = {
     biz_reg_subcat_done:"تأكيد الاختيار",
     biz_reg_subcat_edit:"تغيير الاختيار",
     biz_reg_pay:"طريقة الدفع",
-    biz_reg_pay_note:"اختر أي طريقة دفع مناسبة لك. يمكن اعتبار PayBox خيارًا مفضّلًا فقط، لكنه ليس إلزاميًا.",
+    biz_reg_pay_note:"اختر طريقة مريحة لدفع مكافأة الوكيل",
     biz_reg_success_title:"تم حفظ الطلب",
     biz_reg_success_sub:"لإكمال التسجيل، انتقل إلى WhatsApp وأرسل الرسالة الجاهزة.",
     biz_reg_success_entry_label:"النص الخاص بـ WhatsApp",
@@ -1686,7 +1703,7 @@ const CLEAN_I18N = {
     btn_back_invite:"العودة إلى الكتالوج",
     rew_type:"نوع المكافأة",
     rew_pct:"نسبة (%)",
-    rew_fix:"مبلغ ثابت (₪)",
+    rew_fix:"مبلغ ثابت",
     rew_gift:"هدية",
     rew_pct_ph:"مثال: 10",
     rew_fix_ph:"مثال: 100",
