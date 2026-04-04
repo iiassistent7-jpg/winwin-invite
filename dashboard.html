@@ -143,6 +143,14 @@
         .wallet-card-actions { margin-top:14px; }
         .wallet-card-btn { padding:11px 14px; border-radius:12px; font-size:.82rem; }
         .wallet-phone-link { color:var(--accent2); text-decoration:none; }
+        .wallet-summary { padding:18px; }
+        .wallet-summary-head { font-size:.8rem; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:.6px; margin-bottom:12px; }
+        .wallet-summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+        .wallet-summary-item { background:var(--bg); border:1px solid var(--border); border-radius:16px; padding:14px; min-width:0; }
+        .wallet-summary-item.wide { grid-column:1 / -1; }
+        .wallet-summary-label { font-size:.72rem; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+        .wallet-summary-value { font-family:'Sora',sans-serif; font-size:1.5rem; font-weight:800; margin-top:8px; line-height:1; }
+        .wallet-summary-note { font-size:.82rem; color:var(--text2); margin-top:6px; }
         .reminder-toast {
             position: fixed;
             left: 50%;
@@ -353,18 +361,18 @@
     <div class="spinner" id="loaderSpinner"></div>
 
     <div class="loader-err" id="loaderErr">
-        <div class="loader-err-sub" id="t_err_sub" style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:20px;">׀­ׁ‚׀° ׁ׀µׁׁ׀¸ׁ ׀·׀°׀÷׀¾׀½ׁ‡׀¸׀»׀°ׁׁ, ׀½׀°׀¶׀¼׀¸ׁ‚׀µ ׀½׀° ׀÷׀½׀¾׀¿׀÷ׁƒ ׀¼׀µׁׁ׀µ׀½׀´׀¶׀µׁ€׀° ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ ׀½׀° ׀²ׁ…׀¾׀´.</div>
+        <div class="loader-err-sub" id="t_err_sub" style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:20px;">Эта ссылка больше не активна. Нажмите кнопку мессенджера, чтобы получить новую ссылку входа.</div>
         
-        <div id="errPrefillText" style="display:none;">׀¡׀½׀¾׀²׀° ׀²׀¾׀¹ׁ‚׀¸ ׀² ׀»׀¸ׁ‡׀½ׁ‹׀¹ ׀÷׀°׀±׀¸׀½׀µׁ‚</div>
+        <div id="errPrefillText" style="display:none;">Войти снова в мой кабинет</div>
         <div id="t_err_preview" style="display:none;"></div>
         <div id="t_err_hint" style="display:none;"></div>
         <div id="t_err_pointer" style="display:none;"></div>
 
         <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:280px; margin:0 auto 12px; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
-            <i data-feather="message-circle" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_wa">׀׀°׀¿׀¸ׁ׀°ׁ‚ׁ ׀² WhatsApp</span>
+            <i data-feather="message-circle" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_wa">Открыть WhatsApp</span>
         </a>
         <a href="#" class="btn-primary btn-tg" id="errBtnTg" style="max-width:280px; margin:0 auto; text-decoration:none; display:none; flex-direction:row; align-items:center; justify-content:center; padding: 14px;">
-            <i data-feather="send" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_tg">׀׀°׀¿׀¸ׁ׀°ׁ‚ׁ ׀² Telegram</span>
+            <i data-feather="send" style="width:20px;height:20px;margin-right:8px;"></i> <span id="t_err_btn_tg">Открыть Telegram</span>
         </a>
     </div>
   </div>
@@ -373,8 +381,8 @@
     
     <header class="header">
         <div class="header-left">
-            <div class="greeting" id="t_greeting">׀¡ ׀²׀¾׀·׀²ׁ€׀°ׁ‰׀µ׀½׀¸׀µ׀¼,</div>
-            <div class="name" id="t_name">ג€”</div>
+            <div class="greeting" id="t_greeting">С возвращением,</div>
+            <div class="name" id="t_name">—</div>
         </div>
         <div class="header-right">
             <div class="lang-row">
@@ -391,20 +399,20 @@
         
         <div id="view-home" class="view active">
             <div class="card balance-card">
-                <div class="balance-label" id="t_balance_label">׀¡׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀»</div>
+                <div class="balance-label" id="t_balance_label">Ваш социальный капитал</div>
                 <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
                 <div class="balance-stats">
                     <div class="balance-stat" onclick="openStatDetail('deals')">
                         <div class="balance-stat-val" id="v_deals">0</div>
-                        <div class="balance-stat-lbl" id="t_deals_lbl">׀¡׀´׀µ׀»׀¾׀÷</div>
+                        <div class="balance-stat-lbl" id="t_deals_lbl">Закрыто</div>
                     </div>
                     <div class="balance-stat" onclick="openStatDetail('pending')">
                         <div class="balance-stat-val" id="v_pending">0 ₪</div>
-                        <div class="balance-stat-lbl" id="t_pending_lbl">׀׀¶׀¸׀´׀°׀µׁ‚</div>
+                        <div class="balance-stat-lbl" id="t_pending_lbl">Ожидают выплаты</div>
                     </div>
                     <div class="balance-stat" onclick="openStatDetail('active')">
                         <div class="balance-stat-val" id="v_active">0</div>
-                        <div class="balance-stat-lbl" id="t_active_lbl">׀’ ׁ€׀°׀±׀¾ׁ‚׀µ</div>
+                        <div class="balance-stat-lbl" id="t_active_lbl">В работе</div>
                     </div>
                 </div>
             </div>
@@ -412,26 +420,26 @@
             <div class="card action-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, rgba(242, 201, 76, 0.05), rgba(242, 153, 74, 0.05)); border-color: rgba(242, 201, 76, 0.3);">
                 <div class="action-icon" style="background: rgba(242, 201, 76, 0.15); color: #F2C94C;"><i data-feather="award"></i></div>
                 <div>
-                    <div class="action-title" id="t_lb_widget_title">׀—׀°׀» ׀¡׀»׀°׀²ׁ‹</div>
-                    <div class="action-sub" id="t_lb_widget_sub" style="color:var(--text)">׀¢׀¾׀¿ ׀°׀³׀µ׀½ׁ‚׀¾׀² ׀¿׀»׀°ׁ‚ׁ„׀¾ׁ€׀¼ׁ‹</div>
+                    <div class="action-title" id="t_lb_widget_title">Зал славы</div>
+                    <div class="action-sub" id="t_lb_widget_sub" style="color:var(--text)">Топ рекомендателей</div>
                 </div>
             </div>
 
             <div class="card action-card" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
                 <div class="action-icon"><i data-feather="heart"></i></div>
                 <div>
-                    <div class="action-title" id="t_action_title">׀׀¾׀¼׀¾׀³׀¸ׁ‚׀µ ׀»ׁ׀±׀¸׀¼׀¾׀¼ׁƒ ׀±׀¸׀·׀½׀µׁׁƒ</div>
-                    <div class="action-sub" id="t_action_sub">׀ׁ‚׀÷ׁ€׀¾׀¹ׁ‚׀µ ׀÷׀°ׁ‚׀°׀»׀¾׀³ ׀¸ ׁ׀´׀µ׀»׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ</div>
+                    <div class="action-title" id="t_action_title">Помогите бизнесу, которому доверяете</div>
+                    <div class="action-sub" id="t_action_sub">Откройте каталог и порекомендуйте хороший бизнес</div>
                 </div>
             </div>
 
-            <h2 class="sec-title"><span id="t_events">׀׀¾ׁ׀»׀µ׀´׀½׀¸׀µ ׁ׀¾׀±ׁ‹ׁ‚׀¸ׁ</span></h2>
+            <h2 class="sec-title"><span id="t_events">Последние события</span></h2>
             <div class="card" style="padding:0 16px;" id="activityList"></div>
             <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none;text-decoration:none;margin-top:4px;"></a>
         </div>
 
         <div id="view-catalog" class="view">
-            <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">׀׀°ׁ‚׀°׀»׀¾׀³ ׀±׀¸׀·׀½׀µׁ׀°</h2>
+            <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнесов</h2>
             
             <div class="cat-search">
                 <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
@@ -441,9 +449,9 @@
             <div style="margin-bottom: 20px;">
                 <button class="btn-primary btn-invite-special" onclick="openInviteScreen()">
                     <div style="line-height:1.4;">
-                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_1">׀•ׁ׀»׀¸ ׀·׀´׀µׁׁ ׀½׀µׁ‚ ׀±׀¸׀·׀½׀µׁ׀°,</span><br>
-                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_2">׀÷׀¾ׁ‚׀¾ׁ€׀¾׀³׀¾ ׀²ׁ‹ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ</span><br>
-                        <span style="font-size:0.95rem; font-weight:800;" id="t_invite_btn_3">׀ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀µ׀³׀¾ ׀² Win-Win</span>
+                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_1">Если нужного бизнеса нет,</span><br>
+                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_2">и вы хотите его рекомендовать,</span><br>
+                        <span style="font-size:0.95rem; font-weight:800;" id="t_invite_btn_3">пригласите его в Win-Win</span>
                     </div>
                 </button>
             </div>
@@ -457,54 +465,48 @@
         </div>
 
         <div id="view-history" class="view">
-            <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">׀׀¾׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸</h2>
-            <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">נ•’ ׀’ ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ</div>
+            <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">Мои рекомендации</h2>
+            <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">В работе</div>
             <div id="list_active"></div>
-            <div class="sec-title" style="color:#9A6A00;margin-top:16px;" id="t_debt_sec">נ’° ׀׀¶׀¸׀´׀°ׁׁ‚ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹</div>
+            <div class="sec-title" style="color:#9A6A00;margin-top:16px;" id="t_debt_sec">Ждут оплаты</div>
             <div id="list_debt"></div>
-            <div class="sec-title" style="margin-top:16px;" id="t_done_sec">ג… ׀˜ׁׁ‚׀¾ׁ€׀¸ׁ</div>
+            <div class="sec-title" style="margin-top:16px;" id="t_done_sec">История</div>
             <div id="list_history"></div>
         </div>
 
         <div id="view-wallet" class="view">
-            <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">׀₪׀¸׀½׀°׀½ׁׁ‹</h2>
-            <div class="avg-display">
-                <div class="avg-num" id="v_avg">0</div>
-                <div class="avg-lbl" id="t_avg_lbl">׀¡ׁ€׀µ׀´׀½׀¸׀¹ ׀·׀°ׁ€׀°׀±׀¾ׁ‚׀¾׀÷ ׀½׀° ׁ׀´׀µ׀»׀÷ׁƒ ג‚×</div>
-            </div>
-            <div class="card">
-                <div class="eff-top">
-                    <div>
-                        <div class="eff-num" id="v_eff">ג€”</div>
-                        <div style="font-size:.72rem;color:var(--text2);margin-top:2px;" id="t_eff_sub">% ׀·׀°׀÷ׁ€ׁ‹ׁ‚ׁ‹ׁ… ׁ׀´׀µ׀»׀¾׀÷</div>
+            <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Кошелёк</h2>
+            <div class="card wallet-summary">
+                <div class="wallet-summary-head" id="t_wallet_summary_title">Деньги и выплаты</div>
+                <div class="wallet-summary-grid">
+                    <div class="wallet-summary-item">
+                        <div class="wallet-summary-label" id="t_wallet_total_earned">Уже заработано</div>
+                        <div class="wallet-summary-value" id="v_wallet_total_earned">0 ₪</div>
                     </div>
-                    <div class="eff-badge eff-neutral" id="eff_badge">׀׀°׀÷׀°׀¿׀»׀¸׀²׀°׀µׁ‚ׁׁ</div>
+                    <div class="wallet-summary-item">
+                        <div class="wallet-summary-label" id="t_wallet_pending_amount">Сейчас ожидается</div>
+                        <div class="wallet-summary-value" id="v_wallet_pending_amount">0 ₪</div>
+                    </div>
+                    <div class="wallet-summary-item wide">
+                        <div class="wallet-summary-label" id="t_wallet_attention">Требуют внимания</div>
+                        <div class="wallet-summary-value" id="v_wallet_attention">0</div>
+                        <div class="wallet-summary-note" id="t_wallet_attention_note">Сделки с выплатой или подтверждением</div>
+                    </div>
                 </div>
-                <div class="eff-track"><div class="eff-fill" id="eff_bar"></div></div>
-                <div class="eff-compare" id="eff_compare"></div>
             </div>
-            <div class="sec-title" id="t_funnel">׀’׀¾ׁ€׀¾׀½׀÷׀°</div>
-            <div class="card">
-                <div class="funnel-header"><span id="t_total_leads">׀’ׁ׀µ׀³׀¾: 0</span><span class="conv-pill" id="v_conv">0%</span></div>
-                <div class="funnel-row"><div class="funnel-lbl" id="t_f_active">׀’ ׁ€׀°׀±׀¾ׁ‚׀µ</div><div class="funnel-track"><div class="funnel-fill fill-blue" id="bar_active"></div></div><div class="funnel-num" id="st_active">0</div></div>
-                <div class="funnel-row"><div class="funnel-lbl" id="t_f_closed">׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾</div><div class="funnel-track"><div class="funnel-fill fill-green" id="bar_closed"></div></div><div class="funnel-num" id="st_closed">0</div></div>
-                <div class="funnel-row"><div class="funnel-lbl" id="t_f_rejected">׀ׁ‚׀÷׀»׀¾׀½׀µ׀½׀¾</div><div class="funnel-track"><div class="funnel-fill fill-red" id="bar_rejected"></div></div><div class="funnel-num" id="st_rejected">0</div></div>
-            </div>
-            <div class="sec-title" id="t_awaiting">׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ ׀¾ׁ‚:</div>
-            <div class="card" id="pendingList"></div>
-            <div class="sec-title" id="t_chart_title" style="display:none;">׀׀¾ ׀½׀¸ׁˆ׀°׀¼</div>
-            <div class="card" id="chartCard" style="display:none;"><div class="chart-wrap"><canvas id="nicheChart"></canvas></div></div>
+            <div class="sec-title" id="t_awaiting">Сделки и выплаты</div>
+            <div id="pendingList"></div>
         </div>
 
         <div id="view-profile" class="view">
-            <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">׀ׁ€׀¾ׁ„׀¸׀»ׁ</h2>
+            <h2 class="sec-title" style="margin-top:4px;" id="t_profile_title">Профиль</h2>
 
             <div class="card profile-btn-card" onclick="openProfileEdit()">
                 <div class="profile-header">
                     <div class="profile-avatar" id="profileAvatar">W</div>
                     <div>
-                        <div class="profile-name" id="profileName">ג€”</div>
-                        <div class="profile-phone" id="profilePhone">ג€”</div>
+                        <div class="profile-name" id="profileName">—</div>
+                        <div class="profile-phone" id="profilePhone">—</div>
                     </div>
                     <div class="profile-edit-hint"><i data-feather="edit-2" style="width:15px;height:15px;"></i></div>
                 </div>
@@ -513,17 +515,17 @@
             <div class="card pro-card" id="pro-locked">
                 <div class="pro-card-inner">
                     <div class="pro-top">
-                        <div class="pro-title" id="t_pro_title_1">נ PRO-׀׀³׀µ׀½ׁ‚</div>
-                        <div class="pro-badge"><i data-feather="lock" style="width:11px;height:11px;"></i><span id="t_pro_locked">׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾</span></div>
+                        <div class="pro-title" id="t_pro_title_1">PRO-агент</div>
+                        <div class="pro-badge"><i data-feather="lock" style="width:11px;height:11px;"></i><span id="t_pro_locked">Закрыто</span></div>
                     </div>
-                    <div class="pro-desc" id="t_pro_desc">׀”׀¾ׁׁ‚׀¸׀³׀½׀¸ׁ‚׀µ 50 ׁƒׁ׀¿׀µׁˆ׀½ׁ‹ׁ… ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׁׁ‚׀°ׁ‚ׁƒׁ ׀˜׀½ׁ„׀»ׁ׀µ׀½ׁ׀µׁ€׀°.</div>
+                    <div class="pro-desc" id="t_pro_desc">Дойдите до 50 успешных рекомендаций, чтобы открыть статус PRO-агента.</div>
                     <div class="pro-progress-wrap">
-                        <div class="pro-progress-header"><span id="t_pro_progress_lbl">׀’׀°ׁˆ ׀¿ׁ€׀¾׀³ׁ€׀µׁׁ</span><span id="pro_progress_txt">0 / 50</span></div>
+                        <div class="pro-progress-header"><span id="t_pro_progress_lbl">Ваш прогресс</span><span id="pro_progress_txt">0 / 50</span></div>
                         <div class="pro-bar-bg"><div class="pro-bar-fill" id="proBar"></div></div>
                     </div>
                     <button class="btn-lb-profile" onclick="openLeaderboard()">
                         <i data-feather="award" style="width:14px;height:14px;"></i>
-                        <span id="t_btn_lb_profile_1">׀׀¾ׁ׀¼׀¾ׁ‚ׁ€׀µׁ‚ׁ ׀—׀°׀» ׀¡׀»׀°׀²ׁ‹</span>
+                        <span id="t_btn_lb_profile_1">Открыть зал славы</span>
                     </button>
                 </div>
             </div>
@@ -531,47 +533,47 @@
             <div class="card pro-card" id="pro-unlocked" style="display:none;">
                 <div class="pro-card-inner">
                     <div class="pro-top">
-                        <div class="pro-title" id="t_pro_title_2">נ PRO-׀׀³׀µ׀½ׁ‚</div>
-                        <div class="pro-badge" id="t_pro_influencer">׀˜׀½ׁ„׀»ׁ׀µ׀½ׁ׀µׁ€</div>
+                        <div class="pro-title" id="t_pro_title_2">PRO-агент</div>
+                        <div class="pro-badge" id="t_pro_influencer">PRO-агент</div>
                     </div>
-                    <div class="pro-desc" id="t_pro_unlocked_desc">׀’ׁ‹ ׁƒׁׁ‚׀°׀½׀°׀²׀»׀¸׀²׀°׀µׁ‚׀µ ׁ׀²׀¾׀¸ ׀¿ׁ€׀°׀²׀¸׀»׀° ׀¸׀³ׁ€ׁ‹.</div>
+                    <div class="pro-desc" id="t_pro_unlocked_desc">Вы уже открыли уровень PRO-агента.</div>
                     <button class="btn-lb-profile" onclick="openLeaderboard()" style="margin-bottom:14px; background:rgba(0,0,0,0.25); color:#fff;">
                         <i data-feather="award" style="width:14px;height:14px;"></i>
-                        <span id="t_btn_lb_profile_2">׀’ׁ‹ ׀² ׀—׀°׀»׀µ ׀¡׀»׀°׀²ׁ‹</span>
+                        <span id="t_btn_lb_profile_2">Открыть зал славы</span>
                     </button>
                     <div class="pro-rate-row">
-                        <span style="font-weight:600;font-size:.88rem;" id="t_base_rate">׀‘׀°׀·׀¾׀²׀°ׁ ׁׁ‚׀°׀²׀÷׀° (׀´׀»ׁ ׀²ׁ׀µׁ…)</span>
+                        <span style="font-weight:600;font-size:.88rem;" id="t_base_rate">Базовая ставка (для всех)</span>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="font-weight:800;font-size:1rem;" id="v_base_rate">ג€”</span>
+                            <span style="font-weight:800;font-size:1rem;" id="v_base_rate">—</span>
                             <i data-feather="edit-2" style="width:13px;height:13px;opacity:.8;"></i>
                         </div>
                     </div>
                     <button class="pro-add-btn" onclick="openNicheModal()">
                         <i data-feather="plus" style="width:15px;height:15px;"></i>
-                        <span id="t_add_niche">׀”׀¾׀±׀°׀²׀¸ׁ‚ׁ ׀½׀¸ׁˆׁƒ</span>
+                        <span id="t_add_niche">Добавить нишу</span>
                     </button>
                 </div>
             </div>
 
-            <h3 class="sec-title" style="font-size:.9rem;margin-top:20px;" id="t_settings">׀׀°ׁׁ‚ׁ€׀¾׀¹׀÷׀¸</h3>
+            <h3 class="sec-title" style="font-size:.9rem;margin-top:20px;" id="t_settings">Настройки</h3>
             <div class="card settings-list" style="padding:0;">
                 <div class="settings-row">
                     <i data-feather="credit-card" style="color:var(--text2);flex-shrink:0;"></i>
-                    <span class="settings-row-label" id="t_pay_method">׀ ׀µ׀÷׀²׀¸׀·׀¸ׁ‚ׁ‹</span>
-                    <span class="settings-row-value" id="v_pay_method">ג€”</span>
+                    <span class="settings-row-label" id="t_pay_method">Способ оплаты</span>
+                    <span class="settings-row-value" id="v_pay_method">—</span>
                 </div>
                 <div class="settings-row" id="bizInfoRow" style="display:none;">
                     <i data-feather="link" style="color:var(--text2);flex-shrink:0;"></i>
-                    <span class="settings-row-label" id="t_biz_info">׀¡ׁׁ‹׀»׀÷׀°</span>
-                    <span class="settings-row-value" id="v_biz_info">ג€”</span>
+                    <span class="settings-row-label" id="t_biz_info">Ссылка</span>
+                    <span class="settings-row-value" id="v_biz_info">—</span>
                 </div>
             </div>
 
             <div class="card action-card" style="margin-top:8px;" onclick="openBizReg()">
                 <div class="action-icon"><i data-feather="briefcase"></i></div>
                 <div>
-                    <div class="action-title" id="t_biz_cta">׀£ ׀²׀°ׁ ׀µׁׁ‚ׁ ׁ׀²׀¾׀¹ ׀±׀¸׀·׀½׀µׁ?</div>
-                    <div class="action-sub" id="t_biz_cta_sub">׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€ׁƒ׀¹ׁ‚׀µׁׁ ׀÷׀°׀÷ ׀±׀¸׀·׀½׀µׁ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³׀µ Win-Win</div>
+                    <div class="action-title" id="t_biz_cta">У вас есть свой бизнес?</div>
+                    <div class="action-sub" id="t_biz_cta_sub">Добавьте его в каталог Win-Win</div>
                 </div>
             </div>
 
@@ -581,32 +583,32 @@
     </div>
     <!-- NAV LTR: Home | Catalog | History | Wallet | Profile -->
     <nav class="bottom-nav" id="nav-ltr">
-        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">׀“׀»׀°׀²׀½׀°ׁ</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">׀׀°ׁ‚׀°׀»׀¾׀³</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">׀˜ׁׁ‚׀¾ׁ€׀¸ׁ</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">׀׀¾ׁˆ׀µ׀»ׁ‘׀÷</span></button>
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">׀ׁ€׀¾ׁ„׀¸׀»ׁ</span></button>
+        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">Главная</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
     </nav>
     <!-- NAV RTL: visually mirrored by RTL direction, so HOME stays on the right -->
     <nav class="bottom-nav nav-hidden" id="nav-rtl">
-        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">׀“׀»׀°׀²׀½׀°ׁ</span></button>
-        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">׀׀°ׁ‚׀°׀»׀¾׀³</span></button>
-        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">׀˜ׁׁ‚׀¾ׁ€׀¸ׁ</span></button>
-        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">׀׀¾ׁˆ׀µ׀»ׁ‘׀÷</span></button>
-        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">׀ׁ€׀¾ׁ„׀¸׀»ׁ</span></button>
+        <button class="nav-item active" onclick="switchTab('home',this)"><i data-feather="home"></i><span class="t_nav_home">Главная</span></button>
+        <button class="nav-item" onclick="switchTab('catalog',this)"><i data-feather="search"></i><span class="t_nav_catalog">Каталог</span></button>
+        <button class="nav-item" onclick="switchTab('history',this)"><i data-feather="list"></i><span class="t_nav_history">История</span></button>
+        <button class="nav-item" onclick="switchTab('wallet',this)"><i data-feather="gift"></i><span class="t_nav_wallet">Кошелёк</span></button>
+        <button class="nav-item" onclick="switchTab('profile',this)"><i data-feather="user"></i><span class="t_nav_profile">Профиль</span></button>
     </nav>
 
     <div class="fullscreen" id="leaderboardSheet" style="padding: 0;">
         <div style="max-width:430px; margin:0 auto; min-height: 100%; display: flex; flex-direction: column;">
             <div style="flex: 1; padding: 24px 16px;">
                 <div style="text-align:center; margin-bottom:24px;">
-                    <div style="font-size:2.2rem; margin-bottom:8px; margin-top:20px;">נ†</div>
-                    <h2 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800;" id="t_lb_title">׀—׀°׀» ׀¡׀»׀°׀²ׁ‹</h2>
+                    <div style="font-size:2.2rem; margin-bottom:8px; margin-top:20px;">🏆</div>
+                    <h2 style="font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800;" id="t_lb_title">Зал славы</h2>
                 </div>
                 <div id="lbContent"></div>
             </div>
             <div style="position: sticky; bottom: 0; padding: 10px 16px 24px; z-index: 600; margin-top: auto; background: linear-gradient(to top, var(--bg) 75%, transparent);">
-                <button class="btn-primary btn-accent" onclick="closeLeaderboard()" id="t_btn_back_lb" style="box-shadow: 0 4px 20px rgba(0,0,0,0.5);">׀׀°׀·׀°׀´</button>
+                <button class="btn-primary btn-accent" onclick="closeLeaderboard()" id="t_btn_back_lb" style="box-shadow: 0 4px 20px rgba(0,0,0,0.5);">Назад</button>
             </div>
         </div>
     </div>
@@ -614,28 +616,28 @@
     <div class="fullscreen" id="profileSheet">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px;">
-                <div class="rec-title" id="t_edit_profile" style="margin-bottom:16px; font-size:1.4rem;">׀ ׀µ׀´׀°׀÷ׁ‚׀¸ׁ€׀¾׀²׀°ׁ‚ׁ ׀¿ׁ€׀¾ׁ„׀¸׀»ׁ</div>
+                <div class="rec-title" id="t_edit_profile" style="margin-bottom:16px; font-size:1.4rem;">Редактировать профиль</div>
                 
-                <label class="input-label" id="t_edit_name">׀˜׀¼ׁ</label>
-                <input class="custom-input" id="editName" type="text" placeholder="׀’׀°ׁˆ׀µ ׀¸׀¼ׁ">
+                <label class="input-label" id="t_edit_name">Имя</label>
+                <input class="custom-input" id="editName" type="text" placeholder="Ваше имя">
                 
-                <label class="input-label" id="t_edit_payment">׀¡׀¿׀¾ׁ׀¾׀± ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸ׁ</label>
+                <label class="input-label" id="t_edit_payment">Способ оплаты</label>
                 <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
                     <button class="pay-btn" onclick="selectPay('Bit', this)">Bit</button>
                     <button class="pay-btn" onclick="selectPay('Paybox', this)">Paybox</button>
                     <button class="pay-btn" onclick="selectPay('PayPal', this)">PayPal</button>
-                    <button class="pay-btn" onclick="selectPay('׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ', this)" id="t_pay_cash">׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ</button>
-                    <button class="pay-btn" onclick="selectPay('׀׀µׁ€׀µ׀²׀¾׀´', this)" id="t_pay_bank">׀׀µׁ€׀µ׀²׀¾׀´</button>
+                    <button class="pay-btn" onclick="selectPay('Наличные', this)" id="t_pay_cash">Наличные</button>
+                    <button class="pay-btn" onclick="selectPay('Перевод', this)" id="t_pay_bank">Перевод</button>
                 </div>
                 <input type="hidden" id="editPayment">
 
-                <label class="input-label" id="t_edit_link">׀¡ׁׁ‹׀»׀÷׀° (ׁ׀¾ׁ†ׁ׀µׁ‚ׁ / ׁ׀°׀¹ׁ‚)</label>
+                <label class="input-label" id="t_edit_link">Ссылка (сайт / соцсеть)</label>
                 <input class="custom-input" id="editLink" type="url" placeholder="https://...">
             </div>
             
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;">
-                <button class="btn-primary" style="background:var(--green); color:#fff;" id="saveProfileBtn" onclick="saveProfile()">׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ</button>
-                <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_prof">׀׀°׀·׀°׀´</button>
+                <button class="btn-primary" style="background:var(--green); color:#fff;" id="saveProfileBtn" onclick="saveProfile()">Сохранить</button>
+                <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_prof">Назад</button>
             </div>
         </div>
     </div>
@@ -643,23 +645,23 @@
     <div class="fullscreen" id="inviteScreen">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <div class="rec-header-card" style="text-align: center; margin-top:20px;">
-                <div style="font-size:2.5rem; margin-bottom:12px;">נ₪</div>
-                <div class="rec-title" id="t_invite_title">׀ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀¸ׁ… ׀² Win-Win!</div>
-                <div class="rec-desc" id="t_invite_desc" style="border:none; padding-top:0;">׀׀¾׀´׀µ׀»׀¸ׁ‚׀µׁׁ ׁׁ‚׀¾׀¹ ׁׁׁ‹׀»׀÷׀¾׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¿ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ ׀¸׀»׀¸ ׀°׀³׀µ׀½ׁ‚׀° ׀½׀° ׀¿׀»׀°ׁ‚ׁ„׀¾ׁ€׀¼ׁƒ. ׀’ׁ‹ ׁׁ‚׀°׀½׀µׁ‚׀µ ׀¸ׁ… ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀µ׀¼!</div>
+                <div style="font-size:2.5rem; margin-bottom:12px;">🤝</div>
+                <div class="rec-title" id="t_invite_title">Пригласите их в Win-Win!</div>
+                <div class="rec-desc" id="t_invite_desc" style="border:none; padding-top:0;">Поделитесь этой ссылкой, чтобы пригласить бизнес или рекомендателя.</div>
             </div>
             <div class="instruction-block">
-                <div class="instruction-text" id="t_copy_link_inv">נ”— ׀’׀°ׁˆ׀° ׀¿׀µׁ€ׁ׀¾׀½׀°׀»ׁ׀½׀°ׁ ׁׁׁ‹׀»׀÷׀°:</div>
+                <div class="instruction-text" id="t_copy_link_inv">Скопируйте и отправьте эту ссылку:</div>
                 <div class="link-box">
                     <input type="text" id="inviteLinkInput" class="link-input" readonly>
-                    <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">׀׀¾׀¿׀¸ׁ€׀¾׀²׀°ׁ‚ׁ</button>
+                    <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">Скопировать</button>
                 </div>
             </div>
             <div class="instruction-block" style="text-align:center;">
-                <div class="instruction-text" id="t_scan_qr_inv">נ“± ׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:</div>
+                <div class="instruction-text" id="t_scan_qr_inv">Или дайте отсканировать QR-код:</div>
                 <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
             </div>
             
-            <button class="btn-primary btn-accent" onclick="closeInviteScreen()" id="t_btn_back_invite" style="margin-top: 10px;">׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³</button>
+            <button class="btn-primary btn-accent" onclick="closeInviteScreen()" id="t_btn_back_invite" style="margin-top: 10px;">Назад в каталог</button>
         </div>
     </div>
 
@@ -671,17 +673,17 @@
                 <div class="rec-desc" id="recBizDesc"></div>
             </div>
             <div class="instruction-block">
-                <div class="instruction-text" id="t_copy_link">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ ׁ‚׀¾׀¼ׁƒ, ׀÷׀¾׀¼ׁƒ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ:</div>
+                <div class="instruction-text" id="t_copy_link">Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:</div>
                 <div class="link-box">
                     <input type="text" id="refLinkInput" class="link-input" readonly>
-                    <button class="btn-copy" id="copyBtn" onclick="copyLink()">׀׀¾׀¿׀¸ׁ€׀¾׀²׀°ׁ‚ׁ</button>
+                    <button class="btn-copy" id="copyBtn" onclick="copyLink()">Скопировать</button>
                 </div>
             </div>
             <div class="instruction-block" style="text-align:center; padding-bottom: 24px; border: none; box-shadow: none; background: transparent;">
-                <div class="instruction-text" id="t_scan_qr">נ“± ׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:</div>
+                <div class="instruction-text" id="t_scan_qr">Или дайте отсканировать QR-код:</div>
                 <div class="qr-container" style="margin-bottom: 20px;"><canvas id="qrCanvas"></canvas></div>
-                <button class="btn-primary btn-accent" onclick="closeRecommend()" id="t_btn_back_rec_mid">׀׀°׀·׀°׀´ ׀÷ ׀÷׀°ׁ‚׀°׀»׀¾׀³ׁƒ</button>
-                <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:10px;">׀’׀µׁ€׀½ׁƒׁ‚ׁׁׁ ׀² WhatsApp</a>
+                <button class="btn-primary btn-accent" onclick="closeRecommend()" id="t_btn_back_rec_mid">Назад в каталог</button>
+                <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:10px;">Вернуться в WhatsApp</a>
             </div>
         </div>
     </div>
@@ -689,62 +691,62 @@
     <div class="fullscreen" id="dealSheet">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px;">
-                <div class="rec-title" id="t_deal_title" style="margin-bottom:16px; font-size:1.4rem;">׀”׀µׁ‚׀°׀»׀¸ ׁ׀´׀µ׀»׀÷׀¸</div>
+                <div class="rec-title" id="t_deal_title" style="margin-bottom:16px; font-size:1.4rem;">Детали сделки</div>
                 <div id="dealDetailContent"></div>
             </div>
             <div id="dealActionButtons" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;"></div>
-            <button class="btn-primary btn-accent" onclick="closeDealDetail()" id="t_btn_back_deal_bottom">׀׀°׀·׀°׀´</button>
+            <button class="btn-primary btn-accent" onclick="closeDealDetail()" id="t_btn_back_deal_bottom">Назад</button>
         </div>
     </div>
 
     <div class="fullscreen" id="bizRegSheet">
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px;">
-                <div class="rec-title" id="t_biz_reg_title" style="margin-bottom:16px; font-size:1.4rem;">׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€׀¾׀²׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ</div>
+                <div class="rec-title" id="t_biz_reg_title" style="margin-bottom:16px; font-size:1.4rem;">Добавить бизнес</div>
                 
-                <label class="input-label"><span id="t_biz_reg_name">׀׀°׀·׀²׀°׀½׀¸׀µ ׀±׀¸׀·׀½׀µׁ׀°</span> <span class="req-mark">*</span></label>
-                <input class="custom-input" id="bizRegName" type="text" placeholder="׀׀°׀¿ׁ€׀¸׀¼׀µׁ€: iStudio" oninput="checkBizRegForm()">
+                <label class="input-label"><span id="t_biz_reg_name">Название бизнеса</span> <span class="req-mark">*</span></label>
+                <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio" oninput="checkBizRegForm()">
                 
-                <label class="input-label"><span id="t_biz_reg_niche">׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ / ׀½׀¸ׁˆ׀°</span> <span class="req-mark">*</span></label>
+                <label class="input-label"><span id="t_biz_reg_niche">Категория / ниша</span> <span class="req-mark">*</span></label>
                 <select class="custom-input" id="bizRegNiche" onchange="updateBizRegSubcategories(); checkBizRegForm()">
                     </select>
 
                 <div id="bizRegSubnicheGroup" style="display:none; margin-bottom:16px;">
-                    <label class="input-label"><span id="t_biz_reg_subniche">׀¡׀¿׀µׁ†׀¸׀°׀»׀¸׀·׀°ׁ†׀¸ׁ</span> <span class="req-mark">*</span></label>
+                    <label class="input-label"><span id="t_biz_reg_subniche">Подкатегория</span> <span class="req-mark">*</span></label>
                     <div id="bizRegSubnicheTags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
                     <div class="niche-checkboxes" id="bizRegSubnicheList"></div>
-                    <button type="button" onclick="confirmBizRegSubcat()" class="btn-primary" style="background:var(--surface2); color:var(--text); border:1px solid var(--border);" id="bizRegSubcatDone">ג… ׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀²ׁ‹׀±׀¾ׁ€</button>
-                    <button type="button" onclick="editBizRegSubcat()" class="btn-primary btn-outline" style="display:none; margin-top:8px;" id="bizRegSubcatEdit">גן¸ ׀˜׀·׀¼׀µ׀½׀¸ׁ‚ׁ</button>
+                    <button type="button" onclick="confirmBizRegSubcat()" class="btn-primary" style="background:var(--surface2); color:var(--text); border:1px solid var(--border);" id="bizRegSubcatDone">Подтвердить выбор</button>
+                    <button type="button" onclick="editBizRegSubcat()" class="btn-primary btn-outline" style="display:none; margin-top:8px;" id="bizRegSubcatEdit">Изменить выбор</button>
                 </div>
                 
-                <label class="input-label"><span id="t_rew_type">׀’׀¸׀´ ׀±׀»׀°׀³׀¾׀´׀°ׁ€׀½׀¾ׁׁ‚׀¸</span> <span class="req-mark">*</span></label>
+                <label class="input-label"><span id="t_rew_type">Тип благодарности</span> <span class="req-mark">*</span></label>
                 <div style="display:flex; gap:8px; margin-bottom:16px;">
-                    <button class="pay-btn" id="btnRewPct" onclick="setBizRewardType('pct', this)"><span id="t_rew_pct">׀ׁ€׀¾ׁ†׀µ׀½ׁ‚ (%)</span></button>
-                    <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">׀₪׀¸׀÷ׁ (ג‚×)</span></button>
-                    <button class="pay-btn" id="btnRewGift" onclick="setBizRewardType('gift', this)"><span id="t_rew_gift">׀׀¾׀´׀°ׁ€׀¾׀÷ (נ)</span></button>
+                    <button class="pay-btn" id="btnRewPct" onclick="setBizRewardType('pct', this)"><span id="t_rew_pct">Процент (%)</span></button>
+                    <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">Фиксировано (₪)</span></button>
+                    <button class="pay-btn" id="btnRewGift" onclick="setBizRewardType('gift', this)"><span id="t_rew_gift">Подарок</span></button>
                 </div>
                 <input type="hidden" id="bizRegRewardType" onchange="checkBizRegForm()">
 
-                <label class="input-label"><span id="t_biz_reg_comm_lbl">׀ ׀°׀·׀¼׀µׁ€ / ׀׀¿׀¸ׁ׀°׀½׀¸׀µ</span> <span class="req-mark">*</span></label>
+                <label class="input-label"><span id="t_biz_reg_comm_lbl">Сумма / описание</span> <span class="req-mark">*</span></label>
                 <input class="custom-input" id="bizRegComm" type="text" placeholder="..." oninput="checkBizRegForm()">
                 
-                <label class="input-label"><span id="t_biz_reg_pay">׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹ ׀°׀³׀µ׀½ׁ‚׀°׀¼</span> <span class="req-mark">*</span></label>
+                <label class="input-label"><span id="t_biz_reg_pay">Способ выплаты благодарности</span> <span class="req-mark">*</span></label>
                 <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
                     <button class="pay-btn" onclick="setBizRegPay('Bit', this)">Bit</button>
                     <button class="pay-btn" onclick="setBizRegPay('Paybox', this)">Paybox</button>
                     <button class="pay-btn" onclick="setBizRegPay('PayPal', this)">PayPal</button>
-                    <button class="pay-btn" onclick="setBizRegPay('׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ', this)" id="t_pay_cash_reg">׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ</button>
-                    <button class="pay-btn" onclick="setBizRegPay('׀׀µׁ€׀µ׀²׀¾׀´', this)" id="t_pay_bank_reg">׀׀µׁ€׀µ׀²׀¾׀´</button>
+                    <button class="pay-btn" onclick="setBizRegPay('Наличные', this)" id="t_pay_cash_reg">Наличные</button>
+                    <button class="pay-btn" onclick="setBizRegPay('Перевод', this)" id="t_pay_bank_reg">Перевод</button>
                 </div>
                 <input type="hidden" id="bizRegPay" onchange="checkBizRegForm()">
 
-                <label class="input-label" id="t_biz_reg_link">׀¡ׁׁ‹׀»׀÷׀° ׀½׀° ׀²׀°ׁ (׀¡׀°׀¹ׁ‚/׀˜׀½ׁׁ‚׀°׀³ׁ€׀°׀¼)</label>
+                <label class="input-label" id="t_biz_reg_link">Ссылка на вас (сайт / Instagram)</label>
                 <input class="custom-input" id="bizRegLink" type="url" placeholder="https://...">
             </div>
 
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;">
-                <button class="btn-primary" onclick="submitBizReg()" style="background:var(--green); color:#fff; opacity:0.5; pointer-events:none;" id="btnBizRegSubmit">׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€׀¾׀²׀°ׁ‚ׁ</button>
-                <button class="btn-primary btn-accent" onclick="closeBizReg()" id="t_btn_back_biz_bottom">׀׀°׀·׀°׀´</button>
+                <button class="btn-primary" onclick="submitBizReg()" style="background:var(--green); color:#fff; opacity:0.5; pointer-events:none;" id="btnBizRegSubmit">Отправить</button>
+                <button class="btn-primary btn-accent" onclick="closeBizReg()" id="t_btn_back_biz_bottom">Назад</button>
             </div>
         </div>
     </div>
@@ -756,19 +758,19 @@
 
     <div class="bottom-sheet" id="statSheet">
         <div class="sheet-handle"></div>
-        <div class="sheet-title" id="statSheetTitle">׀”׀µׁ‚׀°׀»׀¸</div>
+        <div class="sheet-title" id="statSheetTitle">Детали</div>
         <div id="statSheetContent"></div>
     </div>
 
     <div class="bottom-sheet" id="nicheSheet">
         <div class="sheet-handle"></div>
-        <div class="sheet-title" id="t_sheet_title">׀”׀¾׀±׀°׀²׀¸ׁ‚ׁ ׁ׀¿׀µׁ†-ׁƒׁ׀»׀¾׀²׀¸׀µ</div>
-        <label class="input-label" id="t_sheet_cat">׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ ׀±׀¸׀·׀½׀µׁ׀°</label>
+        <div class="sheet-title" id="t_sheet_title">Добавить спецусловие</div>
+        <label class="input-label" id="t_sheet_cat">Категория бизнеса</label>
         <select class="custom-input" id="nicheSheetCat">
             </select>
-        <label class="input-label" id="t_sheet_rate">׀’׀°ׁˆ׀° ׁׁ‚׀°׀²׀÷׀° (%)</label>
+        <label class="input-label" id="t_sheet_rate">Ваша ставка (%)</label>
         <input type="number" class="custom-input" placeholder="15">
-        <button class="btn-primary" onclick="closeAllSheets()" style="margin-top:4px;" id="t_sheet_save">׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ ׁƒׁ׀»׀¾׀²׀¸׀µ</button>
+        <button class="btn-primary" onclick="closeAllSheets()" style="margin-top:4px;" id="t_sheet_save">Сохранить условие</button>
     </div>
 
 </div><script>
@@ -878,9 +880,41 @@ const SUBCAT_TR = {
     "׀›׀¾׀³׀¸ׁׁ‚׀¸׀÷׀° ׀¸ ׀´׀¾ׁׁ‚׀°׀²׀÷׀°": {he:"׳׳•׳’׳™׳¡׳˜׳™׳§׳”", en:"Logistics & Delivery", ar:"״§„„ˆ״¬״³״×״§״×"},
 };
 
+const CATEGORY_SOURCE = {
+    "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+    "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+    "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+    "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+    "Юриспруденция": ["Коммерческое право","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+    "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+    "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+    "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+    "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+    "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+    "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+    "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+    "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
+};
+const CATEGORY_TR = {
+    "Красота и эстетика": { he:"יופי ואסתטיקה", en:"Beauty & Aesthetics", ar:"الجمال والجماليات" },
+    "Еда и рестораны": { he:"אוכל ומסעדות", en:"Food & Restaurants", ar:"الطعام والمطاعم" },
+    "Магазины и товары": { he:"חנויות ומוצרים", en:"Shops & Goods", ar:"المتاجر والسلع" },
+    "Здоровье и медицина": { he:"בריאות ורפואה", en:"Health & Medicine", ar:"الصحة والطب" },
+    "Юриспруденция": { he:"משפטים", en:"Legal Services", ar:"الخدمات القانونية" },
+    "Недвижимость и финансы": { he:"נדל\"ן ופיננסים", en:"Real Estate & Finance", ar:"العقارات والتمويل" },
+    "Дом и ремонт": { he:"בית ושיפוץ", en:"Home & Repair", ar:"المنزل والإصلاح" },
+    "Автомобили": { he:"רכב", en:"Automotive", ar:"السيارات" },
+    "Праздники и мероприятия": { he:"אירועים", en:"Events & Parties", ar:"الفعاليات" },
+    "Обучение и спорт": { he:"חינוך וספורט", en:"Education & Sports", ar:"التعليم والرياضة" },
+    "Домашние питомцы": { he:"חיות מחמד", en:"Pets", ar:"الحيوانات الأليفة" },
+    "Туризм и отдых": { he:"תיירות ופנאי", en:"Tourism & Leisure", ar:"السياحة والترفيه" },
+    "Бизнес и B2B услуги": { he:"עסקים ושירותי B2B", en:"Business & B2B Services", ar:"الأعمال وخدمات B2B" }
+};
+const SUBCATEGORY_TR = {};
+
 function translateSubcat(ruName, targetLang) {
-    if (targetLang === 'ru' || !SUBCAT_TR[ruName]) return ruName;
-    return SUBCAT_TR[ruName][targetLang] || ruName;
+    if (targetLang === 'ru' || !SUBCATEGORY_TR[ruName]) return ruName;
+    return SUBCATEGORY_TR[ruName][targetLang] || ruName;
 }
 function translateNiches(niche, targetLang) {
     if (!niche || targetLang === 'ru') return niche;
@@ -889,15 +923,15 @@ function translateNiches(niche, targetLang) {
     return niche;
 }
 function getCatName(sysName, targetLang) {
-    if (targetLang === 'ru' || !CAT_TR[sysName]) return sysName;
-    return CAT_TR[sysName][targetLang] || sysName;
+    if (targetLang === 'ru' || !CATEGORY_TR[sysName]) return sysName;
+    return CATEGORY_TR[sysName][targetLang] || sysName;
 }
 function populateCategories() {
     const bizRegSelect = document.getElementById('bizRegNiche');
     const nicheSheetSelect = document.getElementById('nicheSheetCat');
-    const defaultOpt = `<option value="" disabled selected>׀’ׁ‹׀±׀µׁ€׀¸ׁ‚׀µ...</option>`;
+    const defaultOpt = `<option value="" disabled selected>Выберите...</option>`;
     let optionsHtml = defaultOpt;
-    for (const cat in CATEGORIES_STANDARD) {
+    for (const cat in CATEGORY_SOURCE) {
         optionsHtml += `<option value="${cat}">${getCatName(cat, lang)}</option>`;
     }
     if(bizRegSelect) bizRegSelect.innerHTML = optionsHtml;
@@ -1113,6 +1147,420 @@ const i18n = {
   },
 };
 
+const CLEAN_I18N = {
+  he: {
+    greeting:"ברוך שובך,",
+    balance_label:"ההון החברתי שלך",
+    deals_lbl:"נסגרו",
+    pending_lbl:"ממתין לתשלום",
+    active_lbl:"בתהליך",
+    action_title:"עזרו לעסק שאתם סומכים עליו",
+    action_sub:"פתחו את הקטלוג והמליצו על עסק טוב",
+    events:"אירועים אחרונים",
+    catalog_title:"קטלוג עסקים",
+    history_title:"ההמלצות שלי",
+    active_sec:"בתהליך",
+    debt_sec:"ממתין לתשלום",
+    done_sec:"היסטוריה",
+    wallet_title:"ארנק",
+    wallet_summary_title:"כסף ותשלומים",
+    wallet_total_earned:"כבר הרווחתי",
+    wallet_pending_amount:"ממתין עכשיו",
+    wallet_attention:"דורש תשומת לב",
+    wallet_attention_note:"עסקאות עם תשלום או אישור",
+    wallet_deals_title:"עסקאות ותשלומים",
+    all_paid:"כל התשלומים התקבלו",
+    profile_title:"פרופיל",
+    settings:"הגדרות",
+    pay_method:"אופן תשלום",
+    biz_info:"קישור",
+    biz_cta:"יש לכם עסק משלכם?",
+    biz_cta_sub:"הוסיפו אותו לקטלוג Win-Win",
+    pro_locked:"סגור",
+    pro_desc:"הגיעו ל-50 המלצות מוצלחות כדי לפתוח סטטוס PRO.",
+    pro_progress_lbl:"ההתקדמות שלך",
+    pro_influencer:"סוכן PRO",
+    pro_unlocked_desc:"כבר פתחתם את רמת PRO.",
+    base_rate:"תעריף בסיס",
+    add_niche:"הוסף נישה",
+    sheet_title:"הוסף תנאי מיוחד",
+    sheet_cat:"קטגוריית עסק",
+    sheet_rate:"השיעור שלך (%)",
+    sheet_save:"שמור",
+    nav_home:"בית",
+    nav_catalog:"קטלוג",
+    nav_history:"היסטוריה",
+    nav_wallet:"ארנק",
+    nav_profile:"פרופיל",
+    avg_lbl:"רווח ממוצע לעסקה ₪",
+    eff_sub:"% מהעסקאות שנסגרו",
+    eff_accum:"צבירה",
+    eff_above:"מעל הממוצע",
+    eff_below:"מתחת לממוצע",
+    eff_avg:"ממוצע:",
+    funnel:"משפך",
+    f_active:"בתהליך",
+    f_closed:"נסגרו",
+    f_rejected:"נדחו",
+    total_leads:"סה\"כ:",
+    awaiting:"ממתין לתשלום:",
+    chart_title:"לפי נישה",
+    status_new:"חדשה",
+    status_in_progress:"בתהליך",
+    status_closed:"סגורה",
+    status_confirmed:"אושרה",
+    status_rejected:"נדחתה",
+    no_deals:"עדיין ריק",
+    no_deals_sub:"המליצו על עסק טוב מהקטלוג, והעסקאות יופיעו כאן.",
+    deal_title:"פרטי העסקה",
+    edit_profile:"עריכת פרופיל",
+    edit_name:"שם",
+    edit_payment:"אופן קבלה",
+    edit_link:"קישור",
+    biz_reg_title:"הוספת עסק",
+    biz_reg_submit:"שליחה",
+    biz_reg_name:"שם העסק",
+    biz_reg_niche:"קטגוריה / נישה",
+    biz_reg_subniche:"תת-קטגוריה",
+    biz_reg_pay:"אופן תשלום",
+    stat_deals:"עסקאות סגורות",
+    stat_pending:"ממתין לתשלום",
+    stat_active:"עסקאות פעילות",
+    btn_back:"חזרה",
+    btn_back_catalog:"חזרה לקטלוג",
+    copy_link:"העתיקו ושלחו את הקישור הזה.",
+    wa_btn:"WhatsApp",
+    btn_tg:"Telegram",
+    copy_btn:"העתק",
+    copied:"הועתק",
+    scan_qr:"או סרקו:",
+    wa_return:"חזרה ל-WhatsApp",
+    cat_search:"חיפוש עסק או שירות...",
+    cat_loading:"טוען...",
+    cat_empty:"לא נמצאו תוצאות",
+    bonus:"בונוס:",
+    filter_all:"כל הקטגוריות",
+    save:"שמור",
+    remind_debt:"הזכר על החוב",
+    remind_success:"התזכורת נשלחה.",
+    remind_error:"לא ניתן לשלוח תזכורת.",
+    remind_result_sent_now:"התזכורת נשלחה.",
+    remind_result_scheduled_0900:"אנחנו מכבדים את המרחב האישי של אנשים ולא שולחים תזכורות בלילה.\nהתזכורת הוכנסה לתור ותישלח בשעה 09:00.",
+    remind_result_blocked_24h:"כבר נשלחה תזכורת דרך המערכת במהלך 24 השעות האחרונות.\nכדי לא להעמיס על אנשים בהודעות, התזכורת הבאה תהיה זמינה מאוחר יותר.",
+    confirm_receipt:"אישור קבלה",
+    confirm_receipt_success:"הקבלה אושרה.",
+    confirm_receipt_error:"לא ניתן לאשר קבלה.",
+    pay_cash:"מזומן",
+    pay_bank:"העברה",
+    lb_title:"היכל התהילה",
+    lb_widget_title:"היכל התהילה",
+    lb_widget_sub:"המובילים",
+    lb_profile_btn:"פתחו את היכל התהילה",
+    lb_your_pos:"המיקום שלך",
+    lb_top:"המובילים",
+    lb_deals:"עסקאות:",
+    lb_earned:"הרוויח",
+    lb_blur_alert:"הגיעו ל-50 עסקאות כדי לפתוח את שמות המובילים.",
+    invite_btn_1:"אם העסק עדיין לא מופיע,",
+    invite_btn_2:"ואתם רוצים להמליץ עליו,",
+    invite_btn_3:"הזמינו אותו ל-Win-Win",
+    invite_title:"הזמינו אותם ל-Win-Win",
+    invite_desc:"שתפו את הקישור כדי להזמין עסק או ממליץ.",
+    btn_back_invite:"חזרה לקטלוג",
+    rew_type:"סוג התגמול",
+    rew_pct:"אחוז (%)",
+    rew_fix:"סכום קבוע (₪)",
+    rew_gift:"מתנה",
+    rew_pct_ph:"למשל: 10",
+    rew_fix_ph:"למשל: 100",
+    rew_gift_ph:"למשל: עיסוי חינם",
+    biz_reg_comm_lbl:"סכום / תיאור",
+    biz_reg_success:"הבקשה נשלחה. פתחו WhatsApp כדי לסיים את ההרשמה.",
+    biz_reg_error:"לא ניתן לשלוח את הבקשה.",
+    catalog_error:"הקטלוג אינו זמין כרגע.",
+    err_expired_title:"הסשן פג תוקף",
+    err_expired_sub:"הקישור הזה כבר לא פעיל. לחצו על כפתור המסנג'ר כדי לקבל קישור חדש.",
+    err_preview:"ההודעה שלך:",
+    err_prefill:"להיכנס שוב לקבינט שלי\nלחצו על שלח כדי לקבל קישור חדש {pointer}",
+    pro_agent_title:"PRO-סוכן"
+  },
+  en: {
+    greeting:"Welcome back,",
+    balance_label:"Your social capital",
+    deals_lbl:"Closed",
+    pending_lbl:"Awaiting payout",
+    active_lbl:"In work",
+    action_title:"Help a business you trust",
+    action_sub:"Open the catalog and recommend a strong business",
+    events:"Recent events",
+    catalog_title:"Business catalog",
+    history_title:"My recommendations",
+    active_sec:"In work",
+    debt_sec:"Awaiting payout",
+    done_sec:"History",
+    wallet_title:"Wallet",
+    wallet_summary_title:"Money and payouts",
+    wallet_total_earned:"Already earned",
+    wallet_pending_amount:"Pending now",
+    wallet_attention:"Need attention",
+    wallet_attention_note:"Deals with payout or confirmation",
+    wallet_deals_title:"Deals and payouts",
+    all_paid:"All payouts received",
+    profile_title:"Profile",
+    settings:"Settings",
+    pay_method:"Payment method",
+    biz_info:"Link",
+    biz_cta:"Do you have your own business?",
+    biz_cta_sub:"Add it to the Win-Win catalog",
+    pro_locked:"Locked",
+    pro_desc:"Reach 50 successful recommendations to unlock PRO.",
+    pro_progress_lbl:"Your progress",
+    pro_influencer:"PRO agent",
+    pro_unlocked_desc:"You have already unlocked PRO.",
+    base_rate:"Base rate",
+    add_niche:"Add niche",
+    sheet_title:"Add special condition",
+    sheet_cat:"Business category",
+    sheet_rate:"Your rate (%)",
+    sheet_save:"Save",
+    nav_home:"Home",
+    nav_catalog:"Catalog",
+    nav_history:"History",
+    nav_wallet:"Wallet",
+    nav_profile:"Profile",
+    avg_lbl:"Average earnings per deal ₪",
+    eff_sub:"% of closed deals",
+    eff_accum:"Accumulation",
+    eff_above:"Above average",
+    eff_below:"Below average",
+    eff_avg:"Average:",
+    funnel:"Funnel",
+    f_active:"In work",
+    f_closed:"Closed",
+    f_rejected:"Rejected",
+    total_leads:"Total:",
+    awaiting:"Awaiting payout:",
+    chart_title:"By category",
+    status_new:"New",
+    status_in_progress:"In work",
+    status_closed:"Closed",
+    status_confirmed:"Confirmed",
+    status_rejected:"Rejected",
+    no_deals:"Nothing here yet",
+    no_deals_sub:"Recommend a strong business from the catalog and your deals will appear here.",
+    deal_title:"Deal details",
+    edit_profile:"Edit profile",
+    edit_name:"Name",
+    edit_payment:"Payout method",
+    edit_link:"Link",
+    biz_reg_title:"Add business",
+    biz_reg_submit:"Submit",
+    biz_reg_name:"Business name",
+    biz_reg_niche:"Category / niche",
+    biz_reg_subniche:"Subcategory",
+    biz_reg_pay:"Payout method",
+    stat_deals:"Closed deals",
+    stat_pending:"Awaiting payout",
+    stat_active:"Deals in work",
+    btn_back:"Back",
+    btn_back_catalog:"Back to catalog",
+    copy_link:"Copy and share this link.",
+    wa_btn:"WhatsApp",
+    btn_tg:"Telegram",
+    copy_btn:"Copy",
+    copied:"Copied",
+    scan_qr:"Or scan:",
+    wa_return:"Back to WhatsApp",
+    cat_search:"Search for a business or service...",
+    cat_loading:"Loading...",
+    cat_empty:"Nothing found",
+    bonus:"Bonus:",
+    filter_all:"All categories",
+    save:"Save",
+    remind_debt:"Remind about debt",
+    remind_success:"Reminder sent.",
+    remind_error:"Could not send a reminder.",
+    remind_result_sent_now:"Reminder sent.",
+    remind_result_scheduled_0900:"We respect people’s personal space and do not send reminders at night.\nYour reminder has been queued and will be sent at 09:00.",
+    remind_result_blocked_24h:"A reminder has already been sent through the system within the last 24 hours.\nTo avoid overloading people with messages, the next reminder will be available later.",
+    confirm_receipt:"Confirm receipt",
+    confirm_receipt_success:"Receipt confirmed.",
+    confirm_receipt_error:"Could not confirm receipt.",
+    pay_cash:"Cash",
+    pay_bank:"Transfer",
+    lb_title:"Hall of Fame",
+    lb_widget_title:"Hall of Fame",
+    lb_widget_sub:"Top recommenders",
+    lb_profile_btn:"Open Hall of Fame",
+    lb_your_pos:"Your position",
+    lb_top:"Top recommenders",
+    lb_deals:"Deals:",
+    lb_earned:"Earned",
+    lb_blur_alert:"Reach 50 deals to unlock leader names.",
+    invite_btn_1:"If the business is not here yet,",
+    invite_btn_2:"and you want to recommend it,",
+    invite_btn_3:"invite it to Win-Win",
+    invite_title:"Invite them to Win-Win",
+    invite_desc:"Share this link to invite a business or recommender.",
+    btn_back_invite:"Back to catalog",
+    rew_type:"Reward type",
+    rew_pct:"Percent (%)",
+    rew_fix:"Fixed amount (₪)",
+    rew_gift:"Gift",
+    rew_pct_ph:"Example: 10",
+    rew_fix_ph:"Example: 100",
+    rew_gift_ph:"Example: free massage",
+    biz_reg_comm_lbl:"Amount / description",
+    biz_reg_success:"Request sent. Open WhatsApp to finish registration.",
+    biz_reg_error:"Could not send the request.",
+    catalog_error:"The catalog is unavailable right now.",
+    err_expired_title:"Session expired",
+    err_expired_sub:"This link is no longer active. Tap the messenger button to get a new login link.",
+    err_preview:"Your message:",
+    err_prefill:"Log me back into my dashboard\nTap Send to get a new link {pointer}",
+    pro_agent_title:"PRO agent"
+  },
+  ar: {
+    greeting:"مرحبًا بعودتك،",
+    balance_label:"رأسمالك الاجتماعي",
+    deals_lbl:"مغلقة",
+    pending_lbl:"بانتظار الدفع",
+    active_lbl:"قيد العمل",
+    action_title:"ساعد عملاً تثق به",
+    action_sub:"افتح الكتالوج ووصِّ بعمل قوي",
+    events:"أحدث الأحداث",
+    catalog_title:"كتالوج الأعمال",
+    history_title:"توصياتي",
+    active_sec:"قيد العمل",
+    debt_sec:"بانتظار الدفع",
+    done_sec:"السجل",
+    wallet_title:"المحفظة",
+    wallet_summary_title:"المال والمدفوعات",
+    wallet_total_earned:"تم كسبه بالفعل",
+    wallet_pending_amount:"معلّق الآن",
+    wallet_attention:"يحتاج انتباهًا",
+    wallet_attention_note:"صفقات فيها دفعة أو تأكيد",
+    wallet_deals_title:"الصفقات والمدفوعات",
+    all_paid:"تم استلام جميع الدفعات",
+    profile_title:"الملف الشخصي",
+    settings:"الإعدادات",
+    pay_method:"طريقة الدفع",
+    biz_info:"الرابط",
+    biz_cta:"هل لديك عملك الخاص؟",
+    biz_cta_sub:"أضفه إلى كتالوج Win-Win",
+    pro_locked:"مغلق",
+    pro_desc:"صل إلى 50 توصية ناجحة لفتح PRO.",
+    pro_progress_lbl:"تقدّمك",
+    pro_influencer:"وكيل PRO",
+    pro_unlocked_desc:"لقد فتحت مستوى PRO بالفعل.",
+    base_rate:"المعدل الأساسي",
+    add_niche:"أضف تخصصًا",
+    sheet_title:"أضف شرطًا خاصًا",
+    sheet_cat:"فئة العمل",
+    sheet_rate:"نسبتك (%)",
+    sheet_save:"حفظ",
+    nav_home:"الرئيسية",
+    nav_catalog:"الكتالوج",
+    nav_history:"السجل",
+    nav_wallet:"المحفظة",
+    nav_profile:"الملف",
+    avg_lbl:"متوسط الربح لكل صفقة ₪",
+    eff_sub:"% من الصفقات المغلقة",
+    eff_accum:"التراكم",
+    eff_above:"أعلى من المتوسط",
+    eff_below:"أقل من المتوسط",
+    eff_avg:"المتوسط:",
+    funnel:"القمع",
+    f_active:"قيد العمل",
+    f_closed:"مغلقة",
+    f_rejected:"مرفوضة",
+    total_leads:"الإجمالي:",
+    awaiting:"بانتظار الدفع:",
+    chart_title:"حسب الفئة",
+    status_new:"جديدة",
+    status_in_progress:"قيد العمل",
+    status_closed:"مغلقة",
+    status_confirmed:"تم التأكيد",
+    status_rejected:"مرفوضة",
+    no_deals:"لا يوجد شيء هنا بعد",
+    no_deals_sub:"أوصِ بعمل قوي من الكتالوج وستظهر صفقاتك هنا.",
+    deal_title:"تفاصيل الصفقة",
+    edit_profile:"تعديل الملف",
+    edit_name:"الاسم",
+    edit_payment:"طريقة الاستلام",
+    edit_link:"الرابط",
+    biz_reg_title:"إضافة عمل",
+    biz_reg_submit:"إرسال",
+    biz_reg_name:"اسم العمل",
+    biz_reg_niche:"الفئة / التخصص",
+    biz_reg_subniche:"الفئة الفرعية",
+    biz_reg_pay:"طريقة الدفع",
+    stat_deals:"الصفقات المغلقة",
+    stat_pending:"بانتظار الدفع",
+    stat_active:"الصفقات قيد العمل",
+    btn_back:"رجوع",
+    btn_back_catalog:"العودة إلى الكتالوج",
+    copy_link:"انسخ هذا الرابط وشاركه.",
+    wa_btn:"WhatsApp",
+    btn_tg:"Telegram",
+    copy_btn:"نسخ",
+    copied:"تم النسخ",
+    scan_qr:"أو امسح:",
+    wa_return:"العودة إلى WhatsApp",
+    cat_search:"ابحث عن عمل أو خدمة...",
+    cat_loading:"جارٍ التحميل...",
+    cat_empty:"لا توجد نتائج",
+    bonus:"المكافأة:",
+    filter_all:"كل الفئات",
+    save:"حفظ",
+    remind_debt:"تذكير بالدين",
+    remind_success:"تم إرسال التذكير.",
+    remind_error:"تعذر إرسال التذكير.",
+    remind_result_sent_now:"تم إرسال التذكير.",
+    remind_result_scheduled_0900:"نحن نحترم المساحة الشخصية للناس ولا نرسل التذكيرات ليلًا.\nتمت إضافة التذكير إلى قائمة الانتظار وسيتم إرساله في الساعة 09:00.",
+    remind_result_blocked_24h:"تم بالفعل إرسال تذكير من خلال النظام خلال آخر 24 ساعة.\nولكي لا نزعج الناس بكثرة الرسائل، سيكون التذكير التالي متاحًا لاحقًا.",
+    confirm_receipt:"تأكيد الاستلام",
+    confirm_receipt_success:"تم تأكيد الاستلام.",
+    confirm_receipt_error:"تعذر تأكيد الاستلام.",
+    pay_cash:"نقدًا",
+    pay_bank:"تحويل",
+    lb_title:"قاعة الشرف",
+    lb_widget_title:"قاعة الشرف",
+    lb_widget_sub:"أفضل الموصين",
+    lb_profile_btn:"افتح قاعة الشرف",
+    lb_your_pos:"موقعك",
+    lb_top:"أفضل الموصين",
+    lb_deals:"الصفقات:",
+    lb_earned:"المكتسب",
+    lb_blur_alert:"أغلق 50 صفقة لفتح أسماء المتصدرين.",
+    invite_btn_1:"إذا لم يكن العمل موجودًا بعد،",
+    invite_btn_2:"وأردت أن توصي به،",
+    invite_btn_3:"فادعه إلى Win-Win",
+    invite_title:"ادعهم إلى Win-Win",
+    invite_desc:"شارك هذا الرابط لدعوة عمل أو موصٍ.",
+    btn_back_invite:"العودة إلى الكتالوج",
+    rew_type:"نوع المكافأة",
+    rew_pct:"نسبة (%)",
+    rew_fix:"مبلغ ثابت (₪)",
+    rew_gift:"هدية",
+    rew_pct_ph:"مثال: 10",
+    rew_fix_ph:"مثال: 100",
+    rew_gift_ph:"مثال: مساج مجاني",
+    biz_reg_comm_lbl:"المبلغ / الوصف",
+    biz_reg_success:"تم إرسال الطلب. افتح WhatsApp لإكمال التسجيل.",
+    biz_reg_error:"تعذر إرسال الطلب.",
+    catalog_error:"الكتالوج غير متاح الآن.",
+    err_expired_title:"انتهت الجلسة",
+    err_expired_sub:"هذا الرابط لم يعد نشطًا. اضغط زر المراسلة للحصول على رابط جديد.",
+    err_preview:"رسالتك:",
+    err_prefill:"سجّل دخولي إلى لوحتي من جديد\nاضغط إرسال للحصول على رابط جديد {pointer}",
+    pro_agent_title:"وكيل PRO"
+  }
+};
+Object.entries(CLEAN_I18N).forEach(([locale, values]) => {
+  i18n[locale] = Object.assign({}, i18n[locale] || {}, values);
+});
+
 // ג”€ג”€ State ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
@@ -1257,9 +1705,10 @@ function applyLang() {
     const map = {
         't_greeting':'greeting','t_balance_label':'balance_label','t_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl',
         't_action_title':'action_title','t_action_sub':'action_sub','t_events':'events','t_catalog_title':'catalog_title','t_history_title':'history_title',
-        't_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec','t_wallet_title':'wallet_title','t_avg_lbl':'avg_lbl',
-        't_eff_sub':'eff_sub','t_funnel':'funnel','t_f_active':'f_active','t_f_closed':'f_closed','t_f_rejected':'f_rejected','t_total_leads':'total_leads',
-        't_awaiting':'awaiting','t_chart_title':'chart_title','t_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method',
+        't_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec','t_wallet_title':'wallet_title',
+        't_wallet_summary_title':'wallet_summary_title','t_wallet_total_earned':'wallet_total_earned','t_wallet_pending_amount':'wallet_pending_amount',
+        't_wallet_attention':'wallet_attention','t_wallet_attention_note':'wallet_attention_note',
+        't_awaiting':'wallet_deals_title','t_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method',
         't_biz_info':'biz_info','t_biz_cta':'biz_cta','t_biz_cta_sub':'biz_cta_sub','t_pro_locked':'pro_locked','t_pro_desc':'pro_desc',
         't_pro_progress_lbl':'pro_progress_lbl','t_pro_influencer':'pro_influencer','t_pro_unlocked_desc':'pro_unlocked_desc','t_base_rate':'base_rate',
         't_add_niche':'add_niche','t_sheet_title':'sheet_title','t_sheet_cat':'sheet_cat','t_sheet_rate':'sheet_rate','t_sheet_save':'sheet_save',
@@ -1308,7 +1757,7 @@ function applyLang() {
         else commInput.placeholder = '...';
     }
 
-    const pointer = (lang === 'he' || lang === 'ar') ? 'נ‘ˆ' : 'נ‘‰';
+    const pointer = (lang === 'he' || lang === 'ar') ? '⬅️' : '➡️';
     const rawPrefill = L.err_prefill || i18n.ru.err_prefill;
     const msgText = rawPrefill.replace('{pointer}', pointer);
     const elPrefill = document.getElementById('errPrefillText');
@@ -1320,9 +1769,11 @@ function applyLang() {
     if(btnWa) btnWa.href = `https://wa.me/${phone}?text=${msg}`;
     
     const btnTgLabel = document.getElementById('t_err_btn_tg');
-    if (btnTgLabel) btnTgLabel.textContent = L.btn_tg;
+    if (btnTgLabel) btnTgLabel.textContent = L.btn_tg || 'Telegram';
     const btnWaLabel = document.getElementById('t_err_btn_wa');
-    if (btnWaLabel) btnWaLabel.textContent = L.btn_wa;
+    if (btnWaLabel) btnWaLabel.textContent = L.wa_btn || 'WhatsApp';
+    const waReturnLink = document.getElementById('waReturnLink');
+    if (waReturnLink) waReturnLink.textContent = L.wa_return || 'Back to WhatsApp';
 }
 
 // ג”€ג”€ Navigation ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
@@ -1460,14 +1911,14 @@ function getDealProjection(lead) {
     const status = String(lead?.status || '').toLowerCase();
     const decision = String(lead?.decision || '').toLowerCase();
     const labels = {
-        new: { ru:'Новая', he:'׳—׳“׳©׳”', en:'New', ar:'״¬״¯״¯״©' },
-        in_progress: { ru:'В работе', he:'׳‘׳¢׳‘׳•׳“׳”', en:'In progress', ar:'‚״¯ ״§„״×†״°' },
-        awaiting_decision: { ru:'Нужно выбрать способ расчёта', he:'׳׳׳×׳™׳ ׳׳”׳—׳׳˜׳”', en:'Awaiting decision', ar:'״¨״§†״×״¸״§״± ״§„‚״±״§״±' },
-        awaiting_payment: { ru:'Ожидаем выплату от бизнеса', he:'׳׳׳×׳™׳ ׳׳×׳©׳׳•׳', en:'Awaiting payout', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹' },
-        awaiting_client: { ru:'Ждём подтверждение получения', he:'׳׳׳×׳™׳ ׳׳׳™׳©׳•׳¨ ׳”׳׳§׳•׳—', en:'Awaiting client confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״¹…„' },
-        support_in_progress: { ru:'Поддержка бизнеса в процессе', he:'׳×׳׳™׳›׳× ׳”׳¢׳¡׳§ ׳‘׳×׳”׳׳™׳', en:'Business support in progress', ar:'״¯״¹… ״§„†״´״§״· ‚״¯ ״§„״×†״°' },
-        completed: { ru:'Закрыта', he:'׳”׳•׳©׳׳', en:'Completed', ar:'…ƒ״×…„' },
-        rejected: { ru:'Отклонена', he:'׳ ׳“׳—׳”', en:'Rejected', ar:'…״±ˆ״¶' }
+        new: { ru:'Новая', he:'חדשה', en:'New', ar:'جديدة' },
+        in_progress: { ru:'В работе', he:'בעבודה', en:'In progress', ar:'قيد العمل' },
+        awaiting_decision: { ru:'Нужно выбрать способ расчёта', he:'צריך לבחור דרך סגירה', en:'Choose settlement method', ar:'يجب اختيار طريقة التسوية' },
+        awaiting_payment: { ru:'Ожидаем выплату', he:'ממתין לתשלום', en:'Awaiting payout', ar:'بانتظار الدفع' },
+        awaiting_client: { ru:'Ждём подтверждение получения', he:'ממתין לאישור קבלה', en:'Awaiting receipt confirmation', ar:'بانتظار تأكيد الاستلام' },
+        support_in_progress: { ru:'Поддержка бизнеса в процессе', he:'תמיכת העסק בתהליך', en:'Business support in progress', ar:'دعم العمل قيد التنفيذ' },
+        completed: { ru:'Закрыта', he:'סגורה', en:'Completed', ar:'مغلقة' },
+        rejected: { ru:'Отклонена', he:'נדחתה', en:'Rejected', ar:'مرفوضة' }
     };
     const getLabel = key => ((labels[key] || labels.in_progress)[lang]) || (labels[key] || labels.in_progress).ru;
 
@@ -1523,9 +1974,9 @@ function iconForStatus(leadOrStatus) {
 // ג”€ג”€ Deal card & detail ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 function getSettlementMethodLabel(decision) {
     const map = {
-        take: { ru:'себе', he:'׳׳¢׳¦׳׳™', en:'to self', ar:'„†״³‡' },
-        gift_client: { ru:'клиенту', he:'׳׳׳§׳•׳—', en:'to client', ar:'„„״¹…„' },
-        support_business: { ru:'бизнесу', he:'׳׳¢׳¡׳§', en:'to business', ar:'„„״¹…„' }
+        take: { ru:'себе', he:'לעצמי', en:'to self', ar:'لنفسي' },
+        gift_client: { ru:'клиенту', he:'ללקוח', en:'to client', ar:'للعميل' },
+        support_business: { ru:'бизнесу', he:'לעסק', en:'to business', ar:'للعمل' }
     };
     const value = map[String(decision || '').toLowerCase()];
     return value ? (value[lang] || value.ru) : '—';
@@ -1538,10 +1989,10 @@ function getWalletStageMeta(lead) {
     const decision = String(lead.decision || '').toLowerCase();
     const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
     const labels = {
-        choose_settlement: { ru:'Нужно выбрать способ расчёта', he:'׳™׳© ׳׳‘׳—׳•׳¨ ׳“׳¨׳ ׳¡׳’׳™׳¨׳”', en:'Choose settlement method', ar:'„״²… ״§״®״×״§״± ״·״±‚״© ״§„״×״³ˆ״©' },
-        awaiting_payment: { ru:'Ожидаем выплату от бизнеса', he:'׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳ ׳׳”׳¢׳¡׳§', en:'Awaiting payment from business', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹ …† ״§„†״´״§״·' },
-        awaiting_receipt: { ru:'Ждём подтверждение получения', he:'׳׳׳×׳™׳ ׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳”', en:'Awaiting receipt confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§…' },
-        closed: { ru:'Закрыта', he:'׳¡׳’׳•׳¨׳”', en:'Closed', ar:'…״÷„‚״©' }
+        choose_settlement: { ru:'Нужно выбрать способ расчёта', he:'צריך לבחור דרך סגירה', en:'Choose settlement method', ar:'يجب اختيار طريقة التسوية' },
+        awaiting_payment: { ru:'Ожидаем выплату', he:'ממתינים לתשלום', en:'Awaiting payout', ar:'بانتظار الدفع' },
+        awaiting_receipt: { ru:'Ждём подтверждение получения', he:'ממתינים לאישור קבלה', en:'Awaiting receipt confirmation', ar:'بانتظار تأكيد الاستلام' },
+        closed: { ru:'Закрыта', he:'סגורה', en:'Closed', ar:'مغلقة' }
     };
     const getLabel = key => (labels[key] && (labels[key][lang] || labels[key].ru)) || labels.choose_settlement.ru;
 
@@ -1623,8 +2074,7 @@ function getWalletLeads() {
 function walletDealCardHtml(lead) {
     lead = normalizeDashboardLead(lead);
     const curr = dashData?.currency || '₪';
-    const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : 'ג€”';
-    const actionHtml = renderWalletActionButton(lead, 'card');
+    const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : '—';
     return `
     <div class="card wallet-deal-card" onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'>
         <div class="wallet-card-top">
@@ -1639,23 +2089,22 @@ function walletDealCardHtml(lead) {
         </div>
         <div class="wallet-card-grid">
             <div>
-                <div class="wallet-card-lbl">${({ ru:'Клиент', he:'׳׳§׳•׳—', en:'Client', ar:'العميل' }[lang] || 'Клиент')}</div>
+                <div class="wallet-card-lbl">${({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент')}</div>
                 <div class="wallet-card-val">${escapeHtml(lead.client_name || '—')}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">${({ ru:'Старт', he:'׳”׳×׳—׳׳”', en:'Start date', ar:'تاريخ البداية' }[lang] || 'Старт')}</div>
+                <div class="wallet-card-lbl">${({ ru:'Старт', he:'התחלה', en:'Start date', ar:'تاريخ البداية' }[lang] || 'Старт')}</div>
                 <div class="wallet-card-val">${formatDateValue(lead.start_date)}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">${({ ru:'Бонус', he:'׳‘׳•׳ ׳•׳¡', en:'Bonus', ar:'المكافأة' }[lang] || 'Бонус')}</div>
+                <div class="wallet-card-lbl">${({ ru:'Бонус', he:'בונוס', en:'Bonus', ar:'المكافأة' }[lang] || 'Бонус')}</div>
                 <div class="wallet-card-val wallet-card-bonus">${bonus}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">${({ ru:'Обновлено', he:'׳¢׳•׳“׳›׳', en:'Updated', ar:'آخر تحديث' }[lang] || 'Обновлено')}</div>
+                <div class="wallet-card-lbl">${({ ru:'Обновлено', he:'עודכן', en:'Updated', ar:'آخر تحديث' }[lang] || 'Обновлено')}</div>
                 <div class="wallet-card-val">${formatDateValue(lead.last_update_date)}</div>
             </div>
         </div>
-        ${actionHtml ? `<div class="wallet-card-actions">${actionHtml}</div>` : ''}
     </div>`;
 }
 
@@ -1670,7 +2119,7 @@ function dealItemHtml(lead) {
         <div class="act-icon">${iconForStatus(lead)}</div>
         <div style="flex:1;min-width:0;">
             <div class="act-title">${lead.biz_name}</div>
-            <div class="act-sub">נ‘₪ ${lead.client_name}</div>
+            <div class="act-sub">${({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент')}: ${lead.client_name}</div>
         </div>
         <div class="act-right">
             ${statusPill(lead)}
@@ -1965,9 +2414,9 @@ function renderLeaderboardUI() {
 
 function createAgentCardHTML(agent, isCurrent, isPro, listType, curr, L) {
     let rankBadge = agent.rank, rankClass = '';
-    if (agent.rank === 1) { rankBadge = 'נ¥‡'; rankClass = 'lb-rank-1'; }
-    else if (agent.rank === 2) { rankBadge = 'נ¥ˆ'; rankClass = 'lb-rank-2'; }
-    else if (agent.rank === 3) { rankBadge = 'נ¥‰'; rankClass = 'lb-rank-3'; }
+    if (agent.rank === 1) { rankBadge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (agent.rank === 2) { rankBadge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (agent.rank === 3) { rankBadge = '🥉'; rankClass = 'lb-rank-3'; }
     
     const highlightClass = isCurrent ? 'highlight' : '';
     const shouldBlur = !isPro && !isCurrent;
@@ -2025,7 +2474,7 @@ function openStatDetail(type) {
     } else if (type === 'pending') {
         title = L.stat_pending;
         const pbs = dashData?.pending_businesses || [];
-        content = pbs.length ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'ג€”'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('') : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
+        content = pbs.length ? pbs.map(b => `<div class="deal-detail-row"><div><div style="font-weight:700">${b.name}</div><div style="font-size:.78rem;color:var(--text2)">${Array.isArray(b.niche)?b.niche[0]:b.niche||'—'}</div></div><div style="font-weight:800;color:var(--gold)">${b.amount} ${curr}</div></div>`).join('') : `<div style="color:var(--green);font-weight:700;text-align:center;padding:20px">${L.all_paid}</div>`;
         if (!pbs.length && stats.debtLeads.length) content = stats.debtLeads.map(l => dealItemHtml(l)).join('');
     } else if (type === 'active') {
         title = L.stat_active;
@@ -2100,7 +2549,7 @@ function updateBizRegSubcategories() {
     const doneBtn = document.getElementById('bizRegSubcatDone');
     const editBtn = document.getElementById('bizRegSubcatEdit');
     
-    const subs = CATEGORIES_STANDARD[cat] || [];
+    const subs = CATEGORY_SOURCE[cat] || [];
     list.innerHTML = '';
     tags.innerHTML = '';
     tags.style.display = 'none';
@@ -2182,7 +2631,7 @@ function checkBizRegForm() {
     const rewardType = document.getElementById('bizRegRewardType').value;
     const comm = document.getElementById('bizRegComm').value.trim();
     const pay = document.getElementById('bizRegPay').value;
-    const subsRequired = cat && CATEGORIES_STANDARD[cat] && CATEGORIES_STANDARD[cat].length > 0;
+    const subsRequired = cat && CATEGORY_SOURCE[cat] && CATEGORY_SOURCE[cat].length > 0;
     const subsOk = !subsRequired || getSelectedBizRegSubniches().length > 0;
     const btn = document.getElementById('btnBizRegSubmit');
     if (name && cat && rewardType && comm && pay && subsOk) {
@@ -2216,7 +2665,7 @@ async function submitBizReg() {
     const pay  = document.getElementById('bizRegPay').value;
     const link = document.getElementById('bizRegLink').value.trim();
     const selectedSubs = getSelectedBizRegSubniches();
-    const subsRequired = cat && CATEGORIES_STANDARD[cat] && CATEGORIES_STANDARD[cat].length > 0;
+    const subsRequired = cat && CATEGORY_SOURCE[cat] && CATEGORY_SOURCE[cat].length > 0;
     if (!name || !cat || !rewardType || !commVal || !pay || (subsRequired && selectedSubs.length === 0)) return;
 
     let commissionStr = commVal;
@@ -2231,8 +2680,8 @@ async function submitBizReg() {
             body: JSON.stringify({ role:'business', name, category: cat, niche: selectedSubs, commission: commissionStr, pay_pref: pay, lang, sender: catalogAgentId, rewardType, rewardValue: commVal, business_info: link })
         });
         if (res.ok) { closeBizReg(); alert((i18n[lang]||i18n.ru).biz_reg_success); }
-        else { alert('׀ׁˆ׀¸׀±׀÷׀° ׁ׀µׁ€׀²׀µׁ€׀°.'); }
-    } catch(e) { alert('׀ׁˆ׀¸׀±׀÷׀° ׁ׀µׁ‚׀¸.'); }
+        else { alert((i18n[lang]||i18n.ru).biz_reg_error || 'Не удалось отправить заявку.'); }
+    } catch(e) { alert((i18n[lang]||i18n.ru).biz_reg_error || 'Не удалось отправить заявку.'); }
     btn.textContent = (i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled = false;
 }
 
@@ -2252,14 +2701,15 @@ async function loadCatalog() {
         extractNiches();
         renderCatalog();
     } catch(e) {
-        document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">׀׀°ׁ‚׀°׀»׀¾׀³ ׀½׀µ׀´׀¾ׁׁ‚ׁƒ׀¿׀µ׀½.</div>`;
+        const L = i18n[lang] || i18n.ru;
+        document.getElementById('catGrid').innerHTML = `<div class="card" style="text-align:center;color:var(--text2);padding:24px;">${L.catalog_error || 'Каталог сейчас недоступен.'}</div>`;
     }
 }
 
 function extractNiches() {
     const L = i18n[lang]||i18n.ru;
     const all = L.filter_all || 'Все категории';
-    const cats = [all, ...Object.keys(CATEGORIES_STANDARD)];
+    const cats = [all, ...Object.keys(CATEGORY_SOURCE)];
     const container = document.getElementById('catFilters');
     if (!container) return;
     container.innerHTML = '';
@@ -2296,8 +2746,8 @@ function renderCatalog() {
         card.className = 'biz-card';
         card.onclick = () => openRecommend(biz);
         const translatedCat = getCatName(biz.category || '', lang);
-        const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='ג€”' ? [biz.niche] : []);
-        const nicheStr = _nRaw.length ? ' ֲ· ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
+        const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche && biz.niche !== '—' ? [biz.niche] : []);
+        const nicheStr = _nRaw.length ? ' · ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
         const fullCat = `${translatedCat}${nicheStr}`.trim() || 'Ниша';
         card.innerHTML = `
             <div class="biz-card-header">
@@ -2313,8 +2763,8 @@ function renderCatalog() {
 function openRecommend(biz) {
     document.getElementById('recBizName').textContent = biz.name;
     const translatedCat = getCatName(biz.category || '', lang);
-    const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='ג€”' ? [biz.niche] : []);
-    const nicheStr = _nRaw.length ? ' ֲ· ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
+    const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche && biz.niche !== '—' ? [biz.niche] : []);
+    const nicheStr = _nRaw.length ? ' · ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
     document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || 'Ниша';
     
     const descEl = document.getElementById('recBizDesc');
@@ -2405,7 +2855,7 @@ function renderAll() {
     const listHistory = document.getElementById('list_history');
     if (listActive && listDebt && listHistory) {
         listActive.innerHTML=''; listDebt.innerHTML=''; listHistory.innerHTML='';
-        const emptyRow = `<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">ג€”</div>`;
+        const emptyRow = `<div class="card" style="text-align:center;color:var(--text2);padding:14px;font-size:.85rem;">—</div>`;
         if (!leads.length) {
             listActive.innerHTML=`<div class="empty-state"><div class="empty-sub">${L.no_deals_sub}</div></div>`;
         } else {
@@ -2424,33 +2874,13 @@ function renderAll() {
         if (!listHistory.innerHTML) listHistory.innerHTML=emptyRow;
     }
 
-    document.getElementById('v_avg').textContent = closed>0 ? Math.round((d.total_earned||0)/closed) : 0;
-
-    const pct = d.efficiency_pct, avgPct = d.platform_avg_pct||0;
-    if (pct==null) {
-        document.getElementById('v_eff').textContent='ג€”';
-        document.getElementById('eff_badge').textContent=L.eff_accum;
-        document.getElementById('eff_badge').className='eff-badge eff-neutral';
-    } else {
-        animNum('v_eff', Math.round(pct));
-        setTimeout(()=>{ document.getElementById('eff_bar').style.width=Math.min(pct,100)+'%'; },100);
-        document.getElementById('eff_compare').textContent=`${L.eff_avg} ${avgPct}%`;
-        if (pct>=avgPct) { document.getElementById('eff_badge').textContent=`ג… ${L.eff_above}`; document.getElementById('eff_badge').className='eff-badge eff-good'; }
-        else { document.getElementById('eff_badge').textContent=L.eff_below; document.getElementById('eff_badge').className='eff-badge eff-neutral'; }
-    }
-
-    const total=active+closed+rejected;
-    document.getElementById('t_total_leads').textContent=`${L.total_leads} ${total}`;
-    document.getElementById('v_conv').textContent=(total>0?Math.round(closed/total*100):0)+'%';
-    animNum('st_active',active); animNum('st_closed',closed); animNum('st_rejected',rejected);
-    setTimeout(()=>{
-        document.getElementById('bar_active').style.width=(total>0?active/total*100:0)+'%';
-        document.getElementById('bar_closed').style.width=(total>0?closed/total*100:0)+'%';
-        document.getElementById('bar_rejected').style.width=(total>0?rejected/total*100:0)+'%';
-    },80);
-
-        const pendList = document.getElementById('pendingList');
     const walletLeads = getWalletLeads();
+    const attentionCount = walletLeads.filter(lead => getWalletStageMeta(lead).key !== 'closed').length;
+    document.getElementById('v_wallet_total_earned').textContent = `${Math.round(d.total_earned || 0)} ${curr}`;
+    document.getElementById('v_wallet_pending_amount').textContent = `${Math.round(d.pending_payout || 0)} ${curr}`;
+    document.getElementById('v_wallet_attention').textContent = attentionCount;
+
+    const pendList = document.getElementById('pendingList');
     document.getElementById('t_awaiting').textContent = L.wallet_deals_title || L.awaiting;
     if (!walletLeads.length) {
         pendList.innerHTML = leads.length
@@ -2460,22 +2890,11 @@ function renderAll() {
         pendList.innerHTML = walletLeads.map(walletDealCardHtml).join('');
     }
 
-    if (d.chart_data&&d.chart_data.labels&&d.chart_data.labels.length) {
-        document.getElementById('chartCard').style.display='block';
-        document.getElementById('t_chart_title').style.display='flex';
-        if (chartInst) chartInst.destroy();
-        chartInst = new Chart(document.getElementById('nicheChart').getContext('2d'), {
-            type:'doughnut',
-            data:{ labels:d.chart_data.labels, datasets:[{data:d.chart_data.values, backgroundColor:['#56CCF2','#27AE60','#2F80ED','#F2C94C','#9B51E0'], borderWidth:0, hoverOffset:6}] },
-            options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom', labels:{ color:document.body.classList.contains('brand-theme')?'#A0A0B0':'#8A8D9F', font:{family:'Inter',size:12}, padding:14 } } } }
-        });
-    }
-
-    const name = d.user_name||'ג€”';
+    const name = d.user_name||'—';
     document.getElementById('profileName').textContent = name;
-    document.getElementById('profilePhone').textContent = d.phone||'ג€”';
+    document.getElementById('profilePhone').textContent = d.phone||'—';
     document.getElementById('profileAvatar').textContent = (name[0]||'W').toUpperCase();
-    document.getElementById('v_pay_method').textContent = d.payment_method||'ג€”';
+    document.getElementById('v_pay_method').textContent = d.payment_method||'—';
     if (d.business_info) { document.getElementById('bizInfoRow').style.display='flex'; updateBizInfoLink(d.business_info); }
 
     feather.replace();
@@ -2511,10 +2930,10 @@ function showError() {
     document.getElementById('loaderErr').style.display='block';
     const L = i18n[lang] || i18n.ru;
     const isRtl = (lang === 'he' || lang === 'ar');
-    const pointer = isRtl ? 'נ‘ˆ' : 'ג¡ן¸';
+    const pointer = isRtl ? '⬅️' : '➡️';
     const elSub = document.getElementById('t_err_sub');
     if (elSub) elSub.textContent = L.err_expired_sub || i18n.ru.err_expired_sub;
-    const HINTS = { ru:'׀׀°׀¶׀¼׀¸ׁ‚׀µ ׀÷׀½׀¾׀¿׀÷ׁƒ ׀¸ ׀½׀°׀¶׀¼׀¸ׁ‚׀µ ׀ׁ‚׀¿ׁ€׀°׀²׀¸ׁ‚ׁ', he:'׳׳—׳¦׳• ׳¢׳ ׳”׳›׳₪׳×׳•׳¨ ׳•׳׳– ׳©׳׳—', en:'Tap the button then press Send', ar:'״§״¶״÷״· ״§„״²״± ״«… ״£״±״³„' };
+    const HINTS = { ru:'Нажмите кнопку и затем отправьте сообщение', he:'לחצו על הכפתור ואז שלחו', en:'Tap the button and then press Send', ar:'اضغط الزر ثم أرسل الرسالة' };
     const elHint = document.getElementById('t_err_hint');
     if (elHint) elHint.textContent = HINTS[lang] || HINTS.ru;
     const elPtr = document.getElementById('t_err_pointer');
@@ -2523,8 +2942,8 @@ function showError() {
     const msgText = rawPrefill.replace('{pointer}', pointer);
     const elPrefill = document.getElementById('errPrefillText');
     if (elPrefill) elPrefill.innerHTML = msgText.replace(/\n/g, '<br>');
-    const BTN_WA = {ru:'׀׀°׀¿׀¸ׁ׀°ׁ‚ׁ ׀² WhatsApp', he:'׳׳₪׳×׳•׳— WhatsApp', en:'Open WhatsApp', ar:'״×״­ WhatsApp'};
-    const BTN_TG = {ru:'׀׀°׀¿׀¸ׁ׀°ׁ‚ׁ ׀² Telegram', he:'׳׳₪׳×׳•׳— Telegram', en:'Open Telegram', ar:'״×״­ Telegram'};
+    const BTN_WA = {ru:'Открыть WhatsApp', he:'פתחו WhatsApp', en:'Open WhatsApp', ar:'افتح WhatsApp'};
+    const BTN_TG = {ru:'Открыть Telegram', he:'פתחו Telegram', en:'Open Telegram', ar:'افتح Telegram'};
     const elBtnWaLbl = document.getElementById('t_err_btn_wa'); if (elBtnWaLbl) elBtnWaLbl.textContent = BTN_WA[lang] || BTN_WA.ru;
     const elBtnTgLbl = document.getElementById('t_err_btn_tg'); if (elBtnTgLbl) elBtnTgLbl.textContent = BTN_TG[lang] || BTN_TG.ru;
     const msg = encodeURIComponent(msgText);
