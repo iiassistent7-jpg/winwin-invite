@@ -346,6 +346,63 @@
         .pay-btn { background:var(--surface); border:1px solid var(--border); color:var(--text2); padding:10px 8px; border-radius:12px; cursor:pointer; white-space:nowrap; font-weight:600; font-size:.8rem; transition:.2s; flex:1; text-align:center;}
         .pay-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); }
 
+        .biz-reg-layout { display:flex; flex-direction:column; gap:14px; }
+        .biz-reg-section {
+            background:var(--surface2);
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:16px;
+        }
+        .biz-reg-section-title {
+            font-size:.82rem;
+            font-weight:800;
+            letter-spacing:.4px;
+            text-transform:uppercase;
+            color:var(--text2);
+            margin-bottom:12px;
+        }
+        .biz-reg-helper {
+            font-size:.78rem;
+            line-height:1.45;
+            color:var(--text2);
+            margin:-4px 0 12px;
+        }
+        .biz-reg-actions {
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin-bottom:24px;
+        }
+        .biz-reg-success-icon {
+            width:64px;
+            height:64px;
+            border-radius:20px;
+            background:rgba(39,174,96,.14);
+            color:var(--green);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto 16px;
+        }
+        .biz-reg-success-entry {
+            background:var(--surface2);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:14px 16px;
+            font-size:.88rem;
+            font-weight:800;
+            text-align:center;
+            word-break:break-all;
+            margin:10px 0 14px;
+        }
+        .biz-reg-success-hint {
+            font-size:.84rem;
+            color:var(--text2);
+            line-height:1.5;
+            text-align:center;
+            margin-bottom:18px;
+        }
+
         .niche-checkboxes { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
         .niche-checkbox-item { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer; transition:.2s; }
         .niche-checkbox-item.checked { background:rgba(86,204,242,0.1); border-color:var(--accent1); }
@@ -703,50 +760,86 @@
         <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
             <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px;">
                 <div class="rec-title" id="t_biz_reg_title" style="margin-bottom:16px; font-size:1.4rem;">Добавить бизнес</div>
-                
-                <label class="input-label"><span id="t_biz_reg_name">Название бизнеса</span> <span class="req-mark">*</span></label>
-                <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio" oninput="checkBizRegForm()">
-                
-                <label class="input-label"><span id="t_biz_reg_niche">Категория / ниша</span> <span class="req-mark">*</span></label>
-                <select class="custom-input" id="bizRegNiche" onchange="updateBizRegSubcategories(); checkBizRegForm()">
-                    </select>
 
-                <div id="bizRegSubnicheGroup" style="display:none; margin-bottom:16px;">
-                    <label class="input-label"><span id="t_biz_reg_subniche">Подкатегория</span> <span class="req-mark">*</span></label>
-                    <div id="bizRegSubnicheTags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
-                    <div class="niche-checkboxes" id="bizRegSubnicheList"></div>
-                    <button type="button" onclick="confirmBizRegSubcat()" class="btn-primary" style="background:var(--surface2); color:var(--text); border:1px solid var(--border);" id="bizRegSubcatDone">Подтвердить выбор</button>
-                    <button type="button" onclick="editBizRegSubcat()" class="btn-primary btn-outline" style="display:none; margin-top:8px;" id="bizRegSubcatEdit">Изменить выбор</button>
-                </div>
-                
-                <label class="input-label"><span id="t_rew_type">Тип благодарности</span> <span class="req-mark">*</span></label>
-                <div style="display:flex; gap:8px; margin-bottom:16px;">
-                    <button class="pay-btn" id="btnRewPct" onclick="setBizRewardType('pct', this)"><span id="t_rew_pct">Процент (%)</span></button>
-                    <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">Фиксировано (₪)</span></button>
-                    <button class="pay-btn" id="btnRewGift" onclick="setBizRewardType('gift', this)"><span id="t_rew_gift">Подарок</span></button>
-                </div>
-                <input type="hidden" id="bizRegRewardType" onchange="checkBizRegForm()">
+                <div class="biz-reg-layout">
+                    <div class="biz-reg-section">
+                        <div class="biz-reg-section-title" id="t_biz_reg_section_business">О бизнесе</div>
+                        <label class="input-label"><span id="t_biz_reg_name">Название бизнеса</span> <span class="req-mark">*</span></label>
+                        <input class="custom-input" id="bizRegName" type="text" placeholder="Например: iStudio" oninput="checkBizRegForm()">
+                        
+                        <label class="input-label"><span id="t_biz_reg_niche">Категория / ниша</span> <span class="req-mark">*</span></label>
+                        <select class="custom-input" id="bizRegNiche" onchange="updateBizRegSubcategories(); checkBizRegForm()">
+                            </select>
 
-                <label class="input-label"><span id="t_biz_reg_comm_lbl">Сумма / описание</span> <span class="req-mark">*</span></label>
-                <input class="custom-input" id="bizRegComm" type="text" placeholder="..." oninput="checkBizRegForm()">
-                
-                <label class="input-label"><span id="t_biz_reg_pay">Способ выплаты благодарности</span> <span class="req-mark">*</span></label>
-                <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-                    <button class="pay-btn" onclick="setBizRegPay('Bit', this)">Bit</button>
-                    <button class="pay-btn" onclick="setBizRegPay('Paybox', this)">Paybox</button>
-                    <button class="pay-btn" onclick="setBizRegPay('PayPal', this)">PayPal</button>
-                    <button class="pay-btn" onclick="setBizRegPay('Наличные', this)" id="t_pay_cash_reg">Наличные</button>
-                    <button class="pay-btn" onclick="setBizRegPay('Перевод', this)" id="t_pay_bank_reg">Перевод</button>
-                </div>
-                <input type="hidden" id="bizRegPay" onchange="checkBizRegForm()">
+                        <div id="bizRegSubnicheGroup" style="display:none; margin-bottom:0;">
+                            <label class="input-label"><span id="t_biz_reg_subniche">Подкатегория</span> <span class="req-mark">*</span></label>
+                            <div id="bizRegSubnicheTags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+                            <div class="niche-checkboxes" id="bizRegSubnicheList"></div>
+                            <button type="button" onclick="confirmBizRegSubcat()" class="btn-primary" style="background:var(--surface); color:var(--text); border:1px solid var(--border);" id="bizRegSubcatDone">Подтвердить выбор</button>
+                            <button type="button" onclick="editBizRegSubcat()" class="btn-primary btn-outline" style="display:none; margin-top:8px;" id="bizRegSubcatEdit">Изменить выбор</button>
+                        </div>
+                    </div>
 
-                <label class="input-label" id="t_biz_reg_link">Ссылка на вас (сайт / Instagram)</label>
-                <input class="custom-input" id="bizRegLink" type="url" placeholder="https://...">
+                    <div class="biz-reg-section">
+                        <div class="biz-reg-section-title" id="t_biz_reg_section_reward">Условия благодарности</div>
+                        <label class="input-label"><span id="t_rew_type">Тип благодарности</span> <span class="req-mark">*</span></label>
+                        <div style="display:flex; gap:8px; margin-bottom:16px;">
+                            <button class="pay-btn" id="btnRewPct" onclick="setBizRewardType('pct', this)"><span id="t_rew_pct">Процент (%)</span></button>
+                            <button class="pay-btn" id="btnRewFix" onclick="setBizRewardType('fix', this)"><span id="t_rew_fix">Фиксировано (₪)</span></button>
+                            <button class="pay-btn" id="btnRewGift" onclick="setBizRewardType('gift', this)"><span id="t_rew_gift">Подарок</span></button>
+                        </div>
+                        <input type="hidden" id="bizRegRewardType" onchange="checkBizRegForm()">
+
+                        <label class="input-label"><span id="t_biz_reg_comm_lbl">Сумма / описание</span> <span class="req-mark">*</span></label>
+                        <input class="custom-input" id="bizRegComm" type="text" placeholder="..." oninput="checkBizRegForm()">
+                    </div>
+
+                    <div class="biz-reg-section">
+                        <div class="biz-reg-section-title" id="t_biz_reg_section_payment">Как выплачивать благодарность</div>
+                        <label class="input-label"><span id="t_biz_reg_pay">Способ выплаты благодарности</span> <span class="req-mark">*</span></label>
+                        <div class="biz-reg-helper" id="t_biz_reg_pay_note">Выберите любой удобный способ выплаты. PayBox можно указать как предпочтительный вариант, но это не обязательно.</div>
+                        <div style="display:flex; gap:8px; margin-bottom:0; flex-wrap:wrap;">
+                            <button class="pay-btn" onclick="setBizRegPay('Bit', this)">Bit</button>
+                            <button class="pay-btn" onclick="setBizRegPay('Paybox', this)">Paybox</button>
+                            <button class="pay-btn" onclick="setBizRegPay('PayPal', this)">PayPal</button>
+                            <button class="pay-btn" onclick="setBizRegPay('Наличные', this)" id="t_pay_cash_reg">Наличные</button>
+                            <button class="pay-btn" onclick="setBizRegPay('Перевод', this)" id="t_pay_bank_reg">Перевод</button>
+                        </div>
+                        <input type="hidden" id="bizRegPay" onchange="checkBizRegForm()">
+                    </div>
+
+                    <div class="biz-reg-section">
+                        <div class="biz-reg-section-title" id="t_biz_reg_section_link">Ссылка для доверия</div>
+                        <label class="input-label" id="t_biz_reg_link">Ссылка на вас (сайт / Instagram)</label>
+                        <input class="custom-input" id="bizRegLink" type="url" placeholder="https://...">
+                    </div>
+                </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 24px;">
+            <div class="biz-reg-actions">
                 <button class="btn-primary" onclick="submitBizReg()" style="background:var(--green); color:#fff; opacity:0.5; pointer-events:none;" id="btnBizRegSubmit">Отправить</button>
                 <button class="btn-primary btn-accent" onclick="closeBizReg()" id="t_btn_back_biz_bottom">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen" id="bizRegSuccessSheet">
+        <div style="max-width:430px; margin:0 auto; padding-bottom:30px;">
+            <div class="rec-header-card" style="margin-bottom:24px; margin-top:20px; text-align:center;">
+                <div class="biz-reg-success-icon"><i data-feather="check-circle" style="width:28px;height:28px;"></i></div>
+                <div class="rec-title" id="t_biz_reg_success_title" style="margin-bottom:10px; font-size:1.35rem;">Заявка сохранена</div>
+                <div class="rec-desc" id="t_biz_reg_success_sub" style="border:none; padding-top:0; text-align:center;">Чтобы завершить регистрацию, перейдите в WhatsApp и отправьте готовое сообщение.</div>
+                <div class="biz-reg-section-title" id="t_biz_reg_success_entry_label" style="margin-top:14px; margin-bottom:8px;">Текст для WhatsApp</div>
+                <div class="biz-reg-success-entry" id="bizRegSuccessEntry">reg_pending_reg_...</div>
+                <div class="biz-reg-success-hint" id="t_biz_reg_success_hint">Нажмите кнопку ниже, откроется WhatsApp с уже подготовленным текстом.</div>
+            </div>
+
+            <div class="biz-reg-actions">
+                <a href="#" class="btn-primary btn-wa" id="bizRegSuccessWaBtn" style="text-decoration:none; text-align:center;">
+                    <i data-feather="message-circle" style="width:18px;height:18px;"></i>
+                    <span id="t_biz_reg_success_wa">Продолжить в WhatsApp</span>
+                </a>
+                <button class="btn-primary btn-accent" onclick="closeBizRegSuccess()" id="t_biz_reg_success_close">Вернуться в кабинет</button>
             </div>
         </div>
     </div>
@@ -1006,11 +1099,24 @@ const i18n = {
     edit_payment:"Способ оплаты",
     edit_link:"Ссылка (сайт / соцсеть)",
     biz_reg_title:"Добавить бизнес",
+    biz_reg_section_business:"О бизнесе",
+    biz_reg_section_reward:"Условия благодарности",
+    biz_reg_section_payment:"Как выплачивать благодарность",
+    biz_reg_section_link:"Ссылка для доверия",
     biz_reg_submit:"Отправить",
     biz_reg_name:"Название бизнеса",
     biz_reg_niche:"Категория / ниша",
     biz_reg_subniche:"Подкатегория",
+    biz_reg_subcat_done:"Подтвердить выбор",
+    biz_reg_subcat_edit:"Изменить выбор",
     biz_reg_pay:"Способ выплаты благодарности",
+    biz_reg_pay_note:"Выберите любой удобный способ выплаты. PayBox можно указать как предпочтительный вариант, но это не обязательно.",
+    biz_reg_success_title:"Заявка сохранена",
+    biz_reg_success_sub:"Чтобы завершить регистрацию, перейдите в WhatsApp и отправьте готовое сообщение.",
+    biz_reg_success_entry_label:"Текст для WhatsApp",
+    biz_reg_success_hint:"Нажмите кнопку ниже, откроется WhatsApp с уже подготовленным текстом.",
+    biz_reg_success_wa:"Продолжить в WhatsApp",
+    biz_reg_success_close:"Вернуться в кабинет",
     stat_deals:"Закрытые сделки",
     stat_pending:"Ожидают оплаты",
     stat_active:"Сделки в работе",
@@ -1218,11 +1324,24 @@ const CLEAN_I18N = {
     edit_payment:"אופן קבלה",
     edit_link:"קישור",
     biz_reg_title:"הוספת עסק",
+    biz_reg_section_business:"על העסק",
+    biz_reg_section_reward:"תנאי התגמול",
+    biz_reg_section_payment:"איך משלמים את התגמול",
+    biz_reg_section_link:"קישור לאמון",
     biz_reg_submit:"שליחה",
     biz_reg_name:"שם העסק",
     biz_reg_niche:"קטגוריה / נישה",
     biz_reg_subniche:"תת-קטגוריה",
+    biz_reg_subcat_done:"אישור הבחירה",
+    biz_reg_subcat_edit:"שינוי הבחירה",
     biz_reg_pay:"אופן תשלום",
+    biz_reg_pay_note:"בחרו כל דרך נוחה לתשלום. אפשר לציין PayBox כהעדפה, אבל זה לא חובה.",
+    biz_reg_success_title:"הבקשה נשמרה",
+    biz_reg_success_sub:"כדי להשלים את הרישום, עברו ל-WhatsApp ושלחו את ההודעה המוכנה.",
+    biz_reg_success_entry_label:"הטקסט ל-WhatsApp",
+    biz_reg_success_hint:"לחיצה על הכפתור תפתח את WhatsApp עם הטקסט המוכן לשליחה.",
+    biz_reg_success_wa:"המשך ב-WhatsApp",
+    biz_reg_success_close:"חזרה לקבינט",
     stat_deals:"עסקאות סגורות",
     stat_pending:"ממתין לתשלום",
     stat_active:"עסקאות פעילות",
@@ -1354,11 +1473,24 @@ const CLEAN_I18N = {
     edit_payment:"Payout method",
     edit_link:"Link",
     biz_reg_title:"Add business",
+    biz_reg_section_business:"About the business",
+    biz_reg_section_reward:"Reward terms",
+    biz_reg_section_payment:"How the reward will be paid",
+    biz_reg_section_link:"Trust link",
     biz_reg_submit:"Submit",
     biz_reg_name:"Business name",
     biz_reg_niche:"Category / niche",
     biz_reg_subniche:"Subcategory",
+    biz_reg_subcat_done:"Confirm selection",
+    biz_reg_subcat_edit:"Change selection",
     biz_reg_pay:"Payout method",
+    biz_reg_pay_note:"Choose any payout method that works for you. PayBox can be marked as preferred, but it is not required.",
+    biz_reg_success_title:"Request saved",
+    biz_reg_success_sub:"To finish registration, continue to WhatsApp and send the prepared message.",
+    biz_reg_success_entry_label:"WhatsApp text",
+    biz_reg_success_hint:"Tap the button below and WhatsApp will open with the exact text ready to send.",
+    biz_reg_success_wa:"Continue in WhatsApp",
+    biz_reg_success_close:"Back to dashboard",
     stat_deals:"Closed deals",
     stat_pending:"Awaiting payout",
     stat_active:"Deals in work",
@@ -1490,11 +1622,24 @@ const CLEAN_I18N = {
     edit_payment:"طريقة الاستلام",
     edit_link:"الرابط",
     biz_reg_title:"إضافة عمل",
+    biz_reg_section_business:"عن العمل",
+    biz_reg_section_reward:"شروط المكافأة",
+    biz_reg_section_payment:"كيف سيتم دفع المكافأة",
+    biz_reg_section_link:"رابط الثقة",
     biz_reg_submit:"إرسال",
     biz_reg_name:"اسم العمل",
     biz_reg_niche:"الفئة / التخصص",
     biz_reg_subniche:"الفئة الفرعية",
+    biz_reg_subcat_done:"تأكيد الاختيار",
+    biz_reg_subcat_edit:"تغيير الاختيار",
     biz_reg_pay:"طريقة الدفع",
+    biz_reg_pay_note:"اختر أي طريقة دفع مناسبة لك. يمكن اعتبار PayBox خيارًا مفضّلًا فقط، لكنه ليس إلزاميًا.",
+    biz_reg_success_title:"تم حفظ الطلب",
+    biz_reg_success_sub:"لإكمال التسجيل، انتقل إلى WhatsApp وأرسل الرسالة الجاهزة.",
+    biz_reg_success_entry_label:"النص الخاص بـ WhatsApp",
+    biz_reg_success_hint:"اضغط الزر أدناه وسيفتح WhatsApp مع النص الجاهز للإرسال.",
+    biz_reg_success_wa:"المتابعة في WhatsApp",
+    biz_reg_success_close:"العودة إلى اللوحة",
     stat_deals:"الصفقات المغلقة",
     stat_pending:"بانتظار الدفع",
     stat_active:"الصفقات قيد العمل",
@@ -1715,6 +1860,10 @@ function applyLang() {
         't_nav_home':'nav_home_SKIP','t_nav_catalog':'nav_catalog_SKIP','t_nav_history':'nav_history_SKIP','t_nav_wallet':'nav_wallet_SKIP','t_nav_profile':'nav_profile_SKIP',
         't_deal_title':'deal_title','t_edit_profile':'edit_profile','t_edit_name':'edit_name','t_edit_payment':'edit_payment','t_edit_link':'edit_link',
         't_biz_reg_title':'biz_reg_title','t_biz_reg_submit':'biz_reg_submit','t_biz_reg_name':'biz_reg_name','t_biz_reg_niche':'biz_reg_niche','t_biz_reg_subniche':'biz_reg_subniche','t_biz_reg_pay':'biz_reg_pay',
+        't_biz_reg_section_business':'biz_reg_section_business','t_biz_reg_section_reward':'biz_reg_section_reward','t_biz_reg_section_payment':'biz_reg_section_payment','t_biz_reg_section_link':'biz_reg_section_link',
+        't_biz_reg_pay_note':'biz_reg_pay_note','t_biz_reg_success_title':'biz_reg_success_title','t_biz_reg_success_sub':'biz_reg_success_sub',
+        't_biz_reg_success_entry_label':'biz_reg_success_entry_label','t_biz_reg_success_hint':'biz_reg_success_hint',
+        't_biz_reg_success_wa':'biz_reg_success_wa','t_biz_reg_success_close':'biz_reg_success_close',
         't_pay_cash':'pay_cash','t_pay_bank':'pay_bank','t_pay_cash_reg':'pay_cash','t_pay_bank_reg':'pay_bank','t_lb_title':'lb_title','t_lb_widget_title':'lb_widget_title',
         't_lb_widget_sub':'lb_widget_sub','t_btn_lb_profile_1':'lb_profile_btn','t_btn_lb_profile_2':'lb_profile_btn',
         't_invite_btn_1':'invite_btn_1','t_invite_btn_2':'invite_btn_2','t_invite_btn_3':'invite_btn_3',
@@ -1739,6 +1888,8 @@ function applyLang() {
     const copyBtn = document.getElementById('copyBtn'); if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
     const inviteCopyBtn = document.getElementById('inviteCopyBtn'); if (inviteCopyBtn && !inviteCopyBtn.classList.contains('copied')) inviteCopyBtn.textContent = L.copy_btn || 'Copy';
     const saveProfileBtn = document.getElementById('saveProfileBtn'); if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
+    const bizRegSubcatDone = document.getElementById('bizRegSubcatDone'); if (bizRegSubcatDone) bizRegSubcatDone.textContent = L.biz_reg_subcat_done || 'Подтвердить выбор';
+    const bizRegSubcatEdit = document.getElementById('bizRegSubcatEdit'); if (bizRegSubcatEdit) bizRegSubcatEdit.textContent = L.biz_reg_subcat_edit || 'Изменить выбор';
     
     const btnBackMid = document.getElementById('t_btn_back_rec_mid'); if (btnBackMid) btnBackMid.textContent = L.btn_back_catalog;
     const btnBackDeal = document.getElementById('t_btn_back_deal_bottom'); if (btnBackDeal) btnBackDeal.textContent = L.btn_back;
@@ -2234,6 +2385,39 @@ function closeProfileEdit()   { closeFullscreen('profileSheet'); }
 function closeRecommend()     { closeFullscreen('recommendScreen'); }
 function closeInviteScreen()  { closeFullscreen('inviteScreen'); }
 function closeBizReg()        { closeFullscreen('bizRegSheet'); }
+function closeBizRegSuccess() { closeFullscreen('bizRegSuccessSheet'); }
+
+function getBizRegWhatsAppEntry(respData) {
+    if (!respData || typeof respData !== 'object') return '';
+    if (typeof respData.whatsapp_text === 'string' && respData.whatsapp_text.trim()) return respData.whatsapp_text.trim();
+    if (typeof respData.entry_text === 'string' && respData.entry_text.trim()) return respData.entry_text.trim();
+    const tempKey = [respData.temp_key, respData.pending_reg_key, respData.pending_key, respData.key]
+        .map(v => typeof v === 'string' ? v.trim() : '')
+        .find(Boolean);
+    return tempKey ? `reg_${tempKey}` : '';
+}
+
+function openBizRegSuccess(entryText) {
+    const L = i18n[lang] || i18n.ru;
+    const cleanEntry = String(entryText || '').trim();
+    const waHref = `https://wa.me/${catalogBotPhone || '972534218573'}?text=${encodeURIComponent(cleanEntry)}`;
+    const entryEl = document.getElementById('bizRegSuccessEntry');
+    const waBtn = document.getElementById('bizRegSuccessWaBtn');
+    if (entryEl) entryEl.textContent = cleanEntry;
+    if (waBtn) {
+        waBtn.href = waHref;
+        waBtn.setAttribute('target', '_blank');
+        waBtn.setAttribute('rel', 'noopener noreferrer');
+        waBtn.setAttribute('aria-label', L.biz_reg_success_wa || 'Продолжить в WhatsApp');
+    }
+    const sheet = document.getElementById('bizRegSuccessSheet');
+    if (sheet) {
+        sheet.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0,0);
+    }
+    feather.replace();
+}
 
 function showReminderToast(message) {
     const toast = document.getElementById('reminderToast');
@@ -2679,7 +2863,14 @@ async function submitBizReg() {
             method:'POST', headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ role:'business', name, category: cat, niche: selectedSubs, commission: commissionStr, pay_pref: pay, lang, sender: catalogAgentId, rewardType, rewardValue: commVal, business_info: link })
         });
-        if (res.ok) { closeBizReg(); alert((i18n[lang]||i18n.ru).biz_reg_success); }
+        let respData = {};
+        try { respData = await res.clone().json(); } catch(e) {}
+        if (res.ok) {
+            const pendingEntry = getBizRegWhatsAppEntry(respData);
+            if (!pendingEntry) throw new Error('missing_pending_entry');
+            closeBizReg();
+            setTimeout(() => openBizRegSuccess(pendingEntry), 320);
+        }
         else { alert((i18n[lang]||i18n.ru).biz_reg_error || 'Не удалось отправить заявку.'); }
     } catch(e) { alert((i18n[lang]||i18n.ru).biz_reg_error || 'Не удалось отправить заявку.'); }
     btn.textContent = (i18n[lang]||i18n.ru).biz_reg_submit; btn.disabled = false;
