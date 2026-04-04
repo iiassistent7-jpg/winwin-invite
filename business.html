@@ -659,7 +659,7 @@ const i18n = {
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
-    debt_label:"🔴 Долг агентам:", debt_open:"Открыть список", debt_sheet_title:"Долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Выплата агенту", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
+    debt_label:"Нужно закрыть долг агенту", debt_open:"Открыть список", debt_sheet_title:"Нужно закрыть долг агенту", debt_sheet_sub:"Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Выплата агенту", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
@@ -673,7 +673,7 @@ const i18n = {
     pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_link:"Instagram / сайт", pr_phone:"Телефон",
     btn_edit:"Изменить данные", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:",
-    m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_cancel:"Назад",
+    m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_mark_paid:"Оплату произвёл", m_cancel:"Назад",
     m_lbl_amount:"Сумма сделки (только цифры)", m_confirm_close:"Подтвердить закрытие",
     m_reject_sure:"Уверены, что хотите отклонить?", m_confirm_reject:"Да, отклонить",
     edit_title:"Редактирование", f_name:"Название бизнеса", f_niche:"Категория бизнеса",
@@ -709,7 +709,7 @@ const i18n = {
     pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_link:"אינסטגרם / אתר", pr_phone:"טלפון",
     btn_edit:"עריכת נתונים", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:",
-    m_close:"סגור עסקה", m_reject:"דחה עסקה", m_cancel:"חזור",
+    m_close:"סגור עסקה", m_reject:"דחה עסקה", m_mark_paid:"סימנתי ששילמתי", m_cancel:"חזור",
     m_lbl_amount:"סכום העסקה", m_confirm_close:"אשר סגירה",
     m_reject_sure:"האם אתה בטוח?", m_confirm_reject:"כן, לדחות",
     edit_title:"עריכה", f_name:"שם העסק", f_niche:"תחום",
@@ -731,7 +731,7 @@ const i18n = {
 
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
-    debt_label:"🔴 Agent debt:", debt_open:"Open list", debt_sheet_title:"Agent debt", debt_sheet_sub:"Only active deals where the agent payout is still owed are shown here.", debt_sheet_empty:"There are no active deals with unpaid agent payout right now.", debt_client:"Client", debt_agent:"Agent", debt_reward:"Agent payout", debt_status:"Status", filt_active:"Active", filt_history:"History",
+    debt_label:"Agent payout still needs to be closed", debt_open:"Open list", debt_sheet_title:"Agent payout still needs to be closed", debt_sheet_sub:"Only active deals where the agent payout is still owed are shown here.", debt_sheet_empty:"There are no active deals with unpaid agent payout right now.", debt_client:"Client", debt_agent:"Agent", debt_reward:"Agent payout", debt_status:"Status", filt_active:"Active", filt_history:"History",
     st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
     pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
     st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
@@ -745,7 +745,7 @@ const i18n = {
     pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_link:"Instagram / website", pr_phone:"Phone",
     btn_edit:"Edit Data", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:",
-    m_close:"Close Deal", m_reject:"Reject Deal", m_cancel:"Back",
+    m_close:"Close Deal", m_reject:"Reject Deal", m_mark_paid:"Payment sent", m_cancel:"Back",
     m_lbl_amount:"Deal amount (digits only)", m_confirm_close:"Confirm closure",
     m_reject_sure:"Are you sure you want to reject?", m_confirm_reject:"Yes, reject",
     edit_title:"Edit Profile", f_name:"Business Name", f_niche:"Category",
@@ -767,7 +767,7 @@ const i18n = {
 
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
-    debt_label:"🔴 دين للوكلاء:", debt_open:"فتح القائمة", debt_sheet_title:"دين للوكلاء", debt_sheet_sub:"يظهر هنا فقط الصفقات النشطة التي ما زالت تتطلب دفع مكافأة الوكيل.", debt_sheet_empty:"لا توجد الآن صفقات نشطة عليها دين للوكيل.", debt_client:"العميل", debt_agent:"الوكيل", debt_reward:"دفعة الوكيل", debt_status:"الحالة", filt_active:"نشط", filt_history:"السجل",
+    debt_label:"لا يزال يجب إغلاق دين الوكيل", debt_open:"فتح القائمة", debt_sheet_title:"لا يزال يجب إغلاق دين الوكيل", debt_sheet_sub:"يظهر هنا فقط الصفقات النشطة التي ما زالت تتطلب دفع مكافأة الوكيل.", debt_sheet_empty:"لا توجد الآن صفقات نشطة عليها دين للوكيل.", debt_client:"العميل", debt_agent:"الوكيل", debt_reward:"دفعة الوكيل", debt_status:"الحالة", filt_active:"نشط", filt_history:"السجل",
     st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
     pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
     st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
@@ -781,7 +781,7 @@ const i18n = {
     pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_link:"إنستغرام / موقع", pr_phone:"الهاتف",
     btn_edit:"تعديل البيانات", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:",
-    m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_cancel:"رجوع",
+    m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_mark_paid:"تم الدفع", m_cancel:"رجوع",
     m_lbl_amount:"مبلغ الصفقة (أرقام فقط)", m_confirm_close:"تأكيد الإغلاق",
     m_reject_sure:"هل أنت متأكد من الرفض?", m_confirm_reject:"نعم، أرفض",
     edit_title:"تعديل", f_name:"اسم العمل", f_niche:"الفئة",
@@ -1219,6 +1219,35 @@ function getDealStatusCodes(deal) {
   ].map(v => String(v || '').trim().toLowerCase()).filter(Boolean);
 }
 
+function getActiveDealsPromoHtml() {
+  const promoTitle = {
+    ru:'Тёплые клиенты начинаются с доверия',
+    he:'לקוחות חמים מתחילים באמון',
+    en:'Warm clients start with trust',
+    ar:'العملاء الدافئون يبدأون بالثقة'
+  };
+  const promoText = {
+    ru:'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.',
+    he:'הפעילו המלצות וחברו ממליצים חזקים בנישה שלכם כדי להביא לקוחות חמים בלי תנועה קרה.',
+    en:'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.',
+    ar:'ابدأ التوصيات واربط موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.'
+  };
+  const promoBtn = {
+    ru:'Порекомендовать бизнес',
+    he:'להמליץ על עסק',
+    en:'Recommend a business',
+    ar:'التوصية بعمل'
+  };
+  return `
+    <div class="page-hero deals-empty-hero" style="margin-bottom:16px;">
+      <h3>${promoTitle[lang] || promoTitle.ru}</h3>
+      <div class="empty-copy open" style="display:block;max-height:none;opacity:1;margin-top:10px;">${promoText[lang] || promoText.ru}</div>
+      <div class="deals-empty-actions" style="margin-top:16px;">
+        <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${promoBtn[lang] || promoBtn.ru}</button>
+      </div>
+    </div>`;
+}
+
 function getPrimaryDealStatus(deal) {
   return getDealStatusCodes(deal)[0] || 'in_progress';
 }
@@ -1313,7 +1342,7 @@ function isDebtRelevantActiveDeal(deal) {
     if (truth.historyReady === true) return false;
     if (truth.hasOpenAgentPayout === true) return true;
     if (truth.debtAmount > 0) return true;
-    if (truth.hasOpenSettlement === true) return truth.historyReady !== true;
+    return false;
   }
   const statuses = getDealStatusCodes(deal);
   const decision = String(deal.agent_decision || deal.decision || '').trim().toLowerCase();
@@ -1365,6 +1394,15 @@ function isBusinessHistoryDeal(deal) {
 
 function getDebtVisibleDeals() {
   return (bizData.deals || []).filter(isDebtRelevantActiveDeal);
+}
+
+function isPayoutPendingBusinessDeal(deal) {
+  const truth = getDealTruth(deal);
+  if (truth.explicit) {
+    return truth.hasOpenAgentPayout === true;
+  }
+  const statusCode = getDisplayDealStatus(deal);
+  return ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode);
 }
 
 
@@ -1579,7 +1617,7 @@ function renderDeals() {
     return;
   }
 
-  container.innerHTML = filtered.map(d => {
+  const dealsHtml = filtered.map(d => {
     const statusCode = getDisplayDealStatus(d);
     const st        = getStatusData(statusCode);
     const isPending = d.status === 'pending_confirmation';
@@ -1633,6 +1671,10 @@ function renderDeals() {
         </div>
       </div>`;
   }).join('');
+
+  container.innerHTML = dealFilter === 'active'
+    ? `${getActiveDealsPromoHtml()}${dealsHtml}`
+    : dealsHtml;
 
   feather.replace();
 }
@@ -2117,15 +2159,25 @@ function openManageDeal(id) {
   document.getElementById('m_val_client').textContent = `${deal.client_name} (${deal.client_phone})`;
   document.getElementById('m_val_agent').textContent  = deal.agent_name || '—';
   document.getElementById('m_val_date').textContent   = deal.date;
-  document.getElementById('m_amount').value = '';
+  document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
+  const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
+  const isPayoutPending = isPayoutPendingBusinessDeal(deal);
+  closeBtn.onclick = isPayoutPending ? () => submitDealAction('close') : () => setStep('close');
+  document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
   if (deal.status === 'new') {
     acceptBtn.style.display = 'flex';
     closeBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'flex';
+  } else if (isPayoutPending) {
+    acceptBtn.style.display = 'none';
+    closeBtn.style.display = 'flex';
+    if (rejectBtn) rejectBtn.style.display = 'none';
   } else {
     acceptBtn.style.display = 'none';
     closeBtn.style.display = 'flex';
+    if (rejectBtn) rejectBtn.style.display = 'flex';
   }
   setStep('main');
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
@@ -2145,14 +2197,19 @@ function setStep(step) {
 
 async function submitDealAction(actionType) {
   const L = i18n[lang] || i18n.ru;
-  if (actionType === 'close' && !document.getElementById('m_amount').value) return;
+  const activeDeal = (bizData.deals || []).find(d => d.id === activeDealId);
+  const isPayoutPending = activeDeal ? isPayoutPendingBusinessDeal(activeDeal) : false;
+  if (actionType === 'close' && !isPayoutPending && !document.getElementById('m_amount').value) return;
   setStep('result');
   document.getElementById('m_spinner').style.display = 'block';
   document.getElementById('m_result_msg').textContent  = L.action_processing;
   document.getElementById('m_result_msg').style.color  = 'var(--text)';
 
   const payload = { token, deal_id: activeDealId, action: actionType };
-  if (actionType === 'close') payload.amount = document.getElementById('m_amount').value;
+  if (actionType === 'close') {
+    const closeAmount = document.getElementById('m_amount').value || (activeDeal && (activeDeal.amount || activeDeal.deal_amount)) || '';
+    if (closeAmount) payload.amount = closeAmount;
+  }
 
   try {
     const res = await fetch(`${API_URL}/api/deals/action`, {
@@ -2179,7 +2236,14 @@ async function submitDealAction(actionType) {
       document.getElementById('m_result_msg').textContent = msgs[lang] || msgs.ru;
       document.getElementById('m_result_msg').style.color = 'var(--purple)';
       const deal = (bizData.deals || []).find(d => d.id === activeDealId);
-      if (deal) deal.status = 'pending_confirmation';
+      if (deal) {
+        deal.status = 'pending_confirmation';
+        if (hasOwn(deal, 'has_open_agent_payout')) deal.has_open_agent_payout = false;
+        if (hasOwn(deal, 'has_open_settlement')) deal.has_open_settlement = true;
+        if (hasOwn(deal, 'history_ready')) deal.history_ready = false;
+        if (hasOwn(deal, 'settlement_status')) deal.settlement_status = 'pending_agent_confirmation';
+        if (hasOwn(deal, 'debt_amount')) deal.debt_amount = 0;
+      }
     } else {
       document.getElementById('m_result_msg').textContent = L.action_success;
       document.getElementById('m_result_msg').style.color = 'var(--green)';
