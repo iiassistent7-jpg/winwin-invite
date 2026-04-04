@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Win-Win ֲ· ׀׀°׀±׀¸׀½׀µׁ‚</title>
+    <title>Win-Win · Кабинет</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -349,7 +349,7 @@
   
   <div class="loader" id="globalLoader">
     <div class="loader-brand">Win-Win</div>
-    <div class="loader-sub" id="loaderText">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀° ׀´׀°׀½׀½ׁ‹ׁ…...</div>
+    <div class="loader-sub" id="loaderText">Загрузка данных...</div>
     <div class="spinner" id="loaderSpinner"></div>
 
     <div class="loader-err" id="loaderErr">
@@ -392,14 +392,14 @@
         <div id="view-home" class="view active">
             <div class="card balance-card">
                 <div class="balance-label" id="t_balance_label">׀¡׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀»</div>
-                <div class="balance-amount"><span id="v_earned">0</span> ג‚×</div>
+                <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
                 <div class="balance-stats">
                     <div class="balance-stat" onclick="openStatDetail('deals')">
                         <div class="balance-stat-val" id="v_deals">0</div>
                         <div class="balance-stat-lbl" id="t_deals_lbl">׀¡׀´׀µ׀»׀¾׀÷</div>
                     </div>
                     <div class="balance-stat" onclick="openStatDetail('pending')">
-                        <div class="balance-stat-val" id="v_pending">0 ג‚×</div>
+                        <div class="balance-stat-val" id="v_pending">0 ₪</div>
                         <div class="balance-stat-lbl" id="t_pending_lbl">׀׀¶׀¸׀´׀°׀µׁ‚</div>
                     </div>
                     <div class="balance-stat" onclick="openStatDetail('active')">
@@ -435,7 +435,7 @@
             
             <div class="cat-search">
                 <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
-                <input type="text" id="catSearch" placeholder="׀׀¾׀¸ׁ׀÷ ׀±׀¸׀·׀½׀µׁ׀° ׀¸׀»׀¸ ׁƒׁ׀»ׁƒ׀³׀¸..." oninput="renderCatalog()">
+                <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
             </div>
             
             <div style="margin-bottom: 20px;">
@@ -452,7 +452,7 @@
                 </div>
 
             <div class="cat-grid" id="catGrid">
-                <div class="card" style="text-align:center;color:var(--text2);padding:32px;">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀° ׀÷׀°ׁ‚׀°׀»׀¾׀³׀°...</div>
+                <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
             </div>
         </div>
 
@@ -907,25 +907,134 @@ function populateCategories() {
 // ג”€ג”€ i18n ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 const i18n = {
   ru: {
-    greeting:"׀¡ ׀²׀¾׀·׀²ׁ€׀°ׁ‰׀µ׀½׀¸׀µ׀¼,", balance_label:"׀¡׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀»", deals_lbl:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ‹ׁ…", pending_lbl:"׀׀¶׀¸׀´׀°׀µׁ‚", active_lbl:"׀’ ׁ€׀°׀±׀¾ׁ‚׀µ", action_title:"׀׀¾׀¼׀¾׀³׀¸ׁ‚׀µ ׀»ׁ׀±׀¸׀¼׀¾׀¼ׁƒ ׀±׀¸׀·׀½׀µׁׁƒ", action_sub:"׀ׁ‚׀÷ׁ€׀¾׀¹ׁ‚׀µ ׀÷׀°ׁ‚׀°׀»׀¾׀³ ׀¸ ׁ׀´׀µ׀»׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ", events:"׀׀¾ׁ׀»׀µ׀´׀½׀¸׀µ ׁ׀¾׀±ׁ‹ׁ‚׀¸ׁ", catalog_title:"׀׀°ׁ‚׀°׀»׀¾׀³ ׀±׀¸׀·׀½׀µׁ׀°", history_title:"׀׀¾׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸", active_sec:"נ•’ ׀’ ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ", debt_sec:"נ’° ׀׀¶׀¸׀´׀°ׁׁ‚ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹", done_sec:"ג… ׀˜ׁׁ‚׀¾ׁ€׀¸ׁ",
-    wallet_title:"׀₪׀¸׀½׀°׀½ׁׁ‹", avg_lbl:"׀¡ׁ€׀µ׀´׀½׀¸׀¹ ׀·׀°ׁ€׀°׀±׀¾ׁ‚׀¾׀÷ ׀½׀° ׁ׀´׀µ׀»׀÷ׁƒ ג‚×", eff_sub:"% ׀·׀°׀÷ׁ€ׁ‹ׁ‚ׁ‹ׁ… ׁ׀´׀µ׀»׀¾׀÷", eff_accum:"׀׀°׀÷׀°׀¿׀»׀¸׀²׀°׀µׁ‚ׁׁ", eff_above:"׀’ׁ‹ׁˆ׀µ ׁׁ€׀µ׀´׀½׀µ׀³׀¾", eff_below:"׀׀¸׀¶׀µ ׁׁ€׀µ׀´׀½׀µ׀³׀¾", eff_avg:"׀¡ׁ€׀µ׀´׀½׀µ׀µ:",
-    funnel:"׀’׀¾ׁ€׀¾׀½׀÷׀°", f_active:"׀’ ׁ€׀°׀±׀¾ׁ‚׀µ", f_closed:"׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾", f_rejected:"׀ׁ‚׀÷׀»׀¾׀½׀µ׀½׀¾", total_leads:"׀’ׁ׀µ׀³׀¾:", awaiting:"׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ ׀¾ׁ‚:", all_paid:"ג… ׀’ׁ׀µ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½ׁ‹", chart_title:"׀׀¾ ׀½׀¸ׁˆ׀°׀¼",
-    profile_title:"׀ׁ€׀¾ׁ„׀¸׀»ׁ", settings:"׀׀°ׁׁ‚ׁ€׀¾׀¹׀÷׀¸", pay_method:"׀ ׀µ׀÷׀²׀¸׀·׀¸ׁ‚ׁ‹", biz_info:"׀¡ׁׁ‹׀»׀÷׀°", biz_cta:"׀£ ׀²׀°ׁ ׀µׁׁ‚ׁ ׁ׀²׀¾׀¹ ׀±׀¸׀·׀½׀µׁ?", biz_cta_sub:"׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€ׁƒ׀¹ׁ‚׀µׁׁ ׀÷׀°׀÷ ׀±׀¸׀·׀½׀µׁ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³׀µ Win-Win", pro_locked:"׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾", pro_desc:"׀”׀¾ׁׁ‚׀¸׀³׀½׀¸ׁ‚׀µ 50 ׁƒׁ׀¿׀µׁˆ׀½ׁ‹ׁ… ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׁׁ‚׀°ׁ‚ׁƒׁ ׀˜׀½ׁ„׀»ׁ׀µ׀½ׁ׀µׁ€׀°.", pro_progress_lbl:"׀’׀°ׁˆ ׀¿ׁ€׀¾׀³ׁ€׀µׁׁ", pro_influencer:"׀˜׀½ׁ„׀»ׁ׀µ׀½ׁ׀µׁ€", pro_unlocked_desc:"׀’ׁ‹ ׁƒׁׁ‚׀°׀½׀°׀²׀»׀¸׀²׀°׀µׁ‚׀µ ׁ׀²׀¾׀¸ ׀¿ׁ€׀°׀²׀¸׀»׀° ׀¸׀³ׁ€ׁ‹.",
-    base_rate:"׀‘׀°׀·׀¾׀²׀°ׁ ׁׁ‚׀°׀²׀÷׀° (׀´׀»ׁ ׀²ׁ׀µׁ…)", add_niche:"׀”׀¾׀±׀°׀²׀¸ׁ‚ׁ ׀½׀¸ׁˆׁƒ", sheet_title:"׀”׀¾׀±׀°׀²׀¸ׁ‚ׁ ׁ׀¿׀µׁ†-ׁƒׁ׀»׀¾׀²׀¸׀µ", sheet_cat:"׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ ׀±׀¸׀·׀½׀µׁ׀°", sheet_rate:"׀’׀°ׁˆ׀° ׁׁ‚׀°׀²׀÷׀° (%)", sheet_save:"׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ ׁƒׁ׀»׀¾׀²׀¸׀µ",
-    nav_home:"׀“׀»׀°׀²׀½׀°ׁ", nav_catalog:"׀׀°ׁ‚׀°׀»׀¾׀³", nav_history:"׀˜ׁׁ‚׀¾ׁ€׀¸ׁ", nav_wallet:"׀׀¾ׁˆ׀µ׀»ׁ‘׀÷", nav_profile:"׀ׁ€׀¾ׁ„׀¸׀»ׁ", status_new:"׀׀¾׀²ׁ‹׀¹", status_in_progress:"׀’ ׁ€׀°׀±׀¾ׁ‚׀µ", status_closed:"׀”׀¾׀»׀¶׀½ׁ‹", status_confirmed:"׀“׀¾ׁ‚׀¾׀²׀¾", status_rejected:"׀ׁ‚׀÷׀»׀¾׀½ׁ‘׀½", no_deals:"׀׀¾׀÷׀° ׀¿ׁƒׁׁ‚׀¾", no_deals_sub:"׀׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒ׀¹ׁ‚׀µ ׀¿ׁ€׀¾׀²׀µׁ€׀µ׀½׀½ׁ‹׀¹ ׀±׀¸׀·׀½׀µׁ ׀´ׁ€ׁƒ׀³ׁƒ ג€” ׁ׀¾׀·׀´׀°׀¹ׁ‚׀µ ׀¿׀µׁ€׀²ׁƒׁ ׁ׀´׀µ׀»׀÷ׁƒ.", wa_btn:"WhatsApp", btn_tg:"Telegram",
-    deal_title:"׀”׀µׁ‚׀°׀»׀¸ ׁ׀´׀µ׀»׀÷׀¸", edit_profile:"׀ ׀µ׀´׀°׀÷ׁ‚׀¸ׁ€׀¾׀²׀°ׁ‚ׁ ׀¿ׁ€׀¾ׁ„׀¸׀»ׁ", edit_name:"׀˜׀¼ׁ", edit_payment:"׀¡׀¿׀¾ׁ׀¾׀± ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸ׁ", edit_link:"׀¡ׁׁ‹׀»׀÷׀° (ׁ׀¾ׁ†ׁ׀µׁ‚ׁ / ׁ׀°׀¹ׁ‚)",
-    biz_reg_title:"׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€׀¾׀²׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ", biz_reg_submit:"׀—׀°ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀¸ׁ€׀¾׀²׀°ׁ‚ׁ", biz_reg_name:"׀׀°׀·׀²׀°׀½׀¸׀µ ׀±׀¸׀·׀½׀µׁ׀°", biz_reg_niche:"׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ / ׀½׀¸ׁˆ׀°", biz_reg_subniche: "׀¡׀¿׀µׁ†׀¸׀°׀»׀¸׀·׀°ׁ†׀¸ׁ", biz_reg_pay:"׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹ ׀°׀³׀µ׀½ׁ‚׀°׀¼",
-    stat_deals:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸", stat_pending:"׀׀¶׀¸׀´׀°ׁׁ‚ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹", stat_active:"׀¡׀´׀µ׀»׀÷׀¸ ׀² ׁ€׀°׀±׀¾ׁ‚׀µ",
-    btn_back:"׀׀°׀·׀°׀´", btn_back_catalog:"׀’׀µׁ€׀½ׁƒׁ‚ׁׁׁ ׀÷ ׀÷׀°ׁ‚׀°׀»׀¾׀³ׁƒ", copy_link:"׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ ׁ‚׀¾׀¼ׁƒ, ׀÷׀¾׀¼ׁƒ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ", copy_btn:"׀׀¾׀¿׀¸ׁ€׀¾׀²׀°ׁ‚ׁ", copied:"׀¡׀÷׀¾׀¿׀¸ׁ€׀¾׀²׀°׀½׀¾ ג…", scan_qr:"נ“± ׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:", wa_return:"׀’׀µׁ€׀½ׁƒׁ‚ׁׁׁ ׀² WhatsApp",
-    cat_search:"׀׀¾׀¸ׁ׀÷ ׀±׀¸׀·׀½׀µׁ׀° ׀¸׀»׀¸ ׁƒׁ׀»ׁƒ׀³׀¸...", cat_loading:"׀—׀°׀³ׁ€ׁƒ׀·׀÷׀°...", cat_empty:"׀׀¸ׁ‡׀µ׀³׀¾ ׀½׀µ ׀½׀°׀¹׀´׀µ׀½׀¾", bonus:"נ ׀‘׀¾׀½ׁƒׁ:", filter_all:"׀’ׁ׀µ ׀÷׀°ׁ‚׀µ׀³׀¾ׁ€׀¸׀¸", save:"׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ",
-    remind_debt: "׀׀°׀¿׀¾׀¼׀½׀¸ׁ‚ׁ ׀¾ ׀´׀¾׀»׀³׀µ", remind_already_sent: "׀ׁ‹ ׁƒ׀¶׀µ ׀½׀°׀¿׀¾׀¼׀¸׀½׀°׀»׀¸ ׁ׀µ׀³׀¾׀´׀½ׁ ׀±׀¸׀·׀½׀µׁׁƒ {biz}.", remind_success: "׀׀°׀¿׀¾׀¼׀¸׀½׀°׀½׀¸׀µ ׁƒׁ׀¿׀µׁˆ׀½׀¾ ׀¾ׁ‚׀¿ׁ€׀°׀²׀»׀µ׀½׀¾!", remind_error: "׀ׁˆ׀¸׀±׀÷׀° ׀¾ׁ‚׀¿ׁ€׀°׀²׀÷׀¸. ׀‘ׁ׀÷׀µ׀½׀´ ׀´׀¾׀»׀¶׀µ׀½ ׀¾׀±ׁ€׀°׀±׀¾ׁ‚׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀·׀°׀¿ׁ€׀¾ׁ.", remind_result_sent_now: "Напоминание отправлено.", remind_result_scheduled_0900: "Мы уважаем личное пространство людей и не отправляем напоминания ночью.\nНапоминание поставлено в очередь и будет отправлено в 09:00.", remind_result_blocked_24h: "Напоминание через систему уже отправлялось в течение последних 24 часов.\nЧтобы не перегружать людей сообщениями, следующее напоминание будет доступно позже.", confirm_receipt: "׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸׀µ", confirm_receipt_success: "׀׀¾׀»ׁƒׁ‡׀µ׀½׀¸׀µ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¾.", confirm_receipt_error: "׀׀µ ׁƒ׀´׀°׀»׀¾ׁׁ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸׀µ.", wallet_deals_title: "׀¡׀´׀µ׀»׀÷׀¸ ׀¸ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹",
-    pay_cash: "׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ", pay_bank: "׀׀µׁ€׀µ׀²׀¾׀´", lb_title: "׀—׀°׀» ׀¡׀»׀°׀²ׁ‹", lb_widget_title: "׀—׀°׀» ׀¡׀»׀°׀²ׁ‹", lb_widget_sub: "׀¢׀¾׀¿ ׀°׀³׀µ׀½ׁ‚׀¾׀²", lb_profile_btn: "׀׀¾ׁ׀¼׀¾ׁ‚ׁ€׀µׁ‚ׁ ׀—׀°׀» ׀¡׀»׀°׀²ׁ‹",
-    lb_your_pos: "׀’׀°ׁˆ׀° ׀¿׀¾׀·׀¸ׁ†׀¸ׁ", lb_top: "׀¢׀¾׀¿ ׀°׀³׀µ׀½ׁ‚׀¾׀²", lb_deals: "׀¡׀´׀µ׀»׀¾׀÷:", lb_earned: "׀—׀°ׁ€׀°׀±׀¾ׁ‚׀°׀½׀¾", lb_blur_alert: "׀׀»ׁƒ׀± ׀§׀µ׀¼׀¿׀¸׀¾׀½׀¾׀² ׀µׁ‰׀µ ׀²׀¿׀µׁ€׀µ׀´׀¸! נ ׀­ׁ‚׀¾ ׀¼׀µׁׁ‚׀¾ ׀´׀»ׁ ׁ‚׀µׁ…, ׀÷ׁ‚׀¾ ׀´׀µ׀¹ׁׁ‚׀²׀¸ׁ‚׀µ׀»ׁ׀½׀¾ ׁׁ‚׀°ׁ€׀°׀µׁ‚ׁׁ ׀¿׀¾׀¼׀¾ׁ‡ׁ ׀´ׁ€ׁƒ׀·ׁׁ׀¼ ׀¸ ׀±׀¸׀·׀½׀µׁׁƒ. ׀—׀°׀÷ׁ€׀¾׀¹ׁ‚׀µ 50 ׁ׀´׀µ׀»׀¾׀÷, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׀¸׀¼׀µ׀½׀°.",
-    invite_btn_1: "׀•ׁ׀»׀¸ ׀·׀´׀µׁׁ ׀½׀µׁ‚ ׀±׀¸׀·׀½׀µׁ׀°,", invite_btn_2: "׀÷׀¾ׁ‚׀¾ׁ€׀¾׀³׀¾ ׀²ׁ‹ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ", invite_btn_3: "׀ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀µ׀³׀¾ ׀² Win-Win",
-    invite_title: "׀ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀¸ׁ… ׀² Win-Win!", invite_desc: "׀׀¾׀´׀µ׀»׀¸ׁ‚׀µׁׁ ׁׁ‚׀¾׀¹ ׁׁׁ‹׀»׀÷׀¾׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¿ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ ׀¸׀»׀¸ ׀°׀³׀µ׀½ׁ‚׀° ׀½׀° ׀¿׀»׀°ׁ‚ׁ„׀¾ׁ€׀¼ׁƒ. ׀’ׁ‹ ׁׁ‚׀°׀½׀µׁ‚׀µ ׀¸ׁ… ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀µ׀¼!", btn_back_invite: "׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³",
-    rew_type: "׀’׀¸׀´ ׀±׀»׀°׀³׀¾׀´׀°ׁ€׀½׀¾ׁׁ‚׀¸", rew_pct: "׀ׁ€׀¾ׁ†׀µ׀½ׁ‚ (%)", rew_fix: "׀₪׀¸׀÷ׁ (ג‚×)", rew_gift: "׀׀¾׀´׀°ׁ€׀¾׀÷ (נ)", rew_pct_ph: "׀׀°׀¿ׁ€׀¸׀¼׀µׁ€: 10", rew_fix_ph: "׀׀°׀¿ׁ€׀¸׀¼׀µׁ€: 100", rew_gift_ph: "׀׀°׀¿ׁ€׀¸׀¼׀µׁ€: ׀‘׀µׁ׀¿׀»׀°ׁ‚׀½ׁ‹׀¹ ׀¼׀°ׁׁ׀°׀¶",
-    biz_reg_comm_lbl: "׀ ׀°׀·׀¼׀µׁ€ / ׀׀¿׀¸ׁ׀°׀½׀¸׀µ", biz_reg_success: "׀—׀°ׁ׀²׀÷׀° ׀¾ׁ‚׀¿ׁ€׀°׀²׀»׀µ׀½׀°! ׀ׁ‚׀÷ׁ€׀¾׀¹ׁ‚׀µ WhatsApp ׁ‡ׁ‚׀¾׀±ׁ‹ ׀·׀°׀²׀µׁ€ׁˆ׀¸ׁ‚ׁ ׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀°ׁ†׀¸ׁ. ׀•ׁ׀»׀¸ ׀²ׁ‹ ׁƒ׀¶׀µ ׀°׀³׀µ׀½ׁ‚, ׀±ׁ׀÷׀µ׀½׀´ ׀´׀¾׀»׀¶׀µ׀½ ׁ€׀°׀·ׁ€׀µׁˆ׀¸ׁ‚ׁ ׀¿׀µׁ€׀µׁ€׀µ׀³׀¸ׁׁ‚ׁ€׀°ׁ†׀¸ׁ.",
-    err_expired_title: "׀’ׁ€׀µ׀¼ׁ ׁׁ‚׀¾׀¹ ׁ׀µׁׁ׀¸׀¸ ׀¸ׁׁ‚׀µ׀÷׀»׀¾", err_expired_sub: "׀­ׁ‚׀° ׁ׀µׁׁ׀¸ׁ ׀·׀°׀÷׀¾׀½ׁ‡׀¸׀»׀°ׁׁ, ׀½׀°׀¶׀¼׀¸ׁ‚׀µ ׀½׀° ׀÷׀½׀¾׀¿׀÷ׁƒ ׀¼׀µׁׁ׀µ׀½׀´׀¶׀µׁ€׀° ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ ׀½׀° ׀²ׁ…׀¾׀´.", err_preview: "׀’׀°ׁˆ׀µ ׁ׀¾׀¾׀±ׁ‰׀µ׀½׀¸׀µ:", err_prefill: "׀¡׀½׀¾׀²׀° ׀²׀¾׀¹ׁ‚׀¸ ׀² ׀»׀¸ׁ‡׀½ׁ‹׀¹ ׀÷׀°׀±׀¸׀½׀µׁ‚\n׀׀°׀¶׀¼׀¸ׁ‚׀µ ׀÷׀½׀¾׀¿׀÷ׁƒ ׀¾ׁ‚׀¿ׁ€׀°׀²׀¸ׁ‚ׁ ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ ׀½׀° ׀²ׁ…׀¾׀´ {pointer}", pro_agent_title: "נ PRO-׀׀³׀µ׀½ׁ‚"
+    greeting:"С возвращением,",
+    balance_label:"Ваш социальный капитал",
+    deals_lbl:"Закрыто",
+    pending_lbl:"Ожидают выплаты",
+    active_lbl:"В работе",
+    action_title:"Помогите бизнесу, которому доверяете",
+    action_sub:"Откройте каталог и порекомендуйте хороший бизнес",
+    events:"Последние события",
+    catalog_title:"Каталог бизнесов",
+    history_title:"Мои рекомендации",
+    active_sec:"В работе",
+    debt_sec:"Ждут оплаты",
+    done_sec:"История",
+    wallet_title:"Финансы",
+    avg_lbl:"Средний заработок за сделку ₪",
+    eff_sub:"% закрытых сделок",
+    eff_accum:"Накопление",
+    eff_above:"Выше среднего",
+    eff_below:"Ниже среднего",
+    eff_avg:"Среднее:",
+    funnel:"Воронка",
+    f_active:"В работе",
+    f_closed:"Закрыто",
+    f_rejected:"Отклонено",
+    total_leads:"Всего:",
+    awaiting:"Ожидают оплаты:",
+    all_paid:"Все выплаты получены",
+    chart_title:"По нишам",
+    profile_title:"Профиль",
+    settings:"Настройки",
+    pay_method:"Способ оплаты",
+    biz_info:"Ссылка",
+    biz_cta:"У вас есть свой бизнес?",
+    biz_cta_sub:"Добавьте его в каталог Win-Win",
+    pro_locked:"Закрыто",
+    pro_desc:"Дойдите до 50 успешных рекомендаций, чтобы открыть статус PRO-агента.",
+    pro_progress_lbl:"Ваш прогресс",
+    pro_influencer:"PRO-агент",
+    pro_unlocked_desc:"Вы уже открыли уровень PRO-агента.",
+    base_rate:"Базовая ставка (для всех)",
+    add_niche:"Добавить нишу",
+    sheet_title:"Добавить спецусловие",
+    sheet_cat:"Категория бизнеса",
+    sheet_rate:"Ваша ставка (%)",
+    sheet_save:"Сохранить",
+    nav_home:"Главная",
+    nav_catalog:"Каталог",
+    nav_history:"История",
+    nav_wallet:"Кошелёк",
+    nav_profile:"Профиль",
+    status_new:"Новая",
+    status_in_progress:"В работе",
+    status_closed:"Закрыта",
+    status_confirmed:"Подтверждена",
+    status_rejected:"Отклонена",
+    no_deals:"Пока пусто",
+    no_deals_sub:"Порекомендуйте хороший бизнес из каталога, и ваши сделки появятся здесь.",
+    wa_btn:"WhatsApp",
+    btn_tg:"Telegram",
+    deal_title:"Детали сделки",
+    edit_profile:"Редактировать профиль",
+    edit_name:"Имя",
+    edit_payment:"Способ оплаты",
+    edit_link:"Ссылка (сайт / соцсеть)",
+    biz_reg_title:"Добавить бизнес",
+    biz_reg_submit:"Отправить",
+    biz_reg_name:"Название бизнеса",
+    biz_reg_niche:"Категория / ниша",
+    biz_reg_subniche:"Подкатегория",
+    biz_reg_pay:"Способ выплаты благодарности",
+    stat_deals:"Закрытые сделки",
+    stat_pending:"Ожидают оплаты",
+    stat_active:"Сделки в работе",
+    btn_back:"Назад",
+    btn_back_catalog:"Вернуться в каталог",
+    copy_link:"Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес",
+    copy_btn:"Скопировать",
+    copied:"Скопировано ✅",
+    scan_qr:"Или отсканируйте QR-код:",
+    wa_return:"Вернуться в WhatsApp",
+    cat_search:"Поиск бизнеса или услуги...",
+    cat_loading:"Загрузка...",
+    cat_empty:"Ничего не найдено",
+    bonus:"Бонус:",
+    filter_all:"Все категории",
+    save:"Сохранить",
+    remind_debt:"Напомнить о долге",
+    remind_already_sent:"Мы уже отправляли напоминание для {biz} сегодня.",
+    remind_success:"Напоминание отправлено.",
+    remind_error:"Не удалось отправить напоминание. Попробуйте позже.",
+    remind_result_sent_now:"Напоминание отправлено.",
+    remind_result_scheduled_0900:"Мы уважаем личное пространство людей и не отправляем напоминания ночью.\nНапоминание поставлено в очередь и будет отправлено в 09:00.",
+    remind_result_blocked_24h:"Напоминание через систему уже отправлялось в течение последних 24 часов.\nЧтобы не перегружать людей сообщениями, следующее напоминание будет доступно позже.",
+    confirm_receipt:"Подтвердить получение",
+    confirm_receipt_success:"Получение подтверждено.",
+    confirm_receipt_error:"Не удалось подтвердить получение.",
+    wallet_deals_title:"Сделки и выплаты",
+    pay_cash:"Наличные",
+    pay_bank:"Перевод",
+    lb_title:"Зал славы",
+    lb_widget_title:"Зал славы",
+    lb_widget_sub:"Топ рекомендателей",
+    lb_profile_btn:"Открыть зал славы",
+    lb_your_pos:"Ваша позиция",
+    lb_top:"Топ рекомендателей",
+    lb_deals:"Сделок:",
+    lb_earned:"Заработано",
+    lb_blur_alert:"Дойдите до 50 сделок, чтобы открыть имена лидеров. 🏆",
+    invite_btn_1:"Если нужного бизнеса нет,",
+    invite_btn_2:"и вы хотите его рекомендовать,",
+    invite_btn_3:"пригласите его в Win-Win",
+    invite_title:"Пригласите их в Win-Win!",
+    invite_desc:"Поделитесь этой ссылкой, чтобы пригласить бизнес или рекомендателя.",
+    btn_back_invite:"Назад в каталог",
+    rew_type:"Тип благодарности",
+    rew_pct:"Процент (%)",
+    rew_fix:"Фиксировано (₪)",
+    rew_gift:"Подарок (🎁)",
+    rew_pct_ph:"Например: 10",
+    rew_fix_ph:"Например: 100",
+    rew_gift_ph:"Например: бесплатный массаж",
+    biz_reg_comm_lbl:"Сумма / описание",
+    biz_reg_success:"Заявка отправлена! Откройте WhatsApp, чтобы завершить регистрацию.",
+    err_expired_title:"Сессия истекла",
+    err_expired_sub:"Эта ссылка больше не активна. Нажмите кнопку мессенджера, чтобы получить новую ссылку входа.",
+    err_preview:"Ваше сообщение:",
+    err_prefill:"Войти снова в мой кабинет\nНажмите «Отправить», чтобы получить новую ссылку {pointer}",
+    pro_agent_title:"🏆 PRO-агент"
   },
   he: {
     greeting:"׳‘׳¨׳•׳ ׳©׳•׳‘׳,", balance_label:"׳”׳”׳•׳ ׳”׳—׳‘׳¨׳×׳™ ׳©׳׳", deals_lbl:"׳¡׳’׳•׳¨׳•׳×", pending_lbl:"׳׳׳×׳™׳", active_lbl:"׳‘׳¢׳‘׳•׳“׳”", action_title:"׳¢׳–׳¨׳• ׳׳¢׳¡׳§ ׳”׳׳”׳•׳‘ ׳¢׳׳™׳›׳", action_sub:"׳₪׳×׳—׳• ׳׳× ׳”׳§׳˜׳׳•׳’ ׳•׳§׳—׳• ׳”׳׳׳¦׳” ׳¨׳׳©׳•׳ ׳”",
@@ -1185,8 +1294,8 @@ function applyLang() {
     const btnBackMid = document.getElementById('t_btn_back_rec_mid'); if (btnBackMid) btnBackMid.textContent = L.btn_back_catalog;
     const btnBackDeal = document.getElementById('t_btn_back_deal_bottom'); if (btnBackDeal) btnBackDeal.textContent = L.btn_back;
     const btnBackLb = document.getElementById('t_btn_back_lb'); if (btnBackLb) btnBackLb.textContent = L.btn_back;
-    const proTitle1 = document.getElementById('t_pro_title_1'); if (proTitle1) proTitle1.textContent = L.pro_agent_title || 'נ PRO-׀׀³׀µ׀½ׁ‚';
-    const proTitle2 = document.getElementById('t_pro_title_2'); if (proTitle2) proTitle2.textContent = L.pro_agent_title || 'נ PRO-׀׀³׀µ׀½ׁ‚';
+    const proTitle1 = document.getElementById('t_pro_title_1'); if (proTitle1) proTitle1.textContent = L.pro_agent_title || '🏆 PRO-агент';
+    const proTitle2 = document.getElementById('t_pro_title_2'); if (proTitle2) proTitle2.textContent = L.pro_agent_title || '🏆 PRO-агент';
     const btnBackBiz = document.getElementById('t_btn_back_biz_bottom'); if (btnBackBiz) btnBackBiz.textContent = L.btn_back;
     const btnBackInv = document.getElementById('t_btn_back_invite'); if (btnBackInv) btnBackInv.textContent = L.btn_back_invite;
 
@@ -1288,7 +1397,7 @@ function normalizeDateValue(value) {
 }
 
 function formatDateValue(value) {
-    return normalizeDateValue(value) || 'ג€”';
+    return normalizeDateValue(value) || '—';
 }
 
 function escapeHtml(value) {
@@ -1301,7 +1410,7 @@ function escapeJsSingle(value) {
 
 function formatPhoneLink(phone) {
     const raw = pickFirstFilled(phone);
-    if (!raw) return 'ג€”';
+    if (!raw) return '—';
     const text = String(raw).trim();
     const hrefValue = text.replace(/[^\d+]/g, '') || text;
     return `<a href="tel:${escapeHtml(hrefValue)}" class="wallet-phone-link" onclick="event.stopPropagation()">${escapeHtml(text)}</a>`;
@@ -1318,8 +1427,8 @@ function normalizeDashboardLead(lead) {
     normalized.decision = String(normalized.decision || normalized.agent_decision || normalized.reward_decision || '').trim().toLowerCase();
     if (normalized.commission == null) normalized.commission = pickFirstFilled(normalized.agent_bonus, normalized.bonus, normalized.reward_amount, normalized.commission_amount, normalized.reward);
     if (normalized.amount == null) normalized.amount = pickFirstFilled(normalized.check_amount, normalized.deal_amount, normalized.sum, normalized.total_amount);
-    if (!normalized.biz_name) normalized.biz_name = normalized.business_name || normalized.business || 'ג€”';
-    if (!normalized.client_name) normalized.client_name = normalized.name || normalized.receiver_name || 'ג€”';
+    if (!normalized.biz_name) normalized.biz_name = normalized.business_name || normalized.business || '—';
+    if (!normalized.client_name) normalized.client_name = normalized.name || normalized.receiver_name || '—';
     normalized.biz_phone = pickFirstFilled(normalized.biz_phone, normalized.business_phone, normalized.biz_phone_number, normalized.partner_phone, normalized.receiver_phone_business);
     normalized.client_phone = pickFirstFilled(normalized.client_phone, normalized.phone, normalized.receiver_phone, normalized.customer_phone);
     normalized.start_date = normalizeDateValue(pickFirstFilled(normalized.start_date, normalized.deal_start_date, normalized.date, normalized.created_at));
@@ -1351,14 +1460,14 @@ function getDealProjection(lead) {
     const status = String(lead?.status || '').toLowerCase();
     const decision = String(lead?.decision || '').toLowerCase();
     const labels = {
-        new: { ru:'׀׀¾׀²׀°ׁ', he:'׳—׳“׳©׳”', en:'New', ar:'״¬״¯״¯״©' },
-        in_progress: { ru:'׀’ ׁ€׀°׀±׀¾ׁ‚׀µ', he:'׳‘׳¢׳‘׳•׳“׳”', en:'In progress', ar:'‚״¯ ״§„״×†״°' },
-        awaiting_decision: { ru:'׀–׀´ׁ‘׀¼ ׁ€׀µׁˆ׀µ׀½׀¸׀µ', he:'׳׳׳×׳™׳ ׳׳”׳—׳׳˜׳”', en:'Awaiting decision', ar:'״¨״§†״×״¸״§״± ״§„‚״±״§״±' },
-        awaiting_payment: { ru:'׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ', he:'׳׳׳×׳™׳ ׳׳×׳©׳׳•׳', en:'Awaiting payout', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹' },
-        awaiting_client: { ru:'׀–׀´ׁ‘׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸׀µ ׀÷׀»׀¸׀µ׀½ׁ‚׀°', he:'׳׳׳×׳™׳ ׳׳׳™׳©׳•׳¨ ׳”׳׳§׳•׳—', en:'Awaiting client confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״¹…„' },
-        support_in_progress: { ru:'׀׀¾׀´׀´׀µׁ€׀¶׀÷׀° ׀±׀¸׀·׀½׀µׁ׀° ׀² ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ', he:'׳×׳׳™׳›׳× ׳”׳¢׳¡׳§ ׳‘׳×׳”׳׳™׳', en:'Business support in progress', ar:'״¯״¹… ״§„†״´״§״· ‚״¯ ״§„״×†״°' },
-        completed: { ru:'׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾', he:'׳”׳•׳©׳׳', en:'Completed', ar:'…ƒ״×…„' },
-        rejected: { ru:'׀ׁ‚׀÷׀»׀¾׀½ׁ‘׀½', he:'׳ ׳“׳—׳”', en:'Rejected', ar:'…״±ˆ״¶' }
+        new: { ru:'Новая', he:'׳—׳“׳©׳”', en:'New', ar:'״¬״¯״¯״©' },
+        in_progress: { ru:'В работе', he:'׳‘׳¢׳‘׳•׳“׳”', en:'In progress', ar:'‚״¯ ״§„״×†״°' },
+        awaiting_decision: { ru:'Нужно выбрать способ расчёта', he:'׳׳׳×׳™׳ ׳׳”׳—׳׳˜׳”', en:'Awaiting decision', ar:'״¨״§†״×״¸״§״± ״§„‚״±״§״±' },
+        awaiting_payment: { ru:'Ожидаем выплату от бизнеса', he:'׳׳׳×׳™׳ ׳׳×׳©׳׳•׳', en:'Awaiting payout', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹' },
+        awaiting_client: { ru:'Ждём подтверждение получения', he:'׳׳׳×׳™׳ ׳׳׳™׳©׳•׳¨ ׳”׳׳§׳•׳—', en:'Awaiting client confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״¹…„' },
+        support_in_progress: { ru:'Поддержка бизнеса в процессе', he:'׳×׳׳™׳›׳× ׳”׳¢׳¡׳§ ׳‘׳×׳”׳׳™׳', en:'Business support in progress', ar:'״¯״¹… ״§„†״´״§״· ‚״¯ ״§„״×†״°' },
+        completed: { ru:'Закрыта', he:'׳”׳•׳©׳׳', en:'Completed', ar:'…ƒ״×…„' },
+        rejected: { ru:'Отклонена', he:'׳ ׳“׳—׳”', en:'Rejected', ar:'…״±ˆ״¶' }
     };
     const getLabel = key => ((labels[key] || labels.in_progress)[lang]) || (labels[key] || labels.in_progress).ru;
 
@@ -1414,12 +1523,12 @@ function iconForStatus(leadOrStatus) {
 // ג”€ג”€ Deal card & detail ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 function getSettlementMethodLabel(decision) {
     const map = {
-        take: { ru:'ׁ׀µ׀±׀µ', he:'׳׳¢׳¦׳׳™', en:'to self', ar:'„†״³‡' },
-        gift_client: { ru:'׀÷׀»׀¸׀µ׀½ׁ‚ׁƒ', he:'׳׳׳§׳•׳—', en:'to client', ar:'„„״¹…„' },
-        support_business: { ru:'׀±׀¸׀·׀½׀µׁׁƒ', he:'׳׳¢׳¡׳§', en:'to business', ar:'„„״¹…„' }
+        take: { ru:'себе', he:'׳׳¢׳¦׳׳™', en:'to self', ar:'„†״³‡' },
+        gift_client: { ru:'клиенту', he:'׳׳׳§׳•׳—', en:'to client', ar:'„„״¹…„' },
+        support_business: { ru:'бизнесу', he:'׳׳¢׳¡׳§', en:'to business', ar:'„„״¹…„' }
     };
     const value = map[String(decision || '').toLowerCase()];
-    return value ? (value[lang] || value.ru) : 'ג€”';
+    return value ? (value[lang] || value.ru) : '—';
 }
 
 function getWalletStageMeta(lead) {
@@ -1429,10 +1538,10 @@ function getWalletStageMeta(lead) {
     const decision = String(lead.decision || '').toLowerCase();
     const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
     const labels = {
-        choose_settlement: { ru:'׀ׁƒ׀¶׀½׀¾ ׀²ׁ‹׀±ׁ€׀°ׁ‚ׁ ׁ׀¿׀¾ׁ׀¾׀± ׁ€׀°ׁׁ‡ׁ‘ׁ‚׀°', he:'׳™׳© ׳׳‘׳—׳•׳¨ ׳“׳¨׳ ׳¡׳’׳™׳¨׳”', en:'Choose settlement method', ar:'„״²… ״§״®״×״§״± ״·״±‚״© ״§„״×״³ˆ״©' },
-        awaiting_payment: { ru:'׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ ׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ׀°', he:'׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳ ׳׳”׳¢׳¡׳§', en:'Awaiting payment from business', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹ …† ״§„†״´״§״·' },
-        awaiting_receipt: { ru:'׀–׀´ׁ‘׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸׀µ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸ׁ', he:'׳׳׳×׳™׳ ׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳”', en:'Awaiting receipt confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§…' },
-        closed: { ru:'׀—׀°׀÷ׁ€ׁ‹ׁ‚׀°', he:'׳¡׳’׳•׳¨׳”', en:'Closed', ar:'…״÷„‚״©' }
+        choose_settlement: { ru:'Нужно выбрать способ расчёта', he:'׳™׳© ׳׳‘׳—׳•׳¨ ׳“׳¨׳ ׳¡׳’׳™׳¨׳”', en:'Choose settlement method', ar:'„״²… ״§״®״×״§״± ״·״±‚״© ״§„״×״³ˆ״©' },
+        awaiting_payment: { ru:'Ожидаем выплату от бизнеса', he:'׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳ ׳׳”׳¢׳¡׳§', en:'Awaiting payment from business', ar:'״¨״§†״×״¸״§״± ״§„״¯״¹ …† ״§„†״´״§״·' },
+        awaiting_receipt: { ru:'Ждём подтверждение получения', he:'׳׳׳×׳™׳ ׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳”', en:'Awaiting receipt confirmation', ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§…' },
+        closed: { ru:'Закрыта', he:'׳¡׳’׳•׳¨׳”', en:'Closed', ar:'…״÷„‚״©' }
     };
     const getLabel = key => (labels[key] && (labels[key][lang] || labels[key].ru)) || labels.choose_settlement.ru;
 
@@ -1457,7 +1566,7 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     const L = i18n[lang] || i18n.ru;
     if (stage.action === 'remind') {
         return {
-            label: L.remind_debt || '׀׀°׀¿׀¾׀¼׀½׀¸ׁ‚ׁ ׀¾ ׀´׀¾׀»׀³׀µ',
+            label: L.remind_debt || 'Напомнить о долге',
             icon: 'bell',
             style: 'background:var(--gold); color:#1A1A2E;',
             onclick: `remindDebt(${JSON.stringify(lead.id)}, '${escapeJsSingle(lead.biz_name)}')`
@@ -1465,7 +1574,7 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     }
     if (stage.action === 'confirm_receipt') {
         return {
-            label: L.confirm_receipt || '׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸׀µ',
+            label: L.confirm_receipt || 'Подтвердить получение',
             icon: 'check-circle',
             style: 'background:var(--green); color:#fff;',
             onclick: `confirmReceipt(${JSON.stringify(lead.id)})`
@@ -1513,14 +1622,14 @@ function getWalletLeads() {
 
 function walletDealCardHtml(lead) {
     lead = normalizeDashboardLead(lead);
-    const curr = dashData?.currency || 'ג‚×';
+    const curr = dashData?.currency || '₪';
     const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : 'ג€”';
     const actionHtml = renderWalletActionButton(lead, 'card');
     return `
     <div class="card wallet-deal-card" onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'>
         <div class="wallet-card-top">
             <div class="wallet-card-main">
-                <div class="act-title">${escapeHtml(lead.biz_name || 'ג€”')}</div>
+                <div class="act-title">${escapeHtml(lead.biz_name || '—')}</div>
                 <div class="act-sub">${formatPhoneLink(lead.biz_phone)}</div>
             </div>
             <div class="act-right">
@@ -1530,19 +1639,19 @@ function walletDealCardHtml(lead) {
         </div>
         <div class="wallet-card-grid">
             <div>
-                <div class="wallet-card-lbl">׀׀»׀¸׀µ׀½ׁ‚</div>
-                <div class="wallet-card-val">${escapeHtml(lead.client_name || 'ג€”')}</div>
+                <div class="wallet-card-lbl">${({ ru:'Клиент', he:'׳׳§׳•׳—', en:'Client', ar:'العميل' }[lang] || 'Клиент')}</div>
+                <div class="wallet-card-val">${escapeHtml(lead.client_name || '—')}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">׀¡ׁ‚׀°ׁ€ׁ‚</div>
+                <div class="wallet-card-lbl">${({ ru:'Старт', he:'׳”׳×׳—׳׳”', en:'Start date', ar:'تاريخ البداية' }[lang] || 'Старт')}</div>
                 <div class="wallet-card-val">${formatDateValue(lead.start_date)}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">׀‘׀¾׀½ׁƒׁ</div>
+                <div class="wallet-card-lbl">${({ ru:'Бонус', he:'׳‘׳•׳ ׳•׳¡', en:'Bonus', ar:'المكافأة' }[lang] || 'Бонус')}</div>
                 <div class="wallet-card-val wallet-card-bonus">${bonus}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">׀׀±׀½׀¾׀²׀»׀µ׀½׀¾</div>
+                <div class="wallet-card-lbl">${({ ru:'Обновлено', he:'׳¢׳•׳“׳›׳', en:'Updated', ar:'آخر تحديث' }[lang] || 'Обновлено')}</div>
                 <div class="wallet-card-val">${formatDateValue(lead.last_update_date)}</div>
             </div>
         </div>
@@ -1553,7 +1662,7 @@ function walletDealCardHtml(lead) {
 function dealItemHtml(lead) {
     lead = normalizeDashboardLead(lead);
     const projection = getDealProjection(lead);
-    const curr = dashData?.currency || 'ג‚×';
+    const curr = dashData?.currency || '₪';
     const hasComm = lead.commission != null;
     const commColor = projection.debt ? 'var(--gold)' : 'var(--green)';
     return `
@@ -1799,7 +1908,7 @@ async function openLeaderboard() {
     const contentBox = document.getElementById('lbContent');
 
     if (!leaderboardData) {
-        contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || '׀—׀°׀³ׁ€ׁƒ׀·׀÷׀°...'}</div>`;
+        contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text2);">${L.cat_loading || 'Загрузка...'}</div>`;
         try {
             const agentId = dashData && dashData.agent_id ? dashData.agent_id : null;
             let lbToken = token;
@@ -1812,10 +1921,10 @@ async function openLeaderboard() {
                 leaderboardData = await res.json();
                 renderLeaderboardUI();
             } else {
-                contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">׀ׁˆ׀¸׀±׀÷׀° ׀·׀°׀³ׁ€ׁƒ׀·׀÷׀¸ ׁ€׀µ׀¹ׁ‚׀¸׀½׀³׀°.</div>`;
+                contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Не удалось загрузить рейтинг.</div>`;
             }
         } catch(e) {
-            contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">׀ׁˆ׀¸׀±׀÷׀° ׁ׀µׁ‚׀¸.</div>`;
+            contentBox.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--red);">Ошибка сети.</div>`;
         }
     } else {
         renderLeaderboardUI();
@@ -1827,7 +1936,7 @@ function renderLeaderboardUI() {
     const L = i18n[lang] || i18n.ru;
     const stats = getDashboardProjectionStats();
     const isPro = (stats.leads.length ? stats.closedCount : (dashData?.success_deals || 0)) >= 50;
-    const curr = dashData?.currency || 'ג‚×';
+    const curr = dashData?.currency || '₪';
     let html = '';
 
     let isCurrentInTop = false;
@@ -1907,7 +2016,7 @@ function getDashboardProjectionStats() {
 function openStatDetail(type) {
     const L = i18n[lang]||i18n.ru;
     const stats = getDashboardProjectionStats();
-    const curr = dashData?.currency || 'ג‚×';
+    const curr = dashData?.currency || '₪';
     let title = '', content = '';
     if (type === 'deals') {
         title = L.stat_deals;
@@ -1978,7 +2087,7 @@ function updateBizInfoLink(link) {
     if (link && (link.startsWith('http://') || link.startsWith('https://'))) {
         el.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
     } else {
-        el.textContent = link || 'ג€”';
+        el.textContent = link || '—';
     }
 }
 
@@ -2112,7 +2221,7 @@ async function submitBizReg() {
 
     let commissionStr = commVal;
     if(rewardType === 'pct') commissionStr = commVal + '%';
-    else if(rewardType === 'fix') commissionStr = commVal + ' ג‚×';
+    else if(rewardType === 'fix') commissionStr = commVal + ' ₪';
 
     const btn = document.getElementById('btnBizRegSubmit');
     btn.textContent = '...'; btn.disabled = true;
@@ -2149,7 +2258,7 @@ async function loadCatalog() {
 
 function extractNiches() {
     const L = i18n[lang]||i18n.ru;
-    const all = L.filter_all || '׀’ׁ׀µ ׀÷׀°ׁ‚׀µ׀³׀¾ׁ€׀¸׀¸';
+    const all = L.filter_all || 'Все категории';
     const cats = [all, ...Object.keys(CATEGORIES_STANDARD)];
     const container = document.getElementById('catFilters');
     if (!container) return;
@@ -2189,7 +2298,7 @@ function renderCatalog() {
         const translatedCat = getCatName(biz.category || '', lang);
         const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='ג€”' ? [biz.niche] : []);
         const nicheStr = _nRaw.length ? ' ֲ· ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
-        const fullCat = `${translatedCat}${nicheStr}`.trim() || '׀‘׀¸׀·׀½׀µׁ';
+        const fullCat = `${translatedCat}${nicheStr}`.trim() || 'Ниша';
         card.innerHTML = `
             <div class="biz-card-header">
                 <div class="biz-card-name">${biz.name}</div>
@@ -2206,7 +2315,7 @@ function openRecommend(biz) {
     const translatedCat = getCatName(biz.category || '', lang);
     const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche&&biz.niche!=='ג€”' ? [biz.niche] : []);
     const nicheStr = _nRaw.length ? ' ֲ· ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
-    document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || '׀‘׀¸׀·׀½׀µׁ';
+    document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || 'Ниша';
     
     const descEl = document.getElementById('recBizDesc');
     if (biz.business_info) {
@@ -2271,12 +2380,12 @@ function renderAll() {
     const closed = leads.length ? projectionStats.closedCount : (d.success_deals||0);
     const active = leads.length ? projectionStats.activeCount : (d.active_deals||0);
     const rejected = leads.length ? projectionStats.rejectedCount : (d.rejected_deals||0);
-    const curr = d.currency || 'ג‚×';
-    document.getElementById('t_name').textContent = d.user_name || 'ג€”';
+    const curr = d.currency || '₪';
+    document.getElementById('t_name').textContent = d.user_name || '—';
 
     animNum('v_earned', Math.round(d.total_earned||0));
     document.getElementById('v_deals').textContent = closed;
-    document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ג‚×';
+    document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
     document.getElementById('v_active').textContent = active;
 
     const proProgress = Math.min((closed/50)*100, 100);
