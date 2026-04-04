@@ -126,7 +126,7 @@
     .deal-pending-note { font-size:.75rem; color:var(--purple); background:rgba(155,81,224,.1); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
     .deal-info { font-size:.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
     .deal-info span { font-weight:600; color:var(--text); }
-    .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+    .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; min-height:32px; padding:2px 0; }
     .deal-receipt { background:var(--surface2); border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid var(--border); }
 
 .deal-inline-meta { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
@@ -492,7 +492,10 @@
         <div style="font-size:.9rem;color:var(--text2);margin-bottom:24px;line-height:1.6;">
           <strong id="t_m_lbl_client" style="color:var(--text)">Клиент:</strong> <span id="m_val_client"></span><br>
           <strong id="t_m_lbl_agent"  style="color:var(--text)">Агент:</strong>  <span id="m_val_agent"></span><br>
-          <strong id="t_m_lbl_date"   style="color:var(--text)">Дата:</strong>   <span id="m_val_date"></span>
+          <strong id="t_m_lbl_agent_phone" style="color:var(--text)">Телефон агента:</strong> <span id="m_val_agent_phone"></span><br>
+          <strong id="t_m_lbl_date"   style="color:var(--text)">Дата:</strong>   <span id="m_val_date"></span><br>
+          <strong id="t_m_lbl_status" style="color:var(--text)">Статус:</strong> <span id="m_val_status"></span><br>
+          <strong id="t_m_lbl_debt" style="color:var(--text)">Оплатить долг:</strong> <span id="m_val_debt"></span>
         </div>
 
         <!-- Step: main -->
@@ -811,6 +814,26 @@ const i18n = {
   }
 };
 
+function getManageDealLabels() {
+  const map = {
+    ru: { agentPhone:'Телефон агента:', status:'Статус:', debt:'Оплатить долг:' },
+    he: { agentPhone:'טלפון הסוכן:', status:'סטטוס:', debt:'תשלום לסוכן:' },
+    en: { agentPhone:'Agent phone:', status:'Status:', debt:'Agent payout:' },
+    ar: { agentPhone:'هاتف الوكيل:', status:'الحالة:', debt:'سداد دين الوكيل:' }
+  };
+  return map[lang] || map.ru;
+}
+
+function getPhoneFieldLabel() {
+  const map = {
+    ru: 'Телефон',
+    he: 'טלפון',
+    en: 'Phone',
+    ar: 'الهاتف'
+  };
+  return map[lang] || map.ru;
+}
+
 // ══ STATE ═════════════════════════════════════════════════════════════
 const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
@@ -1002,7 +1025,8 @@ function applyI18n() {
     't_pr_pay':'pr_pay', 't_pr_link':'pr_link', 't_pr_phone':'pr_phone', 't_btn_edit':'btn_edit',
     't_wa_btn':'wa_btn', 't_tg_btn':'tg_btn',
     't_m_title':'m_title', 't_m_lbl_client':'m_client', 't_m_lbl_agent':'m_agent',
-    't_m_lbl_date':'m_date', 't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject',
+    't_m_lbl_agent_phone':'m_agent_phone', 't_m_lbl_date':'m_date', 't_m_lbl_status':'m_status', 't_m_lbl_debt':'m_debt',
+    't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject',
     't_m_cancel':'m_cancel', 't_m_back_top':'m_cancel', 't_m_cancel_bottom':'m_cancel',
     't_m_lbl_amount':'m_lbl_amount', 't_m_btn_confirm_close':'m_confirm_close',
     't_m_reject_sure':'m_reject_sure', 't_m_btn_confirm_reject':'m_confirm_reject',
@@ -1019,6 +1043,13 @@ function applyI18n() {
     const el = document.getElementById(id);
     if (el && L[key]) el.textContent = L[key];
   }
+  const manageLabels = getManageDealLabels();
+  const agentPhoneLbl = document.getElementById('t_m_lbl_agent_phone');
+  const statusLbl = document.getElementById('t_m_lbl_status');
+  const debtLbl = document.getElementById('t_m_lbl_debt');
+  if (agentPhoneLbl) agentPhoneLbl.textContent = manageLabels.agentPhone;
+  if (statusLbl) statusLbl.textContent = manageLabels.status;
+  if (debtLbl) debtLbl.textContent = manageLabels.debt;
   const payCash = document.getElementById('f_pay_cash_btn');
   const payBank = document.getElementById('f_pay_bank_btn');
   if (payCash) payCash.textContent = L.f_pay_cash;
@@ -1534,6 +1565,35 @@ function getDealNextStep(status) {
   }
   return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || '';
 }
+
+function getPhoneDigits(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
+function renderPhoneLink(phone, opts = {}) {
+  const raw = String(phone || '').trim();
+  const digits = getPhoneDigits(raw);
+  if (!digits) return '—';
+  const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  return `<a href="tel:${digits}" class="deal-wa-link"${attrs}>${raw}</a>`;
+}
+
+function getDealAgentPhone(deal) {
+  return deal.agent_phone || deal.sender_phone || deal.recommender_phone || deal.agent_whatsapp || deal.agent_wa_phone || deal.wa_phone || '';
+}
+
+function formatDealDebtAmount(deal, currency) {
+  const truth = getDealTruth(deal);
+  const rewardVal = truth.debtAmount ?? deal.debt_amount ?? deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? deal.pending_payout ?? deal.pending_debt ?? deal.debt ?? null;
+  if (rewardVal == null || rewardVal === '') return '—';
+  return Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${currency}` : String(rewardVal);
+}
+
+function openDebtDealDetail(id) {
+  closeFullscreen('debtDealsSheet');
+  openManageDeal(id);
+}
+
 function openDebtDealsSheet() {
   renderDebtDealsSheet();
   openFullscreen('debtDealsSheet');
@@ -1554,13 +1614,10 @@ function renderDebtDealsSheet() {
     const statusMeta = getStatusData(statusCode);
     const clientName = d.client_name || d.name || '—';
     const agentName = d.agent_name || d.sender_name || d.agent || '—';
-    const rewardVal = d.debt_amount || d.commission || d.agent_reward || d.reward_amount || d.pending_payout || d.pending_debt || d.debt || '—';
-    const rewardText = rewardVal === '—'
-      ? rewardVal
-      : (Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${curr}` : rewardVal);
+    const rewardText = formatDealDebtAmount(d, curr);
     const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : '—');
     return `
-      <div class="debt-deal-card">
+      <div class="debt-deal-card" role="button" tabindex="0" onclick="openDebtDealDetail(${d.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealDetail(${d.id});}">
         <div class="debt-deal-head">
           <div>
             <div class="debt-deal-name">${clientName}</div>
@@ -1713,8 +1770,6 @@ function renderDeals() {
     const statusCode = getDisplayDealStatus(d);
     const st        = getStatusData(statusCode);
     const isPending = d.status === 'pending_confirmation';
-    const cleanPhone = (d.client_phone || '').replace(/\D/g, '');
-    const waLink    = cleanPhone ? `https://wa.me/${cleanPhone}` : '#';
     const nextStep  = getDealNextStep(statusCode);
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
@@ -1752,7 +1807,7 @@ function renderDeals() {
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">WhatsApp</div><div class="deal-mini-val">${cleanPhone ? `<a href="${waLink}" class="deal-wa-link" target="_blank" onclick="event.stopPropagation()">${d.client_phone || '—'}</a>` : '—'}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${getPhoneFieldLabel()}</div><div class="deal-mini-val">${renderPhoneLink(d.client_phone, { stopPropagation:true })}</div></div>
           </div>
           <div class="deal-receipt">
             <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
@@ -2114,13 +2169,14 @@ function openRecommendDetail(index) {
   const labels = getRecommendDetailLabels();
   const curr = bizData.currency || '₪';
   const statusText = getRecommendStatusLabel(row.status, L).text;
+  const clientPhone = renderPhoneLink(row.client_phone);
   document.getElementById('recommendDetailContent').innerHTML = `
     <div class="sheet-card" style="margin-top:0;">
       <div class="sheet-title">${labels.title}</div>
       <div class="deal-inline-meta">
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || '—'}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || '—'}</div></div>
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${row.client_phone || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${clientPhone}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : '—'}</div></div>
       </div>
       <div class="deal-inline-meta" style="margin-bottom:0;">
@@ -2353,9 +2409,19 @@ function openManageDeal(id) {
   activeDealId = id;
   const deal = (bizData.deals || []).find(d => d.id === id);
   if (!deal) return;
-  document.getElementById('m_val_client').textContent = `${deal.client_name} (${deal.client_phone})`;
-  document.getElementById('m_val_agent').textContent  = deal.agent_name || '—';
-  document.getElementById('m_val_date').textContent   = deal.date;
+  const curr = bizData.currency || '₪';
+  const statusMeta = getStatusData(getDisplayDealStatus(deal));
+  const clientPhoneHtml = renderPhoneLink(deal.client_phone);
+  const agentPhoneHtml = renderPhoneLink(getDealAgentPhone(deal));
+  const clientName = deal.client_name || '—';
+  document.getElementById('m_val_client').innerHTML = clientPhoneHtml === '—'
+    ? clientName
+    : `${clientName} · ${clientPhoneHtml}`;
+  document.getElementById('m_val_agent').textContent  = deal.agent_name || deal.sender_name || '—';
+  document.getElementById('m_val_agent_phone').innerHTML = agentPhoneHtml;
+  document.getElementById('m_val_date').textContent   = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
+  document.getElementById('m_val_status').textContent = statusMeta.text;
+  document.getElementById('m_val_debt').textContent = formatDealDebtAmount(deal, curr);
   document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
@@ -2378,6 +2444,7 @@ function openManageDeal(id) {
   }
   setStep('main');
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
+  closeFullscreen('debtDealsSheet');
   openFullscreen('manageDealSheet');
 }
 

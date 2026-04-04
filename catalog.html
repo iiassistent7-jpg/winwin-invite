@@ -29,6 +29,9 @@
     .filters::-webkit-scrollbar{display:none}
     .filter-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:10px 16px;border-radius:999px;white-space:nowrap;font-weight:700;font-size:.84rem;cursor:pointer}
     .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .invite-cta-wrap{margin:0 0 16px}
+    .invite-cta{width:100%;border:none;border-radius:22px;padding:18px 16px;background:linear-gradient(135deg,#2F80ED 0%,#56CCF2 100%);color:#fff;box-shadow:0 16px 34px rgba(47,128,237,.35);cursor:pointer;text-align:center;font-weight:800}
+    .invite-cta span{display:inline-block;line-height:1.35}
     .grid{display:flex;flex-direction:column;gap:12px}
     .biz-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:var(--shadow);cursor:pointer}
     .biz-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
@@ -76,6 +79,13 @@
     <p class="sub" id="t_sub2">Ваш социальный капитал работает на вас.</p>
   </div>
   <div class="search"><input id="q" type="text" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()"></div>
+  <div class="invite-cta-wrap">
+    <button class="invite-cta" onclick="openInviteScreen()">
+      <span id="t_invite_btn_1">Если нужного бизнеса нет,</span><br>
+      <span id="t_invite_btn_2">и вы хотите его рекомендовать,</span><br>
+      <span id="t_invite_btn_3">пригласите его в Win-Win</span>
+    </button>
+  </div>
   <div class="filters" id="filters"></div>
   <div class="grid" id="grid"><div class="empty">Загрузка каталога...</div></div>
 </div>
@@ -100,6 +110,28 @@
     </div>
   </div>
 </div>
+<div class="fullscreen" id="inviteScreen">
+  <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+    <div class="rec-header-card" style="text-align:center;margin-top:20px;">
+      <div style="font-size:2.5rem;margin-bottom:12px;">🤝</div>
+      <div class="rec-title" id="inviteTitleValue">Пригласите их в Win-Win!</div>
+      <div class="rec-niche" id="inviteHeaderTag" style="display:none;"></div>
+      <div class="rec-desc" id="inviteDescValue" style="border:none;padding-top:0;">Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.</div>
+    </div>
+    <div class="instruction-block">
+      <div class="instruction-text" id="t_copy_link_inv">Скопируйте и отправьте эту ссылку:</div>
+      <div class="link-box">
+        <input type="text" id="inviteLinkInput" class="link-input" readonly>
+        <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">Скопировать</button>
+      </div>
+    </div>
+    <div class="instruction-block" style="text-align:center;">
+      <div class="instruction-text" id="t_scan_qr_inv">Или дайте отсканировать QR-код:</div>
+      <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeInviteScreen()" id="t_btn_back_invite">Назад в каталог</button>
+  </div>
+</div>
 <div class="sticky-back"><button class="btn btn-outline" onclick="history.back()" id="stickyBackBtn">Назад</button></div>
 <div class="notice" id="notice"></div>
 <script>
@@ -112,13 +144,65 @@ const i18n={
  ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy_btn:'Скопировать',copy_link:'Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:',copied:'Скопировано ✅',scan_qr:'Или дайте отсканировать QR-код:',back:'Назад',back_catalog:'Назад в каталог',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win',desc_fallback:'У этого бизнеса пока нет дополнительного описания.'},
  en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy_btn:'Copy',copy_link:'Copy and send this link to the person you want to recommend this business to:',copied:'Copied ✅',scan_qr:'Or let them scan the QR code:',back:'Back',back_catalog:'Back to catalog',bonus:'Bonus',invite:'Invite business to Win-Win',desc_fallback:'This business has not added extra details yet.'},
  he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy_btn:'העתק',copy_link:'העתיקו ושלחו את הקישור הזה למי שתרצו להמליץ לו על העסק הזה:',copied:'הועתק ✅',scan_qr:'או תנו לסרוק את קוד ה-QR:',back:'חזרה',back_catalog:'חזרה לקטלוג',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win',desc_fallback:'לעסק הזה עדיין אין תיאור נוסף.'},
- ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy_btn:'نسخ',copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي تريد أن توصي له بهذا النشاط:',copied:'تم النسخ ✅',scan_qr:'أو دعهم يمسحون رمز QR:',back:'رجوع',back_catalog:'العودة إلى الكتالوج',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win‑Win',desc_fallback:'لا توجد بعد معلومات إضافية عن هذا النشاط.'}
+ ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy_btn:'نسخ',copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي تريد أن توصي له بهذا النشاط:',copied:'تم النسخ ✅',scan_qr:'أو دعهم يمسحون رمز QR:',back:'رجوع',back_catalog:'العودة إلى الكتالوج',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win-Win',desc_fallback:'لا توجد بعد معلومات إضافية عن هذا النشاط.'}
+};
+const CATALOG_UX_I18N={
+  ru:{
+    invite_btn_1:'Если нужного бизнеса нет,',
+    invite_btn_2:'и вы хотите его рекомендовать,',
+    invite_btn_3:'пригласите его в Win-Win',
+    invite_title:'Пригласите их в Win-Win!',
+    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.',
+    invite_copy_link:'Скопируйте и отправьте эту ссылку:',
+    invite_scan_qr:'Или дайте отсканировать QR-код:',
+    btn_back_invite:'Назад в каталог',
+    copy_btn:'Скопировать',
+    copied:'Скопировано ✅'
+  },
+  en:{
+    invite_btn_1:'If the business is not here yet,',
+    invite_btn_2:'and you want to recommend it,',
+    invite_btn_3:'invite it to Win-Win',
+    invite_title:'Invite them to Win-Win',
+    invite_desc:'Share this link to invite a business to Win-Win.',
+    invite_copy_link:'Copy and send this link:',
+    invite_scan_qr:'Or let them scan the QR code:',
+    btn_back_invite:'Back to catalog',
+    copy_btn:'Copy',
+    copied:'Copied ✅'
+  },
+  he:{
+    invite_btn_1:'אם העסק עדיין לא מופיע,',
+    invite_btn_2:'ואתם רוצים להמליץ עליו,',
+    invite_btn_3:'הזמינו אותו ל-Win-Win',
+    invite_title:'הזמינו אותם ל-Win-Win',
+    invite_desc:'שתפו את הקישור כדי להזמין עסק ל-Win-Win.',
+    invite_copy_link:'העתיקו ושלחו את הקישור הזה:',
+    invite_scan_qr:'או תנו לסרוק את קוד ה-QR:',
+    btn_back_invite:'חזרה לקטלוג',
+    copy_btn:'העתק',
+    copied:'הועתק ✅'
+  },
+  ar:{
+    invite_btn_1:'إذا لم يكن العمل موجودًا بعد،',
+    invite_btn_2:'وأردت أن توصي به،',
+    invite_btn_3:'فادعه إلى Win-Win',
+    invite_title:'ادعهم إلى Win-Win',
+    invite_desc:'شارك هذا الرابط لدعوة عمل إلى Win-Win.',
+    invite_copy_link:'انسخ وأرسل هذا الرابط:',
+    invite_scan_qr:'أو دعهم يمسحون رمز QR:',
+    btn_back_invite:'العودة إلى الكتالوج',
+    copy_btn:'نسخ',
+    copied:'تم النسخ ✅'
+  }
 };
 function L(){return i18n[lang]||i18n.ru}
+function UX(){return CATALOG_UX_I18N[lang]||CATALOG_UX_I18N.ru}
 function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));applyI18n();renderFilters();renderCatalog();}
 function applyI18n(){
   document.documentElement.lang=lang;
   const t=L();
+  const ux=UX();
   document.getElementById('t_head').textContent=t.head;
   document.getElementById('t_sub1').textContent=t.sub1;
   document.getElementById('t_sub2').textContent=t.sub2;
@@ -126,8 +210,18 @@ function applyI18n(){
   document.getElementById('t_copy_link').textContent=t.copy_link;
   document.getElementById('t_scan_qr').textContent=t.scan_qr;
   document.getElementById('t_btn_back_catalog').textContent=t.back_catalog;
+  document.getElementById('t_invite_btn_1').textContent=ux.invite_btn_1;
+  document.getElementById('t_invite_btn_2').textContent=ux.invite_btn_2;
+  document.getElementById('t_invite_btn_3').textContent=ux.invite_btn_3;
+  document.getElementById('inviteTitleValue').textContent=ux.invite_title;
+  document.getElementById('inviteDescValue').textContent=ux.invite_desc;
+  document.getElementById('t_copy_link_inv').textContent=ux.invite_copy_link;
+  document.getElementById('t_scan_qr_inv').textContent=ux.invite_scan_qr;
+  document.getElementById('t_btn_back_invite').textContent=ux.btn_back_invite;
   const copyBtn=document.getElementById('copyBtn');
   if(copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent=t.copy_btn;
+  const inviteCopyBtn=document.getElementById('inviteCopyBtn');
+  if(inviteCopyBtn && !inviteCopyBtn.classList.contains('copied')) inviteCopyBtn.textContent=ux.copy_btn;
   document.getElementById('stickyBackBtn').textContent=t.back;
 }
 async function loadCatalog(){
@@ -185,6 +279,38 @@ function openRecommend(b){
     inputId:'refLinkInput',
     copyBtnId:'copyBtn',
     qrCanvasId:'qrCanvas'
+  });
+}
+
+function openInviteScreen(){
+  if(!actorId) return;
+  const link=`https://invite.winwinnetwork.pro/register.html?sender=${encodeURIComponent(actorId)}&lang=${encodeURIComponent(lang)}`;
+  const ux=UX();
+  WinWinReferralShare.open({
+    businessName:ux.invite_title,
+    categoryLabel:'',
+    description:ux.invite_desc,
+    link:link,
+    copyLabel:ux.copy_btn,
+    screenId:'inviteScreen',
+    nameId:'inviteTitleValue',
+    nicheId:'inviteHeaderTag',
+    descId:'inviteDescValue',
+    inputId:'inviteLinkInput',
+    copyBtnId:'inviteCopyBtn',
+    qrCanvasId:'inviteQrCanvas'
+  });
+}
+
+function closeInviteScreen(){
+  WinWinReferralShare.close({ screenId:'inviteScreen' });
+}
+
+function copyInviteLink(){
+  WinWinReferralShare.copy({
+    inputId:'inviteLinkInput',
+    copyBtnId:'inviteCopyBtn',
+    copiedLabel:UX().copied
   });
 }
 
