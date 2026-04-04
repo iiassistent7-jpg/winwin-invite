@@ -860,6 +860,8 @@ let recommendationRows = [];
 let dealFilter = 'active';
 let activeDealId = null;
 let currentTab = 'deals';
+let preservedAgentFetchSeq = 0;
+const ACTIVE_BIZ_CONTEXT_KEY = 'winwin_active_business_context';
 let recommendersMode = 'mine';
 
 const LTR_TABS = ['deals','stats','recommenders','recommend','profile'];
@@ -1100,6 +1102,7 @@ async function init() {
   if (i18n[lang]) setLang(lang);
 
   if (!token) { showError(); return; }
+  setActiveBusinessContext();
 
   // Try cache first for instant display
   const cacheKey = `biz_cache_${token}`;
@@ -1164,15 +1167,43 @@ async function loadPreservedAgentDashboard(force = false) {
     return;
   }
   if (!force && agentDashToken === nextToken && agentDashData) return;
+  const requestSeq = ++preservedAgentFetchSeq;
+  const expectedContext = `business:${token}`;
   try {
     const res = await fetch(`${API_URL}/api/dashboard?token=${encodeURIComponent(nextToken)}`);
     if (!res.ok) throw new Error('agent_dashboard');
-    agentDashData = await res.json();
+    const nextData = await res.json();
+    if (requestSeq !== preservedAgentFetchSeq || sessionStorage.getItem(ACTIVE_BIZ_CONTEXT_KEY) !== expectedContext) return;
+    agentDashData = nextData;
     agentDashToken = nextToken;
   } catch (e) {
+    if (requestSeq !== preservedAgentFetchSeq) return;
     console.error('[Win-Win Biz] preserved agent dashboard fetch error:', e);
     agentDashData = null;
     agentDashToken = '';
+  }
+}
+
+function setActiveBusinessContext() {
+  const nextContext = `business:${token}`;
+  const prevContext = sessionStorage.getItem(ACTIVE_BIZ_CONTEXT_KEY);
+  if (prevContext !== nextContext) {
+    agentDashData = null;
+    agentDashToken = '';
+    leaderboardData = null;
+    recommendationRows = [];
+    preservedAgentFetchSeq += 1;
+  }
+  sessionStorage.setItem(ACTIVE_BIZ_CONTEXT_KEY, nextContext);
+  try {
+    for (let i = sessionStorage.length - 1; i >= 0; i -= 1) {
+      const key = sessionStorage.key(i);
+      if (key && key.startsWith('biz_cache_') && key !== `biz_cache_${token}`) {
+        sessionStorage.removeItem(key);
+      }
+    }
+  } catch (e) {
+    console.warn('[Win-Win Biz] cache cleanup skipped:', e);
   }
 }
 

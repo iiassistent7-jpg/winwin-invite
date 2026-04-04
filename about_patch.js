@@ -4,8 +4,18 @@
     const token = params.get('token');
     const fromCabinet = params.get('from') === 'cabinet';
     const lang = params.get('lang') || 'ru';
+    const cabinetParam = (params.get('cabinet') || '').trim().toLowerCase();
 
     if (!token && !fromCabinet) return; // обычный посетитель — ничего не делаем
+
+    function resolveCabinetPath() {
+        if (cabinetParam === 'business') return 'business.html';
+        if (cabinetParam === 'dashboard') return 'dashboard.html';
+        const ref = String(document.referrer || '').toLowerCase();
+        if (ref.includes('/business.html')) return 'business.html';
+        if (ref.includes('/dashboard.html')) return 'dashboard.html';
+        return 'business.html';
+    }
 
     // Ждём загрузки DOM
     function patchButtons() {
@@ -28,7 +38,7 @@
 
         const btn = document.createElement('a');
         btn.href = token
-            ? `https://invite.winwinnetwork.pro/dashboard.html?token=${token}&lang=${lang}`
+            ? `https://invite.winwinnetwork.pro/${resolveCabinetPath()}?token=${token}&lang=${lang}`
             : 'javascript:history.back()';
         btn.textContent = backLabels[lang] || backLabels.ru;
         btn.style.cssText = [
