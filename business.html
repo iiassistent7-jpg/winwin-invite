@@ -659,7 +659,7 @@ const i18n = {
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
-    debt_label:"Закрыть долг агентам", debt_open:"Открыть список", debt_sheet_title:"Закрыть долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где нужно оплатить долг агентам.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Нужно оплатить долг", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
+    debt_label:"Закрыть долг агентам", debt_open:"Открыть список", debt_sheet_title:"Закрыть долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где нужно оплатить долг агентам.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Оплатить долг", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
@@ -805,6 +805,8 @@ const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
 let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
 let bizData    = null;
+let agentDashData = null;
+let agentDashToken = '';
 let leaderboardData = null;
 let dealFilter = 'active';
 let activeDealId = null;
@@ -1050,6 +1052,8 @@ async function init() {
       bizData = JSON.parse(cached);
       showApp();
       renderAll();
+      await loadPreservedAgentDashboard();
+      renderAll();
     } catch(e) {
       console.error('[Win-Win Biz] cache parse error:', e);
       sessionStorage.removeItem(cacheKey); // clear bad cache
@@ -1064,14 +1068,19 @@ async function init() {
     // Log full API response to console — open DevTools to see field names
     console.log('[Win-Win Biz] API response:', JSON.stringify(fresh).slice(0,500));
     const freshStr = JSON.stringify(fresh);
+    bizData = fresh;
+    await loadPreservedAgentDashboard(freshStr !== cached);
     if (freshStr !== cached) {
-      bizData = fresh;
       sessionStorage.setItem(cacheKey, freshStr);
       if (!cached) showApp();
       renderAll();
     } else if (cached) {
       // Data unchanged — make sure app is shown
       if (document.getElementById('globalLoader').style.display !== 'none') showApp();
+      renderAll();
+    } else {
+      showApp();
+      renderAll();
     }
   } catch(e) {
     console.error('[Win-Win Biz] fetch error:', e);
@@ -1087,6 +1096,27 @@ async function init() {
   }
 
   feather.replace();
+}
+
+async function loadPreservedAgentDashboard(force = false) {
+  const hasOperationalState = bizData && bizData.has_agent_operational_state === true;
+  const nextToken = bizData && bizData.agent_dashboard_token ? String(bizData.agent_dashboard_token).trim() : '';
+  if (!hasOperationalState || !nextToken) {
+    agentDashData = null;
+    agentDashToken = '';
+    return;
+  }
+  if (!force && agentDashToken === nextToken && agentDashData) return;
+  try {
+    const res = await fetch(`${API_URL}/api/dashboard?token=${encodeURIComponent(nextToken)}`);
+    if (!res.ok) throw new Error('agent_dashboard');
+    agentDashData = await res.json();
+    agentDashToken = nextToken;
+  } catch (e) {
+    console.error('[Win-Win Biz] preserved agent dashboard fetch error:', e);
+    agentDashData = null;
+    agentDashToken = '';
+  }
 }
 
 function showApp() {
@@ -1182,7 +1212,7 @@ function setFilter(f) {
 function getStatusData(status) {
   const L = i18n[lang] || i18n.ru;
   const payoutPendingText = {
-    ru:'Нужно оплатить долг',
+    ru:'Оплатить долг',
     he:'ממתינים לתשלום לסוכן',
     en:'Awaiting agent payout',
     ar:'بانتظار دفع الوكيل'
@@ -1409,7 +1439,20 @@ function firstArray(items) {
   return items.find(Array.isArray) || null;
 }
 
+function getFetchedAgentRecommendationSource() {
+  return firstArray([
+    agentDashData && agentDashData.leads,
+    agentDashData && agentDashData.outgoing_recommendations,
+    agentDashData && agentDashData.recommendation_history,
+    agentDashData && agentDashData.history
+  ]);
+}
+
 function getPreservedAgentRecommendationSource() {
+  const agentRows = getFetchedAgentRecommendationSource();
+  if (agentRows) {
+    return agentRows;
+  }
   const explicitTopLevel = firstArray([
     bizData.preserved_agent_recommendations,
     bizData.agent_recommendations,
@@ -1454,7 +1497,7 @@ function getDealActionLabel(status) {
 }
 function getDealNextStep(status) {
   const payoutPendingText = {
-    ru:'Нужно оплатить долг',
+    ru:'Оплатить долг',
     he:'יש לשלם לסוכן את התגמול',
     en:'The agent payout still needs to be paid',
     ar:'ما زال يجب دفع مكافأة الوكيل'
@@ -1909,20 +1952,46 @@ function renderLeadersInline() {
 }
 
 // ══ RECOMMEND ═══════════════════════════════════════════════════════════
+function normalizeRecommendationStatus(row) {
+  const status = row.status || row.reward_status || row.decision_status || row.settlement_status || '';
+  if ([
+    'pending_business_payment',
+    'awaiting_business_payment',
+    'pending_reward_payment',
+    'awaiting_reward'
+  ].includes(status)) return 'awaiting_reward';
+  if ([
+    'confirmed',
+    'gift_closed',
+    'completed',
+    'done',
+    'closed'
+  ].includes(status)) return 'done';
+  if (['pending_confirmation', 'pending'].includes(status)) return 'pending_confirmation';
+  return 'in_progress';
+}
+
 function normalizeOutgoingRecommendations() {
-  const raw = getPreservedAgentRecommendationSource()
-    || bizData.outgoing_recommendations
-    || bizData.recommendations_sent
-    || bizData.sent_recommendations
-    || [];
+  const hasExplicitAgentDashboard = bizData && bizData.has_agent_operational_state === true && bizData.agent_dashboard_token;
+  const raw = hasExplicitAgentDashboard
+    ? (getFetchedAgentRecommendationSource() || [])
+    : (getPreservedAgentRecommendationSource()
+      || bizData.outgoing_recommendations
+      || bizData.recommendations_sent
+      || bizData.sent_recommendations
+      || []);
   return raw.map((r, idx) => ({
     id: r.id || idx,
-    business_name: r.business_name || r.receiver_name || r.partner_name || r.recommended_business || '—',
-    client_name: r.client_name || r.invited_client_name || r.name || '—',
-    status: r.status || r.reward_status || r.decision_status || 'in_progress',
-    date: r.date || r.created_at || '',
-    reward: r.reward || r.commission || r.reward_amount || '',
-    decision: r.agent_decision || r.decision || ''
+    business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || '—',
+    client_name: r.client_name || r.invited_client_name || r.receiver_name || r.name || '—',
+    status: normalizeRecommendationStatus(r),
+    date: r.start_date || r.date || r.created_at || '',
+    reward: r.reward || r.commission || r.agent_bonus || r.bonus || r.reward_amount || '',
+    decision: (r.agent_decision || r.reward_decision || r.decision || r.settlement_mode || '') === 'gift'
+      ? 'gift_client'
+      : ((r.agent_decision || r.reward_decision || r.decision || r.settlement_mode || '') === 'support'
+        ? 'support_business'
+        : (r.agent_decision || r.reward_decision || r.decision || r.settlement_mode || ''))
   }));
 }
 
