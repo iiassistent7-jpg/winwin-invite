@@ -545,7 +545,7 @@
       </button>
       <div class="sheet-card" style="margin-top:0;">
         <div class="sheet-title" id="t_debt_sheet_title">Долг агентам</div>
-        <div class="soft-note" id="t_debt_sheet_sub" style="margin-bottom:16px;">Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.</div>
+        <div class="soft-note" id="t_debt_sheet_sub" style="margin-bottom:16px;">Здесь показаны только активные сделки, где нужно оплатить долг агентам.</div>
         <div id="debtDealsList" class="debt-list"></div>
       </div>
     </div>
@@ -659,7 +659,7 @@ const i18n = {
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
-    debt_label:"Нужно закрыть долг агенту", debt_open:"Открыть список", debt_sheet_title:"Нужно закрыть долг агенту", debt_sheet_sub:"Здесь показаны только активные сделки, где ещё нужно выплатить агенту вознаграждение.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Выплата агенту", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
+    debt_label:"Закрыть долг агентам", debt_open:"Открыть список", debt_sheet_title:"Закрыть долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где нужно оплатить долг агентам.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Нужно оплатить долг", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
     pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
@@ -1182,7 +1182,7 @@ function setFilter(f) {
 function getStatusData(status) {
   const L = i18n[lang] || i18n.ru;
   const payoutPendingText = {
-    ru:'Ожидаем выплату агенту',
+    ru:'Нужно оплатить долг',
     he:'ממתינים לתשלום לסוכן',
     en:'Awaiting agent payout',
     ar:'بانتظار دفع الوكيل'
@@ -1405,6 +1405,43 @@ function isPayoutPendingBusinessDeal(deal) {
   return ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode);
 }
 
+function firstArray(items) {
+  return items.find(Array.isArray) || null;
+}
+
+function getPreservedAgentRecommendationSource() {
+  const explicitTopLevel = firstArray([
+    bizData.preserved_agent_recommendations,
+    bizData.agent_recommendations,
+    bizData.agent_recommendation_history,
+    bizData.preserved_agent_history,
+    bizData.agent_history,
+    bizData.agent_outgoing_recommendations,
+    bizData.preserved_agent_outgoing_recommendations
+  ]);
+  if (explicitTopLevel) return explicitTopLevel;
+
+  const explicitContainers = [
+    bizData.preserved_agent_access,
+    bizData.preserved_agent_context,
+    bizData.agent_access,
+    bizData.agent_context
+  ].filter(v => v && typeof v === 'object');
+
+  for (const ctx of explicitContainers) {
+    const rows = firstArray([
+      ctx.outgoing_recommendations,
+      ctx.recommendations,
+      ctx.recommendation_history,
+      ctx.history,
+      ctx.outgoing_history
+    ]);
+    if (rows) return rows;
+  }
+
+  return null;
+}
+
 
 function getDealActionLabel(status) {
   const map = {
@@ -1417,7 +1454,7 @@ function getDealActionLabel(status) {
 }
 function getDealNextStep(status) {
   const payoutPendingText = {
-    ru:'Нужно выплатить агенту вознаграждение',
+    ru:'Нужно оплатить долг',
     he:'יש לשלם לסוכן את התגמול',
     en:'The agent payout still needs to be paid',
     ar:'ما زال يجب دفع مكافأة الوكيل'
@@ -1873,7 +1910,11 @@ function renderLeadersInline() {
 
 // ══ RECOMMEND ═══════════════════════════════════════════════════════════
 function normalizeOutgoingRecommendations() {
-  const raw = bizData.outgoing_recommendations || bizData.recommendations_sent || bizData.outgoing_deals || bizData.sent_recommendations || [];
+  const raw = getPreservedAgentRecommendationSource()
+    || bizData.outgoing_recommendations
+    || bizData.recommendations_sent
+    || bizData.sent_recommendations
+    || [];
   return raw.map((r, idx) => ({
     id: r.id || idx,
     business_name: r.business_name || r.receiver_name || r.partner_name || r.recommended_business || '—',
