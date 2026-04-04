@@ -551,6 +551,17 @@
     </div>
   </div>
 
+  <div class="fullscreen" id="recommendDetailSheet" style="padding:0;">
+    <div style="max-width:430px; margin:0 auto; padding:20px 16px 32px;">
+      <button class="btn-back" onclick="closeRecommendDetail()">
+        <i data-feather="arrow-left"></i>
+        <span id="t_rec_detail_back_top">Назад</span>
+      </button>
+      <div id="recommendDetailContent"></div>
+      <button class="btn-primary btn-accent" onclick="closeRecommendDetail()" id="t_rec_detail_back_bottom">Назад</button>
+    </div>
+  </div>
+
   <!-- ══ FULLSCREEN: Edit Profile ═════════════════════════════════ -->
   <div class="fullscreen" id="editProfileSheet" style="padding:0;">
     <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
@@ -808,6 +819,7 @@ let bizData    = null;
 let agentDashData = null;
 let agentDashToken = '';
 let leaderboardData = null;
+let recommendationRows = [];
 let dealFilter = 'active';
 let activeDealId = null;
 let currentTab = 'deals';
@@ -1984,9 +1996,15 @@ function normalizeOutgoingRecommendations() {
     id: r.id || idx,
     business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || '—',
     client_name: r.client_name || r.invited_client_name || r.receiver_name || r.name || '—',
+    client_phone: r.client_phone || r.invited_client_phone || r.receiver_phone || r.phone || '',
     status: normalizeRecommendationStatus(r),
     date: r.start_date || r.date || r.created_at || '',
     reward: r.reward || r.commission || r.agent_bonus || r.bonus || r.reward_amount || '',
+    debt_amount: r.debt_amount || r.pending_payout || r.pending_debt || r.debt || '',
+    settlement_status: r.settlement_status || r.reward_status || r.status || '',
+    has_open_settlement: r.has_open_settlement,
+    has_open_agent_payout: r.has_open_agent_payout,
+    history_ready: r.history_ready,
     decision: (r.agent_decision || r.reward_decision || r.decision || r.settlement_mode || '') === 'gift'
       ? 'gift_client'
       : ((r.agent_decision || r.reward_decision || r.decision || r.settlement_mode || '') === 'support'
@@ -2003,6 +2021,7 @@ function renderRecommend() {
   const L = i18n[lang] || i18n.ru;
   const curr = bizData.currency || '₪';
   const rows = normalizeOutgoingRecommendations();
+  recommendationRows = rows;
   const waiting = rows.filter(r => ['in_progress','pending','pending_confirmation','awaiting_reward'].includes(r.status)).length;
   const done = rows.filter(r => ['closed','completed','done'].includes(r.status)).length;
   if (totalEl) totalEl.textContent = rows.length;
@@ -2012,12 +2031,12 @@ function renderRecommend() {
     listEl.innerHTML = `<div class="empty-state">${L.rec_empty || L.empty_deals}</div>`;
     return;
   }
-  listEl.innerHTML = rows.map(r => {
+  listEl.innerHTML = rows.map((r, idx) => {
     const statusText = getRecommendStatusLabel(r.status, L);
     const rewardLine = r.reward ? `<span class="meta-pill">🎁 ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
     const decisionLine = r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '';
     return `
-      <div class="reco-card">
+      <div class="reco-card" onclick="openRecommendDetail(${idx})">
         <div class="reco-top">
           <div>
             <div class="reco-title">${r.business_name}</div>
@@ -2051,6 +2070,74 @@ function formatDecision(decision, L) {
   if (decision === 'gift_client') return '🎁 ' + (L.dec_gift || 'Подарить клиенту');
   if (decision === 'support_business') return '🤝 ' + (L.dec_support || 'Поддержать бизнес');
   return decision;
+}
+
+function getRecommendDetailLabels() {
+  const map = {
+    ru: { title:'Детали рекомендации', back:'Назад', business:'Бизнес', client:'Клиент', phone:'Телефон клиента', date:'Дата сделки', stage:'Текущий этап', bonus:'Бонус', settlement:'Способ расчёта', payout:'Состояние выплаты', payout_waiting:'Ожидаем выплату', settlement_open:'Расчёт ещё открыт', closed:'Закрыта', debt:'Есть долг' },
+    he: { title:'פרטי ההמלצה', back:'חזרה', business:'עסק', client:'לקוח', phone:'טלפון לקוח', date:'תאריך', stage:'שלב נוכחי', bonus:'בונוס', settlement:'אופן התגמול', payout:'מצב תשלום', payout_waiting:'ממתינים לתשלום', settlement_open:'הסליקה עדיין פתוחה', closed:'נסגרה', debt:'יש חוב' },
+    en: { title:'Recommendation details', back:'Back', business:'Business', client:'Client', phone:'Client phone', date:'Deal date', stage:'Current stage', bonus:'Bonus', settlement:'Settlement mode', payout:'Payout state', payout_waiting:'Awaiting payout', settlement_open:'Settlement is still open', closed:'Closed', debt:'Debt open' },
+    ar: { title:'تفاصيل التوصية', back:'رجوع', business:'النشاط', client:'العميل', phone:'هاتف العميل', date:'تاريخ الصفقة', stage:'المرحلة الحالية', bonus:'المكافأة', settlement:'طريقة التسوية', payout:'حالة الدفع', payout_waiting:'بانتظار الدفع', settlement_open:'التسوية ما زالت مفتوحة', closed:'مغلقة', debt:'هناك دين' }
+  };
+  return map[lang] || map.ru;
+}
+
+function formatRecommendDecisionPlain(decision, L) {
+  if (decision === 'take') return L.dec_take || 'Забрать себе';
+  if (decision === 'gift_client') return L.dec_gift || 'Подарить клиенту';
+  if (decision === 'support_business') return L.dec_support || 'Поддержать бизнес';
+  return decision || '—';
+}
+
+function formatRecommendAmount(value, curr) {
+  if (value === null || value === undefined || value === '') return '—';
+  const raw = String(value).trim();
+  if (!raw) return '—';
+  return /^-?\d+(\.\d+)?$/.test(raw) ? `${raw} ${curr}` : raw;
+}
+
+function getRecommendPayoutState(row, labels, curr) {
+  const truth = getDealTruth(row);
+  if (truth.hasOpenAgentPayout === true || row.status === 'awaiting_reward') {
+    return truth.debtAmount > 0 ? `${labels.debt}: ${truth.debtAmount} ${curr}` : labels.payout_waiting;
+  }
+  if (truth.debtAmount > 0) return `${labels.debt}: ${truth.debtAmount} ${curr}`;
+  if (truth.hasOpenSettlement === true || ['pending_confirmation','in_progress'].includes(row.status)) return labels.settlement_open;
+  if (row.status === 'done') return labels.closed;
+  return '—';
+}
+
+function openRecommendDetail(index) {
+  const row = recommendationRows[index];
+  if (!row) return;
+  const L = i18n[lang] || i18n.ru;
+  const labels = getRecommendDetailLabels();
+  const curr = bizData.currency || '₪';
+  const statusText = getRecommendStatusLabel(row.status, L).text;
+  document.getElementById('recommendDetailContent').innerHTML = `
+    <div class="sheet-card" style="margin-top:0;">
+      <div class="sheet-title">${labels.title}</div>
+      <div class="deal-inline-meta">
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${row.client_phone || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : '—'}</div></div>
+      </div>
+      <div class="deal-inline-meta" style="margin-bottom:0;">
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.bonus}</div><div class="deal-mini-val">${formatRecommendAmount(row.reward, curr)}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.settlement}</div><div class="deal-mini-val">${formatRecommendDecisionPlain(row.decision, L)}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>
+      </div>
+    </div>`;
+  document.getElementById('t_rec_detail_back_top').textContent = labels.back;
+  document.getElementById('t_rec_detail_back_bottom').textContent = labels.back;
+  openFullscreen('recommendDetailSheet');
+  try { feather.replace(); } catch(e) {}
+}
+
+function closeRecommendDetail() {
+  closeFullscreen('recommendDetailSheet');
 }
 
 async function openRecommendFlow() {

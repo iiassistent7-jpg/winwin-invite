@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Win-Win · Каталог</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="referral-share.js"></script>
   <style>
     :root{--bg:#0F0F1A;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.08);--text:#fff;--text2:#a0a0b0;--accent:#2F80ED;--accent2:#56CCF2;--green:#27AE60;--gold:#F2C94C;--radius:22px;--shadow:0 12px 34px rgba(0,0,0,.35)}
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -34,18 +36,23 @@
     .biz-cat{color:var(--text2);font-size:.8rem;line-height:1.4}
     .biz-bonus{display:inline-flex;align-items:center;gap:6px;background:rgba(242,201,76,.12);border:1px solid rgba(242,201,76,.22);color:var(--gold);padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:800;white-space:nowrap}
     .empty{padding:36px 18px;text-align:center;color:var(--text2);font-weight:600}
-    .sheet{position:fixed;inset:0;background:rgba(3,6,17,.62);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:50}
-    .sheet.active{display:flex}
-    .panel{width:100%;max-width:430px;background:#111527;border:1px solid var(--border);border-radius:28px 28px 24px 24px;padding:20px 18px 24px;box-shadow:0 24px 50px rgba(0,0,0,.55)}
-    .handle{width:52px;height:5px;border-radius:999px;background:rgba(255,255,255,.14);margin:0 auto 16px}
-    .panel h2{font-family:Sora,sans-serif;font-size:1.55rem;line-height:1.05;margin-bottom:8px}
-    .panel p{color:var(--text2);line-height:1.55;font-size:.92rem;margin-bottom:10px}
-    .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.22);color:var(--accent2);padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:800;margin-bottom:12px}
+    .fullscreen{position:fixed;inset:0;background:var(--bg);z-index:70;overflow-y:auto;padding:24px 16px 40px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,1,.5,1);display:none}
+    .fullscreen.active{display:block;transform:translateX(0)}
+    .rec-header-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .rec-title{font-family:Sora,sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:10px;line-height:1.2}
+    .rec-niche{display:inline-block;font-size:.75rem;color:var(--accent2);background:rgba(47,128,237,.1);padding:4px 10px;border-radius:7px;font-weight:700;margin-bottom:12px;line-height:1.4}
+    .rec-desc{font-size:.88rem;color:var(--text2);line-height:1.55;border-top:1px solid var(--border);padding-top:14px;word-break:break-word}
+    .instruction-block{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:20px;margin-bottom:14px}
+    .instruction-text{font-size:.85rem;color:var(--text2);margin-bottom:12px;font-weight:500;line-height:1.4}
+    .link-box{display:flex;gap:8px}
+    .link-input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:11px;font-size:.82rem;outline:none;font-family:inherit}
+    .btn-copy{flex-shrink:0;background:var(--accent2);border:none;color:#fff;font-weight:700;padding:0 18px;border-radius:11px;cursor:pointer;transition:.2s;white-space:nowrap;font-family:inherit}
+    .btn-copy.copied{background:var(--green)}
+    .qr-container{text-align:center;padding:16px;background:#fff;border-radius:16px;display:inline-block;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.1)}
     .actions{display:flex;flex-direction:column;gap:10px;margin-top:14px}
     .btn{display:flex;justify-content:center;align-items:center;width:100%;padding:16px;border-radius:16px;text-decoration:none;font-weight:800;font-size:1rem;border:none;cursor:pointer}
     .btn-primary{background:var(--accent);color:#fff}
     .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
-    .tiny{color:var(--text2);font-size:.76rem;line-height:1.45}
     .notice{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(18px);opacity:0;pointer-events:none;transition:.22s;background:#171d31;color:#fff;border:1px solid rgba(255,255,255,.1);padding:12px 14px;border-radius:14px;z-index:70;box-shadow:0 16px 34px rgba(0,0,0,.35)}
     .sticky-back{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;z-index:60;display:flex;justify-content:center}
     .sticky-back .btn{box-shadow:0 10px 24px rgba(0,0,0,.28)}
@@ -72,16 +79,24 @@
   <div class="filters" id="filters"></div>
   <div class="grid" id="grid"><div class="empty">Загрузка каталога...</div></div>
 </div>
-<div class="sheet" id="sheet" onclick="closeSheet(event)">
-  <div class="panel" onclick="event.stopPropagation()">
-    <div class="handle"></div>
-    <div class="chip" id="sheetChip">Категория</div>
-    <h2 id="sheetName">—</h2>
-    <p id="sheetDesc">—</p>
-    <div class="tiny" id="sheetBonus"></div>
-    <div class="actions">
-      <button class="btn btn-primary" id="copyBtn" onclick="copyReferralLink()">Скопировать ссылку для рекомендации</button>
-      <button class="btn btn-outline" onclick="closeSheet()">Назад</button>
+<div class="fullscreen" id="recommendScreen">
+  <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+    <div class="rec-header-card" style="margin-top:20px;">
+      <div class="rec-title" id="recBizName">—</div>
+      <div class="rec-niche" id="recBizNiche">—</div>
+      <div class="rec-desc" id="recBizDesc">—</div>
+    </div>
+    <div class="instruction-block">
+      <div class="instruction-text" id="t_copy_link">Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:</div>
+      <div class="link-box">
+        <input type="text" id="refLinkInput" class="link-input" readonly>
+        <button class="btn-copy" id="copyBtn" onclick="copyLink()">Скопировать</button>
+      </div>
+    </div>
+    <div class="instruction-block" style="text-align:center;padding-bottom:24px;border:none;box-shadow:none;background:transparent;">
+      <div class="instruction-text" id="t_scan_qr">Или дайте отсканировать QR-код:</div>
+      <div class="qr-container" style="margin-bottom:20px;"><canvas id="qrCanvas"></canvas></div>
+      <button class="btn btn-primary" onclick="closeRecommend()" id="t_btn_back_catalog">Назад в каталог</button>
     </div>
   </div>
 </div>
@@ -94,14 +109,27 @@ let lang=new URLSearchParams(location.search).get('lang')||'ru';
 let allBusinesses=[]; let currentCat='__all__'; let actorId=null; let currentBiz=null;
 const FALLBACK_CATEGORIES={ru:['Красота','Медицина','Недвижимость','Юристы','Услуги','B2B'],en:['Beauty','Medicine','Real Estate','Legal','Services','B2B'],he:['יופי','רפואה','נדל"ן','משפטים','שירותים','B2B'],ar:['الجمال','الطب','العقارات','القانون','الخدمات','B2B']};
 const i18n={
- ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy:'Скопировать ссылку для рекомендации',copied:'Ссылка скопирована ✅',back:'Назад',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win'},
- en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy:'Copy referral link',copied:'Referral link copied ✅',back:'Back',bonus:'Bonus',invite:'Invite business to Win-Win'},
- he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy:'העתק קישור להמלצה',copied:'הקישור הועתק ✅',back:'חזרה',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win'},
- ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy:'انسخ رابط التوصية',copied:'تم نسخ الرابط ✅',back:'رجوع',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win‑Win'}
+ ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy_btn:'Скопировать',copy_link:'Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:',copied:'Скопировано ✅',scan_qr:'Или дайте отсканировать QR-код:',back:'Назад',back_catalog:'Назад в каталог',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win',desc_fallback:'У этого бизнеса пока нет дополнительного описания.'},
+ en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy_btn:'Copy',copy_link:'Copy and send this link to the person you want to recommend this business to:',copied:'Copied ✅',scan_qr:'Or let them scan the QR code:',back:'Back',back_catalog:'Back to catalog',bonus:'Bonus',invite:'Invite business to Win-Win',desc_fallback:'This business has not added extra details yet.'},
+ he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy_btn:'העתק',copy_link:'העתיקו ושלחו את הקישור הזה למי שתרצו להמליץ לו על העסק הזה:',copied:'הועתק ✅',scan_qr:'או תנו לסרוק את קוד ה-QR:',back:'חזרה',back_catalog:'חזרה לקטלוג',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win',desc_fallback:'לעסק הזה עדיין אין תיאור נוסף.'},
+ ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy_btn:'نسخ',copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي تريد أن توصي له بهذا النشاط:',copied:'تم النسخ ✅',scan_qr:'أو دعهم يمسحون رمز QR:',back:'رجوع',back_catalog:'العودة إلى الكتالوج',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win‑Win',desc_fallback:'لا توجد بعد معلومات إضافية عن هذا النشاط.'}
 };
 function L(){return i18n[lang]||i18n.ru}
 function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));applyI18n();renderFilters();renderCatalog();}
-function applyI18n(){document.documentElement.lang=lang;const t=L();document.getElementById('t_head').textContent=t.head;document.getElementById('t_sub1').textContent=t.sub1;document.getElementById('t_sub2').textContent=t.sub2;document.getElementById('q').placeholder=t.search;document.getElementById('copyBtn').textContent=t.copy;document.getElementById('stickyBackBtn').textContent=t.back;}
+function applyI18n(){
+  document.documentElement.lang=lang;
+  const t=L();
+  document.getElementById('t_head').textContent=t.head;
+  document.getElementById('t_sub1').textContent=t.sub1;
+  document.getElementById('t_sub2').textContent=t.sub2;
+  document.getElementById('q').placeholder=t.search;
+  document.getElementById('t_copy_link').textContent=t.copy_link;
+  document.getElementById('t_scan_qr').textContent=t.scan_qr;
+  document.getElementById('t_btn_back_catalog').textContent=t.back_catalog;
+  const copyBtn=document.getElementById('copyBtn');
+  if(copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent=t.copy_btn;
+  document.getElementById('stickyBackBtn').textContent=t.back;
+}
 async function loadCatalog(){
   try{
     const res=await fetch(`${API_URL}/api/catalog?token=${encodeURIComponent(token)}`);
@@ -133,20 +161,43 @@ function renderCatalog(){
   if(!filtered.length){grid.innerHTML=`<div class="empty">${L().empty}</div>`; return;}
   grid.innerHTML='';
   filtered.forEach(b=>{
-    const card=document.createElement('div'); card.className='biz-card'; card.onclick=()=>openBiz(b);
+    const card=document.createElement('div'); card.className='biz-card'; card.onclick=()=>openRecommend(b);
     const cat=categoryOf(b); const niche=Array.isArray(b.niche)&&b.niche.length?(' · '+b.niche.slice(0,2).join(', ')):'';
     card.innerHTML=`<div class="biz-top"><div><div class="biz-name">${b.name}</div><div class="biz-cat">${cat}${niche}</div></div><div class="biz-bonus">🎁 ${L().bonus}: ${b.commission||'—'}</div></div>`;
     grid.appendChild(card);
   });
 }
-function openBiz(b){currentBiz=b; document.getElementById('sheetName').textContent=b.name||'—'; document.getElementById('sheetChip').textContent=categoryOf(b); document.getElementById('sheetDesc').textContent=b.business_info||'У этого бизнеса пока нет дополнительного описания.'; document.getElementById('sheetBonus').textContent=`${L().bonus}: ${b.commission||'—'}`; document.getElementById('sheet').classList.add('active');}
-function closeSheet(e){if(e && e.target!==document.getElementById('sheet')) return; document.getElementById('sheet').classList.remove('active');}
 function showNotice(msg){const n=document.getElementById('notice'); n.textContent=msg; n.style.opacity='1'; n.style.transform='translateX(-50%) translateY(0)'; clearTimeout(showNotice._t); showNotice._t=setTimeout(()=>{n.style.opacity='0'; n.style.transform='translateX(-50%) translateY(18px)';},1800);}
-async function copyReferralLink(){
-  if(!currentBiz || !actorId) return;
-  const link=`https://invite.winwinnetwork.pro/register.html?role=client&sender=${encodeURIComponent(actorId)}&receiver=${encodeURIComponent(currentBiz.id)}&biz_name=${encodeURIComponent(currentBiz.name||'')}&lang=${encodeURIComponent(lang)}`;
-  try{await navigator.clipboard.writeText(link);}catch(e){const ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-  showNotice(L().copied);
+
+function openRecommend(b){
+  currentBiz=b;
+  const link=`https://invite.winwinnetwork.pro/register.html?role=client&sender=${encodeURIComponent(actorId)}&receiver=${encodeURIComponent(b.id)}&biz_name=${encodeURIComponent(b.name||'')}&lang=${encodeURIComponent(lang)}`;
+  WinWinReferralShare.open({
+    businessName:b.name||'—',
+    categoryLabel:categoryOf(b),
+    description:b.business_info||'',
+    link:link,
+    copyLabel:L().copy_btn,
+    screenId:'recommendScreen',
+    nameId:'recBizName',
+    nicheId:'recBizNiche',
+    descId:'recBizDesc',
+    inputId:'refLinkInput',
+    copyBtnId:'copyBtn',
+    qrCanvasId:'qrCanvas'
+  });
+}
+
+function closeRecommend(){
+  WinWinReferralShare.close({ screenId:'recommendScreen' });
+}
+
+function copyLink(){
+  WinWinReferralShare.copy({
+    inputId:'refLinkInput',
+    copyBtnId:'copyBtn',
+    copiedLabel:L().copied
+  });
 }
 applyI18n(); loadCatalog();
 </script>

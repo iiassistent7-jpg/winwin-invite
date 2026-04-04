@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="referral-share.js"></script>
     <style>
         /* ג”€ג”€ Light theme ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
         :root {
@@ -2399,7 +2400,7 @@ function closeFullscreen(id) {
 function closeDealDetail()    { closeFullscreen('dealSheet'); }
 function closeLeaderboard()   { closeFullscreen('leaderboardSheet'); }
 function closeProfileEdit()   { closeFullscreen('profileSheet'); }
-function closeRecommend()     { closeFullscreen('recommendScreen'); }
+function closeRecommend()     { WinWinReferralShare.close({ screenId:'recommendScreen' }); }
 function closeInviteScreen()  { closeFullscreen('inviteScreen'); }
 function closeBizReg()        { closeFullscreen('bizRegSheet'); }
 function closeBizRegSuccess() { closeFullscreen('bizRegSuccessSheet'); }
@@ -2969,41 +2970,33 @@ function renderCatalog() {
 
 // ג”€ג”€ Recommend & Invite ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 function openRecommend(biz) {
-    document.getElementById('recBizName').textContent = biz.name;
     const translatedCat = getCatName(biz.category || '', lang);
     const _nRaw = Array.isArray(biz.niche) ? biz.niche.slice(0,2) : (biz.niche && biz.niche !== '—' ? [biz.niche] : []);
     const nicheStr = _nRaw.length ? ' · ' + _nRaw.map(n=>translateSubcat(n,lang)).join(', ') : '';
-    document.getElementById('recBizNiche').textContent = `${translatedCat}${nicheStr}`.trim() || 'Ниша';
-    
-    const descEl = document.getElementById('recBizDesc');
-    if (biz.business_info) {
-        // ׀¡׀°׀½׀¸ׁ‚׀¸׀·׀°ׁ†׀¸ׁ ׀¿׀µׁ€׀µ׀´ ׀²ׁׁ‚׀°׀²׀÷׀¾׀¹ ׀² innerHTML
-        const safe = biz.business_info.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        descEl.innerHTML = safe.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
-        descEl.style.display = 'block';
-    } else { descEl.style.display = 'none'; }
-
     const link = `https://invite.winwinnetwork.pro/register.html?role=client&sender=${catalogAgentId}&receiver=${biz.id}&biz_name=${encodeURIComponent(biz.name)}&lang=${lang}`;
-    document.getElementById('refLinkInput').value = link;
     const L = i18n[lang]||i18n.ru;
-    const copyBtn = document.getElementById('copyBtn');
-    copyBtn.textContent = L.copy_btn;
-    copyBtn.classList.remove('copied');
-    
-    const ctx = document.getElementById('qrCanvas').getContext('2d');
-    ctx.clearRect(0,0,300,300);
-    try { new QRious({element:document.getElementById('qrCanvas'),value:link,size:220,level:'H'}); } catch(e){}
-    document.getElementById('recommendScreen').classList.add('active');
-    window.scrollTo(0,0);
-    feather.replace();
+    WinWinReferralShare.open({
+        businessName: biz.name || '—',
+        categoryLabel: `${translatedCat}${nicheStr}`.trim() || 'Ниша',
+        description: biz.business_info || '',
+        link: link,
+        copyLabel: L.copy_btn,
+        screenId: 'recommendScreen',
+        nameId: 'recBizName',
+        nicheId: 'recBizNiche',
+        descId: 'recBizDesc',
+        inputId: 'refLinkInput',
+        copyBtnId: 'copyBtn',
+        qrCanvasId: 'qrCanvas'
+    });
 }
 
 function copyLink() {
-    const input = document.getElementById('refLinkInput');
-    navigator.clipboard?.writeText(input.value).catch(() => { input.select(); document.execCommand('copy'); });
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = (i18n[lang]||i18n.ru).copied;
-    btn.classList.add('copied');
+    WinWinReferralShare.copy({
+        inputId: 'refLinkInput',
+        copyBtnId: 'copyBtn',
+        copiedLabel: (i18n[lang]||i18n.ru).copied
+    });
 }
 
 function openInviteScreen() {
