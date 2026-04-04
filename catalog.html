@@ -1,9 +1,9 @@
-<!doctype html>
+﻿﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Win-Win · Каталог</title>
+  <title>Win-Win ֲ· ׀׀°ׁ‚׀°׀»׀¾׀³</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script src="referral-share.js"></script>
@@ -81,130 +81,177 @@
     <div class="logo-sub">NETWORK</div>
   </div>
   <div class="hero">
-    <h1 id="t_head">Экосистема доверия</h1>
-    <p id="t_sub1">Найдите проверенный бизнес в каталоге и передайте рекомендацию.</p>
-    <p class="sub" id="t_sub2">Ваш социальный капитал работает на вас.</p>
+    <h1 id="t_head">׀­׀÷׀¾ׁ׀¸ׁׁ‚׀µ׀¼׀° ׀´׀¾׀²׀µׁ€׀¸ׁ</h1>
+    <p id="t_sub1">׀׀°׀¹׀´׀¸ׁ‚׀µ ׀¿ׁ€׀¾׀²׀µׁ€׀µ׀½׀½ׁ‹׀¹ ׀±׀¸׀·׀½׀µׁ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³׀µ ׀¸ ׀¿׀µׁ€׀µ׀´׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ.</p>
+    <p class="sub" id="t_sub2">׀’׀°ׁˆ ׁ׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀» ׁ€׀°׀±׀¾ׁ‚׀°׀µׁ‚ ׀½׀° ׀²׀°ׁ.</p>
   </div>
-  <div class="search"><input id="q" type="text" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()"></div>
+  <div class="search"><input id="q" type="text" placeholder="׀׀¾׀¸ׁ׀÷ ׀±׀¸׀·׀½׀µׁ׀° ׀¸׀»׀¸ ׁƒׁ׀»ׁƒ׀³׀¸..." oninput="renderCatalog()"></div>
   <div class="invite-cta-wrap">
     <button class="invite-cta" onclick="openInviteScreen()">
-      <span id="t_invite_btn_1">Если нужного бизнеса нет,</span><br>
-      <span id="t_invite_btn_2">и вы хотите его рекомендовать,</span><br>
-      <span id="t_invite_btn_3">пригласите его в Win-Win</span>
+      <span id="t_invite_btn_1">׀•ׁ׀»׀¸ ׀½ׁƒ׀¶׀½׀¾׀³׀¾ ׀±׀¸׀·׀½׀µׁ׀° ׀½׀µׁ‚,</span><br>
+      <span id="t_invite_btn_2">׀¸ ׀²ׁ‹ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀µ׀³׀¾ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ,</span><br>
+      <span id="t_invite_btn_3">׀¿ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀µ׀³׀¾ ׀² Win-Win</span>
     </button>
   </div>
   <div class="filters" id="filters"></div>
   <div class="subfilters-wrap" id="subfiltersWrap" style="display:none;">
-    <div class="subfilters-title" id="t_subfilters_title">Подкатегории</div>
+    <div class="subfilters-title" id="t_subfilters_title">׀׀¾׀´׀÷׀°ׁ‚׀µ׀³׀¾ׁ€׀¸׀¸</div>
     <div class="subfilters" id="subfilters"></div>
   </div>
-  <div class="grid" id="grid"><div class="empty">Загрузка каталога...</div></div>
+  <div class="grid" id="grid"><div class="empty">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀° ׀÷׀°ׁ‚׀°׀»׀¾׀³׀°...</div></div>
 </div>
 <div class="fullscreen" id="recommendScreen">
   <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
     <div class="rec-header-card" style="margin-top:20px;">
-      <div class="rec-title" id="recBizName">—</div>
-      <div class="rec-niche" id="recBizNiche">—</div>
-      <div class="rec-desc" id="recBizDesc">—</div>
+      <div class="rec-title" id="recBizName">ג€”</div>
+      <div class="rec-niche" id="recBizNiche">ג€”</div>
+      <div class="rec-desc" id="recBizDesc">ג€”</div>
     </div>
     <div class="instruction-block">
-      <div class="instruction-text" id="t_copy_link">Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:</div>
+      <div class="instruction-text" id="t_copy_link">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ ׁ‚׀¾׀¼ׁƒ, ׀÷׀¾׀¼ׁƒ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ:</div>
       <div class="link-box">
         <input type="text" id="refLinkInput" class="link-input" readonly>
-        <button class="btn-copy" id="copyBtn" onclick="copyLink()">Скопировать</button>
+        <button class="btn-copy" id="copyBtn" onclick="copyLink()">׀¡׀÷׀¾׀¿׀¸ׁ€׀¾׀²׀°ׁ‚ׁ</button>
       </div>
     </div>
     <div class="instruction-block" style="text-align:center;padding-bottom:24px;border:none;box-shadow:none;background:transparent;">
-      <div class="instruction-text" id="t_scan_qr">Или дайте отсканировать QR-код:</div>
+      <div class="instruction-text" id="t_scan_qr">׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:</div>
       <div class="qr-container" style="margin-bottom:20px;"><canvas id="qrCanvas"></canvas></div>
-      <button class="btn btn-primary" onclick="closeRecommend()" id="t_btn_back_catalog">Назад в каталог</button>
+      <button class="btn btn-primary" onclick="closeRecommend()" id="t_btn_back_catalog">׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³</button>
     </div>
   </div>
 </div>
 <div class="fullscreen" id="inviteScreen">
   <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
     <div class="rec-header-card" style="text-align:center;margin-top:20px;">
-      <div style="font-size:2.5rem;margin-bottom:12px;">🤝</div>
-      <div class="rec-title" id="inviteTitleValue">Пригласите их в Win-Win!</div>
+      <div style="font-size:2.5rem;margin-bottom:12px;">נ₪</div>
+      <div class="rec-title" id="inviteTitleValue">׀ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚׀µ ׀¸ׁ… ׀² Win-Win!</div>
       <div class="rec-niche" id="inviteHeaderTag" style="display:none;"></div>
-      <div class="rec-desc" id="inviteDescValue" style="border:none;padding-top:0;">Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.</div>
+      <div class="rec-desc" id="inviteDescValue" style="border:none;padding-top:0;">׀׀¾׀´׀µ׀»׀¸ׁ‚׀µׁׁ ׁׁ‚׀¾׀¹ ׁׁׁ‹׀»׀÷׀¾׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¿ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ ׀² Win-Win.</div>
     </div>
     <div class="instruction-block">
-      <div class="instruction-text" id="t_copy_link_inv">Скопируйте и отправьте эту ссылку:</div>
+      <div class="instruction-text" id="t_copy_link_inv">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ:</div>
       <div class="link-box">
         <input type="text" id="inviteLinkInput" class="link-input" readonly>
-        <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">Скопировать</button>
+        <button class="btn-copy" id="inviteCopyBtn" onclick="copyInviteLink()">׀¡׀÷׀¾׀¿׀¸ׁ€׀¾׀²׀°ׁ‚ׁ</button>
       </div>
     </div>
     <div class="instruction-block" style="text-align:center;">
-      <div class="instruction-text" id="t_scan_qr_inv">Или дайте отсканировать QR-код:</div>
+      <div class="instruction-text" id="t_scan_qr_inv">׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:</div>
       <div class="qr-container"><canvas id="inviteQrCanvas"></canvas></div>
     </div>
-    <button class="btn btn-primary" onclick="closeInviteScreen()" id="t_btn_back_invite">Назад в каталог</button>
+    <button class="btn btn-primary" onclick="closeInviteScreen()" id="t_btn_back_invite">׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³</button>
   </div>
 </div>
-<div class="sticky-back"><button class="btn btn-outline" onclick="history.back()" id="stickyBackBtn">Назад</button></div>
+<div class="sticky-back"><button class="btn btn-outline" onclick="history.back()" id="stickyBackBtn">׀׀°׀·׀°׀´</button></div>
 <div class="notice" id="notice"></div>
 <script>
 const API_URL='https://amlatsa-bot-production.up.railway.app';
 const token=new URLSearchParams(location.search).get('token')||'';
 let lang=new URLSearchParams(location.search).get('lang')||'ru';
 let allBusinesses=[]; let currentCat='__all__'; let currentSubcat='__all__'; let actorId=null; let currentBiz=null; let catalogData=null;
-const FALLBACK_CATEGORIES={ru:['Красота','Медицина','Недвижимость','Юристы','Услуги','B2B'],en:['Beauty','Medicine','Real Estate','Legal','Services','B2B'],he:['יופי','רפואה','נדל"ן','משפטים','שירותים','B2B'],ar:['الجمال','الطب','العقارات','القانون','الخدمات','B2B']};
-const i18n={
- ru:{head:'Экосистема доверия',sub1:'Найдите проверенный бизнес в каталоге и передайте рекомендацию.',sub2:'Ваш социальный капитал работает на вас.',search:'Поиск бизнеса или услуги...',all:'Все',empty:'Ничего не найдено',loading:'Загрузка каталога...',copy_btn:'Скопировать',copy_link:'Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:',copied:'Скопировано ✅',scan_qr:'Или дайте отсканировать QR-код:',back:'Назад',back_catalog:'Назад в каталог',bonus:'Бонус',invite:'Пригласить бизнес в Win-Win',desc_fallback:'У этого бизнеса пока нет дополнительного описания.'},
- en:{head:'Trust ecosystem',sub1:'Find a verified business and pass on a recommendation.',sub2:'Let your social capital work for you.',search:'Search for a business or service...',all:'All',empty:'Nothing found',loading:'Loading catalog...',copy_btn:'Copy',copy_link:'Copy and send this link to the person you want to recommend this business to:',copied:'Copied ✅',scan_qr:'Or let them scan the QR code:',back:'Back',back_catalog:'Back to catalog',bonus:'Bonus',invite:'Invite business to Win-Win',desc_fallback:'This business has not added extra details yet.'},
- he:{head:'אקוסיסטם של אמון',sub1:'מצאו עסק מאומת בקטלוג והעבירו המלצה.',sub2:'ההון החברתי שלכם עובד עבורכם.',search:'חיפוש עסק או שירות...',all:'הכול',empty:'לא נמצאו תוצאות',loading:'טוען קטלוג...',copy_btn:'העתק',copy_link:'העתיקו ושלחו את הקישור הזה למי שתרצו להמליץ לו על העסק הזה:',copied:'הועתק ✅',scan_qr:'או תנו לסרוק את קוד ה-QR:',back:'חזרה',back_catalog:'חזרה לקטלוג',bonus:'בונוס',invite:'להזמין עסק ל‑Win‑Win',desc_fallback:'לעסק הזה עדיין אין תיאור נוסף.'},
- ar:{head:'منظومة الثقة',sub1:'اعثر على نشاط موثوق في الكتالوج وقدّم توصية.',sub2:'رأس مالك الاجتماعي يعمل لصالحك.',search:'ابحث عن نشاط أو خدمة...',all:'الكل',empty:'لم يتم العثور على نتائج',loading:'جارٍ تحميل الكتالوج...',copy_btn:'نسخ',copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي تريد أن توصي له بهذا النشاط:',copied:'تم النسخ ✅',scan_qr:'أو دعهم يمسحون رمز QR:',back:'رجوع',back_catalog:'العودة إلى الكتالوج',bonus:'مكافأة',invite:'ادعُ نشاطاً إلى Win-Win',desc_fallback:'لا توجد بعد معلومات إضافية عن هذا النشاط.'}
+const TAXONOMY_SOURCE={
+  "Красота и эстетика":["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+  "Еда и рестораны":["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+  "Магазины и товары":["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+  "Здоровье и медицина":["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+  "Юриспруденция":["Коммерческое право","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+  "Недвижимость и финансы":["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+  "Дом и ремонт":["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+  "Автомобили":["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+  "Праздники и мероприятия":["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+  "Обучение и спорт":["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+  "Домашние питомцы":["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+  "Туризм и отдых":["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+  "Бизнес и B2B услуги":["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
 };
-const CATALOG_UX_I18N={
-  ru:{
-    invite_btn_1:'Если нужного бизнеса нет,',
-    invite_btn_2:'и вы хотите его рекомендовать,',
-    invite_btn_3:'пригласите его в Win-Win',
-    invite_title:'Пригласите их в Win-Win!',
-    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.',
-    invite_copy_link:'Скопируйте и отправьте эту ссылку:',
-    invite_scan_qr:'Или дайте отсканировать QR-код:',
-    btn_back_invite:'Назад в каталог',
-    copy_btn:'Скопировать',
-    copied:'Скопировано ✅'
+const TAXONOMY_LABELS={
+  categories:{
+    "Красота и эстетика":{en:"Beauty & Aesthetics",he:"יופי ואסתטיקה",ar:"الجمال والجماليات"},
+    "Еда и рестораны":{en:"Food & Restaurants",he:"אוכל ומסעדות",ar:"الطعام والمطاعم"},
+    "Магазины и товары":{en:"Shops & Goods",he:"חנויות ומוצרים",ar:"المتاجر والسلع"},
+    "Здоровье и медицина":{en:"Health & Medicine",he:"בריאות ורפואה",ar:"الصحة والطب"},
+    "Юриспруденция":{en:"Legal Services",he:"שירותים משפטיים",ar:"الخدمات القانونية"},
+    "Недвижимость и финансы":{en:"Real Estate & Finance",he:"נדל\"ן ופיננסים",ar:"العقارات والتمويل"},
+    "Дом и ремонт":{en:"Home & Repair",he:"בית ושיפוץ",ar:"المنزل والإصلاح"},
+    "Автомобили":{en:"Automotive",he:"רכב",ar:"السيارات"},
+    "Праздники и мероприятия":{en:"Events & Parties",he:"אירועים וחגיגות",ar:"الفعاليات والمناسبات"},
+    "Обучение и спорт":{en:"Education & Sports",he:"חינוך וספורט",ar:"التعليم والرياضة"},
+    "Домашние питомцы":{en:"Pets",he:"חיות מחמד",ar:"الحيوانات الأليفة"},
+    "Туризм и отдых":{en:"Tourism & Leisure",he:"תיירות ופנאי",ar:"السياحة والترفيه"},
+    "Бизнес и B2B услуги":{en:"Business & B2B Services",he:"עסקים ושירותי B2B",ar:"الأعمال وخدمات B2B"}
   },
-  en:{
-    invite_btn_1:'If the business is not here yet,',
-    invite_btn_2:'and you want to recommend it,',
-    invite_btn_3:'invite it to Win-Win',
-    invite_title:'Invite them to Win-Win',
-    invite_desc:'Share this link to invite a business to Win-Win.',
-    invite_copy_link:'Copy and send this link:',
-    invite_scan_qr:'Or let them scan the QR code:',
-    btn_back_invite:'Back to catalog',
-    copy_btn:'Copy',
-    copied:'Copied ✅'
-  },
-  he:{
-    invite_btn_1:'אם העסק עדיין לא מופיע,',
-    invite_btn_2:'ואתם רוצים להמליץ עליו,',
-    invite_btn_3:'הזמינו אותו ל-Win-Win',
-    invite_title:'הזמינו אותם ל-Win-Win',
-    invite_desc:'שתפו את הקישור כדי להזמין עסק ל-Win-Win.',
-    invite_copy_link:'העתיקו ושלחו את הקישור הזה:',
-    invite_scan_qr:'או תנו לסרוק את קוד ה-QR:',
-    btn_back_invite:'חזרה לקטלוג',
-    copy_btn:'העתק',
-    copied:'הועתק ✅'
-  },
-  ar:{
-    invite_btn_1:'إذا لم يكن العمل موجودًا بعد،',
-    invite_btn_2:'وأردت أن توصي به،',
-    invite_btn_3:'فادعه إلى Win-Win',
-    invite_title:'ادعهم إلى Win-Win',
-    invite_desc:'شارك هذا الرابط لدعوة عمل إلى Win-Win.',
-    invite_copy_link:'انسخ وأرسل هذا الرابط:',
-    invite_scan_qr:'أو دعهم يمسحون رمز QR:',
-    btn_back_invite:'العودة إلى الكتالوج',
-    copy_btn:'نسخ',
-    copied:'تم النسخ ✅'
+  subcategories:{
+    "Косметология":{en:"Cosmetology",he:"קוסמטולוגיה",ar:"التجميل"},
+    "Инъекционная косметология":{en:"Injectable cosmetology",he:"קוסמטולוגיה בהזרקות",ar:"التجميل بالحقن"},
+    "Лазерная эпиляция":{en:"Laser hair removal",he:"הסרת שיער בלייזר",ar:"إزالة الشعر بالليزر"},
+    "Эпиляция":{en:"Hair removal",he:"הסרת שיער",ar:"إزالة الشعر"},
+    "Перманентный макияж":{en:"Permanent makeup",he:"איפור קבוע",ar:"المكياج الدائم"},
+    "Удаление тату и татуажа":{en:"Tattoo & PMU removal",he:"הסרת קעקועים ואיפור קבוע",ar:"إزالة الوشم والتاتو التجميلي"},
+    "Стилисты по волосам и барберы":{en:"Hair stylists & barbers",he:"מעצבי שיער וברברים",ar:"مصففو الشعر والحلاقون"},
+    "Ногтевой сервис":{en:"Nail services",he:"שירותי ציפורניים",ar:"خدمات الأظافر"},
+    "Брови и ресницы":{en:"Brows & lashes",he:"גבות וריסים",ar:"الحواجب والرموش"},
+    "Макияж":{en:"Makeup",he:"איפור",ar:"المكياج"},
+    "SPA и релакс-массаж":{en:"SPA & relaxation massage",he:"ספא ועיסוי מרגיע",ar:"السبا والمساج الاسترخائي"},
+    "Рестораны и кафе":{en:"Restaurants & cafes",he:"מסעדות ובתי קפה",ar:"المطاعم والمقاهي"},
+    "Доставка еды и рационы":{en:"Food delivery & meal plans",he:"משלוחי אוכל ותפריטים",ar:"توصيل الطعام والوجبات"},
+    "Авторская выпечка и десерты":{en:"Artisan pastries & desserts",he:"מאפים וקינוחים בעבודת יד",ar:"المخبوزات والحلويات الحرفية"},
+    "Бары и пабы":{en:"Bars & pubs",he:"ברים ופאבים",ar:"البارات والحانات"},
+    "Кейтеринг и банкеты":{en:"Catering & banquets",he:"קייטרינג ואירועים",ar:"التموين والولائم"},
+    "Одежда, обувь и аксессуары":{en:"Clothing, shoes & accessories",he:"ביגוד, נעליים ואקססוריז",ar:"الملابس والأحذية والإكسسوارات"},
+    "Мебель и товары для дома":{en:"Furniture & home goods",he:"ריהוט ומוצרי בית",ar:"الأثاث ومنتجات المنزل"},
+    "Ювелирные изделия":{en:"Jewelry",he:"תכשיטים",ar:"المجوهرات"},
+    "Цветы и подарки":{en:"Flowers & gifts",he:"פרחים ומתנות",ar:"الزهور والهدايا"},
+    "Косметика и парфюмерия":{en:"Cosmetics & perfumes",he:"קוסמטיקה ובשמים",ar:"مستحضرات التجميل والعطور"},
+    "Стоматология":{en:"Dentistry",he:"רפואת שיניים",ar:"طب الأسنان"},
+    "Психология и психотерапия":{en:"Psychology & psychotherapy",he:"פסיכולוגיה ופסיכותרפיה",ar:"علم النفس والعلاج النفسي"},
+    "Физиотерапия и остеопатия":{en:"Physiotherapy & osteopathy",he:"פיזיותרפיה ואוסטאופתיה",ar:"العلاج الطبيعي وتقويم العظام"},
+    "Диетология и нутрициология":{en:"Dietetics & nutrition",he:"דיאטולוגיה ותזונה",ar:"التغذية والحمية"},
+    "Альтернативная медицина":{en:"Alternative medicine",he:"רפואה אלטרנטיבית",ar:"الطب البديل"},
+    "Лечебный массаж":{en:"Therapeutic massage",he:"עיסוי טיפולי",ar:"المساج العلاجي"},
+    "Оптика и зрение":{en:"Optics & vision",he:"אופטיקה וראייה",ar:"البصريات والنظر"},
+    "Коммерческое право":{en:"Commercial law",he:"משפט מסחרי",ar:"القانون التجاري"},
+    "Недвижимость":{en:"Real estate law",he:"נדל\"ן",ar:"العقارات"},
+    "Семейное право":{en:"Family law",he:"דיני משפחה",ar:"قانون الأسرة"},
+    "Иммиграция и визы":{en:"Immigration & visas",he:"הגירה ואשרות",ar:"الهجرة والتأشيرات"},
+    "Уголовное право":{en:"Criminal law",he:"משפט פלילי",ar:"القانون الجنائي"},
+    "Травмы и Битуах Леуми":{en:"Injuries & Bituach Leumi",he:"פציעות וביטוח לאומי",ar:"الإصابات والتأمين الوطني"},
+    "Нотариусы и переводы":{en:"Notary & translations",he:"נוטריונים ותרגומים",ar:"التوثيق والترجمة"},
+    "Недвижимость (купля/продажа/аренда)":{en:"Real estate (buy/sell/rent)",he:"נדל\"ן (קנייה/מכירה/השכרה)",ar:"العقارات (شراء/بيع/إيجار)"},
+    "Ипотека и рефинансирование":{en:"Mortgages & refinancing",he:"משכנתאות ומיחזור",ar:"الرهن العقاري وإعادة التمويل"},
+    "Бухгалтерия и налоги":{en:"Accounting & taxes",he:"הנהלת חשבונות ומסים",ar:"المحاسبة والضرائب"},
+    "Страхование (все виды)":{en:"Insurance (all types)",he:"ביטוח (כל הסוגים)",ar:"التأمين (جميع الأنواع)"},
+    "Ремонт под ключ":{en:"Turnkey renovation",he:"שיפוץ מלא",ar:"التجديد الكامل"},
+    "Электрика":{en:"Electrical work",he:"חשמל",ar:"الأعمال الكهربائية"},
+    "Сантехника":{en:"Plumbing",he:"אינסטלציה",ar:"السباكة"},
+    "Кондиционеры":{en:"Air conditioning",he:"מיזוג אוויר",ar:"التكييف"},
+    "Клининг и химчистка":{en:"Cleaning & dry cleaning",he:"ניקיון וניקוי יבש",ar:"التنظيف والتنظيف الجاف"},
+    "Дизайн интерьера":{en:"Interior design",he:"עיצוב פנים",ar:"التصميم الداخلي"},
+    "Сборка и ремонт мебели":{en:"Furniture assembly & repair",he:"הרכבה ותיקון רהיטים",ar:"تركيب الأثاث وإصلاحه"},
+    "Ремонт и СТО":{en:"Repair & service station",he:"מוסך ותיקון",ar:"الإصلاح ومراكز الخدمة"},
+    "Детейлинг и мойка":{en:"Detailing & car wash",he:"דיטיילינג ושטיפת רכב",ar:"العناية بالسيارات والغسيل"},
+    "Автоподбор и продажа":{en:"Car selection & sales",he:"איתור רכבים ומכירה",ar:"اختيار السيارات وبيعها"},
+    "Аренда авто":{en:"Car rental",he:"השכרת רכב",ar:"تأجير السيارات"},
+    "Фото и видеосъемка":{en:"Photo & video",he:"צילום וידאו וסטילס",ar:"التصوير الفوتوغرافي والفيديو"},
+    "Ведущие и музыканты":{en:"Hosts & musicians",he:"מנחים ומוזיקאים",ar:"مقدمو الحفلات والموسيقيون"},
+    "Организация мероприятий":{en:"Event planning",he:"הפקת אירועים",ar:"تنظيم الفعاليات"},
+    "Декораторы":{en:"Decorators",he:"מעצבים ודקורטורים",ar:"الديكور"},
+    "Фитнес и тренеры":{en:"Fitness & trainers",he:"כושר ומאמנים",ar:"اللياقة والمدربون"},
+    "Репетиторы и курсы":{en:"Tutors & courses",he:"מורים פרטיים וקורסים",ar:"الدروس الخاصة والدورات"},
+    "Языковые школы":{en:"Language schools",he:"בתי ספר לשפות",ar:"مدارس اللغات"},
+    "Детские кружки и секции":{en:"Children's clubs & activities",he:"חוגים ופעילויות לילדים",ar:"أنشطة الأطفال والنوادي"},
+    "Ветеринария":{en:"Veterinary care",he:"וטרינריה",ar:"الطب البيطري"},
+    "Груминг":{en:"Grooming",he:"טיפוח חיות",ar:"العناية بالحيوانات"},
+    "Зоомагазины":{en:"Pet stores",he:"חנויות חיות",ar:"متاجر الحيوانات"},
+    "Передержка и выгул":{en:"Pet boarding & walking",he:"פנסיון והליכה",ar:"الإيواء وتمشية الحيوانات"},
+    "Турагентства":{en:"Travel agencies",he:"סוכנויות נסיעות",ar:"وكالات السفر"},
+    "Отели и апартаменты":{en:"Hotels & apartments",he:"מלונות ודירות",ar:"الفنادق والشقق"},
+    "Гиды и экскурсии":{en:"Guides & tours",he:"מדריכים וסיורים",ar:"المرشدون والجولات"},
+    "Маркетинг и SMM":{en:"Marketing & SMM",he:"שיווק ו-SMM",ar:"التسويق ووسائل التواصل"},
+    "Разработка сайтов и ПО":{en:"Websites & software development",he:"פיתוח אתרים ותוכנה",ar:"تطوير المواقع والبرمجيات"},
+    "Дизайн и брендинг":{en:"Design & branding",he:"עיצוב ומיתוג",ar:"التصميم والعلامة التجارية"},
+    "Консалтинг и коучинг":{en:"Consulting & coaching",he:"ייעוץ וקואצ'ינג",ar:"الاستشارات والتدريب"},
+    "Логистика и доставка":{en:"Logistics & delivery",he:"לוגיסטיקה ומשלוחים",ar:"اللوجستيات والتوصيل"}
   }
 };
 const CLEAN_CATALOG_I18N={
@@ -228,9 +275,9 @@ const CLEAN_CATALOG_I18N={
     back_catalog:'Назад в каталог',
     bonus:'Бонус',
     invite_btn_1:'Если нужного бизнеса нет,',
-    invite_btn_2:'и вы хотите его рекомендовать,',
+    invite_btn_2:'и вы хотите его порекомендовать,',
     invite_btn_3:'пригласите его в Win-Win',
-    invite_title:'Пригласите их в Win-Win!',
+    invite_title:'Пригласите их в Win-Win',
     invite_desc:'Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.',
     invite_copy_link:'Скопируйте и отправьте эту ссылку:',
     invite_scan_qr:'Или дайте отсканировать QR-код:',
@@ -268,14 +315,14 @@ const CLEAN_CATALOG_I18N={
   },
   he:{
     head:'אקוסיסטם של אמון',
-    sub1:'מצאו את העסק המתאים והעבירו המלצה בצורה מהירה וברורה.',
+    sub1:'מצאו את העסק המתאים והעבירו המלצה במהירות ובבהירות.',
     sub2:'קטגוריה, תת-קטגוריה וחיפוש עוזרים למקד את הבחירה.',
     search:'חיפוש עסק או שירות...',
     all:'כל הקטגוריות',
     all_subcats:'כל תתי-הקטגוריות',
-    subfilters_title:'תתי-קטגוריות',
+    subfilters_title:'תת-קטגוריות',
     empty:'לא נמצאו תוצאות',
-    empty_filtered_title:'אין כרגע תוצאות שמתאימות למסננים האלה',
+    empty_filtered_title:'כרגע אין תוצאות שמתאימות למסננים האלה',
     empty_filtered_sub:'נסו להסיר חלק מהמסננים, לבחור תת-קטגוריה אחרת או לשנות את החיפוש.',
     loading:'טוען קטלוג...',
     copy_btn:'העתק',
@@ -297,8 +344,8 @@ const CLEAN_CATALOG_I18N={
   },
   ar:{
     head:'منظومة الثقة',
-    sub1:'اعثر على النشاط المناسب وقدّم التوصية بسرعة وبوضوح.',
-    sub2:'الفئة والفئة الفرعية والبحث تساعد على تضييق الاختيار.',
+    sub1:'اعثر على النشاط المناسب وقدّم توصية بسرعة ووضوح.',
+    sub2:'الفئة والفئة الفرعية والبحث تساعدك على تضييق الاختيار.',
     search:'ابحث عن نشاط أو خدمة...',
     all:'كل الفئات',
     all_subcats:'كل الفئات الفرعية',
@@ -314,11 +361,11 @@ const CLEAN_CATALOG_I18N={
     back:'رجوع',
     back_catalog:'العودة إلى الكتالوج',
     bonus:'مكافأة',
-    invite_btn_1:'إذا لم يكن العمل موجودًا بعد،',
+    invite_btn_1:'إذا لم يكن النشاط موجوداً بعد،',
     invite_btn_2:'وأردت أن توصي به،',
     invite_btn_3:'فادعه إلى Win-Win',
     invite_title:'ادعهم إلى Win-Win',
-    invite_desc:'شارك هذا الرابط لدعوة عمل إلى Win-Win.',
+    invite_desc:'شارك هذا الرابط لدعوة نشاط إلى Win-Win.',
     invite_copy_link:'انسخ وأرسل هذا الرابط:',
     invite_scan_qr:'أو دعهم يمسحون رمز QR:',
     btn_back_invite:'العودة إلى الكتالوج',
@@ -366,24 +413,83 @@ async function loadCatalog(){
     renderCatalog();
   }catch(e){ document.getElementById('grid').innerHTML=`<div class="empty"><div class="empty-title">${L().empty}</div><div class="empty-sub">${L().empty_filtered_sub}</div></div>`; }
 }
+function cleanCatalogText(value){
+  if(value==null) return '';
+  const text=String(value).trim();
+  if(!text || text==='ג€”' || text==='-') return '';
+  return text;
+}
+function normalizeAliasKey(value){
+  return cleanCatalogText(value).toLowerCase().replace(/[_/]+/g,' ').replace(/[^\p{L}\p{N}\s&()+-]+/gu,' ').replace(/\s+/g,' ').trim();
+}
+function slugAliasKey(value){
+  return cleanCatalogText(value).toLowerCase().replace(/&/g,' and ').replace(/[^\p{L}\p{N}]+/gu,'_').replace(/^_+|_+$/g,'');
+}
+function firstFilledValue(values){
+  return values.map(v=>typeof v==='string'?cleanCatalogText(v):v).find(v=>v!=null && v!=='' && !(Array.isArray(v)&&!v.length));
+}
+function extractObjectText(value){
+  if(!value || typeof value!=='object' || Array.isArray(value)) return '';
+  return cleanCatalogText(firstFilledValue([
+    value.name,
+    value.label,
+    value.title,
+    value.category,
+    value.category_name,
+    value.subcategory,
+    value.subcategory_name,
+    value.subniche,
+    value.niche,
+    value.slug,
+    value.key,
+    value.code
+  ]));
+}
+function buildTaxonomyAliasMap(group){
+  const map=new Map();
+  Object.entries(group).forEach(([canonical, translations])=>{
+    [canonical, ...(translations?Object.values(translations):[])].forEach(label=>{
+      const key=normalizeAliasKey(label);
+      const slug=slugAliasKey(label);
+      if(key) map.set(key, canonical);
+      if(slug) map.set(slug, canonical);
+    });
+  });
+  return map;
+}
+const CATEGORY_ALIAS_MAP=buildTaxonomyAliasMap(TAXONOMY_LABELS.categories);
+const SUBCATEGORY_ALIAS_MAP=buildTaxonomyAliasMap(TAXONOMY_LABELS.subcategories);
+function getCanonicalTaxonomyValue(value,type){
+  const cleaned=cleanCatalogText(value);
+  if(!cleaned) return '';
+  const map=type==='category'?CATEGORY_ALIAS_MAP:SUBCATEGORY_ALIAS_MAP;
+  return map.get(normalizeAliasKey(cleaned)) || map.get(slugAliasKey(cleaned)) || cleaned;
+}
+function getTaxonomyLabel(value,type){
+  const canonical=getCanonicalTaxonomyValue(value,type);
+  if(!canonical) return '';
+  if(lang==='ru') return canonical;
+  const dict=type==='category'?TAXONOMY_LABELS.categories:TAXONOMY_LABELS.subcategories;
+  return (dict[canonical] && dict[canonical][lang]) || canonical;
+}
+function getCategoryLabel(value){ return getTaxonomyLabel(value,'category'); }
+function getSubcategoryLabel(value){ return getTaxonomyLabel(value,'subcategory'); }
 function normalizeList(value){
   if(Array.isArray(value)) return value.flatMap(normalizeList);
-  if(typeof value==='string') return value.split(',').map(v=>v.trim()).filter(Boolean);
+  if(typeof value==='object') return normalizeList(extractObjectText(value));
+  if(typeof value==='string') return value.split(',').map(v=>cleanCatalogText(v)).filter(Boolean);
   if(value==null) return [];
-  return [String(value).trim()].filter(Boolean);
+  return [cleanCatalogText(value)].filter(Boolean);
 }
 function uniqueTexts(values){
   const seen=new Set();
-  return values.filter(Boolean).map(v=>String(v).trim()).filter(Boolean).filter(v=>{const key=v.toLowerCase(); if(seen.has(key)) return false; seen.add(key); return true;});
-}
-function firstFilledValue(values){
-  return values.map(v=>typeof v==='string'?v.trim():v).find(v=>v!=null && v!=='' && !(Array.isArray(v)&&!v.length));
+  return values.filter(Boolean).map(v=>cleanCatalogText(v)).filter(Boolean).filter(v=>{const key=normalizeAliasKey(v); if(seen.has(key)) return false; seen.add(key); return true;});
 }
 function getBusinessCategory(b){
-  return String(firstFilledValue([b.category,b.category_name,b.main_category,b.parent_category])||'').trim();
+  return getCanonicalTaxonomyValue(firstFilledValue([b.category,b.category_name,b.main_category,b.parent_category]),'category');
 }
 function getBusinessSubcategories(b){
-  const categoryKey=getBusinessCategory(b).toLowerCase();
+  const categoryKey=normalizeAliasKey(getBusinessCategory(b));
   const values=uniqueTexts([
     ...normalizeList(b.subcategories),
     ...normalizeList(b.subcategory),
@@ -393,8 +499,8 @@ function getBusinessSubcategories(b){
     ...normalizeList(b.subniche),
     ...normalizeList(b.subniches),
     ...normalizeList(b.niche)
-  ]);
-  return values.filter(v=>v.toLowerCase()!==categoryKey);
+  ]).map(v=>getCanonicalTaxonomyValue(v,'subcategory'));
+  return uniqueTexts(values).filter(v=>normalizeAliasKey(v)!==categoryKey);
 }
 function getCategoryTreeFromBackend(){
   const explicit=firstFilledValue([
@@ -405,16 +511,19 @@ function getCategoryTreeFromBackend(){
   ]);
   if(!Array.isArray(explicit)) return null;
   const tree=explicit.map(item=>{
-    if(typeof item==='string') return {name:item.trim(),subcategories:[]};
+    if(typeof item==='string'){
+      const name=getCanonicalTaxonomyValue(item,'category');
+      return name?{name,subcategories:TAXONOMY_SOURCE[name]||[]}:null;
+    }
     if(!item||typeof item!=='object') return null;
-    const name=String(firstFilledValue([item.name,item.label,item.title,item.category])||'').trim();
+    const name=getCanonicalTaxonomyValue(firstFilledValue([item.name,item.label,item.title,item.category,item.slug,item.key]),'category');
     const subcategories=uniqueTexts([
       ...normalizeList(item.subcategories),
       ...normalizeList(item.children),
       ...normalizeList(item.niches),
       ...normalizeList(item.subniches),
       ...normalizeList(item.items)
-    ]);
+    ]).map(v=>getCanonicalTaxonomyValue(v,'subcategory'));
     return name?{name,subcategories}:null;
   }).filter(Boolean);
   return tree.length?tree:null;
@@ -423,7 +532,7 @@ function getAvailableCategories(){
   const explicit=getCategoryTreeFromBackend();
   if(explicit) return explicit.map(item=>item.name);
   const derived=uniqueTexts(allBusinesses.map(getBusinessCategory));
-  return derived.length?derived:(FALLBACK_CATEGORIES[lang]||FALLBACK_CATEGORIES.ru);
+  return derived.length?derived:Object.keys(TAXONOMY_SOURCE);
 }
 function getAvailableSubcategories(category){
   if(!category||category==='__all__') return [];
@@ -432,7 +541,14 @@ function getAvailableSubcategories(category){
     const match=explicit.find(item=>item.name===category);
     if(match&&match.subcategories.length) return match.subcategories;
   }
-  return uniqueTexts(allBusinesses.filter(b=>getBusinessCategory(b)===category).flatMap(getBusinessSubcategories));
+  const derived=uniqueTexts(allBusinesses.filter(b=>getBusinessCategory(b)===category).flatMap(getBusinessSubcategories));
+  return derived.length?derived:(TAXONOMY_SOURCE[category]||[]);
+}
+function getBusinessTaxonomyLine(b){
+  const categoryLabel=getCategoryLabel(getBusinessCategory(b));
+  const subcategoryLabels=getBusinessSubcategories(b).map(getSubcategoryLabel).filter(Boolean);
+  if(categoryLabel && subcategoryLabels.length) return `${categoryLabel} · ${subcategoryLabels.slice(0,2).join(', ')}`;
+  return categoryLabel || subcategoryLabels.slice(0,2).join(', ');
 }
 function renderFilters(){
   const t=L();
@@ -443,7 +559,7 @@ function renderFilters(){
   cats.forEach(cat=>{
     const btn=document.createElement('button');
     btn.className='filter-btn'+(((cat===t.all&&currentCat==='__all__')||cat===currentCat)?' active':'');
-    btn.textContent=cat;
+    btn.textContent=(cat===t.all)?cat:getCategoryLabel(cat);
     btn.onclick=()=>{
       const nextCat=(cat===t.all?'__all__':cat);
       currentCat=nextCat;
@@ -473,7 +589,7 @@ function renderSubfilters(){
   [t.all_subcats,...subcats].forEach(subcat=>{
     const btn=document.createElement('button');
     btn.className='subfilter-btn'+(((subcat===t.all_subcats&&currentSubcat==='__all__')||subcat===currentSubcat)?' active':'');
-    btn.textContent=subcat;
+    btn.textContent=(subcat===t.all_subcats)?subcat:getSubcategoryLabel(subcat);
     btn.onclick=()=>{
       currentSubcat=(subcat===t.all_subcats?'__all__':subcat);
       renderSubfilters();
@@ -489,7 +605,7 @@ function renderCatalog(){
     const subcats=getBusinessSubcategories(b);
     const matchCat=currentCat==='__all__'||cat===currentCat;
     const matchSubcat=currentSubcat==='__all__'||subcats.includes(currentSubcat);
-    const hay=[b.name,b.business_info,cat,...subcats].filter(Boolean).join(' ').toLowerCase();
+    const hay=[b.name,b.business_info,cat,getCategoryLabel(cat),...subcats,...subcats.map(getSubcategoryLabel)].filter(Boolean).join(' ').toLowerCase();
     return matchCat && matchSubcat && hay.includes(q);
   });
   const grid=document.getElementById('grid');
@@ -500,10 +616,9 @@ function renderCatalog(){
   grid.innerHTML='';
   filtered.forEach(b=>{
     const card=document.createElement('div'); card.className='biz-card'; card.onclick=()=>openRecommend(b);
-    const cat=getBusinessCategory(b)||'—';
-    const subcats=getBusinessSubcategories(b);
-    const niche=subcats.length?(' · '+subcats.slice(0,2).join(', ')):'';
-    card.innerHTML=`<div class="biz-top"><div><div class="biz-name">${b.name}</div><div class="biz-cat">${cat}${niche}</div></div><div class="biz-bonus">🎁 ${L().bonus}: ${b.commission||'—'}</div></div>`;
+    const taxonomyLine=getBusinessTaxonomyLine(b);
+    const categoryHtml=taxonomyLine?`<div class="biz-cat">${taxonomyLine}</div>`:'';
+    card.innerHTML=`<div class="biz-top"><div><div class="biz-name">${b.name}</div>${categoryHtml}</div><div class="biz-bonus">🎁 ${L().bonus}: ${b.commission||'—'}</div></div>`;
     grid.appendChild(card);
   });
 }
@@ -514,7 +629,7 @@ function openRecommend(b){
   const link=`https://invite.winwinnetwork.pro/register.html?role=client&sender=${encodeURIComponent(actorId)}&receiver=${encodeURIComponent(b.id)}&biz_name=${encodeURIComponent(b.name||'')}&lang=${encodeURIComponent(lang)}`;
   WinWinReferralShare.open({
     businessName:b.name||'—',
-    categoryLabel:getBusinessCategory(b)||'—',
+    categoryLabel:getBusinessTaxonomyLine(b),
     description:b.business_info||L().desc_fallback,
     link:link,
     copyLabel:L().copy_btn,
@@ -574,3 +689,5 @@ applyI18n(); loadCatalog();
 </script>
 </body>
 </html>
+
+
