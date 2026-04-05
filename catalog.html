@@ -91,11 +91,11 @@
   <div class="hero">
     <h1 id="t_head">׀­׀÷׀¾ׁ׀¸ׁׁ‚׀µ׀¼׀° ׀´׀¾׀²׀µׁ€׀¸ׁ</h1>
     <p id="t_sub1">׀׀°׀¹׀´׀¸ׁ‚׀µ ׀¿ׁ€׀¾׀²׀µׁ€׀µ׀½׀½ׁ‹׀¹ ׀±׀¸׀·׀½׀µׁ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³׀µ ׀¸ ׀¿׀µׁ€׀µ׀´׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ.</p>
-    <p class="sub" id="t_sub2">׀’׀°ׁˆ ׁ׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀» ׁ€׀°׀±׀¾ׁ‚׀°׀µׁ‚ ׀½׀° ׀²׀°ׁ.</p>
+    <p class="sub" id="t_sub2" style="display:none;"></p>
   </div>
   <div class="guide-card">
     <div class="guide-title" id="t_guide_title">Как пользоваться каталогом</div>
-    <div class="guide-text" id="t_guide_text">Сначала выберите нишу, которой готовы делиться с уверенностью. Потом откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте синее приглашение ниже.</div>
+    <div class="guide-text" id="t_guide_text">Выберите бизнес, который хотите порекомендовать.</div>
   </div>
   <div class="search"><input id="q" type="text" placeholder="׀׀¾׀¸ׁ׀÷ ׀±׀¸׀·׀½׀µׁ׀° ׀¸׀»׀¸ ׁƒׁ׀»ׁƒ׀³׀¸..." oninput="renderCatalog()"></div>
   <div class="invite-cta-wrap">
@@ -120,7 +120,6 @@
       <div class="rec-desc" id="recBizDesc">ג€”</div>
     </div>
     <div class="instruction-block">
-      <div class="share-trust-note" id="t_share_trust"><strong>Доверие:</strong> отправляйте эту ссылку только если готовы уверенно рекомендовать этот бизнес.</div>
       <div class="instruction-text" id="t_copy_link">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ ׁ‚׀¾׀¼ׁƒ, ׀÷׀¾׀¼ׁƒ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ:</div>
       <div class="link-box">
         <input type="text" id="refLinkInput" class="link-input" readonly>
@@ -274,7 +273,7 @@ const CLEAN_CATALOG_I18N={
     sub1:'Найдите бизнес, который готовы рекомендовать с уверенностью.',
     sub2:'Категория, подкатегория и поиск помогают выбрать не случайный листинг, а правильную рекомендацию.',
     guide_title:'Как пользоваться каталогом',
-    guide_text:'Сначала выберите нишу, которой готовы делиться с уверенностью. Потом откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте синее приглашение ниже.',
+    guide_text:'Выберите бизнес, который хотите порекомендовать.',
     search:'Поиск бизнеса или услуги...',
     all:'Все категории',
     all_subcats:'Все подкатегории',
@@ -292,9 +291,8 @@ const CLEAN_CATALOG_I18N={
     bonus:'Бонус',
     card_trust:'Рекомендуйте с уверенностью',
     card_cta:'Открыть ссылку',
-    share_trust:'<strong>Доверие:</strong> отправляйте эту ссылку только если готовы уверенно рекомендовать этот бизнес.',
-    invite_btn_1:'Если доверенного бизнеса ещё нет,',
-    invite_btn_2:'и вы готовы его порекомендовать,',
+    invite_btn_1:'Если нужного бизнеса нет,',
+    invite_btn_2:'и вы хотите его рекомендовать,',
     invite_btn_3:'пригласите его в Win-Win',
     invite_title:'Пригласите их в Win-Win',
     invite_desc:'Поделитесь этой ссылкой, чтобы пригласить в Win-Win сильный бизнес, которому можно доверять.',
@@ -309,7 +307,7 @@ const CLEAN_CATALOG_I18N={
     sub1:'Find a business you are ready to recommend with confidence.',
     sub2:'Category, subcategory, and search help you choose the right recommendation, not a random listing.',
     guide_title:'How to use the catalog',
-    guide_text:'Start with the niche you feel confident sharing. Then open a business card to send a recommendation. If the business is missing, use the blue invite block below.',
+    guide_text:'Choose the business you want to recommend.',
     search:'Search for a business or service...',
     all:'All categories',
     all_subcats:'All subcategories',
@@ -327,10 +325,9 @@ const CLEAN_CATALOG_I18N={
     bonus:'Bonus',
     card_trust:'Recommend with confidence',
     card_cta:'Open link',
-    share_trust:'<strong>Trust:</strong> send this link only when you are genuinely ready to stand behind this business.',
-    invite_btn_1:'If the trusted business is not here yet,',
-    invite_btn_2:'and you are ready to recommend it,',
-    invite_btn_3:'invite it to Win-Win',
+    invite_btn_1:"If the business isn't here,",
+    invite_btn_2:'and you want to recommend it',
+    invite_btn_3:'Invite them to Win-Win',
     invite_title:'Invite them to Win-Win',
     invite_desc:'Share this link to invite a strong business you trust into Win-Win.',
     invite_trust:'<strong>Trust:</strong> invite only the business you are willing to recommend in your own name.',
@@ -344,7 +341,7 @@ const CLEAN_CATALOG_I18N={
     sub1:'מצאו עסק שאתם מוכנים להמליץ עליו בביטחון.',
     sub2:'קטגוריה, תת-קטגוריה וחיפוש עוזרים לבחור המלצה נכונה ולא כרטיס אקראי.',
     guide_title:'איך משתמשים בקטלוג',
-    guide_text:'מתחילים בנישה שאתם מרגישים בטוחים לשתף. אחר כך פותחים כרטיס עסק כדי לשלוח המלצה. אם העסק לא נמצא, משתמשים בכרטיס ההזמנה הכחול למטה.',
+    guide_text:'בחרו את העסק שתרצו להמליץ עליו.',
     search:'חיפוש עסק או שירות...',
     all:'כל הקטגוריות',
     all_subcats:'כל תתי-הקטגוריות',
@@ -362,9 +359,8 @@ const CLEAN_CATALOG_I18N={
     bonus:'בונוס',
     card_trust:'להמליץ בביטחון',
     card_cta:'פתיחת קישור',
-    share_trust:'<strong>אמון:</strong> שלחו את הקישור הזה רק אם אתם באמת מוכנים לעמוד מאחורי העסק הזה.',
-    invite_btn_1:'אם העסק האמין עדיין לא מופיע,',
-    invite_btn_2:'ואתם מוכנים להמליץ עליו,',
+    invite_btn_1:'אם העסק לא כאן,',
+    invite_btn_2:'ואתה רוצה להמליץ עליו',
     invite_btn_3:'הזמינו אותו ל-Win-Win',
     invite_title:'הזמינו אותם ל-Win-Win',
     invite_desc:'שתפו את הקישור כדי להזמין ל-Win-Win עסק חזק שאפשר לסמוך עליו.',
@@ -379,7 +375,7 @@ const CLEAN_CATALOG_I18N={
     sub1:'اعثر على عمل أنت مستعد للتوصية به بثقة.',
     sub2:'الفئة والفئة الفرعية والبحث تساعدك على اختيار التوصية الصحيحة لا قائمة عشوائية.',
     guide_title:'كيف تستخدم الكتالوج',
-    guide_text:'ابدأ بالمجال الذي تشعر بالثقة في مشاركته. ثم افتح بطاقة العمل لإرسال التوصية. وإذا كان العمل غير موجود فاستخدم بطاقة الدعوة الزرقاء في الأسفل.',
+    guide_text:'اختر النشاط الذي تريد التوصية به.',
     search:'ابحث عن نشاط أو خدمة...',
     all:'كل الفئات',
     all_subcats:'كل الفئات الفرعية',
@@ -397,9 +393,8 @@ const CLEAN_CATALOG_I18N={
     bonus:'مكافأة',
     card_trust:'أوصِ بثقة',
     card_cta:'فتح الرابط',
-    share_trust:'<strong>الثقة:</strong> أرسل هذا الرابط فقط عندما تكون مستعداً فعلاً للوقوف خلف هذا العمل.',
-    invite_btn_1:'إذا لم يكن العمل الموثوق موجوداً بعد،',
-    invite_btn_2:'وكنت مستعداً للتوصية به،',
+    invite_btn_1:'إذا لم يكن العمل موجوداً بعد،',
+    invite_btn_2:'وأردت أن توصي به،',
     invite_btn_3:'فادعه إلى Win-Win',
     invite_title:'ادعهم إلى Win-Win',
     invite_desc:'شارك هذا الرابط لدعوة عمل قوي تثق به إلى Win-Win.',
@@ -422,7 +417,6 @@ function applyI18n(){
   document.getElementById('t_guide_title').textContent=t.guide_title;
   document.getElementById('t_guide_text').textContent=t.guide_text;
   document.getElementById('q').placeholder=t.search;
-  document.getElementById('t_share_trust').innerHTML=t.share_trust;
   document.getElementById('t_copy_link').textContent=t.copy_link;
   document.getElementById('t_scan_qr').textContent=t.scan_qr;
   document.getElementById('t_btn_back_catalog').textContent=t.back_catalog;
@@ -528,7 +522,16 @@ function uniqueTexts(values){
   return values.filter(Boolean).map(v=>cleanCatalogText(v)).filter(Boolean).filter(v=>{const key=normalizeAliasKey(v); if(seen.has(key)) return false; seen.add(key); return true;});
 }
 function getBusinessCategory(b){
-  return getCanonicalTaxonomyValue(firstFilledValue([b.category,b.category_name,b.main_category,b.parent_category]),'category');
+  const values=uniqueTexts([
+    ...normalizeList(b.category),
+    ...normalizeList(b.category_name),
+    ...normalizeList(b.main_category),
+    ...normalizeList(b.parent_category),
+    ...normalizeList(b.niche_category),
+    ...normalizeList(b.niche_categories),
+    ...normalizeList(b.categories)
+  ]).map(v=>getCanonicalTaxonomyValue(v,'category'));
+  return values.find(Boolean)||'';
 }
 function getBusinessSubcategories(b){
   const categoryKey=normalizeAliasKey(getBusinessCategory(b));
@@ -538,9 +541,12 @@ function getBusinessSubcategories(b){
     ...normalizeList(b.subcategory_name),
     ...normalizeList(b.specialization),
     ...normalizeList(b.specializations),
+    ...normalizeList(b.speciality),
+    ...normalizeList(b.specialities),
     ...normalizeList(b.subniche),
     ...normalizeList(b.subniches),
-    ...normalizeList(b.niche)
+    ...normalizeList(b.niche),
+    ...normalizeList(b.niches)
   ]).map(v=>getCanonicalTaxonomyValue(v,'subcategory'));
   return uniqueTexts(values).filter(v=>normalizeAliasKey(v)!==categoryKey);
 }
