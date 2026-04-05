@@ -22,6 +22,9 @@
     .hero h1{font-size:1.05rem;font-weight:800;color:var(--accent2);margin-bottom:10px}
     .hero p{color:var(--text);line-height:1.45;font-size:.95rem;margin-bottom:6px}
     .hero .sub{color:var(--text2);font-size:.82rem}
+    .guide-card{background:linear-gradient(135deg,rgba(86,204,242,.10),rgba(47,128,237,.06));border:1px solid rgba(86,204,242,.18);border-radius:20px;padding:14px 16px;margin:0 0 14px;box-shadow:var(--shadow)}
+    .guide-title{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:8px}
+    .guide-text{font-size:.85rem;line-height:1.5;color:var(--text)}
     .search{position:relative;margin-bottom:14px}
     .search input{width:100%;padding:18px 18px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1rem;outline:none}
     .search input::placeholder{color:var(--text2)}
@@ -43,6 +46,9 @@
     .biz-name{font-size:1.14rem;font-weight:800;margin-bottom:4px}
     .biz-cat{color:var(--text2);font-size:.8rem;line-height:1.4}
     .biz-bonus{display:inline-flex;align-items:center;gap:6px;background:rgba(242,201,76,.12);border:1px solid rgba(242,201,76,.22);color:var(--gold);padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:800;white-space:nowrap}
+    .biz-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+    .biz-trust{font-size:.78rem;color:var(--text2);line-height:1.35}
+    .biz-cta{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--accent2);flex-shrink:0}
     .empty{padding:36px 18px;text-align:center;color:var(--text2);font-weight:600}
     .empty-title{color:var(--text);font-size:1rem;font-weight:800;margin-bottom:8px}
     .empty-sub{font-size:.88rem;line-height:1.5;color:var(--text2)}
@@ -54,6 +60,8 @@
     .rec-desc{font-size:.88rem;color:var(--text2);line-height:1.55;border-top:1px solid var(--border);padding-top:14px;word-break:break-word}
     .instruction-block{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:20px;margin-bottom:14px}
     .instruction-text{font-size:.85rem;color:var(--text2);margin-bottom:12px;font-weight:500;line-height:1.4}
+    .share-trust-note{display:flex;align-items:flex-start;gap:8px;background:rgba(47,128,237,.08);border:1px solid rgba(47,128,237,.18);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:.82rem;line-height:1.45;color:var(--text)}
+    .share-trust-note strong{color:var(--accent2)}
     .link-box{display:flex;gap:8px}
     .link-input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:11px;font-size:.82rem;outline:none;font-family:inherit}
     .btn-copy{flex-shrink:0;background:var(--accent2);border:none;color:#fff;font-weight:700;padding:0 18px;border-radius:11px;cursor:pointer;transition:.2s;white-space:nowrap;font-family:inherit}
@@ -85,6 +93,10 @@
     <p id="t_sub1">׀׀°׀¹׀´׀¸ׁ‚׀µ ׀¿ׁ€׀¾׀²׀µׁ€׀µ׀½׀½ׁ‹׀¹ ׀±׀¸׀·׀½׀µׁ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³׀µ ׀¸ ׀¿׀µׁ€׀µ׀´׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ.</p>
     <p class="sub" id="t_sub2">׀’׀°ׁˆ ׁ׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀» ׁ€׀°׀±׀¾ׁ‚׀°׀µׁ‚ ׀½׀° ׀²׀°ׁ.</p>
   </div>
+  <div class="guide-card">
+    <div class="guide-title" id="t_guide_title">Как пользоваться каталогом</div>
+    <div class="guide-text" id="t_guide_text">Сначала выберите нишу, которой готовы делиться с уверенностью. Потом откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте синее приглашение ниже.</div>
+  </div>
   <div class="search"><input id="q" type="text" placeholder="׀׀¾׀¸ׁ׀÷ ׀±׀¸׀·׀½׀µׁ׀° ׀¸׀»׀¸ ׁƒׁ׀»ׁƒ׀³׀¸..." oninput="renderCatalog()"></div>
   <div class="invite-cta-wrap">
     <button class="invite-cta" onclick="openInviteScreen()">
@@ -108,6 +120,7 @@
       <div class="rec-desc" id="recBizDesc">ג€”</div>
     </div>
     <div class="instruction-block">
+      <div class="share-trust-note" id="t_share_trust"><strong>Доверие:</strong> отправляйте эту ссылку только если готовы уверенно рекомендовать этот бизнес.</div>
       <div class="instruction-text" id="t_copy_link">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ ׁ‚׀¾׀¼ׁƒ, ׀÷׀¾׀¼ׁƒ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׁׁ‚׀¾ׁ‚ ׀±׀¸׀·׀½׀µׁ:</div>
       <div class="link-box">
         <input type="text" id="refLinkInput" class="link-input" readonly>
@@ -130,6 +143,7 @@
       <div class="rec-desc" id="inviteDescValue" style="border:none;padding-top:0;">׀׀¾׀´׀µ׀»׀¸ׁ‚׀µׁׁ ׁׁ‚׀¾׀¹ ׁׁׁ‹׀»׀÷׀¾׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¿ׁ€׀¸׀³׀»׀°ׁ׀¸ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ ׀² Win-Win.</div>
     </div>
     <div class="instruction-block">
+      <div class="share-trust-note" id="t_invite_trust"><strong>Доверие:</strong> приглашайте сюда только тот бизнес, который готовы рекомендовать от своего имени.</div>
       <div class="instruction-text" id="t_copy_link_inv">׀¡׀÷׀¾׀¿׀¸ׁ€ׁƒ׀¹ׁ‚׀µ ׀¸ ׀¾ׁ‚׀¿ׁ€׀°׀²ׁׁ‚׀µ ׁׁ‚ׁƒ ׁׁׁ‹׀»׀÷ׁƒ:</div>
       <div class="link-box">
         <input type="text" id="inviteLinkInput" class="link-input" readonly>
@@ -257,8 +271,10 @@ const TAXONOMY_LABELS={
 const CLEAN_CATALOG_I18N={
   ru:{
     head:'Экосистема доверия',
-    sub1:'Найдите подходящий бизнес и передайте рекомендацию быстро и понятно.',
-    sub2:'Категория, подкатегория и поиск помогают сузить выбор.',
+    sub1:'Найдите бизнес, который готовы рекомендовать с уверенностью.',
+    sub2:'Категория, подкатегория и поиск помогают выбрать не случайный листинг, а правильную рекомендацию.',
+    guide_title:'Как пользоваться каталогом',
+    guide_text:'Сначала выберите нишу, которой готовы делиться с уверенностью. Потом откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте синее приглашение ниже.',
     search:'Поиск бизнеса или услуги...',
     all:'Все категории',
     all_subcats:'Все подкатегории',
@@ -268,17 +284,21 @@ const CLEAN_CATALOG_I18N={
     empty_filtered_sub:'Попробуйте снять часть фильтров, выбрать другую подкатегорию или изменить поиск.',
     loading:'Загрузка каталога...',
     copy_btn:'Скопировать',
-    copy_link:'Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:',
+    copy_link:'Скопируйте и отправьте эту ссылку человеку, которому готовы уверенно порекомендовать этот бизнес:',
     copied:'Скопировано ✅',
     scan_qr:'Или дайте отсканировать QR-код:',
     back:'Назад',
     back_catalog:'Назад в каталог',
     bonus:'Бонус',
-    invite_btn_1:'Если нужного бизнеса нет,',
-    invite_btn_2:'и вы хотите его порекомендовать,',
+    card_trust:'Рекомендуйте с уверенностью',
+    card_cta:'Открыть ссылку',
+    share_trust:'<strong>Доверие:</strong> отправляйте эту ссылку только если готовы уверенно рекомендовать этот бизнес.',
+    invite_btn_1:'Если доверенного бизнеса ещё нет,',
+    invite_btn_2:'и вы готовы его порекомендовать,',
     invite_btn_3:'пригласите его в Win-Win',
     invite_title:'Пригласите их в Win-Win',
-    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить бизнес в Win-Win.',
+    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить в Win-Win сильный бизнес, которому можно доверять.',
+    invite_trust:'<strong>Доверие:</strong> приглашайте сюда только тот бизнес, который готовы рекомендовать от своего имени.',
     invite_copy_link:'Скопируйте и отправьте эту ссылку:',
     invite_scan_qr:'Или дайте отсканировать QR-код:',
     btn_back_invite:'Назад в каталог',
@@ -286,8 +306,10 @@ const CLEAN_CATALOG_I18N={
   },
   en:{
     head:'Trust ecosystem',
-    sub1:'Find the right business and share a recommendation quickly and clearly.',
-    sub2:'Category, subcategory, and search help narrow the list.',
+    sub1:'Find a business you are ready to recommend with confidence.',
+    sub2:'Category, subcategory, and search help you choose the right recommendation, not a random listing.',
+    guide_title:'How to use the catalog',
+    guide_text:'Start with the niche you feel confident sharing. Then open a business card to send a recommendation. If the business is missing, use the blue invite block below.',
     search:'Search for a business or service...',
     all:'All categories',
     all_subcats:'All subcategories',
@@ -297,17 +319,21 @@ const CLEAN_CATALOG_I18N={
     empty_filtered_sub:'Try clearing some filters, choosing another subcategory, or changing your search.',
     loading:'Loading catalog...',
     copy_btn:'Copy',
-    copy_link:'Copy and send this link to the person you want to recommend this business to:',
+    copy_link:'Copy and send this link to the person you can confidently connect with this business:',
     copied:'Copied ✅',
     scan_qr:'Or let them scan the QR code:',
     back:'Back',
     back_catalog:'Back to catalog',
     bonus:'Bonus',
-    invite_btn_1:'If the business is not here yet,',
-    invite_btn_2:'and you want to recommend it,',
+    card_trust:'Recommend with confidence',
+    card_cta:'Open link',
+    share_trust:'<strong>Trust:</strong> send this link only when you are genuinely ready to stand behind this business.',
+    invite_btn_1:'If the trusted business is not here yet,',
+    invite_btn_2:'and you are ready to recommend it,',
     invite_btn_3:'invite it to Win-Win',
     invite_title:'Invite them to Win-Win',
-    invite_desc:'Share this link to invite a business to Win-Win.',
+    invite_desc:'Share this link to invite a strong business you trust into Win-Win.',
+    invite_trust:'<strong>Trust:</strong> invite only the business you are willing to recommend in your own name.',
     invite_copy_link:'Copy and send this link:',
     invite_scan_qr:'Or let them scan the QR code:',
     btn_back_invite:'Back to catalog',
@@ -315,8 +341,10 @@ const CLEAN_CATALOG_I18N={
   },
   he:{
     head:'אקוסיסטם של אמון',
-    sub1:'מצאו את העסק המתאים והעבירו המלצה במהירות ובבהירות.',
-    sub2:'קטגוריה, תת-קטגוריה וחיפוש עוזרים למקד את הבחירה.',
+    sub1:'מצאו עסק שאתם מוכנים להמליץ עליו בביטחון.',
+    sub2:'קטגוריה, תת-קטגוריה וחיפוש עוזרים לבחור המלצה נכונה ולא כרטיס אקראי.',
+    guide_title:'איך משתמשים בקטלוג',
+    guide_text:'מתחילים בנישה שאתם מרגישים בטוחים לשתף. אחר כך פותחים כרטיס עסק כדי לשלוח המלצה. אם העסק לא נמצא, משתמשים בכרטיס ההזמנה הכחול למטה.',
     search:'חיפוש עסק או שירות...',
     all:'כל הקטגוריות',
     all_subcats:'כל תתי-הקטגוריות',
@@ -326,17 +354,21 @@ const CLEAN_CATALOG_I18N={
     empty_filtered_sub:'נסו להסיר חלק מהמסננים, לבחור תת-קטגוריה אחרת או לשנות את החיפוש.',
     loading:'טוען קטלוג...',
     copy_btn:'העתק',
-    copy_link:'העתיקו ושלחו את הקישור הזה למי שתרצו להמליץ לו על העסק הזה:',
+    copy_link:'העתיקו ושלחו את הקישור הזה למי שאתם באמת מוכנים לחבר לעסק הזה בביטחון:',
     copied:'הועתק ✅',
     scan_qr:'או תנו לסרוק את קוד ה-QR:',
     back:'חזרה',
     back_catalog:'חזרה לקטלוג',
     bonus:'בונוס',
-    invite_btn_1:'אם העסק עדיין לא מופיע,',
-    invite_btn_2:'ואתם רוצים להמליץ עליו,',
+    card_trust:'להמליץ בביטחון',
+    card_cta:'פתיחת קישור',
+    share_trust:'<strong>אמון:</strong> שלחו את הקישור הזה רק אם אתם באמת מוכנים לעמוד מאחורי העסק הזה.',
+    invite_btn_1:'אם העסק האמין עדיין לא מופיע,',
+    invite_btn_2:'ואתם מוכנים להמליץ עליו,',
     invite_btn_3:'הזמינו אותו ל-Win-Win',
     invite_title:'הזמינו אותם ל-Win-Win',
-    invite_desc:'שתפו את הקישור כדי להזמין עסק ל-Win-Win.',
+    invite_desc:'שתפו את הקישור כדי להזמין ל-Win-Win עסק חזק שאפשר לסמוך עליו.',
+    invite_trust:'<strong>אמון:</strong> הזמינו לכאן רק עסק שאתם מוכנים להמליץ עליו בשמכם.',
     invite_copy_link:'העתיקו ושלחו את הקישור הזה:',
     invite_scan_qr:'או תנו לסרוק את קוד ה-QR:',
     btn_back_invite:'חזרה לקטלוג',
@@ -344,8 +376,10 @@ const CLEAN_CATALOG_I18N={
   },
   ar:{
     head:'منظومة الثقة',
-    sub1:'اعثر على النشاط المناسب وقدّم توصية بسرعة ووضوح.',
-    sub2:'الفئة والفئة الفرعية والبحث تساعدك على تضييق الاختيار.',
+    sub1:'اعثر على عمل أنت مستعد للتوصية به بثقة.',
+    sub2:'الفئة والفئة الفرعية والبحث تساعدك على اختيار التوصية الصحيحة لا قائمة عشوائية.',
+    guide_title:'كيف تستخدم الكتالوج',
+    guide_text:'ابدأ بالمجال الذي تشعر بالثقة في مشاركته. ثم افتح بطاقة العمل لإرسال التوصية. وإذا كان العمل غير موجود فاستخدم بطاقة الدعوة الزرقاء في الأسفل.',
     search:'ابحث عن نشاط أو خدمة...',
     all:'كل الفئات',
     all_subcats:'كل الفئات الفرعية',
@@ -355,17 +389,21 @@ const CLEAN_CATALOG_I18N={
     empty_filtered_sub:'جرّب إزالة بعض الفلاتر أو اختيار فئة فرعية أخرى أو تعديل البحث.',
     loading:'جارٍ تحميل الكتالوج...',
     copy_btn:'نسخ',
-    copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي تريد أن توصي له بهذا النشاط:',
+    copy_link:'انسخ وأرسل هذا الرابط إلى الشخص الذي يمكنك أن توصله بهذا العمل بثقة:',
     copied:'تم النسخ ✅',
     scan_qr:'أو دعهم يمسحون رمز QR:',
     back:'رجوع',
     back_catalog:'العودة إلى الكتالوج',
     bonus:'مكافأة',
-    invite_btn_1:'إذا لم يكن النشاط موجوداً بعد،',
-    invite_btn_2:'وأردت أن توصي به،',
+    card_trust:'أوصِ بثقة',
+    card_cta:'فتح الرابط',
+    share_trust:'<strong>الثقة:</strong> أرسل هذا الرابط فقط عندما تكون مستعداً فعلاً للوقوف خلف هذا العمل.',
+    invite_btn_1:'إذا لم يكن العمل الموثوق موجوداً بعد،',
+    invite_btn_2:'وكنت مستعداً للتوصية به،',
     invite_btn_3:'فادعه إلى Win-Win',
     invite_title:'ادعهم إلى Win-Win',
-    invite_desc:'شارك هذا الرابط لدعوة نشاط إلى Win-Win.',
+    invite_desc:'شارك هذا الرابط لدعوة عمل قوي تثق به إلى Win-Win.',
+    invite_trust:'<strong>الثقة:</strong> ادعُ إلى هنا فقط العمل الذي أنت مستعد للتوصية به باسمك.',
     invite_copy_link:'انسخ وأرسل هذا الرابط:',
     invite_scan_qr:'أو دعهم يمسحون رمز QR:',
     btn_back_invite:'العودة إلى الكتالوج',
@@ -381,7 +419,10 @@ function applyI18n(){
   document.getElementById('t_head').textContent=t.head;
   document.getElementById('t_sub1').textContent=t.sub1;
   document.getElementById('t_sub2').textContent=t.sub2;
+  document.getElementById('t_guide_title').textContent=t.guide_title;
+  document.getElementById('t_guide_text').textContent=t.guide_text;
   document.getElementById('q').placeholder=t.search;
+  document.getElementById('t_share_trust').innerHTML=t.share_trust;
   document.getElementById('t_copy_link').textContent=t.copy_link;
   document.getElementById('t_scan_qr').textContent=t.scan_qr;
   document.getElementById('t_btn_back_catalog').textContent=t.back_catalog;
@@ -390,6 +431,7 @@ function applyI18n(){
   document.getElementById('t_invite_btn_3').textContent=t.invite_btn_3;
   document.getElementById('inviteTitleValue').textContent=t.invite_title;
   document.getElementById('inviteDescValue').textContent=t.invite_desc;
+  document.getElementById('t_invite_trust').innerHTML=t.invite_trust;
   document.getElementById('t_copy_link_inv').textContent=t.invite_copy_link;
   document.getElementById('t_scan_qr_inv').textContent=t.invite_scan_qr;
   document.getElementById('t_btn_back_invite').textContent=t.btn_back_invite;
@@ -618,7 +660,7 @@ function renderCatalog(){
     const card=document.createElement('div'); card.className='biz-card'; card.onclick=()=>openRecommend(b);
     const taxonomyLine=getBusinessTaxonomyLine(b);
     const categoryHtml=taxonomyLine?`<div class="biz-cat">${taxonomyLine}</div>`:'';
-    card.innerHTML=`<div class="biz-top"><div><div class="biz-name">${b.name}</div>${categoryHtml}</div><div class="biz-bonus">🎁 ${L().bonus}: ${b.commission||'—'}</div></div>`;
+    card.innerHTML=`<div class="biz-top"><div><div class="biz-name">${b.name}</div>${categoryHtml}</div><div class="biz-bonus">🎁 ${L().bonus}: ${b.commission||'—'}</div></div><div class="biz-bottom"><div class="biz-trust">${L().card_trust}</div><div class="biz-cta">${L().card_cta}</div></div>`;
     grid.appendChild(card);
   });
 }

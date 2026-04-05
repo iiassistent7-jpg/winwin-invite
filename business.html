@@ -818,6 +818,56 @@ const i18n = {
   }
 };
 
+const CLEAN_BIZ_I18N = {
+  ru: {
+    rec_sub:"Рекомендуйте только тот бизнес, которому готовы доверить свою репутацию, и усиливайте сеть доверия вокруг него.",
+    rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности без лишних ручных шагов.",
+    rec_list_sub:"Активные и завершённые рекомендации, отправленные от имени вашего бизнеса.",
+    rec_empty:"Вы пока не отправляли рекомендаций.",
+    debt_label:"К выплате агентам",
+    debt_open:"Открыть выплаты",
+    debt_sheet_title:"К выплате агентам",
+    debt_sheet_sub:"Здесь показаны только активные сделки, где следующий шаг — выплатить агенту вознаграждение.",
+    card_manage:"Открыть сделку"
+  },
+  he: {
+    rec_sub:"המליצו רק על עסק שאתם באמת מוכנים לעמוד מאחוריו, וחזקו את רשת האמון סביבו.",
+    rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד בלי צעדים ידניים מיותרים.",
+    rec_list_sub:"המלצות פעילות והיסטוריה שנשלחו בשם העסק שלכם.",
+    rec_empty:"עדיין לא שלחתם המלצות.",
+    debt_label:"לתשלום לסוכנים",
+    debt_open:"פתיחת התשלומים",
+    debt_sheet_title:"לתשלום לסוכנים",
+    debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן הצעד הבא הוא לשלם לסוכן את התגמול.",
+    card_manage:"פתיחת העסקה"
+  },
+  en: {
+    rec_sub:"Recommend only the business you are genuinely ready to stand behind, and grow the trust network around it.",
+    rec_note:"One recommendation = one invited client. After that, the system carries the gratitude flow without extra manual steps.",
+    rec_list_sub:"Active and completed recommendations sent on behalf of your business.",
+    rec_empty:"You have not sent any recommendations yet.",
+    debt_label:"Agent payouts due",
+    debt_open:"Open payouts",
+    debt_sheet_title:"Agent payouts due",
+    debt_sheet_sub:"Only active deals where the next step is to pay the agent reward are shown here.",
+    card_manage:"Open deal"
+  },
+  ar: {
+    rec_sub:"أوصِ فقط بالعمل الذي أنت مستعد فعلاً للوقوف خلفه، وعزّز شبكة الثقة حوله.",
+    rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة مسار الشكر تلقائياً بدون خطوات يدوية زائدة.",
+    rec_list_sub:"التوصيات النشطة والمكتملة المرسلة باسم عملك.",
+    rec_empty:"لم ترسل أي توصيات بعد.",
+    debt_label:"مستحقات للوكلاء",
+    debt_open:"فتح الدفعات",
+    debt_sheet_title:"مستحقات للوكلاء",
+    debt_sheet_sub:"تظهر هنا فقط الصفقات النشطة التي تكون فيها الخطوة التالية هي دفع مكافأة الوكيل.",
+    card_manage:"افتح الصفقة"
+  }
+};
+Object.entries(CLEAN_BIZ_I18N).forEach(([locale, values]) => {
+  i18n[locale] = Object.assign({}, i18n[locale] || {}, values);
+});
+
 function getManageDealLabels() {
   const map = {
     ru: { agentPhone:'Телефон агента:', status:'Статус:', debt:'Оплатить долг:' },
@@ -1861,7 +1911,7 @@ function renderDeals() {
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
         const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
-        innerAction = `<button class="btn-primary btn-action" onclick="event.stopPropagation();openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${manageLabel[lang] || manageLabel.ru}</button>`;
+        innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
       }
     }
 

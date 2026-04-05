@@ -117,11 +117,15 @@
         
         .action-card { display:flex; align-items:center; gap:16px; cursor:pointer; transition:.2s; border:2px dashed var(--border); background:transparent; }
         .action-card:active { transform:scale(.98); background:var(--surface); }
+        .action-card-primary { border-style:solid; border-color:rgba(47,128,237,.28); background:linear-gradient(135deg, rgba(86,204,242,.12), rgba(47,128,237,.08)); box-shadow:0 10px 30px rgba(47,128,237,.14); }
+        .action-card-primary .action-icon { background:#fff; box-shadow:0 8px 18px rgba(47,128,237,.12); }
+        .action-kicker { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--accent2); margin-bottom:4px; }
         .action-icon { width:48px; height:48px; border-radius:14px; background:rgba(47,128,237,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .action-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
         .action-sub { font-size:.78rem; color:var(--text2); line-height:1.4; }
 
         .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; }
+        .section-caption { font-size:.82rem; color:var(--text2); line-height:1.45; margin:-4px 0 14px; }
 
         /* ג”€ג”€ Activity items ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
         .activity-item { display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:.15s; }
@@ -143,6 +147,7 @@
         .wallet-card-bonus { color:var(--green); }
         .wallet-card-actions { margin-top:14px; }
         .wallet-card-btn { padding:11px 14px; border-radius:12px; font-size:.82rem; }
+        .wallet-card-next { font-size:.78rem; color:var(--text2); line-height:1.45; margin-top:12px; }
         .wallet-phone-link { color:var(--accent2); text-decoration:none; }
         .wallet-summary { padding:18px; }
         .wallet-summary-head { font-size:.8rem; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:.6px; margin-bottom:12px; }
@@ -323,6 +328,9 @@
         .filter-btn.active { background:var(--accent2); color:#fff; border-color:var(--accent2); box-shadow: 0 4px 0 rgba(47,128,237,0.3); }
         .filter-btn.active:active { box-shadow: 0 0 0 rgba(47,128,237,0); }
 
+        .catalog-guide { background:linear-gradient(135deg, rgba(86,204,242,.08), rgba(47,128,237,.05)); border:1px solid rgba(86,204,242,.16); border-radius:18px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow); }
+        .catalog-guide-title { font-size:.8rem; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--accent2); margin-bottom:8px; }
+        .catalog-guide-text { font-size:.85rem; color:var(--text); line-height:1.5; }
         .cat-grid { display:flex; flex-direction:column; gap:10px; margin-bottom: 20px; }
         .biz-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; cursor:pointer; transition:.18s; box-shadow:var(--shadow); }
         .biz-card:active { transform:scale(.98); box-shadow:var(--shadow2); }
@@ -330,6 +338,9 @@
         .biz-card-name { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; line-height: 1.3; }
         .biz-card-cat { font-size:.75rem; color:var(--accent2); background:rgba(47,128,237,.1); padding:5px 10px; border-radius:8px; font-weight:700; white-space:normal; line-height: 1.4;}
         .biz-card-commission { display:inline-block; padding:5px 10px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:.82rem; font-weight:700; color:var(--green); }
+        .biz-card-trust-row { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-top:12px; }
+        .biz-card-trust { font-size:.76rem; color:var(--text2); line-height:1.4; }
+        .biz-card-open { font-size:.74rem; font-weight:800; color:var(--accent2); text-transform:uppercase; letter-spacing:.4px; flex-shrink:0; }
         
         .rec-header-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
         .rec-title { font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:10px; line-height:1.2; }
@@ -338,6 +349,8 @@
         .rec-desc a { color:var(--accent2); text-decoration:none; font-weight:600; }
         .instruction-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
         .instruction-text { font-size:.85rem; color:var(--text2); margin-bottom:12px; font-weight:500; line-height:1.4; }
+        .share-trust-note { display:flex; align-items:flex-start; gap:8px; margin-bottom:14px; padding:12px 14px; border-radius:14px; background:rgba(47,128,237,.08); border:1px solid rgba(47,128,237,.14); color:var(--text); font-size:.82rem; line-height:1.45; }
+        .share-trust-note strong { color:var(--accent2); }
         .link-box { display:flex; gap:8px; }
         .link-input { flex:1; min-width:0; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:.82rem; outline:none; font-family:inherit; }
         .btn-copy { flex-shrink:0; background:var(--accent2); border:none; color:#fff; font-weight:700; padding:0 18px; border-radius:11px; cursor:pointer; transition:.2s; white-space:nowrap; font-family:inherit; }
@@ -492,6 +505,15 @@
                 </div>
             </div>
 
+            <div class="card action-card action-card-primary" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
+                <div class="action-icon"><i data-feather="heart"></i></div>
+                <div>
+                    <div class="action-kicker" id="t_action_kicker">Главное действие</div>
+                    <div class="action-title" id="t_action_title">Помогите бизнесу, которому доверяете</div>
+                    <div class="action-sub" id="t_action_sub">Откройте каталог и порекомендуйте хороший бизнес</div>
+                </div>
+            </div>
+
             <div class="card action-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, rgba(242, 201, 76, 0.05), rgba(242, 153, 74, 0.05)); border-color: rgba(242, 201, 76, 0.3);">
                 <div class="action-icon" style="background: rgba(242, 201, 76, 0.15); color: #F2C94C;"><i data-feather="award"></i></div>
                 <div>
@@ -500,25 +522,24 @@
                 </div>
             </div>
 
-            <div class="card action-card" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
-                <div class="action-icon"><i data-feather="heart"></i></div>
-                <div>
-                    <div class="action-title" id="t_action_title">Помогите бизнесу, которому доверяете</div>
-                    <div class="action-sub" id="t_action_sub">Откройте каталог и порекомендуйте хороший бизнес</div>
-                </div>
-            </div>
-
             <h2 class="sec-title"><span id="t_events">Последние события</span></h2>
+            <div class="section-caption" id="t_events_sub">Откройте карточку, чтобы увидеть статус и следующий шаг.</div>
             <div class="card" style="padding:0 16px;" id="activityList"></div>
             <a href="#" class="btn-primary btn-wa" id="ctaBtnHome" style="display:none;text-decoration:none;margin-top:4px;"></a>
         </div>
 
         <div id="view-catalog" class="view">
             <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнесов</h2>
+            <div class="section-caption" id="t_catalog_sub">Выберите нишу, которой готовы делиться с уверенностью.</div>
             
             <div class="cat-search">
                 <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
                 <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
+            </div>
+
+            <div class="catalog-guide">
+                <div class="catalog-guide-title" id="t_catalog_guide_title">Как пользоваться каталогом</div>
+                <div class="catalog-guide-text" id="t_catalog_guide_text">Сначала выберите категорию и поиск. Откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте приглашение ниже.</div>
             </div>
             
             <div style="margin-bottom: 20px;">
@@ -541,6 +562,7 @@
 
         <div id="view-history" class="view">
             <h2 class="sec-title" style="margin-top:4px;" id="t_history_title">Мои рекомендации</h2>
+            <div class="section-caption" id="t_history_sub">Здесь видно, что в работе, что ждёт выплату и что уже завершилось.</div>
             <div class="sec-title" style="color:var(--accent2);margin-top:4px;" id="t_active_sec">В работе</div>
             <div id="list_active"></div>
             <div class="sec-title" style="color:#9A6A00;margin-top:16px;" id="t_debt_sec">Ждут оплаты</div>
@@ -551,6 +573,7 @@
 
         <div id="view-wallet" class="view">
             <h2 class="sec-title" style="margin-top:4px;" id="t_wallet_title">Кошелёк</h2>
+            <div class="section-caption" id="t_wallet_sub">Откройте карточку, чтобы сразу сделать следующий шаг по выплате или подтверждению.</div>
             <div class="card wallet-summary">
                 <div class="wallet-summary-head" id="t_wallet_summary_title">Деньги и выплаты</div>
                 <div class="wallet-summary-grid">
@@ -725,6 +748,7 @@
                 <div class="rec-desc" id="t_invite_desc" style="border:none; padding-top:0;">Поделитесь этой ссылкой, чтобы пригласить бизнес или рекомендателя.</div>
             </div>
             <div class="instruction-block">
+                <div class="share-trust-note" id="t_invite_trust_note"><strong>Доверие:</strong> приглашайте только тот бизнес, который готовы рекомендовать от своего имени.</div>
                 <div class="instruction-text" id="t_copy_link_inv">Скопируйте и отправьте эту ссылку:</div>
                 <div class="link-box">
                     <input type="text" id="inviteLinkInput" class="link-input" readonly>
@@ -748,6 +772,7 @@
                 <div class="rec-desc" id="recBizDesc"></div>
             </div>
             <div class="instruction-block">
+                <div class="share-trust-note" id="t_recommend_trust_note"><strong>Доверие:</strong> делитесь этой ссылкой только тогда, когда уверены, что готовы поручиться за этот бизнес.</div>
                 <div class="instruction-text" id="t_copy_link">Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес:</div>
                 <div class="link-box">
                     <input type="text" id="refLinkInput" class="link-input" readonly>
@@ -1057,15 +1082,23 @@ const i18n = {
     deals_lbl:"Закрыто",
     pending_lbl:"Ожидают выплаты",
     active_lbl:"В работе",
-    action_title:"Помогите бизнесу, которому доверяете",
-    action_sub:"Откройте каталог и порекомендуйте хороший бизнес",
+    action_kicker:"Главное действие",
+    action_title:"Рекомендуйте с уверенностью",
+    action_sub:"Откройте каталог и передайте дальше бизнес, которому готовы доверить свою репутацию",
     events:"Последние события",
+    events_sub:"Откройте карточку, чтобы увидеть статус и следующий шаг.",
     catalog_title:"Каталог бизнесов",
+    catalog_sub:"Выберите нишу, которой готовы делиться с уверенностью.",
+    catalog_guide_title:"Как пользоваться каталогом",
+    catalog_guide_text:"Сначала выберите категорию и поиск. Откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте приглашение ниже.",
     history_title:"Мои рекомендации",
+    history_sub:"Здесь видно, что в работе, что ждёт выплату и что уже завершилось.",
     active_sec:"В работе",
     debt_sec:"Ждут оплаты",
     done_sec:"История",
     wallet_title:"Финансы",
+    wallet_sub:"Откройте карточку, чтобы сразу сделать следующий шаг по выплате или подтверждению.",
+    wallet_card_note:"Следующий шаг по выплате или подтверждению.",
     avg_lbl:"Средний заработок за сделку ₪",
     eff_sub:"% закрытых сделок",
     eff_accum:"Накопление",
@@ -1108,7 +1141,7 @@ const i18n = {
     status_confirmed:"Подтверждена",
     status_rejected:"Отклонена",
     no_deals:"Пока пусто",
-    no_deals_sub:"Порекомендуйте хороший бизнес из каталога, и ваши сделки появятся здесь.",
+    no_deals_sub:"Порекомендуйте проверенный бизнес из каталога, и ваши сделки появятся здесь.",
     wa_btn:"WhatsApp",
     btn_tg:"Telegram",
     deal_title:"Детали сделки",
@@ -1140,15 +1173,18 @@ const i18n = {
     stat_active:"Сделки в работе",
     btn_back:"Назад",
     btn_back_catalog:"Вернуться в каталог",
-    copy_link:"Скопируйте и отправьте эту ссылку тому, кому хотите порекомендовать этот бизнес",
+    copy_link:"Скопируйте и отправьте эту ссылку человеку, которому вы готовы уверенно рекомендовать этот бизнес",
     copy_btn:"Скопировать",
     copied:"Скопировано ✅",
     scan_qr:"Или отсканируйте QR-код:",
     wa_return:"Вернуться в WhatsApp",
     cat_search:"Поиск бизнеса или услуги...",
     cat_loading:"Загрузка...",
-    cat_empty:"Ничего не найдено",
+    cat_empty:"Ничего не найдено. Попробуйте другой поиск или пригласите доверенный бизнес в Win-Win.",
     bonus:"Бонус:",
+    catalog_card_trust:"Рекомендуйте с уверенностью",
+    catalog_card_cta:"Открыть ссылку",
+    wallet_card_open:"Открыть и сделать следующий шаг",
     filter_all:"Все категории",
     save:"Сохранить",
     remind_debt:"Напомнить о долге",
@@ -1173,11 +1209,13 @@ const i18n = {
     lb_deals:"Сделок:",
     lb_earned:"Заработано",
     lb_blur_alert:"Дойдите до 50 сделок, чтобы открыть имена лидеров. 🏆",
-    invite_btn_1:"Если нужного бизнеса нет,",
-    invite_btn_2:"и вы хотите его рекомендовать,",
+    invite_btn_1:"Если доверенного бизнеса ещё нет,",
+    invite_btn_2:"и вы готовы его рекомендовать,",
     invite_btn_3:"пригласите его в Win-Win",
     invite_title:"Пригласите их в Win-Win!",
-    invite_desc:"Поделитесь этой ссылкой, чтобы пригласить бизнес или рекомендателя.",
+    invite_desc:"Поделитесь этой ссылкой, чтобы пригласить в Win-Win сильный бизнес или рекомендателя, которому можно доверять.",
+    recommend_trust_note:"<strong>Доверие:</strong> делитесь этой ссылкой только тогда, когда уверены, что готовы поручиться за этот бизнес.",
+    invite_trust_note:"<strong>Доверие:</strong> приглашайте только тот бизнес, который готовы рекомендовать от своего имени.",
     btn_back_invite:"Назад в каталог",
     rew_type:"Тип благодарности",
     rew_pct:"Процент (%)",
@@ -1278,15 +1316,23 @@ const CLEAN_I18N = {
     deals_lbl:"נסגרו",
     pending_lbl:"ממתין לתשלום",
     active_lbl:"בתהליך",
-    action_title:"עזרו לעסק שאתם סומכים עליו",
-    action_sub:"פתחו את הקטלוג והמליצו על עסק טוב",
+    action_kicker:"הפעולה הראשית",
+    action_title:"המליצו בביטחון",
+    action_sub:"פתחו את הקטלוג והעבירו הלאה עסק שאתם מוכנים לחבר אליו את המוניטין שלכם",
     events:"אירועים אחרונים",
+    events_sub:"פתחו כרטיס כדי לראות סטטוס ומה השלב הבא.",
     catalog_title:"קטלוג עסקים",
+    catalog_sub:"בחרו נישה שאתם מוכנים לשתף בביטחון.",
+    catalog_guide_title:"איך משתמשים בקטלוג",
+    catalog_guide_text:"קודם בוחרים קטגוריה וחיפוש. אחר כך פותחים כרטיס עסק כדי לשלוח המלצה. אם העסק לא נמצא, משתמשים בהזמנה הכחולה למטה.",
     history_title:"ההמלצות שלי",
+    history_sub:"כאן רואים מה בתהליך, מה ממתין לתשלום ומה כבר הושלם.",
     active_sec:"בתהליך",
     debt_sec:"ממתין לתשלום",
     done_sec:"היסטוריה",
     wallet_title:"ארנק",
+    wallet_sub:"פתחו כרטיס כדי לבצע מיד את הצעד הבא בתשלום או באישור.",
+    wallet_card_note:"הצעד הבא בתשלום או באישור.",
     wallet_summary_title:"כסף ותשלומים",
     wallet_total_earned:"כבר הרווחתי",
     wallet_pending_amount:"ממתין עכשיו",
@@ -1335,7 +1381,7 @@ const CLEAN_I18N = {
     status_confirmed:"אושרה",
     status_rejected:"נדחתה",
     no_deals:"עדיין ריק",
-    no_deals_sub:"המליצו על עסק טוב מהקטלוג, והעסקאות יופיעו כאן.",
+    no_deals_sub:"המליצו על עסק שאתם באמת סומכים עליו, והעסקאות יופיעו כאן.",
     deal_title:"פרטי העסקה",
     edit_profile:"עריכת פרופיל",
     edit_name:"שם",
@@ -1374,8 +1420,11 @@ const CLEAN_I18N = {
     wa_return:"חזרה ל-WhatsApp",
     cat_search:"חיפוש עסק או שירות...",
     cat_loading:"טוען...",
-    cat_empty:"לא נמצאו תוצאות",
+    cat_empty:"לא נמצאו תוצאות. נסו חיפוש אחר או הזמינו עסק אמין ל-Win-Win.",
     bonus:"בונוס:",
+    catalog_card_trust:"להמליץ בביטחון",
+    catalog_card_cta:"פתיחת קישור",
+    wallet_card_open:"פתחו ובצעו את הצעד הבא",
     filter_all:"כל הקטגוריות",
     save:"שמור",
     remind_debt:"הזכר על החוב",
@@ -1398,11 +1447,13 @@ const CLEAN_I18N = {
     lb_deals:"עסקאות:",
     lb_earned:"הרוויח",
     lb_blur_alert:"הגיעו ל-50 עסקאות כדי לפתוח את שמות המובילים.",
-    invite_btn_1:"אם העסק עדיין לא מופיע,",
-    invite_btn_2:"ואתם רוצים להמליץ עליו,",
+    invite_btn_1:"אם העסק האמין עדיין לא כאן,",
+    invite_btn_2:"ואתם מוכנים להמליץ עליו,",
     invite_btn_3:"הזמינו אותו ל-Win-Win",
     invite_title:"הזמינו אותם ל-Win-Win",
-    invite_desc:"שתפו את הקישור כדי להזמין עסק או ממליץ.",
+    invite_desc:"שתפו את הקישור הזה כדי להזמין ל-Win-Win עסק או ממליץ שאפשר לסמוך עליהם.",
+    recommend_trust_note:"<strong>אמון:</strong> שתפו את הקישור הזה רק כשאתם באמת מוכנים לעמוד מאחורי העסק הזה.",
+    invite_trust_note:"<strong>אמון:</strong> הזמינו רק עסק שאתם מוכנים להמליץ עליו בשמכם.",
     btn_back_invite:"חזרה לקטלוג",
     rew_type:"סוג התגמול",
     rew_pct:"אחוז (%)",
@@ -1427,15 +1478,23 @@ const CLEAN_I18N = {
     deals_lbl:"Closed",
     pending_lbl:"Awaiting payout",
     active_lbl:"In work",
-    action_title:"Help a business you trust",
-    action_sub:"Open the catalog and recommend a strong business",
+    action_kicker:"Main action",
+    action_title:"Recommend with confidence",
+    action_sub:"Open the catalog and pass along a business you are ready to back with your reputation",
     events:"Recent events",
+    events_sub:"Open a card to see its status and next step.",
     catalog_title:"Business catalog",
+    catalog_sub:"Choose a niche you feel confident sharing.",
+    catalog_guide_title:"How to use the catalog",
+    catalog_guide_text:"Start with category and search. Open a business card to send a recommendation. If the business is missing, use the invite block below.",
     history_title:"My recommendations",
+    history_sub:"This shows what is in progress, what is awaiting payout, and what is already completed.",
     active_sec:"In work",
     debt_sec:"Awaiting payout",
     done_sec:"History",
     wallet_title:"Wallet",
+    wallet_sub:"Open a card to take the next payout or confirmation step right away.",
+    wallet_card_note:"Next payout or confirmation step.",
     wallet_summary_title:"Money and payouts",
     wallet_total_earned:"Already earned",
     wallet_pending_amount:"Pending now",
@@ -1484,7 +1543,7 @@ const CLEAN_I18N = {
     status_confirmed:"Confirmed",
     status_rejected:"Rejected",
     no_deals:"Nothing here yet",
-    no_deals_sub:"Recommend a strong business from the catalog and your deals will appear here.",
+    no_deals_sub:"Recommend a business you truly trust from the catalog and your deals will appear here.",
     deal_title:"Deal details",
     edit_profile:"Edit profile",
     edit_name:"Name",
@@ -1514,7 +1573,7 @@ const CLEAN_I18N = {
     stat_active:"Deals in work",
     btn_back:"Back",
     btn_back_catalog:"Back to catalog",
-    copy_link:"Copy and share this link.",
+    copy_link:"Copy and send this link to someone you can confidently connect with this business.",
     wa_btn:"WhatsApp",
     btn_tg:"Telegram",
     copy_btn:"Copy",
@@ -1523,8 +1582,11 @@ const CLEAN_I18N = {
     wa_return:"Back to WhatsApp",
     cat_search:"Search for a business or service...",
     cat_loading:"Loading...",
-    cat_empty:"Nothing found",
+    cat_empty:"Nothing found. Try another search or invite a trusted business to Win-Win.",
     bonus:"Bonus:",
+    catalog_card_trust:"Recommend with confidence",
+    catalog_card_cta:"Open link",
+    wallet_card_open:"Open and take the next step",
     filter_all:"All categories",
     save:"Save",
     remind_debt:"Remind about debt",
@@ -1547,11 +1609,13 @@ const CLEAN_I18N = {
     lb_deals:"Deals:",
     lb_earned:"Earned",
     lb_blur_alert:"Reach 50 deals to unlock leader names.",
-    invite_btn_1:"If the business is not here yet,",
-    invite_btn_2:"and you want to recommend it,",
+    invite_btn_1:"If the trusted business is not here yet,",
+    invite_btn_2:"and you are ready to recommend it,",
     invite_btn_3:"invite it to Win-Win",
     invite_title:"Invite them to Win-Win",
-    invite_desc:"Share this link to invite a business or recommender.",
+    invite_desc:"Share this link to invite a strong business or recommender you can trust into Win-Win.",
+    recommend_trust_note:"<strong>Trust:</strong> share this link only when you are genuinely ready to stand behind this business.",
+    invite_trust_note:"<strong>Trust:</strong> invite only the business you are willing to recommend in your own name.",
     btn_back_invite:"Back to catalog",
     rew_type:"Reward type",
     rew_pct:"Percent (%)",
@@ -1576,15 +1640,23 @@ const CLEAN_I18N = {
     deals_lbl:"مغلقة",
     pending_lbl:"بانتظار الدفع",
     active_lbl:"قيد العمل",
-    action_title:"ساعد عملاً تثق به",
-    action_sub:"افتح الكتالوج ووصِّ بعمل قوي",
+    action_kicker:"الخطوة الرئيسية",
+    action_title:"أوصِ بثقة",
+    action_sub:"افتح الكتالوج ومرّر عملاً أنت مستعد لربط سمعتك به",
     events:"أحدث الأحداث",
+    events_sub:"افتح البطاقة لترى الحالة وما الخطوة التالية.",
     catalog_title:"كتالوج الأعمال",
+    catalog_sub:"اختر مجالاً تشعر بالثقة في مشاركته.",
+    catalog_guide_title:"كيف تستخدم الكتالوج",
+    catalog_guide_text:"ابدأ بالفئة والبحث. افتح بطاقة العمل لإرسال التوصية. وإذا كان العمل غير موجود فاستخدم بطاقة الدعوة الزرقاء في الأسفل.",
     history_title:"توصياتي",
+    history_sub:"هنا ترى ما هو قيد العمل وما ينتظر الدفع وما اكتمل بالفعل.",
     active_sec:"قيد العمل",
     debt_sec:"بانتظار الدفع",
     done_sec:"السجل",
     wallet_title:"المحفظة",
+    wallet_sub:"افتح البطاقة لتقوم مباشرة بالخطوة التالية في الدفع أو التأكيد.",
+    wallet_card_note:"الخطوة التالية في الدفع أو التأكيد.",
     wallet_summary_title:"المال والمدفوعات",
     wallet_total_earned:"تم كسبه بالفعل",
     wallet_pending_amount:"معلّق الآن",
@@ -1633,7 +1705,7 @@ const CLEAN_I18N = {
     status_confirmed:"تم التأكيد",
     status_rejected:"مرفوضة",
     no_deals:"لا يوجد شيء هنا بعد",
-    no_deals_sub:"أوصِ بعمل قوي من الكتالوج وستظهر صفقاتك هنا.",
+    no_deals_sub:"أوصِ بعمل تثق به فعلاً من الكتالوج وستظهر صفقاتك هنا.",
     deal_title:"تفاصيل الصفقة",
     edit_profile:"تعديل الملف",
     edit_name:"الاسم",
@@ -1663,7 +1735,7 @@ const CLEAN_I18N = {
     stat_active:"الصفقات قيد العمل",
     btn_back:"رجوع",
     btn_back_catalog:"العودة إلى الكتالوج",
-    copy_link:"انسخ هذا الرابط وشاركه.",
+    copy_link:"انسخ هذا الرابط وأرسله إلى الشخص الذي يمكنك أن توصله بهذا العمل بثقة.",
     wa_btn:"WhatsApp",
     btn_tg:"Telegram",
     copy_btn:"نسخ",
@@ -1672,8 +1744,11 @@ const CLEAN_I18N = {
     wa_return:"العودة إلى WhatsApp",
     cat_search:"ابحث عن عمل أو خدمة...",
     cat_loading:"جارٍ التحميل...",
-    cat_empty:"لا توجد نتائج",
+    cat_empty:"لا توجد نتائج. جرّب بحثاً آخر أو ادعُ عملاً موثوقاً إلى Win-Win.",
     bonus:"المكافأة:",
+    catalog_card_trust:"أوصِ بثقة",
+    catalog_card_cta:"فتح الرابط",
+    wallet_card_open:"افتح واتخذ الخطوة التالية",
     filter_all:"كل الفئات",
     save:"حفظ",
     remind_debt:"تذكير بالدين",
@@ -1696,11 +1771,13 @@ const CLEAN_I18N = {
     lb_deals:"الصفقات:",
     lb_earned:"المكتسب",
     lb_blur_alert:"أغلق 50 صفقة لفتح أسماء المتصدرين.",
-    invite_btn_1:"إذا لم يكن العمل موجودًا بعد،",
-    invite_btn_2:"وأردت أن توصي به،",
+    invite_btn_1:"إذا لم يكن العمل الموثوق موجودًا بعد،",
+    invite_btn_2:"وكنت مستعداً للتوصية به،",
     invite_btn_3:"فادعه إلى Win-Win",
     invite_title:"ادعهم إلى Win-Win",
-    invite_desc:"شارك هذا الرابط لدعوة عمل أو موصٍ.",
+    invite_desc:"شارك هذا الرابط لدعوة عمل قوي أو موصٍ يمكن الوثوق به إلى Win-Win.",
+    recommend_trust_note:"<strong>الثقة:</strong> شارك هذا الرابط فقط عندما تكون مستعداً فعلاً للوقوف خلف هذا العمل.",
+    invite_trust_note:"<strong>الثقة:</strong> ادعُ فقط العمل الذي أنت مستعد للتوصية به باسمك.",
     btn_back_invite:"العودة إلى الكتالوج",
     rew_type:"نوع المكافأة",
     rew_pct:"نسبة (%)",
@@ -1867,8 +1944,8 @@ function applyLang() {
     const L = i18n[lang] || i18n.ru;
     const map = {
         't_greeting':'greeting','t_balance_label':'balance_label','t_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl',
-        't_action_title':'action_title','t_action_sub':'action_sub','t_events':'events','t_catalog_title':'catalog_title','t_history_title':'history_title',
-        't_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec','t_wallet_title':'wallet_title',
+        't_action_kicker':'action_kicker','t_action_title':'action_title','t_action_sub':'action_sub','t_events':'events','t_events_sub':'events_sub','t_catalog_title':'catalog_title','t_catalog_sub':'catalog_sub','t_catalog_guide_title':'catalog_guide_title','t_catalog_guide_text':'catalog_guide_text','t_history_title':'history_title','t_history_sub':'history_sub',
+        't_active_sec':'active_sec','t_debt_sec':'debt_sec','t_done_sec':'done_sec','t_wallet_title':'wallet_title','t_wallet_sub':'wallet_sub',
         't_wallet_summary_title':'wallet_summary_title','t_wallet_total_earned':'wallet_total_earned','t_wallet_pending_amount':'wallet_pending_amount',
         't_wallet_attention':'wallet_attention','t_wallet_attention_note':'wallet_attention_note',
         't_awaiting':'wallet_deals_title','t_profile_title':'profile_title','t_settings':'settings','t_pay_method':'pay_method',
@@ -1905,6 +1982,8 @@ function applyLang() {
     const catSearch = document.getElementById('catSearch'); if (catSearch) catSearch.placeholder = L.cat_search || 'Search...';
     const copyBtn = document.getElementById('copyBtn'); if (copyBtn && !copyBtn.classList.contains('copied')) copyBtn.textContent = L.copy_btn || 'Copy';
     const inviteCopyBtn = document.getElementById('inviteCopyBtn'); if (inviteCopyBtn && !inviteCopyBtn.classList.contains('copied')) inviteCopyBtn.textContent = L.copy_btn || 'Copy';
+    const recommendTrust = document.getElementById('t_recommend_trust_note'); if (recommendTrust) recommendTrust.innerHTML = L.recommend_trust_note || '';
+    const inviteTrust = document.getElementById('t_invite_trust_note'); if (inviteTrust) inviteTrust.innerHTML = L.invite_trust_note || '';
     const saveProfileBtn = document.getElementById('saveProfileBtn'); if (saveProfileBtn) saveProfileBtn.textContent = L.save || 'Save';
     const bizRegSubcatDone = document.getElementById('bizRegSubcatDone'); if (bizRegSubcatDone) bizRegSubcatDone.textContent = L.biz_reg_subcat_done || 'Подтвердить выбор';
     const bizRegSubcatEdit = document.getElementById('bizRegSubcatEdit'); if (bizRegSubcatEdit) bizRegSubcatEdit.textContent = L.biz_reg_subcat_edit || 'Изменить выбор';
@@ -2244,6 +2323,7 @@ function walletDealCardHtml(lead) {
     lead = normalizeDashboardLead(lead);
     const curr = dashData?.currency || '₪';
     const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : '—';
+    const L = i18n[lang] || i18n.ru;
     return `
     <div class="card wallet-deal-card" onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'>
         <div class="wallet-card-top">
@@ -2274,6 +2354,8 @@ function walletDealCardHtml(lead) {
                 <div class="wallet-card-val">${formatDateValue(lead.last_update_date)}</div>
             </div>
         </div>
+        <div class="wallet-card-next">${escapeHtml(L.wallet_card_note || '')}</div>
+        <div class="wallet-card-actions">${renderWalletActionButton(lead, 'card') || `<button class="btn-primary wallet-card-btn btn-outline" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>${escapeHtml(L.wallet_card_open || 'Open and take the next step')}</button>`}</div>
     </div>`;
 }
 
@@ -2963,7 +3045,11 @@ function renderCatalog() {
                 <div class="biz-card-name">${biz.name}</div>
                 <div class="biz-card-cat">${fullCat}</div>
             </div>
-            <div class="biz-card-commission">${L.bonus} ${biz.commission||'...'}</div>`;
+            <div class="biz-card-commission">${L.bonus} ${biz.commission||'...'}</div>
+            <div class="biz-card-trust-row">
+                <div class="biz-card-trust">${L.catalog_card_trust || 'Recommend with confidence'}</div>
+                <div class="biz-card-open">${L.catalog_card_cta || 'Open link'}</div>
+            </div>`;
         grid.appendChild(card);
     });
 }
