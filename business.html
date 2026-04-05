@@ -112,8 +112,8 @@
 
     /* ── Deal Card ──────────────────────────────────────────────────── */
     .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; }
-    .deal-card.pending { border-color:rgba(155,81,224,.4); background:rgba(155,81,224,.03); }
-    .deal-card.unpaid  { border-color:rgba(235,87,87,.4); box-shadow:0 0 15px rgba(235,87,87,.08); }
+    .deal-card.pending { border-color:rgba(242,153,74,.42); background:rgba(242,153,74,.05); box-shadow:0 0 15px rgba(242,153,74,.08); }
+    .deal-card.unpaid  { border-color:rgba(235,87,87,.4); background:rgba(235,87,87,.04); box-shadow:0 0 15px rgba(235,87,87,.08); }
     .deal-card-header  { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
     .deal-client { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:2px; }
     .deal-date   { font-size:.75rem; color:var(--text2); font-weight:500; }
@@ -122,8 +122,11 @@
     .st-progress { background:rgba(86,204,242,.15); color:var(--accent1); }
     .st-closed   { background:rgba(39,174,96,.15);  color:var(--green); }
     .st-rejected { background:rgba(235,87,87,.15);  color:var(--red); }
-    .st-pending  { background:rgba(155,81,224,.15); color:var(--purple); }
-    .deal-pending-note { font-size:.75rem; color:var(--purple); background:rgba(155,81,224,.1); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
+    .st-pending  { background:rgba(242,153,74,.15); color:var(--gold); }
+    .deal-pending-note { font-size:.75rem; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
+    .deal-pending-note.warning { color:var(--gold); background:rgba(242,153,74,.12); }
+    .deal-pending-note.danger { color:var(--red); background:rgba(235,87,87,.1); }
+    .deal-pending-note.success { color:var(--green); background:rgba(39,174,96,.12); }
     .deal-info { font-size:.85rem; color:var(--text2); margin-bottom:14px; line-height:1.6; }
     .deal-info span { font-weight:600; color:var(--text); }
     .deal-wa-link { color:var(--accent2); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px; min-height:32px; padding:2px 0; }
@@ -137,6 +140,12 @@
 .deal-mini-box { background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:12px; min-width:0; }
 .deal-mini-lbl { font-size:.74rem; color:var(--text2); margin-bottom:4px; }
 .deal-mini-val { font-size:1rem; font-weight:700; line-height:1.25; word-break:break-word; }
+.deal-mini-box-positive { background:rgba(39,174,96,.08); border-color:rgba(39,174,96,.22); }
+.deal-mini-box-positive .deal-mini-val { color:var(--green); }
+.deal-mini-box-danger { background:rgba(235,87,87,.08); border-color:rgba(235,87,87,.24); }
+.deal-mini-box-danger .deal-mini-val { color:var(--red); }
+.deal-mini-box-warning { background:rgba(242,153,74,.08); border-color:rgba(242,153,74,.22); }
+.deal-mini-box-warning .deal-mini-val { color:#b26a00; }
 .deal-summary-pills { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 14px; }
 .deal-actions-row { display:flex; gap:10px; flex-wrap:wrap; }
 .deal-actions-row .btn-primary { flex:1 1 150px; }
@@ -274,6 +283,23 @@
     .cta-block p { font-size:.80rem; color:var(--text2); line-height:1.42; margin-bottom:12px; }
     .soft-note { font-size:.73rem; color:var(--text2); margin-top:8px; line-height:1.38; }
     .section-caption { font-size:.76rem; color:var(--text2); margin:-2px 0 10px; line-height:1.4; }
+    .manage-summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+    .manage-contact-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:18px; }
+    .manage-info-box { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:12px; min-width:0; }
+    .manage-info-label { font-size:.74rem; color:var(--text2); margin-bottom:6px; }
+    .manage-info-value { font-size:1rem; font-weight:800; color:var(--text); line-height:1.25; word-break:break-word; }
+    .manage-info-box-positive { background:rgba(39,174,96,.08); border-color:rgba(39,174,96,.24); }
+    .manage-info-box-positive .manage-info-value { color:var(--green); }
+    .manage-info-box-danger { background:rgba(235,87,87,.08); border-color:rgba(235,87,87,.24); }
+    .manage-info-box-danger .manage-info-value { color:var(--red); }
+    .manage-info-box-warning { background:rgba(242,153,74,.08); border-color:rgba(242,153,74,.22); }
+    .manage-info-box-warning .manage-info-value { color:#b26a00; }
+    .manage-contact-card { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:12px; }
+    .manage-contact-card .deal-contact-stack { gap:10px; }
+    #manageDealSheet .sheet-card > div[style*="font-size:.9rem"] { display:none; }
+    @media (max-width:420px){
+      .manage-summary-grid { grid-template-columns:1fr; }
+    }
     body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
 
     /* ── Misc ───────────────────────────────────────────────────────── */
@@ -426,11 +452,10 @@
       <div class="cta-block">
         <div class="ghost-chip" id="t_rec_chip">Ваш социальный капитал</div>
         <h3 id="t_rec_title">Мои рекомендации</h3>
-        <p id="t_rec_sub">Когда вы рекомендуете хороший бизнес, вы усиливаете сеть доверия и можете выбрать, как распорядиться благодарностью.</p>
+        <p id="t_rec_sub">Рекомендуйте бизнес, за который готовы поручиться.</p>
         <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
           <span id="t_rec_btn_label">Порекомендовать бизнес</span>
         </button>
-        <div class="soft-note" id="t_rec_note">Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.</div>
       </div>
       <div class="mini-stats">
         <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Рекомендаций</div></div>
@@ -500,6 +525,35 @@
           <strong id="t_m_lbl_date"   style="color:var(--text)">Дата:</strong>   <span id="m_val_date"></span><br>
           <strong id="t_m_lbl_status" style="color:var(--text)">Статус:</strong> <span id="m_val_status"></span><br>
           <strong id="t_m_lbl_debt" style="color:var(--text)">Оплатить долг:</strong> <span id="m_val_debt"></span>
+        </div>
+
+        <div class="manage-summary-grid">
+          <div class="manage-info-box" id="m_box_status">
+            <div class="manage-info-label" id="t_m_lbl_status_compact">Статус:</div>
+            <div class="manage-info-value" id="m_val_status_compact"></div>
+          </div>
+          <div class="manage-info-box manage-info-box-positive" id="m_box_income">
+            <div class="manage-info-label" id="t_m_lbl_income">Доход:</div>
+            <div class="manage-info-value" id="m_val_income"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_debt">
+            <div class="manage-info-label" id="t_m_lbl_debt_compact">Оплатить долг:</div>
+            <div class="manage-info-value" id="m_val_debt_compact"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_date">
+            <div class="manage-info-label" id="t_m_lbl_date_compact">Дата:</div>
+            <div class="manage-info-value" id="m_val_date_compact"></div>
+          </div>
+        </div>
+        <div class="manage-contact-grid">
+          <div class="manage-contact-card">
+            <div class="manage-info-label" id="t_m_lbl_client_compact">Клиент:</div>
+            <div id="m_val_client_compact"></div>
+          </div>
+          <div class="manage-contact-card">
+            <div class="manage-info-label" id="t_m_lbl_agent_compact">Агент:</div>
+            <div id="m_val_agent_compact"></div>
+          </div>
         </div>
 
         <!-- Step: main -->
@@ -820,7 +874,7 @@ const i18n = {
 
 const CLEAN_BIZ_I18N = {
   ru: {
-    rec_sub:"Рекомендуйте только тот бизнес, которому готовы доверить свою репутацию, и усиливайте сеть доверия вокруг него.",
+    rec_sub:"Рекомендуйте бизнес, за который готовы поручиться.",
     rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности без лишних ручных шагов.",
     rec_list_sub:"Активные и завершённые рекомендации, отправленные от имени вашего бизнеса.",
     rec_empty:"Вы пока не отправляли рекомендаций.",
@@ -828,10 +882,12 @@ const CLEAN_BIZ_I18N = {
     debt_open:"Открыть выплаты",
     debt_sheet_title:"К выплате агентам",
     debt_sheet_sub:"Здесь показаны только активные сделки, где следующий шаг — выплатить агенту вознаграждение.",
-    card_manage:"Открыть сделку"
+    card_manage:"Управление сделкой",
+    card_next_step:"Следующий шаг",
+    m_income:"Доход:"
   },
   he: {
-    rec_sub:"המליצו רק על עסק שאתם באמת מוכנים לעמוד מאחוריו, וחזקו את רשת האמון סביבו.",
+    rec_sub:"המליצו על עסק שאתם באמת מוכנים לעמוד מאחוריו.",
     rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד בלי צעדים ידניים מיותרים.",
     rec_list_sub:"המלצות פעילות והיסטוריה שנשלחו בשם העסק שלכם.",
     rec_empty:"עדיין לא שלחתם המלצות.",
@@ -839,10 +895,12 @@ const CLEAN_BIZ_I18N = {
     debt_open:"פתיחת התשלומים",
     debt_sheet_title:"לתשלום לסוכנים",
     debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן הצעד הבא הוא לשלם לסוכן את התגמול.",
-    card_manage:"פתיחת העסקה"
+    card_manage:"ניהול עסקה",
+    card_next_step:"השלב הבא",
+    m_income:"רווח:"
   },
   en: {
-    rec_sub:"Recommend only the business you are genuinely ready to stand behind, and grow the trust network around it.",
+    rec_sub:"Recommend the business you are ready to stand behind.",
     rec_note:"One recommendation = one invited client. After that, the system carries the gratitude flow without extra manual steps.",
     rec_list_sub:"Active and completed recommendations sent on behalf of your business.",
     rec_empty:"You have not sent any recommendations yet.",
@@ -850,10 +908,12 @@ const CLEAN_BIZ_I18N = {
     debt_open:"Open payouts",
     debt_sheet_title:"Agent payouts due",
     debt_sheet_sub:"Only active deals where the next step is to pay the agent reward are shown here.",
-    card_manage:"Open deal"
+    card_manage:"Manage deal",
+    card_next_step:"Next step",
+    m_income:"Income:"
   },
   ar: {
-    rec_sub:"أوصِ فقط بالعمل الذي أنت مستعد فعلاً للوقوف خلفه، وعزّز شبكة الثقة حوله.",
+    rec_sub:"أوصِ بالعمل الذي أنت مستعد فعلاً للوقوف خلفه.",
     rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة مسار الشكر تلقائياً بدون خطوات يدوية زائدة.",
     rec_list_sub:"التوصيات النشطة والمكتملة المرسلة باسم عملك.",
     rec_empty:"لم ترسل أي توصيات بعد.",
@@ -861,7 +921,9 @@ const CLEAN_BIZ_I18N = {
     debt_open:"فتح الدفعات",
     debt_sheet_title:"مستحقات للوكلاء",
     debt_sheet_sub:"تظهر هنا فقط الصفقات النشطة التي تكون فيها الخطوة التالية هي دفع مكافأة الوكيل.",
-    card_manage:"افتح الصفقة"
+    card_manage:"إدارة الصفقة",
+    card_next_step:"الخطوة التالية",
+    m_income:"الدخل:"
   }
 };
 Object.entries(CLEAN_BIZ_I18N).forEach(([locale, values]) => {
@@ -1113,9 +1175,21 @@ function applyI18n() {
   const agentPhoneLbl = document.getElementById('t_m_lbl_agent_phone');
   const statusLbl = document.getElementById('t_m_lbl_status');
   const debtLbl = document.getElementById('t_m_lbl_debt');
+  const incomeLbl = document.getElementById('t_m_lbl_income');
+  const compactStatusLbl = document.getElementById('t_m_lbl_status_compact');
+  const compactDebtLbl = document.getElementById('t_m_lbl_debt_compact');
+  const compactDateLbl = document.getElementById('t_m_lbl_date_compact');
+  const compactClientLbl = document.getElementById('t_m_lbl_client_compact');
+  const compactAgentLbl = document.getElementById('t_m_lbl_agent_compact');
   if (agentPhoneLbl) agentPhoneLbl.textContent = manageLabels.agentPhone;
   if (statusLbl) statusLbl.textContent = manageLabels.status;
   if (debtLbl) debtLbl.textContent = manageLabels.debt;
+  if (incomeLbl) incomeLbl.textContent = L.m_income || 'Доход:';
+  if (compactStatusLbl) compactStatusLbl.textContent = manageLabels.status;
+  if (compactDebtLbl) compactDebtLbl.textContent = manageLabels.debt;
+  if (compactDateLbl) compactDateLbl.textContent = L.m_date;
+  if (compactClientLbl) compactClientLbl.textContent = L.m_client;
+  if (compactAgentLbl) compactAgentLbl.textContent = L.m_agent;
   const payCash = document.getElementById('f_pay_cash_btn');
   const payBank = document.getElementById('f_pay_bank_btn');
   if (payCash) payCash.textContent = L.f_pay_cash;
@@ -1394,12 +1468,6 @@ function getActiveDealsPromoHtml() {
     en:'Warm clients start with trust',
     ar:'العملاء الدافئون يبدأون بالثقة'
   };
-  const promoText = {
-    ru:'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.',
-    he:'הפעילו המלצות וחברו ממליצים חזקים בנישה שלכם כדי להביא לקוחות חמים בלי תנועה קרה.',
-    en:'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.',
-    ar:'ابدأ التوصيات واربط موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.'
-  };
   const promoBtn = {
     ru:'Порекомендовать бизнес',
     he:'להמליץ על עסק',
@@ -1409,7 +1477,6 @@ function getActiveDealsPromoHtml() {
   return `
     <div class="page-hero deals-empty-hero" style="margin-bottom:16px;">
       <h3>${promoTitle[lang] || promoTitle.ru}</h3>
-      <div class="empty-copy open" style="display:block;max-height:none;opacity:1;margin-top:10px;">${promoText[lang] || promoText.ru}</div>
       <div class="deals-empty-actions" style="margin-top:16px;">
         <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${promoBtn[lang] || promoBtn.ru}</button>
       </div>
@@ -1718,6 +1785,24 @@ function formatDealDebtAmount(deal, currency) {
   return Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${currency}` : String(rewardVal);
 }
 
+function formatDealIncomeAmount(deal, currency) {
+  const rawAmount = deal.amount ?? deal.deal_amount ?? null;
+  const rawCommission = deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? null;
+  if (rawAmount == null || rawAmount === '' || rawCommission == null || rawCommission === '') return '—';
+  const amountNum = Number(rawAmount);
+  const commissionNum = Number(rawCommission);
+  if (!Number.isFinite(amountNum) || !Number.isFinite(commissionNum)) return '—';
+  return `${Math.round((amountNum - commissionNum) * 10) / 10} ${currency}`;
+}
+
+function getDealTone(statusCode, isPayoutPending) {
+  if (isPayoutPending) return 'danger';
+  if (['pending_confirmation','pending_receipt','awaiting_receipt','pending_agent_confirmation','new','in_progress'].includes(statusCode)) return 'warning';
+  if (['closed','completed','done'].includes(statusCode)) return 'success';
+  if (statusCode === 'rejected') return 'danger';
+  return '';
+}
+
 function openDebtDealDetail(id) {
   closeFullscreen('debtDealsSheet');
   openManageDeal(id);
@@ -1898,15 +1983,16 @@ function renderDeals() {
   const dealsHtml = filtered.map(d => {
     const statusCode = getDisplayDealStatus(d);
     const st        = getStatusData(statusCode);
-    const isPending = d.status === 'pending_confirmation';
+    const isPayoutPending = isPayoutPendingBusinessDeal(d);
+    const tone = getDealTone(statusCode, isPayoutPending);
     const nextStep  = getDealNextStep(statusCode);
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
-    const incomeVal = (d.amount && d.commission) ? `${Math.round((+d.amount - +d.commission)*10)/10} ${curr}` : '—';
+    const incomeVal = formatDealIncomeAmount(d, curr);
 
     let innerAction = '';
     if (dealFilter === 'active') {
-      if (isPending) {
+      if (statusCode === 'pending_confirmation') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
@@ -1916,7 +2002,7 @@ function renderDeals() {
     }
 
     return `
-      <div class="deal-card${isPending ? ' pending unpaid' : ''}" onclick="toggleDealExtra(${d.id})">
+      <div class="deal-card${tone === 'warning' ? ' pending' : ''}${tone === 'danger' ? ' unpaid' : ''}" onclick="toggleDealExtra(${d.id})">
         <div class="deal-card-header">
           <div>
             <div class="deal-client">${d.client_name}</div>
@@ -1927,7 +2013,7 @@ function renderDeals() {
             <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
           </div>
         </div>
-        <div class="deal-pending-note"><i data-feather="${isPending ? 'clock' : 'check-circle'}" style="width:14px;height:14px;"></i> ${nextStep}</div>
+        <div class="deal-pending-note ${tone || 'warning'}"><i data-feather="${tone === 'danger' ? 'alert-circle' : (tone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
           <span class="meta-pill">💵 ${amountVal}</span>
@@ -1936,7 +2022,7 @@ function renderDeals() {
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${getPhoneFieldLabel()}</div><div class="deal-mini-val">${renderPhoneContact(d.client_phone, { stopPropagation:true })}</div></div>
+            <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
           </div>
           <div class="deal-receipt">
             <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
@@ -2539,20 +2625,34 @@ function openManageDeal(id) {
   const deal = (bizData.deals || []).find(d => d.id === id);
   if (!deal) return;
   const curr = bizData.currency || '₪';
-  const statusMeta = getStatusData(getDisplayDealStatus(deal));
+  const statusCode = getDisplayDealStatus(deal);
+  const statusMeta = getStatusData(statusCode);
   const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
-  const agentPhoneHtml = renderPhoneContact(getDealAgentPhone(deal));
+  const isPayoutPending = isPayoutPendingBusinessDeal(deal);
+  const tone = getDealTone(statusCode, isPayoutPending);
+  const agentName = deal.agent_name || deal.sender_name || '—';
+  const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
+  const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
+  const debtValue = formatDealDebtAmount(deal, curr);
+  const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
-  document.getElementById('m_val_agent').textContent  = deal.agent_name || deal.sender_name || '—';
+  document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
+  document.getElementById('m_val_agent').textContent  = agentName;
   document.getElementById('m_val_agent_phone').innerHTML = agentPhoneHtml;
-  document.getElementById('m_val_date').textContent   = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
+  document.getElementById('m_val_agent_compact').innerHTML = agentPhoneHtml;
+  document.getElementById('m_val_date').textContent   = dealDate;
+  document.getElementById('m_val_date_compact').textContent   = dealDate;
   document.getElementById('m_val_status').textContent = statusMeta.text;
-  document.getElementById('m_val_debt').textContent = formatDealDebtAmount(deal, curr);
+  document.getElementById('m_val_status_compact').textContent = statusMeta.text;
+  document.getElementById('m_val_debt').textContent = debtValue;
+  document.getElementById('m_val_debt_compact').textContent = debtValue;
+  document.getElementById('m_val_income').textContent = incomeValue;
+  document.getElementById('m_box_status').className = `manage-info-box ${tone === 'success' ? 'manage-info-box-positive' : (tone === 'danger' ? 'manage-info-box-danger' : 'manage-info-box-warning')}`;
+  document.getElementById('m_box_debt').className = `manage-info-box${isPayoutPending ? ' manage-info-box-danger' : ''}`;
   document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
-  const isPayoutPending = isPayoutPendingBusinessDeal(deal);
   closeBtn.onclick = isPayoutPending ? () => submitDealAction('close') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
   if (deal.status === 'new') {
