@@ -71,6 +71,8 @@
     .btn{display:flex;justify-content:center;align-items:center;width:100%;padding:16px;border-radius:16px;text-decoration:none;font-weight:800;font-size:1rem;border:none;cursor:pointer}
     .btn-primary{background:var(--accent);color:#fff}
     .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn-ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.84);backdrop-filter:blur(10px)}
+    .btn-ghost:hover{background:rgba(255,255,255,.1);color:#fff}
     .notice{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(18px);opacity:0;pointer-events:none;transition:.22s;background:#171d31;color:#fff;border:1px solid rgba(255,255,255,.1);padding:12px 14px;border-radius:14px;z-index:70;box-shadow:0 16px 34px rgba(0,0,0,.35)}
     .sticky-back{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;z-index:60;display:flex;justify-content:center}
     .sticky-back .btn{box-shadow:0 10px 24px rgba(0,0,0,.28)}
@@ -129,7 +131,7 @@
     <div class="instruction-block" style="text-align:center;padding-bottom:24px;border:none;box-shadow:none;background:transparent;">
       <div class="instruction-text" id="t_scan_qr">׀˜׀»׀¸ ׀´׀°׀¹ׁ‚׀µ ׀¾ׁ‚ׁ׀÷׀°׀½׀¸ׁ€׀¾׀²׀°ׁ‚ׁ QR-׀÷׀¾׀´:</div>
       <div class="qr-container" style="margin-bottom:20px;"><canvas id="qrCanvas"></canvas></div>
-      <button class="btn btn-primary" onclick="closeRecommend()" id="t_btn_back_catalog">׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³</button>
+      <button class="btn btn-ghost" onclick="closeRecommend()" id="t_btn_back_catalog">׀׀°׀·׀°׀´ ׀² ׀÷׀°ׁ‚׀°׀»׀¾׀³</button>
     </div>
   </div>
 </div>

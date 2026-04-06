@@ -507,9 +507,9 @@
   <!-- Bottom Nav -->
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
-    <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
-    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Агенты</span></button>
     <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommend">Клиенты</span></button>
+    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Агенты</span></button>
+    <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
     <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
@@ -981,8 +981,8 @@ const ACTIVE_BIZ_CONTEXT_KEY = 'winwin_active_business_context';
 let recommendersMode = 'mine';
 let recommendMode = 'incoming';
 
-const LTR_TABS = ['deals','stats','recommenders','recommend','profile'];
-const RTL_TABS = ['profile','recommend','recommenders','stats','deals'];
+const LTR_TABS = ['deals','recommend','recommenders','stats','profile'];
+const RTL_TABS = ['profile','stats','recommenders','recommend','deals'];
 function isRTLLang(targetLang = lang) { return targetLang === 'he' || targetLang === 'ar'; }
 function getTabOrder(targetLang = lang) { return isRTLLang(targetLang) ? RTL_TABS : LTR_TABS; }
 
