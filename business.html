@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Win-Win ֲ· ׀‘׀¸׀·׀½׀µׁ ׀׀°׀±׀¸׀½׀µׁ‚</title>
+  <title>Win-Win · Бизнес Кабинет</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    /* ג”€ג”€ CSS Variables ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── CSS Variables ──────────────────────────────────────────────── */
     :root {
       --bg:#E7EBF2; --surface:#F4F6FA; --surface2:#EDEFF4;
       --text:#171A28; --text2:#6F778F; --border:rgba(16,24,40,0.09);
@@ -23,12 +23,12 @@
       --nav-bg:rgba(15,15,26,0.85);
     }
 
-    /* ג”€ג”€ Reset ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Reset ──────────────────────────────────────────────────────── */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html { -webkit-text-size-adjust:100%; }
     body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; transition:background .3s,color .3s; overscroll-behavior:none; }
 
-    /* ג”€ג”€ RTL (agent cabinet pattern ג€” body.rtl class) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── RTL (agent cabinet pattern — body.rtl class) ───────────────── */
     body.rtl { text-align:right; }
     body.rtl .header-right { flex-direction:row-reverse; }
     body.rtl .deal-card-header { flex-direction:row-reverse; }
@@ -41,11 +41,11 @@
     body.rtl .fullscreen.slide-out { transform:translateX(-100%); }
     body.rtl .btn-back i { transform:rotate(180deg); }
 
-    /* ג”€ג”€ Layout ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Layout ─────────────────────────────────────────────────────── */
     .app { width:100%; max-width:430px; min-height:100vh; position:relative; padding-bottom:90px; overflow-x:hidden; direction:ltr; }
     body.rtl .view, body.rtl .header { direction:rtl; }
 
-    /* ג”€ג”€ Loader ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Loader ─────────────────────────────────────────────────────── */
     .loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s; }
     .loader-brand { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:8px; }
     .loader-sub { font-size:.82rem; color:var(--text2); margin-bottom:32px; font-weight:600; }
@@ -55,14 +55,14 @@
     .loader-err-title { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; color:var(--red); margin-bottom:12px; }
     .loader-err-sub { font-size:.9rem; color:var(--text2); margin-bottom:32px; line-height:1.5; font-weight:500; }
 
-    /* ג”€ג”€ Fullscreen Sheets (agent cabinet pattern) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Fullscreen Sheets (agent cabinet pattern) ──────────────────── */
     .fullscreen { position:fixed; inset:0; background:var(--bg); z-index:500; overflow-y:auto; padding:24px 16px 40px; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); display:none; }
     .fullscreen.active { transform:translateX(0) !important; display:block; }
     .fullscreen.slide-out { transform:translateX(100%); display:block; }
     .btn-back { background:transparent; border:none; color:var(--text2); font-size:.95rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 0; margin-bottom:20px; transition:.2s; }
     .btn-back:active { opacity:.6; transform:translateX(-4px); }
 
-    /* ג”€ג”€ Header ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Header ─────────────────────────────────────────────────────── */
     .header { display:flex; align-items:center; justify-content:space-between; padding:18px 18px 10px; position:sticky; top:0; background:var(--bg); z-index:50; }
     .header-left .logo-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:800; background:linear-gradient(90deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; color:transparent; margin-bottom:2px; }
     .header-left .company-name { font-size:.85rem; color:var(--text); font-weight:600; }
@@ -73,16 +73,16 @@
     .icon-btn { width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); transition:.2s; }
     .icon-btn:active { transform:scale(.92); }
 
-    /* ג”€ג”€ Swipe Views ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
-    /* Wrapper ׀’׀¡׀•׀“׀”׀ LTR. Offset = -index * 20%. Nav ׀·׀µׁ€׀÷׀°׀»׀¸ׁ‚ׁׁ CSS ׀² RTL. */
+    /* ── Swipe Views ────────────────────────────────────────────────── */
+    /* Wrapper ВСЕГДА LTR. Offset = -index * 20%. Nav зеркалится CSS в RTL. */
     .views-wrapper { display:flex; width:500%; transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); will-change:transform; direction:ltr !important; }
     .view { width:20%; flex-shrink:0; padding:0 16px; }
 
-    /* ג”€ג”€ Cards & Common ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Cards & Common ─────────────────────────────────────────────── */
     .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
     .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; letter-spacing:.5px; }
 
-    /* ג”€ג”€ Debt Banner ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Debt Banner ────────────────────────────────────────────────── */
     .debt-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:14px; }
     .debt-banner-text { color:var(--text); font-weight:700; font-size:.88rem; }
     .debt-banner-sum { color:var(--red); font-weight:800; font-size:1.08rem; }
@@ -105,12 +105,12 @@
       .debt-deal-grid { grid-template-columns:1fr; }
     }
 
-    /* ג”€ג”€ Deal Filter Tabs ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Deal Filter Tabs ───────────────────────────────────────────── */
     .deals-filter { display:flex; gap:8px; margin-bottom:16px; background:var(--surface); padding:4px; border-radius:14px; border:1px solid var(--border); }
     .filter-tab { flex:1; background:transparent; border:none; color:var(--text2); padding:10px; border-radius:10px; cursor:pointer; font-weight:600; font-size:.85rem; transition:.2s; font-family:inherit; }
     .filter-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.05); }
 
-    /* ג”€ג”€ Deal Card ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Deal Card ──────────────────────────────────────────────────── */
     .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; }
     .deal-card.pending { border-color:rgba(242,153,74,.42); background:rgba(242,153,74,.05); box-shadow:0 0 15px rgba(242,153,74,.08); }
     .deal-card.unpaid  { border-color:rgba(235,87,87,.4); background:rgba(235,87,87,.04); box-shadow:0 0 15px rgba(235,87,87,.08); }
@@ -159,7 +159,7 @@
     .receipt-line .unpaid-warn { color:var(--red); font-weight:700; }
     .receipt-line .paid-ok { color:var(--green); font-size:.75rem; font-weight:700; }
 
-    /* ג”€ג”€ Buttons ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Buttons ────────────────────────────────────────────────────── */
     .btn-primary { display:flex; justify-content:center; align-items:center; gap:8px; width:100%; border:none; padding:14px 22px; border-radius:14px; font-weight:700; font-size:.95rem; cursor:pointer; transition:.2s; font-family:inherit; text-decoration:none; }
     .btn-primary:active { transform:scale(.97); }
     .btn-action  { background:var(--surface2); color:var(--text); border:1px solid var(--border); font-weight:600; font-size:.9rem; padding:12px; border-radius:12px; }
@@ -172,14 +172,14 @@
     .btn-wa      { background:#25D366; color:#fff; box-shadow:0 4px 16px rgba(37,211,102,.25); }
     .btn-tg      { background:#2F80ED; color:#fff; box-shadow:0 4px 16px rgba(47,128,237,.25); }
 
-    /* ג”€ג”€ Stats ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Stats ──────────────────────────────────────────────────────── */
     .stats-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
     .stats-grid-3 { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
     .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:12px 8px; text-align:center; box-shadow:var(--shadow); }
     .stat-val { font-family:'Sora',sans-serif; font-size:1.04rem; font-weight:800; color:var(--text); margin-bottom:3px; }
     .stat-lbl { color:var(--text2); font-weight:700; font-size:.62rem; text-transform:uppercase; letter-spacing:.4px; }
 
-    /* ג”€ג”€ Funnel ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Funnel ─────────────────────────────────────────────────────── */
     .funnel-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
     .funnel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; font-size:.95rem; }
     .funnel-conv { color:var(--green); background:rgba(39,174,96,.15); padding:4px 10px; border-radius:8px; font-size:.85rem; }
@@ -190,7 +190,7 @@
     .f-active { background:var(--accent1); } .f-closed { background:var(--green); } .f-rejected { background:var(--red); }
     .f-val { width:35px; text-align:right; font-weight:700; font-size:.9rem; }
 
-    /* ג”€ג”€ Agent List ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Agent List ─────────────────────────────────────────────────── */
     .agent-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); margin-bottom:12px; }
     .agent-avatar { width:46px; height:46px; border-radius:12px; background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; text-transform:uppercase; }
     .agent-info  { flex:1; min-width:0; }
@@ -201,7 +201,7 @@
     .agent-comm-lbl { font-size:.65rem; color:var(--text2); text-transform:uppercase; margin-bottom:2px; }
     .agent-comm-val { font-size:1rem; font-weight:800; color:var(--gold); }
 
-    /* ג”€ג”€ Radar / Leaderboard ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Radar / Leaderboard ────────────────────────────────────────── */
     .lb-rank-badge { width:40px; height:40px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:12px; background:var(--bg); font-size:1.1rem; font-weight:800; color:var(--text2); border:1px solid var(--border); }
     .lb-rank-1 { background:rgba(255,215,0,.15); color:#FFD700; border-color:rgba(255,215,0,.3); font-size:1.3rem; }
     .lb-rank-2 { background:rgba(192,192,192,.15); color:#C0C0C0; border-color:rgba(192,192,192,.3); font-size:1.3rem; }
@@ -213,7 +213,7 @@
     .pro-promo h3 { font-family:'Sora',sans-serif; font-size:1.2rem; margin-bottom:8px; }
     .pro-promo p  { font-size:.85rem; color:var(--text2); margin-bottom:16px; line-height:1.5; }
 
-    /* ג”€ג”€ Profile ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Profile ────────────────────────────────────────────────────── */
     .sub-card { background:linear-gradient(135deg,rgba(86,204,242,.1),rgba(47,128,237,.1)); border:1px solid rgba(47,128,237,.3); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
     .sub-card-title { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
     .sub-badge { font-size:.7rem; font-weight:700; background:var(--accent2); color:#fff; padding:3px 8px; border-radius:8px; }
@@ -224,7 +224,7 @@
     .prof-lbl { color:var(--text2); font-size:.85rem; font-weight:600; }
     .prof-val { font-weight:700; font-size:.9rem; text-align:right; max-width:60%; word-break:break-word; }
 
-    /* ג”€ג”€ Edit Form ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Edit Form ──────────────────────────────────────────────────── */
     .sheet-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:18px; box-shadow:var(--shadow2); }
     .sheet-title { font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; margin-bottom:20px; }
     .input-label { font-size:.82rem; color:var(--text2); font-weight:600; margin-bottom:5px; display:block; }
@@ -240,12 +240,12 @@
     .niche-item input { width:18px; height:18px; accent-color:var(--accent1); flex-shrink:0; cursor:pointer; }
     .niche-item span { font-size:.85rem; font-weight:600; color:var(--text); }
 
-    /* ג”€ג”€ Manage Deal Steps ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Manage Deal Steps ──────────────────────────────────────────── */
     .step-panel { display:none; }
     .step-panel.active { display:block; animation:fadeIn .3s; }
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-    /* ג”€ג”€ Bottom Nav ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Bottom Nav ─────────────────────────────────────────────────── */
     .bottom-nav { position:fixed; bottom:0; width:100%; max-width:430px; background:var(--nav-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; justify-content:space-between; gap:2px; padding:10px 12px 20px; border-top:1px solid var(--border); z-index:100; direction:ltr !important; }
     .nav-hidden { display:none !important; }
     .nav-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px; color:var(--text2); cursor:pointer; transition:.2s; background:transparent; border:none; padding:2px 0 0; font-family:inherit; }
@@ -256,7 +256,7 @@
     .nav-item span { font-size:.47rem; font-weight:700; line-height:1.02; text-align:center; display:flex; align-items:flex-start; justify-content:center; width:100%; min-height:1.18rem; max-width:48px; letter-spacing:-0.02em; white-space:normal; word-break:keep-all; }
 
 
-    /* ג”€ג”€ Page Heroes / CTA ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Page Heroes / CTA ─────────────────────────────────────────── */
     .page-hero { background:linear-gradient(135deg, rgba(86,204,242,.08), rgba(47,128,237,.06)); border:1px solid rgba(86,204,242,.16); border-radius:22px; padding:11px 14px; margin-bottom:12px; box-shadow:var(--shadow); }
     .page-hero h3 { font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:6px; letter-spacing:-.02em; }
     .page-hero p { font-size:.76rem; color:var(--text2); line-height:1.38; }
@@ -302,7 +302,7 @@
     }
     body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
 
-    /* ג”€ג”€ Misc ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
+    /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
 
     .deals-empty-hero { background:linear-gradient(135deg, rgba(47,128,237,.10), rgba(86,204,242,.08)); border:1px solid rgba(86,204,242,.18); border-radius:24px; padding:18px; box-shadow:var(--shadow); margin-top:4px; }
@@ -333,15 +333,15 @@
 </head>
 <body class="brand-theme">
 
-<!-- ג•ג• LOADER ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג• -->
+<!-- ══ LOADER ══════════════════════════════════════════════════════════ -->
 <div class="loader" id="globalLoader">
   <div class="loader-brand">Win-Win</div>
-  <div class="loader-sub" id="t_loader_sub">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀° ׀´׀°׀½׀½ׁ‹ׁ…...</div>
+  <div class="loader-sub" id="t_loader_sub">Загрузка данных...</div>
   <div class="spinner" id="loaderSpinner"></div>
   <div class="loader-err" id="loaderErr">
-    <div class="loader-err-title" id="t_err_title">׀¡׀µׁׁ׀¸ׁ ׀¸ׁׁ‚׀µ׀÷׀»׀°</div>
-    <div class="loader-err-sub"   id="t_err_sub">׀’׀µׁ€׀½׀¸ׁ‚׀µׁׁ ׀² ׀¼׀µׁׁ׀µ׀½׀´׀¶׀µׁ€ ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ.</div>
-    <!-- Prefill message is silently baked into the button href ג€” NOT shown to user -->
+    <div class="loader-err-title" id="t_err_title">Сессия истекла</div>
+    <div class="loader-err-sub"   id="t_err_sub">Вернитесь в мессенджер и получите новую ссылку.</div>
+    <!-- Prefill message is silently baked into the button href — NOT shown to user -->
     <a href="#" class="btn-primary btn-wa" id="errBtnWa" style="max-width:280px;margin:0 auto 12px;display:none;">
       <i data-feather="message-circle" style="width:18px;height:18px;"></i>
       <span id="t_err_btn_wa">WhatsApp</span>
@@ -353,7 +353,7 @@
   </div>
 </div>
 
-<!-- ג•ג• MAIN SHELL ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג• -->
+<!-- ══ MAIN SHELL ═══════════════════════════════════════════════════════ -->
 <div class="app" style="display:none;" id="mainShell">
 
   <!-- Header -->
@@ -376,128 +376,122 @@
   <!-- Views wrapper -->
   <div class="views-wrapper" id="viewsWrapper">
 
-    <!-- ג”€ג”€ VIEW: Deals ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ -->
+    <!-- ── VIEW: Deals ──────────────────────────────────────────── -->
     <div id="view-deals" class="view active">
       <div class="debt-banner" id="debtBanner" style="display:none;" role="button" tabindex="0" onclick="openDebtDealsSheet()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealsSheet();}">
-        <div class="debt-banner-text" id="t_debt_label">נ”´ ׀”׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼:</div>
+        <div class="debt-banner-text" id="t_debt_label">🔴 Долг агентам:</div>
         <div class="debt-banner-meta">
-          <div class="debt-banner-hint" id="t_debt_open">׀ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׁ׀¿׀¸ׁ׀¾׀÷</div>
-          <div class="debt-banner-sum"  id="debtAmount">0 ג‚×</div>
+          <div class="debt-banner-hint" id="t_debt_open">Открыть список</div>
+          <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
         </div>
       </div>
       <div class="deals-filter">
-        <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">׀’ ׁ€׀°׀±׀¾ׁ‚׀µ</button>
-        <button class="filter-tab"        onclick="setFilter('history')" id="t_filt_history">׀˜ׁׁ‚׀¾ׁ€׀¸ׁ</button>
+        <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">В работе</button>
+        <button class="filter-tab"        onclick="setFilter('history')" id="t_filt_history">История</button>
       </div>
       <div id="dealsContainer"></div>
     </div>
 
-    <!-- ג”€ג”€ VIEW: Stats ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ -->
+    <!-- ── VIEW: Stats ──────────────────────────────────────────── -->
     <div id="view-stats" class="view">
-      <div class="sec-title" id="t_st_fin_title">׀₪׀¸׀½׀°׀½ׁׁ‹</div>
+      <div class="sec-title" id="t_st_fin_title">Финансы</div>
       <div class="stats-hero">
-        <div class="eyebrow" id="t_st_net_big">׀“׀»׀°׀²׀½ׁ‹׀¹ ׀¿׀¾׀÷׀°׀·׀°ׁ‚׀µ׀»ׁ</div>
-        <div class="hero-val" id="st_net_big">0 ג‚×</div>
-        <div class="hero-sub" id="t_st_net_big_sub">׀§׀¸ׁׁ‚ׁ‹׀¹ ׀´׀¾ׁ…׀¾׀´ ג€” ׀´׀µ׀½ׁ׀³׀¸, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀µ ׁ€׀µ׀°׀»ׁ׀½׀¾ ׀¾ׁׁ‚׀°ׁׁ‚ׁׁ ׁƒ ׀²׀°ׁ ׀¿׀¾ׁ׀»׀µ ׀²ׁ‹׀¿׀»׀°ׁ‚</div>
+        <div class="eyebrow" id="t_st_net_big">Главный показатель</div>
+        <div class="hero-val" id="st_net_big">0 ₪</div>
+        <div class="hero-sub" id="t_st_net_big_sub">Чистый доход — деньги, которые реально остаются у вас после выплат</div>
       </div>
       <div class="stats-trio">
-        <div class="stat-box"><div class="stat-val" id="st_revenue">0 ג‚×</div><div class="stat-lbl" id="t_st_revenue">׀׀±׀¾ׁ€׀¾ׁ‚</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red)">0 ג‚×</div><div class="stat-lbl" id="t_st_commission">׀’ׁ‹׀¿׀»׀°ׁ‚ׁ‹</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_pending_cnt" style="color:var(--purple)">0</div><div class="stat-lbl" id="t_st_pending_cnt">׀–׀´ׁƒׁ‚ ׀°׀³׀µ׀½ׁ‚׀°</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_revenue">0 ₪</div><div class="stat-lbl" id="t_st_revenue">Оборот</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_commission" style="color:var(--red)">0 ₪</div><div class="stat-lbl" id="t_st_commission">Выплаты</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_pending_cnt" style="color:var(--purple)">0</div><div class="stat-lbl" id="t_st_pending_cnt">Ждут агента</div></div>
       </div>
-      <div class="sec-title" id="t_st_funnel_title">׀’׀¾ׁ€׀¾׀½׀÷׀° ׀÷׀¾׀½׀²׀µׁ€ׁ׀¸׀¸</div>
+      <div class="sec-title" id="t_st_funnel_title">Воронка конверсии</div>
       <div class="funnel-box">
         <div class="funnel-header">
-          <div><span id="t_st_total_leads">׀’ׁ׀µ׀³׀¾ ׀»׀¸׀´׀¾׀²:</span> <span id="st_total_leads" style="color:var(--text)">0</span></div>
+          <div><span id="t_st_total_leads">Всего лидов:</span> <span id="st_total_leads" style="color:var(--text)">0</span></div>
           <div class="funnel-conv" id="st_conversion">0%</div>
         </div>
-        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_active">׀’ ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
-        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_closed">׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
-        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_rejected">׀ׁ‚׀÷׀»׀¾׀½׀µ׀½׀¾</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_active">В процессе</div><div class="f-bar-bg"><div class="f-bar f-active" id="bar_active"></div></div><div class="f-val" id="st_f_active">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_closed">Закрыто</div><div class="f-bar-bg"><div class="f-bar f-closed" id="bar_closed"></div></div><div class="f-val" id="st_f_closed">0</div></div>
+        <div class="f-bar-wrap"><div class="f-lbl" id="t_f_rejected">Отклонено</div><div class="f-bar-bg"><div class="f-bar f-rejected" id="bar_rejected"></div></div><div class="f-val" id="st_f_rejected">0</div></div>
       </div>
       <div class="stats-bottom-row">
-        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent1)">0</div><div class="stat-lbl" id="t_st_agents">׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸</div></div>
-        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--gold)">0 ג‚×</div><div class="stat-lbl" id="t_st_avg_deal">׀¡ׁ€׀µ׀´׀½׀¸׀¹ ׁ‡׀µ׀÷</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_agents" style="color:var(--accent1)">0</div><div class="stat-lbl" id="t_st_agents">Рекомендатели</div></div>
+        <div class="stat-box"><div class="stat-val" id="st_avg_deal" style="color:var(--gold)">0 ₪</div><div class="stat-lbl" id="t_st_avg_deal">Средний чек</div></div>
       </div>
     </div>
 
-    <!-- ג”€ג”€ VIEW: Recommenders ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ -->
+    <!-- ── VIEW: Recommenders ───────────────────────────────────── -->
     <div id="view-recommenders" class="view">
       <div class="page-hero">
-        <div class="ghost-chip" id="t_ag_chip">׀˜ׁׁ‚׀¾ׁ‡׀½׀¸׀÷׀¸ ׀´׀¾׀²׀µׁ€׀¸ׁ</div>
-        <h3 id="t_ag_title">׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸</h3>
-        <p id="t_ag_sub">׀—׀´׀µׁׁ ׀¶׀¸׀²ׁƒׁ‚ ׀²׀°ׁˆ׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸ ׀¸ ׁ׀¸׀»ׁ׀½ׁ‹׀µ ׀»ׁ׀´׀¸ ׀² ׀²׀°ׁˆ׀µ׀¹ ׀½׀¸ׁˆ׀µ, ׁ ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀¼׀¸ ׀¼׀¾׀¶׀½׀¾ ׀½׀°ׁ‡׀°ׁ‚ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀¾.</p>
+        <div class="ghost-chip" id="t_ag_chip">Источники доверия</div>
+        <h3 id="t_ag_title">Рекомендатели</h3>
+        <p id="t_ag_sub">Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.</p>
       </div>
       <div class="segmented-tabs">
-        <button class="seg-tab active" id="agTabMine" onclick="setRecommendersMode('mine')">׀׀¾׀¸</button>
-        <button class="seg-tab" id="agTabLeaders" onclick="setRecommendersMode('leaders')">׀›׀¸׀´׀µׁ€ׁ‹ ׀² ׀¼׀¾׀µ׀¹ ׀½׀¸ׁˆ׀µ</button>
+        <button class="seg-tab active" id="agTabMine" onclick="setRecommendersMode('mine')">Мои</button>
+        <button class="seg-tab" id="agTabLeaders" onclick="setRecommendersMode('leaders')">Лидеры в моей нише</button>
       </div>
       <div id="recommendersMinePanel">
-        <div class="section-caption" id="t_ag_mine_caption">׀›ׁ׀´׀¸, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀µ ׁƒ׀¶׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒׁׁ‚ ׀²׀°ׁˆ ׀±׀¸׀·׀½׀µׁ ׀¸ ׀¿ׁ€׀¸׀²׀¾׀´ׁׁ‚ ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀².</div>
+        <div class="section-caption" id="t_ag_mine_caption">Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.</div>
         <div id="agentsList"></div>
       </div>
       <div id="recommendersLeadersPanel" style="display:none;">
-        <div class="section-caption" id="t_ag_leaders_caption">׀¡׀¸׀»ׁ׀½ׁ‹׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸ ׀² ׀²׀°ׁˆ׀µ׀¹ ׀½׀¸ׁˆ׀µ ג€” ׀¾ׁ€׀¸׀µ׀½ׁ‚׀¸ׁ€ ׀´׀»ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀°.</div>
+        <div class="section-caption" id="t_ag_leaders_caption">Сильные рекомендатели в вашей нише — ориентир для сотрудничества.</div>
         <div id="leadersInlinePromo" class="pro-promo" style="display:none;">
-          <h3 id="t_rd_promo_title">׀˜ׁ‰׀µׁ‚׀µ ׀½׀¾׀²ׁ‹ׁ… ׀¿׀°ׁ€ׁ‚׀½ׁ‘ׁ€׀¾׀²?</h3>
-          <p id="t_rd_promo_desc">׀׀µׁ€׀µ׀¹׀´׀¸ׁ‚׀µ ׀½׀° PRO, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׀÷׀¾׀½ׁ‚׀°׀÷ׁ‚ׁ‹ ׀»׀¸׀´׀µׁ€׀¾׀² ׀² ׀²׀°ׁˆ׀µ׀¹ ׀½׀¸ׁˆ׀µ.</p>
-          <button class="btn-primary btn-gold" onclick="openUpgradePage()" id="t_rd_promo_btn">׀׀¾׀´ׁ€׀¾׀±׀½׀µ׀µ ׀¾ PRO</button>
+          <h3 id="t_rd_promo_title">Ищете новых партнёров?</h3>
+          <p id="t_rd_promo_desc">Перейдите на PRO, чтобы открыть контакты лидеров в вашей нише.</p>
+          <button class="btn-primary btn-gold" onclick="openUpgradePage()" id="t_rd_promo_btn">Подробнее о PRO</button>
         </div>
-        <div id="leadersInlineList"><div class="empty-state" id="t_radar_loading">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀°...</div></div>
+        <div id="leadersInlineList"><div class="empty-state" id="t_radar_loading">Загрузка...</div></div>
       </div>
     </div>
 
-    <!-- ג”€ג”€ VIEW: Recommend ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ -->
+    <!-- ── VIEW: Recommend ───────────────────────────────────────── -->
     <div id="view-recommend" class="view">
-      <div class="sec-title" style="margin-top:4px;" id="t_rec_page_title">Рекомендации</div>
-      <div class="segmented-tabs">
-        <button type="button" class="seg-tab active" id="recTabIncoming" onclick="setRecommendMode('incoming')">
-          <span id="t_rec_mode_incoming">Входящие</span>
-        </button>
-        <button type="button" class="seg-tab" id="recTabOutgoing" onclick="setRecommendMode('outgoing')">
-          <span id="t_rec_mode_outgoing">Исходящие</span>
-        </button>
-      </div>
       <div class="cta-block">
-        <h3 id="t_rec_title">Посмотрите, что требует внимания сейчас.</h3>
-        <button class="btn-primary btn-accent" onclick="handleRecommendMainAction()">
-          <span id="t_rec_btn_label">Открыть сделки</span>
+        <div class="ghost-chip" id="t_rec_chip">Ваш социальный капитал</div>
+        <h3 id="t_rec_title">Рекомендуйте проверенные бизнесы</h3>
+        <p id="t_rec_sub">Выберите бизнес, который готовы рекомендовать.</p>
+        <button class="btn-primary btn-accent" onclick="openRecommendFlow()">
+          <span id="t_rec_btn_label">Выбрать бизнес</span>
         </button>
       </div>
       <div class="mini-stats">
-        <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Выручка</div></div>
-        <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Выплаты</div></div>
-        <div class="mini-stat"><div class="val" id="rec_stat_done">0</div><div class="lbl" id="t_rec_stat_done">Чистыми</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Рекомендаций</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Ждут благодарности</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_done">0</div><div class="lbl" id="t_rec_stat_done">Завершено</div></div>
       </div>
-      <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Входящие рекомендации</div>
+      <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Мои рекомендации</div>
+      <div class="section-caption" id="t_rec_list_sub">Активные и завершённые исходящие рекомендации.</div>
       <div id="recommendList"></div>
     </div>
 
-    <!-- ג”€ג”€ VIEW: Profile ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ -->
+    <!-- ── VIEW: Profile ────────────────────────────────────────── -->
     <div id="view-profile" class="view">
       <div class="sub-card" id="subCard">
         <div class="sub-card-title">
-          <span id="t_sub_title">׀¢׀µ׀÷ׁƒׁ‰׀¸׀¹ ׁ‚׀°ׁ€׀¸ׁ„:</span>
-          <span class="sub-badge" id="subBadge">׀¡ׁ‚׀°׀½׀´׀°ׁ€ׁ‚</span>
+          <span id="t_sub_title">Текущий тариф:</span>
+          <span class="sub-badge" id="subBadge">Стандарт</span>
         </div>
-        <div class="sub-desc" id="subDesc">׀‘׀°׀·׀¾׀²ׁ‹׀¹ ׁ„ׁƒ׀½׀÷ׁ†׀¸׀¾׀½׀°׀». ׀›׀¸׀¼׀¸ׁ‚ׁ‹ ׁ׀´׀µ׀»׀¾׀÷ ׁƒׁ‡׀¸ׁ‚ׁ‹׀²׀°ׁׁ‚ׁׁ ׀¿׀»׀°ׁ‚ׁ„׀¾ׁ€׀¼׀¾׀¹.</div>
+        <div class="sub-desc" id="subDesc">Базовый функционал. Лимиты сделок учитываются платформой.</div>
         <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="openUpgradePage()">
           <i data-feather="star" style="width:18px;height:18px;"></i>
-          <span id="t_btn_upgrade">׀׀µׁ€׀µ׀¹ׁ‚׀¸ ׀½׀° PRO (149 ג‚×)</span>
+          <span id="t_btn_upgrade">Перейти на PRO (149 ₪)</span>
         </button>
       </div>
-      <div class="sec-title" id="t_tab_profile">׀׀°ׁׁ‚ׁ€׀¾׀¹׀÷׀¸ ׀±׀¸׀·׀½׀µׁ׀°</div>
+      <div class="sec-title" id="t_tab_profile">Настройки бизнеса</div>
       <div class="profile-card">
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_name">׀׀°׀·׀²׀°׀½׀¸׀µ</div><div class="prof-val" id="pr_name">ג€”</div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">׀׀¸ׁˆ׀°</div><div class="prof-val" id="pr_niche">ג€”</div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">׀’׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸׀µ</div><div class="prof-val" id="pr_comm">ג€”</div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹</div><div class="prof-val" id="pr_pay">ג€”</div></div>
-        <div class="prof-row" id="pr_link_row"><div class="prof-lbl" id="t_pr_link">Instagram / ׁ׀°׀¹ׁ‚</div><div class="prof-val" id="pr_link">ג€”</div></div>
-        <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">׀¢׀µ׀»׀µׁ„׀¾׀½</div><div class="prof-val" id="pr_phone">ג€”</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_name">Название</div><div class="prof-val" id="pr_name">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_niche">Ниша</div><div class="prof-val" id="pr_niche">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_comm">Вознаграждение</div><div class="prof-val" id="pr_comm">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_pay">Способ выплаты</div><div class="prof-val" id="pr_pay">—</div></div>
+        <div class="prof-row" id="pr_link_row"><div class="prof-lbl" id="t_pr_link">Instagram / сайт</div><div class="prof-val" id="pr_link">—</div></div>
+        <div class="prof-row"><div class="prof-lbl" id="t_pr_phone">Телефон</div><div class="prof-val" id="pr_phone">—</div></div>
       </div>
       <button class="btn-primary btn-outline" onclick="openProfileEdit()" style="margin-bottom:12px;">
         <i data-feather="edit-2" style="width:16px;height:16px;"></i>
-        <span id="t_btn_edit">׀˜׀·׀¼׀µ׀½׀¸ׁ‚ׁ ׀´׀°׀½׀½ׁ‹׀µ</span>
+        <span id="t_btn_edit">Изменить данные</span>
       </button>
       <div style="margin-top:8px;"></div>
       <a href="#" id="btnWaReturn" class="btn-primary btn-wa"  style="display:none;margin-bottom:12px;"><i data-feather="message-circle" style="width:18px;height:18px;"></i> <span id="t_wa_btn">WhatsApp</span></a>
@@ -508,56 +502,56 @@
 
   <!-- Bottom Nav -->
   <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">׀¡׀´׀µ׀»׀÷׀¸</span></button>
-    <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">׀ׁ‚ׁ‡׀µׁ‚ׁ‹</span></button>
-    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">׀׀³׀µ׀½ׁ‚ׁ‹</span></button>
-    <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommend">׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒׁ</span></button>
-    <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">׀ׁ€׀¾ׁ„׀¸׀»ׁ</span></button>
+    <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
+    <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
+    <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Агенты</span></button>
+    <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommend">Рекомендую</span></button>
+    <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
   </nav>
 
-  <!-- ג•ג• FULLSCREEN: Manage Deal ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג• -->
-  <!-- ג•ג• FULLSCREEN: Manage Deal ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג• -->
+  <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
+  <!-- ══ FULLSCREEN: Manage Deal ══════════════════════════════════ -->
   <div class="fullscreen" id="manageDealSheet">
     <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
       <button class="btn-back" onclick="closeManageDeal()">
-        <i data-feather="arrow-left"></i><span id="t_m_back_top">׀׀°׀·׀°׀´</span>
+        <i data-feather="arrow-left"></i><span id="t_m_back_top">Назад</span>
       </button>
       <div class="sheet-card">
-        <div class="sheet-title" id="t_m_title">׀£׀¿ׁ€׀°׀²׀»׀µ׀½׀¸׀µ ׁ׀´׀µ׀»׀÷׀¾׀¹</div>
+        <div class="sheet-title" id="t_m_title">Управление сделкой</div>
         <div style="font-size:.9rem;color:var(--text2);margin-bottom:24px;line-height:1.6;">
-          <strong id="t_m_lbl_client" style="color:var(--text)">׀׀»׀¸׀µ׀½ׁ‚:</strong> <span id="m_val_client"></span><br>
-          <strong id="t_m_lbl_agent"  style="color:var(--text)">׀׀³׀µ׀½ׁ‚:</strong>  <span id="m_val_agent"></span><br>
-          <strong id="t_m_lbl_agent_phone" style="color:var(--text)">׀¢׀µ׀»׀µׁ„׀¾׀½ ׀°׀³׀µ׀½ׁ‚׀°:</strong> <span id="m_val_agent_phone"></span><br>
-          <strong id="t_m_lbl_date"   style="color:var(--text)">׀”׀°ׁ‚׀°:</strong>   <span id="m_val_date"></span><br>
-          <strong id="t_m_lbl_status" style="color:var(--text)">׀¡ׁ‚׀°ׁ‚ׁƒׁ:</strong> <span id="m_val_status"></span><br>
-          <strong id="t_m_lbl_debt" style="color:var(--text)">׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³:</strong> <span id="m_val_debt"></span>
+          <strong id="t_m_lbl_client" style="color:var(--text)">Клиент:</strong> <span id="m_val_client"></span><br>
+          <strong id="t_m_lbl_agent"  style="color:var(--text)">Агент:</strong>  <span id="m_val_agent"></span><br>
+          <strong id="t_m_lbl_agent_phone" style="color:var(--text)">Телефон агента:</strong> <span id="m_val_agent_phone"></span><br>
+          <strong id="t_m_lbl_date"   style="color:var(--text)">Дата:</strong>   <span id="m_val_date"></span><br>
+          <strong id="t_m_lbl_status" style="color:var(--text)">Статус:</strong> <span id="m_val_status"></span><br>
+          <strong id="t_m_lbl_debt" style="color:var(--text)">Оплатить долг:</strong> <span id="m_val_debt"></span>
         </div>
 
         <div class="manage-summary-grid">
           <div class="manage-info-box" id="m_box_status">
-            <div class="manage-info-label" id="t_m_lbl_status_compact">׀¡ׁ‚׀°ׁ‚ׁƒׁ:</div>
+            <div class="manage-info-label" id="t_m_lbl_status_compact">Статус:</div>
             <div class="manage-info-value" id="m_val_status_compact"></div>
           </div>
           <div class="manage-info-box manage-info-box-positive" id="m_box_income">
-            <div class="manage-info-label" id="t_m_lbl_income">׀”׀¾ׁ…׀¾׀´:</div>
+            <div class="manage-info-label" id="t_m_lbl_income">Доход:</div>
             <div class="manage-info-value" id="m_val_income"></div>
           </div>
           <div class="manage-info-box" id="m_box_debt">
-            <div class="manage-info-label" id="t_m_lbl_debt_compact">׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³:</div>
+            <div class="manage-info-label" id="t_m_lbl_debt_compact">Оплатить долг:</div>
             <div class="manage-info-value" id="m_val_debt_compact"></div>
           </div>
           <div class="manage-info-box" id="m_box_date">
-            <div class="manage-info-label" id="t_m_lbl_date_compact">׀”׀°ׁ‚׀°:</div>
+            <div class="manage-info-label" id="t_m_lbl_date_compact">Дата:</div>
             <div class="manage-info-value" id="m_val_date_compact"></div>
           </div>
         </div>
         <div class="manage-contact-grid">
           <div class="manage-contact-card">
-            <div class="manage-info-label" id="t_m_lbl_client_compact">׀׀»׀¸׀µ׀½ׁ‚:</div>
+            <div class="manage-info-label" id="t_m_lbl_client_compact">Клиент:</div>
             <div id="m_val_client_compact"></div>
           </div>
           <div class="manage-contact-card">
-            <div class="manage-info-label" id="t_m_lbl_agent_compact">׀׀³׀µ׀½ׁ‚:</div>
+            <div class="manage-info-label" id="t_m_lbl_agent_compact">Агент:</div>
             <div id="m_val_agent_compact"></div>
           </div>
         </div>
@@ -566,41 +560,41 @@
         <div class="step-panel active" id="m_step_main">
           <button class="btn-primary btn-green" style="margin-bottom:12px;display:none;" id="m_btn_accept" onclick="submitDealAction('accept')">
             <i data-feather="play-circle" style="width:18px;height:18px;"></i>
-            <span>׀’׀·ׁׁ‚ׁ ׀² ׁ€׀°׀±׀¾ׁ‚ׁƒ</span>
+            <span>Взять в работу</span>
           </button>
           <button class="btn-primary btn-accent" style="margin-bottom:12px;" id="m_btn_go_close" onclick="setStep('close')">
             <i data-feather="check-circle" style="width:18px;height:18px;"></i>
-            <span id="t_m_btn_close">׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ</span>
+            <span id="t_m_btn_close">Закрыть сделку</span>
           </button>
           <button class="btn-primary btn-red" onclick="setStep('reject')">
             <i data-feather="x-circle" style="width:18px;height:18px;"></i>
-            <span id="t_m_btn_reject">׀ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ</span>
+            <span id="t_m_btn_reject">Отклонить сделку</span>
           </button>
         </div>
 
         <!-- Step: close (enter amount) -->
         <div class="step-panel" id="m_step_close">
-          <div class="deal-warning">׀’׀°׀¶׀½׀¾: ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀°׀¹ׁ‚׀µ ׀·׀°׀÷ׁ€ׁ‹ׁ‚׀¸׀µ ׁ׀´׀µ׀»׀÷׀¸ ׁ‚׀¾׀»ׁ׀÷׀¾ ׀¿׀¾ׁ׀»׀µ ׁ„׀°׀÷ׁ‚׀¸ׁ‡׀µׁ׀÷׀¾׀¹ ׀¾׀¿׀»׀°ׁ‚ׁ‹ ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀¼. ׀׀¾ׁ׀»׀µ ׀·׀°׀÷ׁ€ׁ‹ׁ‚׀¸ׁ ׀²׀µׁ€׀½ׁƒׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ ׀½׀°׀·׀°׀´ ׁƒ׀¶׀µ ׀½׀µ׀»ׁ׀·ׁ.</div>
-          <label class="input-label" id="t_m_lbl_amount">׀¡ׁƒ׀¼׀¼׀° ׁ׀´׀µ׀»׀÷׀¸ (ׁ‚׀¾׀»ׁ׀÷׀¾ ׁ†׀¸ׁ„ׁ€ׁ‹)</label>
-          <input type="number" class="custom-input" id="m_amount" placeholder="׀׀°׀¿ׁ€׀¸׀¼׀µׁ€: 1500">
-          <button class="btn-primary btn-accent" style="margin-bottom:12px;" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀·׀°׀÷ׁ€ׁ‹ׁ‚׀¸׀µ</button>
-          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back1">׀ׁ‚׀¼׀µ׀½׀°</button>
+          <div class="deal-warning">Важно: подтверждайте закрытие сделки только после фактической оплаты клиентом. После закрытия вернуть сделку назад уже нельзя.</div>
+          <label class="input-label" id="t_m_lbl_amount">Сумма сделки (только цифры)</label>
+          <input type="number" class="custom-input" id="m_amount" placeholder="Например: 1500">
+          <button class="btn-primary btn-accent" style="margin-bottom:12px;" onclick="submitDealAction('close')" id="t_m_btn_confirm_close">Подтвердить закрытие</button>
+          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back1">Отмена</button>
         </div>
 
         <!-- Step: reject -->
         <div class="step-panel" id="m_step_reject">
-          <p style="text-align:center;margin-bottom:16px;font-weight:600;" id="t_m_reject_sure">׀£׀²׀µׁ€׀µ׀½ׁ‹, ׁ‡ׁ‚׀¾ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ?</p>
-          <button class="btn-primary" style="background:var(--red);color:#fff;margin-bottom:12px;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">׀”׀°, ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ</button>
-          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back2">׀ׁ‚׀¼׀µ׀½׀°</button>
+          <p style="text-align:center;margin-bottom:16px;font-weight:600;" id="t_m_reject_sure">Уверены, что хотите отклонить?</p>
+          <button class="btn-primary" style="background:var(--red);color:#fff;margin-bottom:12px;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+          <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back2">Отмена</button>
         </div>
 
         <!-- Step: result -->
         <div class="step-panel" id="m_step_result" style="text-align:center;padding:24px 0;">
           <div class="spinner" style="margin:0 auto 16px;" id="m_spinner"></div>
-          <div id="m_result_msg" style="font-weight:600;white-space:pre-line;color:var(--text);">׀׀±ׁ€׀°׀±׀¾ׁ‚׀÷׀°...</div>
+          <div id="m_result_msg" style="font-weight:600;white-space:pre-line;color:var(--text);">Обработка...</div>
         </div>
       </div>
-      <button class="btn-primary btn-accent" onclick="closeManageDeal()" id="t_m_cancel_bottom">׀׀°׀·׀°׀´</button>
+      <button class="btn-primary btn-accent" onclick="closeManageDeal()" id="t_m_cancel_bottom">Назад</button>
     </div>
   </div>
 
@@ -608,11 +602,11 @@
     <div style="max-width:430px; margin:0 auto; padding:20px 16px 32px;">
       <button class="btn-back" onclick="closeFullscreen('debtDealsSheet')">
         <i data-feather="arrow-left"></i>
-        <span id="t_debt_back">׀׀°׀·׀°׀´</span>
+        <span id="t_debt_back">Назад</span>
       </button>
       <div class="sheet-card" style="margin-top:0;">
-        <div class="sheet-title" id="t_debt_sheet_title">׀”׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼</div>
-        <div class="soft-note" id="t_debt_sheet_sub" style="margin-bottom:16px;">׀—׀´׀µׁׁ ׀¿׀¾׀÷׀°׀·׀°׀½ׁ‹ ׁ‚׀¾׀»ׁ׀÷׀¾ ׀°׀÷ׁ‚׀¸׀²׀½ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸, ׀³׀´׀µ ׀½ׁƒ׀¶׀½׀¾ ׀¾׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼.</div>
+        <div class="sheet-title" id="t_debt_sheet_title">Долг агентам</div>
+        <div class="soft-note" id="t_debt_sheet_sub" style="margin-bottom:16px;">Здесь показаны только активные сделки, где нужно оплатить долг агентам.</div>
         <div id="debtDealsList" class="debt-list"></div>
       </div>
     </div>
@@ -622,59 +616,59 @@
     <div style="max-width:430px; margin:0 auto; padding:20px 16px 32px;">
       <button class="btn-back" onclick="closeRecommendDetail()">
         <i data-feather="arrow-left"></i>
-        <span id="t_rec_detail_back_top">׀׀°׀·׀°׀´</span>
+        <span id="t_rec_detail_back_top">Назад</span>
       </button>
       <div id="recommendDetailContent"></div>
-      <button class="btn-primary btn-accent" onclick="closeRecommendDetail()" id="t_rec_detail_back_bottom">׀׀°׀·׀°׀´</button>
+      <button class="btn-primary btn-accent" onclick="closeRecommendDetail()" id="t_rec_detail_back_bottom">Назад</button>
     </div>
   </div>
 
-  <!-- ג•ג• FULLSCREEN: Edit Profile ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג• -->
+  <!-- ══ FULLSCREEN: Edit Profile ═════════════════════════════════ -->
   <div class="fullscreen" id="editProfileSheet" style="padding:0;">
     <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
       <div style="flex:1;padding:24px 16px;">
         <button class="btn-back" onclick="closeProfileEdit()">
-          <i data-feather="arrow-left"></i><span id="t_edit_back">׀׀°׀·׀°׀´</span>
+          <i data-feather="arrow-left"></i><span id="t_edit_back">Назад</span>
         </button>
         <div class="sheet-card" style="margin-top:0;">
-          <div class="sheet-title" id="t_edit_title">׀ ׀µ׀´׀°׀÷ׁ‚׀¸ׁ€׀¾׀²׀°׀½׀¸׀µ</div>
+          <div class="sheet-title" id="t_edit_title">Редактирование</div>
 
-          <label class="input-label" id="t_f_name">׀׀°׀·׀²׀°׀½׀¸׀µ ׀±׀¸׀·׀½׀µׁ׀°</label>
+          <label class="input-label" id="t_f_name">Название бизнеса</label>
           <input type="text" class="custom-input" id="f_name">
 
-          <label class="input-label" id="t_f_niche">׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ ׀±׀¸׀·׀½׀µׁ׀°</label>
+          <label class="input-label" id="t_f_niche">Категория бизнеса</label>
           <select class="custom-input" id="f_niche" onchange="updateSubniches()">
-            <option value="" disabled>׀’ׁ‹׀±׀µׁ€׀¸ׁ‚׀µ...</option>
+            <option value="" disabled>Выберите...</option>
           </select>
 
           <div id="f_subniche_group" style="display:none;margin-bottom:16px;">
-            <label class="input-label" id="t_f_subniche">׀¡׀¿׀µׁ†׀¸׀°׀»׀¸׀·׀°ׁ†׀¸ׁ</label>
+            <label class="input-label" id="t_f_subniche">Специализация</label>
             <div class="niche-tags" id="f_subniche_tags"></div>
             <div class="niche-list" id="f_subniche_list"></div>
-            <button type="button" onclick="confirmSubniches()" class="btn-primary btn-outline" id="btnSubcatDone" style="margin-bottom:8px;">ג… ׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀²ׁ‹׀±׀¾ׁ€</button>
-            <button type="button" onclick="editSubniches()"   class="btn-primary btn-outline" id="btnSubcatEdit" style="display:none;">גן¸ ׀˜׀·׀¼׀µ׀½׀¸ׁ‚ׁ</button>
+            <button type="button" onclick="confirmSubniches()" class="btn-primary btn-outline" id="btnSubcatDone" style="margin-bottom:8px;">✅ Подтвердить выбор</button>
+            <button type="button" onclick="editSubniches()"   class="btn-primary btn-outline" id="btnSubcatEdit" style="display:none;">✏️ Изменить</button>
           </div>
 
-          <label class="input-label" id="t_f_comm">׀’׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸׀µ (׀½׀°׀¿ׁ€. 10% ׀¸׀»׀¸ 500)</label>
+          <label class="input-label" id="t_f_comm">Вознаграждение (напр. 10% или 500)</label>
           <input type="text" class="custom-input" id="f_comm">
 
-          <label class="input-label" id="t_f_pay">׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹</label>
+          <label class="input-label" id="t_f_pay">Способ выплаты</label>
           <div class="pay-btns">
             <button type="button" class="pay-btn" onclick="selectPay('Bit')">Bit</button>
             <button type="button" class="pay-btn" onclick="selectPay('Paybox')">Paybox</button>
             <button type="button" class="pay-btn" onclick="selectPay('PayPal')">PayPal</button>
-            <button type="button" class="pay-btn" id="f_pay_cash_btn" onclick="selectPay('׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ')">׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ</button>
-            <button type="button" class="pay-btn" id="f_pay_bank_btn" onclick="selectPay('׀׀µׁ€׀µ׀²׀¾׀´')">׀׀µׁ€׀µ׀²׀¾׀´</button>
+            <button type="button" class="pay-btn" id="f_pay_cash_btn" onclick="selectPay('Наличные')">Наличные</button>
+            <button type="button" class="pay-btn" id="f_pay_bank_btn" onclick="selectPay('Перевод')">Перевод</button>
           </div>
           <input type="hidden" id="f_pay">
 
-          <label class="input-label" id="t_f_link">׀¡ׁׁ‹׀»׀÷׀° (׀¡׀°׀¹ׁ‚ / ׀¡׀¾ׁ†ׁ׀µׁ‚׀¸)</label>
+          <label class="input-label" id="t_f_link">Ссылка (Сайт / Соцсети)</label>
           <input type="text" class="custom-input" id="f_link" placeholder="https://...">
         </div>
       </div>
       <div class="sticky-footer" style="padding:10px 16px 24px;">
-        <button class="btn-primary" id="btnSaveProfile" onclick="submitEdit()" style="background:var(--green);color:#fff;" id="t_btn_save">׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ</button>
-        <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_edit">׀׀°׀·׀°׀´</button>
+        <button class="btn-primary" id="btnSaveProfile" onclick="submitEdit()" style="background:var(--green);color:#fff;" id="t_btn_save">Сохранить</button>
+        <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_edit">Назад</button>
       </div>
     </div>
   </div>
@@ -683,13 +677,13 @@
     <div style="max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;">
       <div style="flex:1;padding:24px 16px;">
         <div style="text-align:center;margin-bottom:24px;">
-          <div style="font-size:2.2rem;margin-bottom:8px;margin-top:20px;">נ†</div>
-          <h2 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:800;" id="t_lb_title">׀—׀°׀» ׀¡׀»׀°׀²ׁ‹</h2>
+          <div style="font-size:2.2rem;margin-bottom:8px;margin-top:20px;">🏆</div>
+          <h2 style="font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:800;" id="t_lb_title">Зал Славы</h2>
         </div>
         <div id="lbContent"></div>
       </div>
       <div style="position:sticky;bottom:0;padding:10px 16px 24px;z-index:600;margin-top:auto;background:linear-gradient(to top,var(--bg) 75%,transparent);">
-        <button class="btn-primary btn-accent" onclick="closeFullscreen('leaderboardSheet')" id="t_btn_back_lb">׀׀°׀·׀°׀´</button>
+        <button class="btn-primary btn-accent" onclick="closeFullscreen('leaderboardSheet')" id="t_btn_back_lb">Назад</button>
       </div>
     </div>
   </div>
@@ -697,120 +691,120 @@
 </div><!-- /app -->
 
 <script>
-// ג•ג• CATEGORIES ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ CATEGORIES ═══════════════════════════════════════════════════════
 const CATEGORIES = {
-  "׀ׁ€׀°ׁ׀¾ׁ‚׀° ׀¸ ׁׁׁ‚׀µׁ‚׀¸׀÷׀°":["׀׀¾ׁ׀¼׀µׁ‚׀¾׀»׀¾׀³׀¸ׁ","׀˜׀½ׁ׀µ׀÷ׁ†׀¸׀¾׀½׀½׀°ׁ ׀÷׀¾ׁ׀¼׀µׁ‚׀¾׀»׀¾׀³׀¸ׁ","׀›׀°׀·׀µׁ€׀½׀°ׁ ׁ׀¿׀¸׀»ׁׁ†׀¸ׁ","׀­׀¿׀¸׀»ׁׁ†׀¸ׁ","׀׀µׁ€׀¼׀°׀½׀µ׀½ׁ‚׀½ׁ‹׀¹ ׀¼׀°׀÷׀¸ׁ׀¶","׀£׀´׀°׀»׀µ׀½׀¸׀µ ׁ‚׀°ׁ‚ׁƒ ׀¸ ׁ‚׀°ׁ‚ׁƒ׀°׀¶׀°","׀¡ׁ‚׀¸׀»׀¸ׁׁ‚ׁ‹ ׀¿׀¾ ׀²׀¾׀»׀¾ׁ׀°׀¼ ׀¸ ׀±׀°ׁ€׀±׀µׁ€ׁ‹","׀׀¾׀³ׁ‚׀µ׀²׀¾׀¹ ׁ׀µׁ€׀²׀¸ׁ","׀‘ׁ€׀¾׀²׀¸ ׀¸ ׁ€׀µׁ׀½׀¸ׁ†ׁ‹","׀׀°׀÷׀¸ׁ׀¶","SPA ׀¸ ׁ€׀µ׀»׀°׀÷ׁ-׀¼׀°ׁׁ׀°׀¶"],
-  "׀•׀´׀° ׀¸ ׁ€׀µׁׁ‚׀¾ׁ€׀°׀½ׁ‹":["׀ ׀µׁׁ‚׀¾ׁ€׀°׀½ׁ‹ ׀¸ ׀÷׀°ׁ„׀µ","׀”׀¾ׁׁ‚׀°׀²׀÷׀° ׀µ׀´ׁ‹ ׀¸ ׁ€׀°ׁ†׀¸׀¾׀½ׁ‹","׀׀²ׁ‚׀¾ׁ€ׁ׀÷׀°ׁ ׀²ׁ‹׀¿׀µׁ‡׀÷׀° ׀¸ ׀´׀µׁ׀µׁ€ׁ‚ׁ‹","׀‘׀°ׁ€ׁ‹ ׀¸ ׀¿׀°׀±ׁ‹","׀׀µ׀¹ׁ‚׀µׁ€׀¸׀½׀³ ׀¸ ׀±׀°׀½׀÷׀µׁ‚ׁ‹"],
-  "׀׀°׀³׀°׀·׀¸׀½ׁ‹ ׀¸ ׁ‚׀¾׀²׀°ׁ€ׁ‹":["׀׀´׀µ׀¶׀´׀°, ׀¾׀±ׁƒ׀²ׁ ׀¸ ׀°׀÷ׁ׀µׁׁׁƒ׀°ׁ€ׁ‹","׀׀µ׀±׀µ׀»ׁ ׀¸ ׁ‚׀¾׀²׀°ׁ€ׁ‹ ׀´׀»ׁ ׀´׀¾׀¼׀°","׀®׀²׀µ׀»׀¸ׁ€׀½ׁ‹׀µ ׀¸׀·׀´׀µ׀»׀¸ׁ","׀¦׀²׀µׁ‚ׁ‹ ׀¸ ׀¿׀¾׀´׀°ׁ€׀÷׀¸","׀׀¾ׁ׀¼׀µׁ‚׀¸׀÷׀° ׀¸ ׀¿׀°ׁ€ׁ„ׁ׀¼׀µׁ€׀¸ׁ"],
-  "׀—׀´׀¾ׁ€׀¾׀²ׁ׀µ ׀¸ ׀¼׀µ׀´׀¸ׁ†׀¸׀½׀°":["׀¡ׁ‚׀¾׀¼׀°ׁ‚׀¾׀»׀¾׀³׀¸ׁ","׀ׁ׀¸ׁ…׀¾׀»׀¾׀³׀¸ׁ ׀¸ ׀¿ׁ׀¸ׁ…׀¾ׁ‚׀µׁ€׀°׀¿׀¸ׁ","׀₪׀¸׀·׀¸׀¾ׁ‚׀µׁ€׀°׀¿׀¸ׁ ׀¸ ׀¾ׁׁ‚׀µ׀¾׀¿׀°ׁ‚׀¸ׁ","׀”׀¸׀µׁ‚׀¾׀»׀¾׀³׀¸ׁ ׀¸ ׀½ׁƒׁ‚ׁ€׀¸ׁ†׀¸׀¾׀»׀¾׀³׀¸ׁ","׀׀»ׁׁ‚׀µׁ€׀½׀°ׁ‚׀¸׀²׀½׀°ׁ ׀¼׀µ׀´׀¸ׁ†׀¸׀½׀°","׀›׀µׁ‡׀µ׀±׀½ׁ‹׀¹ ׀¼׀°ׁׁ׀°׀¶","׀׀¿ׁ‚׀¸׀÷׀° ׀¸ ׀·ׁ€׀µ׀½׀¸׀µ"],
-  "׀®ׁ€׀¸ׁ׀¿ׁ€ׁƒ׀´׀µ׀½ׁ†׀¸ׁ":["׀׀¾׀¼׀¼׀µׁ€ׁ‡׀µׁ׀÷׀¾׀µ ׀¿ׁ€׀°׀²׀¾","׀׀µ׀´׀²׀¸׀¶׀¸׀¼׀¾ׁׁ‚ׁ","׀¡׀µ׀¼׀µ׀¹׀½׀¾׀µ ׀¿ׁ€׀°׀²׀¾","׀˜׀¼׀¼׀¸׀³ׁ€׀°ׁ†׀¸ׁ ׀¸ ׀²׀¸׀·ׁ‹","׀£׀³׀¾׀»׀¾׀²׀½׀¾׀µ ׀¿ׁ€׀°׀²׀¾","׀¢ׁ€׀°׀²׀¼ׁ‹ ׀¸ ׀‘׀¸ׁ‚ׁƒ׀°ׁ… ׀›׀µׁƒ׀¼׀¸","׀׀¾ׁ‚׀°ׁ€׀¸ׁƒׁׁ‹ ׀¸ ׀¿׀µׁ€׀µ׀²׀¾׀´ׁ‹"],
-  "׀׀µ׀´׀²׀¸׀¶׀¸׀¼׀¾ׁׁ‚ׁ ׀¸ ׁ„׀¸׀½׀°׀½ׁׁ‹":["׀׀µ׀´׀²׀¸׀¶׀¸׀¼׀¾ׁׁ‚ׁ (׀÷ׁƒ׀¿׀»ׁ/׀¿ׁ€׀¾׀´׀°׀¶׀°/׀°ׁ€׀µ׀½׀´׀°)","׀˜׀¿׀¾ׁ‚׀µ׀÷׀° ׀¸ ׁ€׀µׁ„׀¸׀½׀°׀½ׁ׀¸ׁ€׀¾׀²׀°׀½׀¸׀µ","׀‘ׁƒׁ…׀³׀°׀»ׁ‚׀µׁ€׀¸ׁ ׀¸ ׀½׀°׀»׀¾׀³׀¸","׀¡ׁ‚ׁ€׀°ׁ…׀¾׀²׀°׀½׀¸׀µ (׀²ׁ׀µ ׀²׀¸׀´ׁ‹)"],
-  "׀”׀¾׀¼ ׀¸ ׁ€׀µ׀¼׀¾׀½ׁ‚":["׀ ׀µ׀¼׀¾׀½ׁ‚ ׀¿׀¾׀´ ׀÷׀»ׁׁ‡","׀­׀»׀µ׀÷ׁ‚ׁ€׀¸׀÷׀°","׀¡׀°׀½ׁ‚׀µׁ…׀½׀¸׀÷׀°","׀׀¾׀½׀´׀¸ׁ†׀¸׀¾׀½׀µׁ€ׁ‹","׀׀»׀¸׀½׀¸׀½׀³ ׀¸ ׁ…׀¸׀¼ׁ‡׀¸ׁׁ‚׀÷׀°","׀”׀¸׀·׀°׀¹׀½ ׀¸׀½ׁ‚׀µׁ€ׁ׀µׁ€׀°","׀¡׀±׀¾ׁ€׀÷׀° ׀¸ ׁ€׀µ׀¼׀¾׀½ׁ‚ ׀¼׀µ׀±׀µ׀»׀¸"],
-  "׀׀²ׁ‚׀¾׀¼׀¾׀±׀¸׀»׀¸":["׀ ׀µ׀¼׀¾׀½ׁ‚ ׀¸ ׀¡׀¢׀","׀”׀µׁ‚׀µ׀¹׀»׀¸׀½׀³ ׀¸ ׀¼׀¾׀¹׀÷׀°","׀׀²ׁ‚׀¾׀¿׀¾׀´׀±׀¾ׁ€ ׀¸ ׀¿ׁ€׀¾׀´׀°׀¶׀°","׀ׁ€׀µ׀½׀´׀° ׀°׀²ׁ‚׀¾"],
-  "׀ׁ€׀°׀·׀´׀½׀¸׀÷׀¸ ׀¸ ׀¼׀µׁ€׀¾׀¿ׁ€׀¸ׁׁ‚׀¸ׁ":["׀₪׀¾ׁ‚׀¾ ׀¸ ׀²׀¸׀´׀µ׀¾ׁׁ׀µ׀¼׀÷׀°","׀’׀µ׀´ׁƒׁ‰׀¸׀µ ׀¸ ׀¼ׁƒ׀·ׁ‹׀÷׀°׀½ׁ‚ׁ‹","׀ׁ€׀³׀°׀½׀¸׀·׀°ׁ†׀¸ׁ ׀¼׀µׁ€׀¾׀¿ׁ€׀¸ׁׁ‚׀¸׀¹","׀”׀µ׀÷׀¾ׁ€׀°ׁ‚׀¾ׁ€ׁ‹"],
-  "׀׀±ׁƒׁ‡׀µ׀½׀¸׀µ ׀¸ ׁ׀¿׀¾ׁ€ׁ‚":["׀₪׀¸ׁ‚׀½׀µׁ ׀¸ ׁ‚ׁ€׀µ׀½׀µׁ€ׁ‹","׀ ׀µ׀¿׀µׁ‚׀¸ׁ‚׀¾ׁ€ׁ‹ ׀¸ ׀÷ׁƒׁ€ׁׁ‹","׀¯׀·ׁ‹׀÷׀¾׀²ׁ‹׀µ ׁˆ׀÷׀¾׀»ׁ‹","׀”׀µׁ‚ׁ׀÷׀¸׀µ ׀÷ׁ€ׁƒ׀¶׀÷׀¸ ׀¸ ׁ׀µ׀÷ׁ†׀¸׀¸"],
-  "׀”׀¾׀¼׀°ׁˆ׀½׀¸׀µ ׀¿׀¸ׁ‚׀¾׀¼ׁ†ׁ‹":["׀’׀µׁ‚׀µׁ€׀¸׀½׀°ׁ€׀¸ׁ","׀“ׁ€ׁƒ׀¼׀¸׀½׀³","׀—׀¾׀¾׀¼׀°׀³׀°׀·׀¸׀½ׁ‹","׀׀µׁ€׀µ׀´׀µׁ€׀¶׀÷׀° ׀¸ ׀²ׁ‹׀³ׁƒ׀»"],
-  "׀¢ׁƒׁ€׀¸׀·׀¼ ׀¸ ׀¾ׁ‚׀´ׁ‹ׁ…":["׀¢ׁƒׁ€׀°׀³׀µ׀½ׁ‚ׁׁ‚׀²׀°","׀ׁ‚׀µ׀»׀¸ ׀¸ ׀°׀¿׀°ׁ€ׁ‚׀°׀¼׀µ׀½ׁ‚ׁ‹","׀“׀¸׀´ׁ‹ ׀¸ ׁ׀÷ׁ׀÷ׁƒׁ€ׁ׀¸׀¸"],
-  "׀‘׀¸׀·׀½׀µׁ ׀¸ B2B ׁƒׁ׀»ׁƒ׀³׀¸":["׀׀°ׁ€׀÷׀µׁ‚׀¸׀½׀³ ׀¸ SMM","׀ ׀°׀·ׁ€׀°׀±׀¾ׁ‚׀÷׀° ׁ׀°׀¹ׁ‚׀¾׀² ׀¸ ׀׀","׀”׀¸׀·׀°׀¹׀½ ׀¸ ׀±ׁ€׀µ׀½׀´׀¸׀½׀³","׀׀¾׀½ׁ׀°׀»ׁ‚׀¸׀½׀³ ׀¸ ׀÷׀¾ׁƒׁ‡׀¸׀½׀³","׀›׀¾׀³׀¸ׁׁ‚׀¸׀÷׀° ׀¸ ׀´׀¾ׁׁ‚׀°׀²׀÷׀°"]
+  "Красота и эстетика":["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
+  "Еда и рестораны":["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+  "Магазины и товары":["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+  "Здоровье и медицина":["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+  "Юриспруденция":["Коммерческое право","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+  "Недвижимость и финансы":["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+  "Дом и ремонт":["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+  "Автомобили":["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+  "Праздники и мероприятия":["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+  "Обучение и спорт":["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+  "Домашние питомцы":["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+  "Туризм и отдых":["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+  "Бизнес и B2B услуги":["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
 };
 const CAT_TR = {
-  "׀ׁ€׀°ׁ׀¾ׁ‚׀° ׀¸ ׁׁׁ‚׀µׁ‚׀¸׀÷׀°":{he:"׳™׳•׳₪׳™ ׳•׳׳¡׳×׳˜׳™׳§׳”",en:"Beauty & Aesthetics",ar:"״§„״¬…״§„ ˆ״§„״¬…״§„״§״×"},
-  "׀•׀´׀° ׀¸ ׁ€׀µׁׁ‚׀¾ׁ€׀°׀½ׁ‹":{he:"׳׳•׳›׳ ׳•׳׳¡׳¢׳“׳•׳×",en:"Food & Restaurants",ar:"״§„״·״¹״§… ˆ״§„…״·״§״¹…"},
-  "׀׀°׀³׀°׀·׀¸׀½ׁ‹ ׀¸ ׁ‚׀¾׀²׀°ׁ€ׁ‹":{he:"׳—׳ ׳•׳™׳•׳× ׳•׳׳•׳¦׳¨׳™׳",en:"Shops & Goods",ar:"״§„…״×״§״¬״± ˆ״§„״³„״¹"},
-  "׀—׀´׀¾ׁ€׀¾׀²ׁ׀µ ׀¸ ׀¼׀µ׀´׀¸ׁ†׀¸׀½׀°":{he:"׳‘׳¨׳™׳׳•׳× ׳•׳¨׳₪׳•׳׳”",en:"Health & Medicine",ar:"״§„״µ״­״© ˆ״§„״·״¨"},
-  "׀®ׁ€׀¸ׁ׀¿ׁ€ׁƒ׀´׀µ׀½ׁ†׀¸ׁ":{he:"׳׳©׳₪׳˜׳™׳",en:"Legal Services",ar:"״§„‚״§†ˆ†״©"},
-  "׀׀µ׀´׀²׀¸׀¶׀¸׀¼׀¾ׁׁ‚ׁ ׀¸ ׁ„׀¸׀½׀°׀½ׁׁ‹":{he:"׳ ׳“׳׳´׳ ׳•׳₪׳™׳ ׳ ׳¡׳™׳",en:"Real Estate & Finance",ar:"״§„״¹‚״§״±״§״× ˆ״§„״×…ˆ„"},
-  "׀”׀¾׀¼ ׀¸ ׁ€׀µ׀¼׀¾׀½ׁ‚":{he:"׳‘׳™׳× ׳•׳©׳™׳₪׳•׳¦׳™׳",en:"Home & Repair",ar:"״§„…†״²„ ˆ״§„״¥״µ„״§״­"},
-  "׀׀²ׁ‚׀¾׀¼׀¾׀±׀¸׀»׀¸":{he:"׳¨׳›׳‘׳™׳",en:"Automotive",ar:"״§„״³״§״±״§״×"},
-  "׀ׁ€׀°׀·׀´׀½׀¸׀÷׀¸ ׀¸ ׀¼׀µׁ€׀¾׀¿ׁ€׀¸ׁׁ‚׀¸ׁ":{he:"׳׳™׳¨׳•׳¢׳™׳",en:"Events & Parties",ar:"״§„״¹״§„״§״×"},
-  "׀׀±ׁƒׁ‡׀µ׀½׀¸׀µ ׀¸ ׁ׀¿׀¾ׁ€ׁ‚":{he:"׳—׳™׳ ׳•׳ ׳•׳¡׳₪׳•׳¨׳˜",en:"Education & Sports",ar:"״§„״×״¹„… ˆ״§„״±״§״¶״©"},
-  "׀”׀¾׀¼׀°ׁˆ׀½׀¸׀µ ׀¿׀¸ׁ‚׀¾׀¼ׁ†ׁ‹":{he:"׳—׳™׳•׳× ׳׳—׳׳“",en:"Pets",ar:"״§„״­ˆ״§†״§״× ״§„״£„״©"},
-  "׀¢ׁƒׁ€׀¸׀·׀¼ ׀¸ ׀¾ׁ‚׀´ׁ‹ׁ…":{he:"׳×׳™׳™׳¨׳•׳×",en:"Tourism & Leisure",ar:"״§„״³״§״­״©"},
-  "׀‘׀¸׀·׀½׀µׁ ׀¸ B2B ׁƒׁ׀»ׁƒ׀³׀¸":{he:"׳¢׳¡׳§׳™׳ B2B",en:"Business & B2B",ar:"״§„״£״¹…״§„ B2B"}
+  "Красота и эстетика":{he:"יופי ואסתטיקה",en:"Beauty & Aesthetics",ar:"الجمال والجماليات"},
+  "Еда и рестораны":{he:"אוכל ומסעדות",en:"Food & Restaurants",ar:"الطعام والمطاعم"},
+  "Магазины и товары":{he:"חנויות ומוצרים",en:"Shops & Goods",ar:"المتاجر والسلع"},
+  "Здоровье и медицина":{he:"בריאות ורפואה",en:"Health & Medicine",ar:"الصحة والطب"},
+  "Юриспруденция":{he:"משפטים",en:"Legal Services",ar:"القانونية"},
+  "Недвижимость и финансы":{he:"נדל״ן ופיננסים",en:"Real Estate & Finance",ar:"العقارات والتمويل"},
+  "Дом и ремонт":{he:"בית ושיפוצים",en:"Home & Repair",ar:"المنزل والإصلاح"},
+  "Автомобили":{he:"רכבים",en:"Automotive",ar:"السيارات"},
+  "Праздники и мероприятия":{he:"אירועים",en:"Events & Parties",ar:"الفعاليات"},
+  "Обучение и спорт":{he:"חינוך וספורט",en:"Education & Sports",ar:"التعليم والرياضة"},
+  "Домашние питомцы":{he:"חיות מחמד",en:"Pets",ar:"الحيوانات الأليفة"},
+  "Туризм и отдых":{he:"תיירות",en:"Tourism & Leisure",ar:"السياحة"},
+  "Бизнес и B2B услуги":{he:"עסקים B2B",en:"Business & B2B",ar:"الأعمال B2B"}
 };
 function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name][l]||name); }
 
-// ג•ג• I18N ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ I18N ══════════════════════════════════════════════════════════════
 const i18n = {
   ru:{
-    rec_chip:"׀’׀°ׁˆ ׁ׀¾ׁ†׀¸׀°׀»ׁ׀½ׁ‹׀¹ ׀÷׀°׀¿׀¸ׁ‚׀°׀»", rec_title:"׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒ׀¹ׁ‚׀µ ׀¿ׁ€׀¾׀²׀µׁ€׀µ׀½׀½ׁ‹׀µ ׀±׀¸׀·׀½׀µׁׁ‹", rec_sub:"׀’ׁ‹׀±׀µׁ€׀¸ׁ‚׀µ ׀±׀¸׀·׀½׀µׁ, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀¹ ׀³׀¾ׁ‚׀¾׀²ׁ‹ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ.", rec_btn_label:"׀’ׁ‹׀±ׁ€׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ", rec_note:"׀׀´׀½׀° ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ = ׀¾׀´׀¸׀½ ׀¿ׁ€׀¸׀³׀»׀°ׁˆׁ‘׀½׀½ׁ‹׀¹ ׀÷׀»׀¸׀µ׀½ׁ‚. ׀”׀°׀»ׁׁˆ׀µ ׁ׀¸ׁׁ‚׀µ׀¼׀° ׁ׀°׀¼׀° ׀¿ׁ€׀¾׀²׀µ׀´ׁ‘ׁ‚ ׁ׀´׀µ׀»׀÷ׁƒ ׀¿׀¾ ׁׁ†׀µ׀½׀°ׁ€׀¸ׁ ׀±׀»׀°׀³׀¾׀´׀°ׁ€׀½׀¾ׁׁ‚׀¸.", rec_stat_total:"׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¹", rec_stat_waiting:"׀–׀´ׁƒׁ‚ ׀±׀»׀°׀³׀¾׀´׀°ׁ€׀½׀¾ׁׁ‚׀¸", rec_stat_done:"׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾", rec_list_title:"׀׀¾׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸", rec_list_sub:"׀׀÷ׁ‚׀¸׀²׀½ׁ‹׀µ ׀¸ ׀·׀°׀²׀µׁ€ׁˆׁ‘׀½׀½ׁ‹׀µ ׀¸ׁׁ…׀¾׀´ׁׁ‰׀¸׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸.", rec_empty:"׀’ׁ‹ ׀¿׀¾׀÷׀° ׀½׀¸׀÷׀¾׀³׀¾ ׀½׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°׀»׀¸.", rec_prefill:"׀¥׀¾ׁ‡ׁƒ ׀¿׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ", rec_waiting:"׀’ ׁ€׀°׀±׀¾ׁ‚׀µ", rec_payout_pending:"׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ", rec_done:"׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾", rec_client:"׀׀»׀¸׀µ׀½ׁ‚", dec_take:"׀—׀°׀±ׁ€׀°ׁ‚ׁ ׁ׀µ׀±׀µ", dec_gift:"׀׀¾׀´׀°ׁ€׀¸ׁ‚ׁ ׀÷׀»׀¸׀µ׀½ׁ‚ׁƒ", dec_support:"׀׀¾׀´׀´׀µׁ€׀¶׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ", ag_chip:"׀˜ׁׁ‚׀¾ׁ‡׀½׀¸׀÷׀¸ ׀´׀¾׀²׀µׁ€׀¸ׁ", ag_tab_mine:"׀׀¾׀¸", ag_tab_leaders:"׀›׀¸׀´׀µׁ€ׁ‹ ׀² ׀¼׀¾׀µ׀¹ ׀½׀¸ׁˆ׀µ", ag_mine_caption:"׀›ׁ׀´׀¸, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀µ ׁƒ׀¶׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒׁׁ‚ ׀²׀°ׁˆ ׀±׀¸׀·׀½׀µׁ ׀¸ ׀¿ׁ€׀¸׀²׀¾׀´ׁׁ‚ ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀².", ag_leaders_caption:"׀¡׀¸׀»ׁ׀½ׁ‹׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸ ׀² ׀²׀°ׁˆ׀µ׀¹ ׀½׀¸ׁˆ׀µ ג€” ׀¾ׁ€׀¸׀µ׀½ׁ‚׀¸ׁ€ ׀´׀»ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀°.", ag_cta_partner:"׀ׁ€׀µ׀´׀»׀¾׀¶׀¸ׁ‚ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀¾",
+    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендуйте проверенные бизнесы", rec_sub:"Выберите бизнес, который готовы рекомендовать.", rec_btn_label:"Выбрать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_payout_pending:"Ожидаем выплату", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_chip:"Источники доверия", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
 
-    loader_sub:"׀—׀°׀³ׁ€ׁƒ׀·׀÷׀° ׀´׀°׀½׀½ׁ‹ׁ…...", err_title:"׀¡׀µׁׁ׀¸ׁ ׀¸ׁׁ‚׀µ׀÷׀»׀°", err_sub:"׀’׀µׁ€׀½׀¸ׁ‚׀µׁׁ ׀² ׀¼׀µׁׁ׀µ׀½׀´׀¶׀µׁ€ ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ.", err_preview:"׀’׀°ׁˆ׀µ ׁ׀¾׀¾׀±ׁ‰׀µ׀½׀¸׀µ:",
-    err_prefill:"׀¡׀½׀¾׀²׀° ׀²׀¾׀¹ׁ‚׀¸ ׀² ׀»׀¸ׁ‡׀½ׁ‹׀¹ ׀÷׀°׀±׀¸׀½׀µׁ‚\n׀׀°׀¶׀¼׀¸ׁ‚׀µ ׀÷׀½׀¾׀¿׀÷ׁƒ ׀¾ׁ‚׀¿ׁ€׀°׀²׀¸ׁ‚ׁ ׀¸ ׀¿׀¾׀»ׁƒׁ‡׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁׁׁ‹׀»׀÷ׁƒ ׀½׀° ׀²ׁ…׀¾׀´ {pointer}",
-    debt_label:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ ׀´׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼", debt_open:"׀ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׁ׀¿׀¸ׁ׀¾׀÷", debt_sheet_title:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ ׀´׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼", debt_sheet_sub:"׀—׀´׀µׁׁ ׀¿׀¾׀÷׀°׀·׀°׀½ׁ‹ ׁ‚׀¾׀»ׁ׀÷׀¾ ׀°׀÷ׁ‚׀¸׀²׀½ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸, ׀³׀´׀µ ׀½ׁƒ׀¶׀½׀¾ ׀¾׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³ ׀°׀³׀µ׀½ׁ‚׀°׀¼.", debt_sheet_empty:"׀¡׀µ׀¹ׁ‡׀°ׁ ׀½׀µׁ‚ ׀°׀÷ׁ‚׀¸׀²׀½ׁ‹ׁ… ׁ׀´׀µ׀»׀¾׀÷ ׁ ׀·׀°׀´׀¾׀»׀¶׀µ׀½׀½׀¾ׁׁ‚ׁׁ ׀¿׀µׁ€׀µ׀´ ׀°׀³׀µ׀½ׁ‚׀¾׀¼.", debt_client:"׀׀»׀¸׀µ׀½ׁ‚", debt_agent:"׀׀³׀µ׀½ׁ‚", debt_reward:"׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³", debt_status:"׀¡ׁ‚׀°ׁ‚ׁƒׁ", filt_active:"׀’ ׁ€׀°׀±׀¾ׁ‚׀µ", filt_history:"׀˜ׁׁ‚׀¾ׁ€׀¸ׁ",
-    st_new:"׀׀¾׀²׀°ׁ", st_prog:"׀’ ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ", st_closed:"׀—׀°׀÷ׁ€ׁ‹ׁ‚׀°", st_rej:"׀ׁ‚׀÷׀»׀¾׀½׀µ׀½׀°", st_pending:"ג³ ׀–׀´ׁ‘׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸ׁ",
-    pending_note:"׀׀¶׀¸׀´׀°׀µ׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸ׁ ׀¾ׁ‚ ׀°׀³׀µ׀½ׁ‚׀°", card_agent:"׀׀³׀µ׀½ׁ‚:", card_manage:"׀£׀¿ׁ€׀°׀²׀»ׁׁ‚ׁ",
-    st_fin_title:"׀₪׀¸׀½׀°׀½ׁׁ‹", st_revenue:"׀׀±׀¾ׁ€׀¾ׁ‚", st_commission:"׀’ׁ‹׀¿׀»׀°ׁ‚ׁ‹", st_net:"׀§׀¸ׁׁ‚ׁ‹׀¹ ׀´׀¾ׁ…׀¾׀´", st_pending_cnt:"׀–׀´ׁƒׁ‚ ׀°׀³׀µ׀½ׁ‚׀°", st_net_big:"׀“׀»׀°׀²׀½ׁ‹׀¹ ׀¿׀¾׀÷׀°׀·׀°ׁ‚׀µ׀»ׁ", st_net_big_sub:"׀§׀¸ׁׁ‚ׁ‹׀¹ ׀´׀¾ׁ…׀¾׀´ ג€” ׀´׀µ׀½ׁ׀³׀¸, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀µ ׁ€׀µ׀°׀»ׁ׀½׀¾ ׀¾ׁׁ‚׀°ׁׁ‚ׁׁ ׁƒ ׀²׀°ׁ ׀¿׀¾ׁ׀»׀µ ׀²ׁ‹׀¿׀»׀°ׁ‚",
-    st_funnel_title:"׀’׀¾ׁ€׀¾׀½׀÷׀° ׀÷׀¾׀½׀²׀µׁ€ׁ׀¸׀¸", st_total_leads:"׀’ׁ׀µ׀³׀¾ ׀»׀¸׀´׀¾׀²:", f_active:"׀’ ׀¿ׁ€׀¾ׁ†׀µׁׁ׀µ", f_closed:"׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾", f_rejected:"׀ׁ‚׀÷׀»׀¾׀½׀µ׀½׀¾",
-    st_agents:"׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸", st_avg_deal:"׀¡ׁ€׀µ׀´׀½׀¸׀¹ ׁ‡׀µ׀÷",
-    ag_title:"׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸", ag_sub:"׀—׀´׀µׁׁ ׀¶׀¸׀²ׁƒׁ‚ ׀²׀°ׁˆ׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀¸ ׀¸ ׁ׀¸׀»ׁ׀½ׁ‹׀µ ׀»ׁ׀´׀¸ ׀² ׀²׀°ׁˆ׀µ׀¹ ׀½׀¸ׁˆ׀µ, ׁ ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀¼׀¸ ׀¼׀¾׀¶׀½׀¾ ׀½׀°ׁ‡׀°ׁ‚ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀¾.",
-    ag_deals:"׀ׁ€׀¸׀²ׁ‘׀» ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀²:", ag_comm:"׀’ׁ‹׀¿׀»׀°ׁ‡׀µ׀½׀¾",
-    rd_title:"׀—׀°׀» ׀¡׀»׀°׀²ׁ‹", rd_promo_title:"׀˜ׁ‰׀µׁ‚׀µ ׀½׀¾׀²ׁ‹ׁ… ׀¿׀°ׁ€ׁ‚׀½׀µׁ€׀¾׀²?", rd_promo_desc:"׀׀µׁ€׀µ׀¹׀´׀¸ׁ‚׀µ ׀½׀° PRO, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׀÷׀¾׀½ׁ‚׀°׀÷ׁ‚ׁ‹ ׀»ׁƒׁ‡ׁˆ׀¸ׁ… ׀¸׀½ׁ„׀»ׁ׀µ׀½ׁ׀µׁ€׀¾׀².",
-    rd_promo_btn:"׀׀¾׀´ׁ€׀¾׀±׀½׀µ׀µ ׀¾ PRO", radar_loading:"׀—׀°׀³ׁ€ׁƒ׀·׀÷׀°...",
-    tab_profile:"׀׀°ׁׁ‚ׁ€׀¾׀¹׀÷׀¸ ׀±׀¸׀·׀½׀µׁ׀°", sub_title:"׀¢׀µ׀÷ׁƒׁ‰׀¸׀¹ ׁ‚׀°ׁ€׀¸ׁ„:", btn_upgrade:"׀׀µׁ€׀µ׀¹ׁ‚׀¸ ׀½׀° PRO (149 ג‚×)",
-    pr_name:"׀׀°׀·׀²׀°׀½׀¸׀µ", pr_niche:"׀׀¸ׁˆ׀°", pr_comm:"׀’׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸׀µ", pr_pay:"׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹", pr_link:"Instagram / ׁ׀°׀¹ׁ‚", pr_phone:"׀¢׀µ׀»׀µׁ„׀¾׀½",
-    btn_edit:"׀˜׀·׀¼׀µ׀½׀¸ׁ‚ׁ ׀´׀°׀½׀½ׁ‹׀µ", wa_btn:"WhatsApp", tg_btn:"Telegram",
-    m_title:"׀£׀¿ׁ€׀°׀²׀»׀µ׀½׀¸׀µ ׁ׀´׀µ׀»׀÷׀¾׀¹", m_client:"׀׀»׀¸׀µ׀½ׁ‚:", m_agent:"׀׀³׀µ׀½ׁ‚:", m_date:"׀”׀°ׁ‚׀°:",
-    m_close:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ", m_reject:"׀ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ", m_mark_paid:"׀׀¿׀»׀°ׁ‚ׁƒ ׀¿ׁ€׀¾׀¸׀·׀²ׁ‘׀»", m_cancel:"׀׀°׀·׀°׀´",
-    m_lbl_amount:"׀¡ׁƒ׀¼׀¼׀° ׁ׀´׀µ׀»׀÷׀¸ (ׁ‚׀¾׀»ׁ׀÷׀¾ ׁ†׀¸ׁ„ׁ€ׁ‹)", m_confirm_close:"׀׀¾׀´ׁ‚׀²׀µׁ€׀´׀¸ׁ‚ׁ ׀·׀°׀÷ׁ€ׁ‹ׁ‚׀¸׀µ",
-    m_reject_sure:"׀£׀²׀µׁ€׀µ׀½ׁ‹, ׁ‡ׁ‚׀¾ ׁ…׀¾ׁ‚׀¸ׁ‚׀µ ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ?", m_confirm_reject:"׀”׀°, ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ",
-    edit_title:"׀ ׀µ׀´׀°׀÷ׁ‚׀¸ׁ€׀¾׀²׀°׀½׀¸׀µ", f_name:"׀׀°׀·׀²׀°׀½׀¸׀µ ׀±׀¸׀·׀½׀µׁ׀°", f_niche:"׀׀°ׁ‚׀µ׀³׀¾ׁ€׀¸ׁ ׀±׀¸׀·׀½׀µׁ׀°",
-    f_subniche:"׀¡׀¿׀µׁ†׀¸׀°׀»׀¸׀·׀°ׁ†׀¸ׁ", f_comm:"׀’׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸׀µ (׀½׀°׀¿ׁ€. 10% ׀¸׀»׀¸ 500)",
-    f_pay:"׀¡׀¿׀¾ׁ׀¾׀± ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹", f_link:"׀¡ׁׁ‹׀»׀÷׀° (׀¡׀°׀¹ׁ‚ / ׀¡׀¾ׁ†ׁ׀µׁ‚׀¸)",
-    f_pay_cash:"׀׀°׀»׀¸ׁ‡׀½ׁ‹׀µ", f_pay_bank:"׀׀µׁ€׀µ׀²׀¾׀´",
-    btn_save:"׀¡׀¾ׁ…ׁ€׀°׀½׀¸ׁ‚ׁ", btn_cancel_edit:"׀׀°׀·׀°׀´",
-    action_processing:"׀׀±ׁ€׀°׀±׀¾ׁ‚׀÷׀°...", action_success:"׀£ׁ׀¿׀µׁˆ׀½׀¾!", action_close:"׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ",
-    save_ok:"׀˜׀·׀¼׀µ׀½׀µ׀½׀¸ׁ ׁ׀¾ׁ…ׁ€׀°׀½׀µ׀½ׁ‹!", save_err:"׀ׁˆ׀¸׀±׀÷׀° ׁ׀¾ׁ…ׁ€׀°׀½׀µ׀½׀¸ׁ",
-    empty_deals:"׀—׀´׀µׁׁ ׀¿׀¾׀÷׀° ׀¿ׁƒׁׁ‚׀¾.",
-    nav_deals:"׀¡׀´׀µ׀»׀÷׀¸", nav_stats:"׀ׁ‚ׁ‡׀µׁ‚ׁ‹", nav_recommenders:"׀׀³׀µ׀½ׁ‚ׁ‹", nav_recommend:"׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´ׁƒׁ", nav_profile:"׀ׁ€׀¾ׁ„׀¸׀»ׁ",
-    sub_standard:"׀¡ׁ‚׀°׀½׀´׀°ׁ€ׁ‚", sub_desc_standard:"׀‘׀°׀·׀¾׀²ׁ‹׀¹ ׁ„ׁƒ׀½׀÷ׁ†׀¸׀¾׀½׀°׀». ׀›׀¸׀¼׀¸ׁ‚ׁ‹ ׁ׀´׀µ׀»׀¾׀÷ ׁƒׁ‡׀¸ׁ‚ׁ‹׀²׀°ׁׁ‚ׁׁ ׀¿׀»׀°ׁ‚ׁ„׀¾ׁ€׀¼׀¾׀¹.",
-    sub_desc_pro:"׀׀¾׀»׀½ׁ‹׀¹ ׀´׀¾ׁׁ‚ׁƒ׀¿: ׀±׀µ׀·׀»׀¸׀¼׀¸ׁ‚׀½ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸ ׀¸ ׀÷׀¾׀½ׁ‚׀°׀÷ׁ‚ׁ‹ ׀»ׁƒׁ‡ׁˆ׀¸ׁ… ׀°׀³׀µ׀½ׁ‚׀¾׀².",
-    lb_blur_alert:"׀”׀»ׁ ׀´׀¾ׁׁ‚ׁƒ׀¿׀° ׀÷ ׀÷׀¾׀½ׁ‚׀°׀÷ׁ‚׀°׀¼ ׀°׀³׀µ׀½ׁ‚׀¾׀² ׀¿׀µׁ€׀µ׀¹׀´׀¸ׁ‚׀µ ׀½׀° PRO. נ",
-    lb_deals:"׀¡׀´׀µ׀»׀¾׀÷:", filt_all:"׀’ׁ׀µ", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
+    err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
+    debt_label:"Закрыть долг агентам", debt_open:"Открыть список", debt_sheet_title:"Закрыть долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где нужно оплатить долг агентам.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Оплатить долг", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
+    st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
+    pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
+    st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
+    st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
+    st_agents:"Рекомендатели", st_avg_deal:"Средний чек",
+    ag_title:"Рекомендатели", ag_sub:"Здесь живут ваши рекомендатели и сильные люди в вашей нише, с которыми можно начать сотрудничество.",
+    ag_deals:"Привёл клиентов:", ag_comm:"Выплачено",
+    rd_title:"Зал Славы", rd_promo_title:"Ищете новых партнеров?", rd_promo_desc:"Перейдите на PRO, чтобы открыть контакты лучших инфлюенсеров.",
+    rd_promo_btn:"Подробнее о PRO", radar_loading:"Загрузка...",
+    tab_profile:"Настройки бизнеса", sub_title:"Текущий тариф:", btn_upgrade:"Перейти на PRO (149 ₪)",
+    pr_name:"Название", pr_niche:"Ниша", pr_comm:"Вознаграждение", pr_pay:"Способ выплаты", pr_link:"Instagram / сайт", pr_phone:"Телефон",
+    btn_edit:"Изменить данные", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:",
+    m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_mark_paid:"Оплату произвёл", m_cancel:"Назад",
+    m_lbl_amount:"Сумма сделки (только цифры)", m_confirm_close:"Подтвердить закрытие",
+    m_reject_sure:"Уверены, что хотите отклонить?", m_confirm_reject:"Да, отклонить",
+    edit_title:"Редактирование", f_name:"Название бизнеса", f_niche:"Категория бизнеса",
+    f_subniche:"Специализация", f_comm:"Вознаграждение (напр. 10% или 500)",
+    f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)",
+    f_pay_cash:"Наличные", f_pay_bank:"Перевод",
+    btn_save:"Сохранить", btn_cancel_edit:"Назад",
+    action_processing:"Обработка...", action_success:"Успешно!", action_close:"Закрыть",
+    save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
+    empty_deals:"Здесь пока пусто.",
+    nav_deals:"Сделки", nav_stats:"Отчеты", nav_recommenders:"Агенты", nav_recommend:"Рекомендую", nav_profile:"Профиль",
+    sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
+    sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
+    lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
+    lb_deals:"Сделок:", filt_all:"Все", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   he:{
-    rec_chip:"׳”׳”׳•׳ ׳”׳—׳‘׳¨׳×׳™ ׳©׳׳", rec_title:"׳”׳׳׳™׳¦׳• ׳¢׳ ׳¢׳¡׳§׳™׳ ׳‘׳“׳•׳§׳™׳", rec_sub:"׳‘׳—׳¨׳• ׳¢׳¡׳§ ׳©׳׳×׳ ׳׳•׳›׳ ׳™׳ ׳׳”׳׳׳™׳¥ ׳¢׳׳™׳•.", rec_btn_label:"׳‘׳—׳™׳¨׳× ׳¢׳¡׳§", rec_note:"׳”׳׳׳¦׳” ׳׳—׳× = ׳׳§׳•׳— ׳׳•׳–׳׳ ׳׳—׳“. ׳׳©׳ ׳”׳׳¢׳¨׳›׳× ׳׳׳©׳™׳›׳” ׳׳‘׳“.", rec_stat_total:"׳”׳׳׳¦׳•׳×", rec_stat_waiting:"׳׳׳×׳™׳ ׳•׳× ׳׳×׳’׳׳•׳", rec_stat_done:"׳”׳•׳©׳׳׳•", rec_list_title:"׳”׳”׳׳׳¦׳•׳× ׳©׳׳™", rec_list_sub:"׳”׳׳׳¦׳•׳× ׳™׳•׳¦׳׳•׳× ׳₪׳¢׳™׳׳•׳× ׳•׳”׳™׳¡׳˜׳•׳¨׳™׳”.", rec_empty:"׳¢׳“׳™׳™׳ ׳׳ ׳”׳׳׳¦׳×׳ ׳¢׳ ׳¢׳¡׳§.", rec_prefill:"׳׳ ׳™ ׳¨׳•׳¦׳” ׳׳”׳׳׳™׳¥ ׳¢׳ ׳¢׳¡׳§", rec_waiting:"׳‘׳×׳”׳׳™׳", rec_payout_pending:"׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳", rec_done:"׳”׳•׳©׳׳", rec_client:"׳׳§׳•׳—", dec_take:"׳׳§׳—׳× ׳׳¢׳¦׳׳™", dec_gift:"׳׳”׳¢׳ ׳™׳§ ׳׳׳§׳•׳—", dec_support:"׳׳×׳׳•׳ ׳‘׳¢׳¡׳§", ag_chip:"׳׳§׳•׳¨׳•׳× ׳׳׳•׳", ag_tab_mine:"׳©׳׳™", ag_tab_leaders:"׳׳•׳‘׳™׳׳™׳ ׳‘׳ ׳™׳©׳” ׳©׳׳™", ag_mine_caption:"׳׳ ׳©׳™׳ ׳©׳›׳‘׳¨ ׳׳׳׳™׳¦׳™׳ ׳¢׳ ׳”׳¢׳¡׳§ ׳©׳׳›׳ ׳•׳׳‘׳™׳׳™׳ ׳׳§׳•׳—׳•׳×.", ag_leaders_caption:"׳׳׳׳™׳¦׳™׳ ׳—׳–׳§׳™׳ ׳‘׳ ׳™׳©׳” ׳©׳׳›׳ ג€” ׳›׳™׳•׳•׳ ׳׳©׳™׳×׳•׳£ ׳₪׳¢׳•׳׳”.", ag_cta_partner:"׳׳”׳¦׳™׳¢ ׳©׳™׳×׳•׳£ ׳₪׳¢׳•׳׳”",
+    rec_chip:"ההון החברתי שלך", rec_title:"המליצו על עסקים בדוקים", rec_sub:"בחרו עסק שאתם מוכנים להמליץ עליו.", rec_btn_label:"בחירת עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_payout_pending:"ממתינים לתשלום", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_chip:"מקורות אמון", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
 
-    loader_sub:"׳˜׳•׳¢׳ ׳ ׳×׳•׳ ׳™׳...", err_title:"׳₪׳’ ׳×׳•׳§׳₪׳• ׳©׳ ׳”׳׳•׳©׳‘", err_sub:"׳—׳–׳•׳¨ ׳׳׳¡׳ ׳’'׳¨ ׳•׳§׳‘׳ ׳§׳™׳©׳•׳¨ ׳›׳ ׳™׳¡׳” ׳—׳“׳©.", err_preview:"׳”׳”׳•׳“׳¢׳” ׳©׳׳:",
-    err_prefill:"׳׳”׳™׳›׳ ׳¡ ׳©׳•׳‘ ׳׳׳–׳•׳¨ ׳”׳׳™׳©׳™\n׳׳—׳¥ ׳¢׳ ׳©׳׳— ׳•׳§׳‘׳ ׳§׳™׳©׳•׳¨ ׳—׳“׳© {pointer}",
-    debt_label:"נ”´ ׳—׳•׳‘ ׳׳¡׳•׳›׳ ׳™׳:", debt_open:"׳₪׳×׳™׳—׳× ׳”׳¨׳©׳™׳׳”", debt_sheet_title:"׳—׳•׳‘ ׳׳¡׳•׳›׳ ׳™׳", debt_sheet_sub:"׳›׳׳ ׳׳•׳¦׳’׳•׳× ׳¨׳§ ׳¢׳¡׳§׳׳•׳× ׳₪׳¢׳™׳׳•׳× ׳©׳‘׳”׳ ׳¢׳“׳™׳™׳ ׳¦׳¨׳™׳ ׳׳©׳׳ ׳׳¡׳•׳›׳ ׳׳× ׳”׳×׳’׳׳•׳.", debt_sheet_empty:"׳›׳¨׳’׳¢ ׳׳™׳ ׳¢׳¡׳§׳׳•׳× ׳₪׳¢׳™׳׳•׳× ׳¢׳ ׳—׳•׳‘ ׳׳¡׳•׳›׳.", debt_client:"׳׳§׳•׳—", debt_agent:"׳¡׳•׳›׳", debt_reward:"׳×׳©׳׳•׳ ׳׳¡׳•׳›׳", debt_status:"׳¡׳˜׳˜׳•׳¡", filt_active:"׳₪׳¢׳™׳", filt_history:"׳”׳™׳¡׳˜׳•׳¨׳™׳”",
-    st_new:"׳—׳“׳©׳”", st_prog:"׳‘׳×׳”׳׳™׳", st_closed:"׳ ׳¡׳’׳¨׳”", st_rej:"׳ ׳“׳—׳×׳”", st_pending:"ג³ ׳׳׳×׳™׳ ׳׳׳™׳©׳•׳¨",
-    pending_note:"׳׳׳×׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳” ׳׳”׳¡׳•׳›׳", card_agent:"׳¡׳•׳›׳:", card_manage:"׳ ׳™׳”׳•׳",
-    st_fin_title:"׳₪׳™׳ ׳ ׳¡׳™׳", st_revenue:"׳”׳›׳ ׳¡׳•׳×", st_commission:"׳×׳©׳׳•׳׳™׳", st_net:"׳¨׳•׳•׳— ׳ ׳§׳™", st_pending_cnt:"׳׳׳×׳™׳ ׳׳¡׳•׳›׳", st_net_big:"׳”׳׳“׳“ ׳”׳׳¨׳›׳–׳™", st_net_big_sub:"׳”׳¨׳•׳•׳— ׳”׳ ׳§׳™ ג€” ׳”׳›׳¡׳£ ׳©׳ ׳©׳׳¨ ׳‘׳₪׳•׳¢׳ ׳׳—׳¨׳™ ׳”׳×׳©׳׳•׳׳™׳",
-    st_funnel_title:"׳׳©׳₪׳ ׳”׳׳¨׳•׳×", st_total_leads:"׳¡׳”׳´׳› ׳׳™׳“׳™׳:", f_active:"׳‘׳×׳”׳׳™׳", f_closed:"׳ ׳¡׳’׳¨׳•", f_rejected:"׳ ׳“׳—׳•",
-    st_agents:"׳׳׳׳™׳¦׳™׳", st_avg_deal:"׳¢׳¡׳§׳” ׳׳׳•׳¦׳¢׳×",
-    ag_title:"׳׳׳׳™׳¦׳™׳", ag_sub:"׳›׳׳ ׳ ׳׳¦׳׳™׳ ׳”׳׳׳׳™׳¦׳™׳ ׳©׳׳›׳ ׳•׳”׳׳•׳‘׳™׳׳™׳ ׳‘׳ ׳™׳©׳” ׳©׳׳›׳, ׳©׳׳™׳×׳ ׳׳₪׳©׳¨ ׳׳”׳×׳—׳™׳ ׳©׳™׳×׳•׳£ ׳₪׳¢׳•׳׳”.",
-    ag_deals:"׳”׳‘׳™׳ ׳׳§׳•׳—׳•׳×:", ag_comm:"׳©׳•׳׳",
-    rd_title:"׳¨׳“׳׳¨ ׳”׳׳©׳₪׳™׳¢׳ ׳™׳", rd_promo_title:"׳׳—׳₪׳©׳™׳ ׳©׳•׳×׳₪׳™׳ ׳—׳“׳©׳™׳?", rd_promo_desc:"׳¢׳‘׳¨׳• ׳-PRO ׳›׳“׳™ ׳׳₪׳×׳•׳— ׳׳ ׳©׳™ ׳§׳©׳¨ ׳©׳ ׳׳©׳₪׳™׳¢׳ ׳™׳.",
-    rd_promo_btn:"׳’׳׳” ׳¢׳ PRO", radar_loading:"׳˜׳•׳¢׳...",
-    tab_profile:"׳”׳’׳“׳¨׳•׳× ׳¢׳¡׳§", sub_title:"׳׳¡׳׳•׳ ׳ ׳•׳›׳—׳™:", btn_upgrade:"׳©׳“׳¨׳’ ׳-PRO (149 ג‚×)",
-    pr_name:"׳©׳", pr_niche:"׳×׳—׳•׳", pr_comm:"׳×׳’׳׳•׳", pr_pay:"׳׳•׳₪׳ ׳×׳©׳׳•׳", pr_link:"׳׳™׳ ׳¡׳˜׳’׳¨׳ / ׳׳×׳¨", pr_phone:"׳˜׳׳₪׳•׳",
-    btn_edit:"׳¢׳¨׳™׳›׳× ׳ ׳×׳•׳ ׳™׳", wa_btn:"WhatsApp", tg_btn:"Telegram",
-    m_title:"׳ ׳™׳”׳•׳ ׳¢׳¡׳§׳”", m_client:"׳׳§׳•׳—:", m_agent:"׳¡׳•׳›׳:", m_date:"׳×׳׳¨׳™׳:",
-    m_close:"׳¡׳’׳•׳¨ ׳¢׳¡׳§׳”", m_reject:"׳“׳—׳” ׳¢׳¡׳§׳”", m_mark_paid:"׳¡׳™׳׳ ׳×׳™ ׳©׳©׳™׳׳׳×׳™", m_cancel:"׳—׳–׳•׳¨",
-    m_lbl_amount:"׳¡׳›׳•׳ ׳”׳¢׳¡׳§׳”", m_confirm_close:"׳׳©׳¨ ׳¡׳’׳™׳¨׳”",
-    m_reject_sure:"׳”׳׳ ׳׳×׳” ׳‘׳˜׳•׳—?", m_confirm_reject:"׳›׳, ׳׳“׳—׳•׳×",
-    edit_title:"׳¢׳¨׳™׳›׳”", f_name:"׳©׳ ׳”׳¢׳¡׳§", f_niche:"׳×׳—׳•׳",
-    f_subniche:"׳”׳×׳׳—׳•׳×", f_comm:"׳×׳’׳׳•׳",
-    f_pay:"׳׳•׳₪׳ ׳×׳©׳׳•׳", f_link:"׳§׳™׳©׳•׳¨",
-    f_pay_cash:"׳׳–׳•׳׳", f_pay_bank:"׳”׳¢׳‘׳¨׳”",
-    btn_save:"׳©׳׳•׳¨", btn_cancel_edit:"׳—׳–׳•׳¨",
-    action_processing:"׳׳¢׳‘׳“...", action_success:"׳‘׳•׳¦׳¢!", action_close:"׳¡׳’׳•׳¨",
-    save_ok:"׳ ׳©׳׳¨!", save_err:"׳©׳’׳™׳׳”",
-    empty_deals:"׳¨׳™׳§ ׳›׳׳.",
-    nav_deals:"׳¢׳¡׳§׳׳•׳×", nav_stats:"׳“׳•׳—׳•׳×", nav_recommenders:"׳׳׳׳™׳¦׳™׳", nav_recommend:"׳׳׳׳™׳¥ ׳¢׳ ׳¢׳¡׳§", nav_profile:"׳₪׳¨׳•׳₪׳™׳",
-    sub_standard:"׳¨׳’׳™׳", sub_desc_standard:"׳×׳›׳•׳ ׳•׳× ׳‘׳¡׳™׳¡׳™׳•׳×. ׳׳’׳‘׳׳•׳× ׳¢׳¡׳§׳׳•׳× ׳—׳׳•׳×.",
-    sub_desc_pro:"׳’׳™׳©׳” ׳׳׳׳”: ׳¢׳¡׳§׳׳•׳× ׳׳׳ ׳”׳’׳‘׳׳” ׳•׳׳ ׳©׳™ ׳§׳©׳¨ ׳©׳ ׳¡׳•׳›׳ ׳™׳ ׳׳•׳‘׳™׳׳™׳.",
-    lb_blur_alert:"׳©׳“׳¨׳’ ׳-PRO ׳׳₪׳×׳™׳—׳× ׳׳ ׳©׳™ ׳§׳©׳¨. נ",
-    lb_deals:"׳¢׳¡׳§׳׳•׳×:", filt_all:"׳”׳›׳", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
+    err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
+    debt_label:"🔴 חוב לסוכנים:", debt_open:"פתיחת הרשימה", debt_sheet_title:"חוב לסוכנים", debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן עדיין צריך לשלם לסוכן את התגמול.", debt_sheet_empty:"כרגע אין עסקאות פעילות עם חוב לסוכן.", debt_client:"לקוח", debt_agent:"סוכן", debt_reward:"תשלום לסוכן", debt_status:"סטטוס", filt_active:"פעיל", filt_history:"היסטוריה",
+    st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
+    pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
+    st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן", st_net_big:"המדד המרכזי", st_net_big_sub:"הרווח הנקי — הכסף שנשאר בפועל אחרי התשלומים",
+    st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
+    st_agents:"ממליצים", st_avg_deal:"עסקה ממוצעת",
+    ag_title:"ממליצים", ag_sub:"כאן נמצאים הממליצים שלכם והמובילים בנישה שלכם, שאיתם אפשר להתחיל שיתוף פעולה.",
+    ag_deals:"הביא לקוחות:", ag_comm:"שולם",
+    rd_title:"רדאר המשפיענים", rd_promo_title:"מחפשים שותפים חדשים?", rd_promo_desc:"עברו ל-PRO כדי לפתוח אנשי קשר של משפיענים.",
+    rd_promo_btn:"גלה על PRO", radar_loading:"טוען...",
+    tab_profile:"הגדרות עסק", sub_title:"מסלול נוכחי:", btn_upgrade:"שדרג ל-PRO (149 ₪)",
+    pr_name:"שם", pr_niche:"תחום", pr_comm:"תגמול", pr_pay:"אופן תשלום", pr_link:"אינסטגרם / אתר", pr_phone:"טלפון",
+    btn_edit:"עריכת נתונים", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:",
+    m_close:"סגור עסקה", m_reject:"דחה עסקה", m_mark_paid:"סימנתי ששילמתי", m_cancel:"חזור",
+    m_lbl_amount:"סכום העסקה", m_confirm_close:"אשר סגירה",
+    m_reject_sure:"האם אתה בטוח?", m_confirm_reject:"כן, לדחות",
+    edit_title:"עריכה", f_name:"שם העסק", f_niche:"תחום",
+    f_subniche:"התמחות", f_comm:"תגמול",
+    f_pay:"אופן תשלום", f_link:"קישור",
+    f_pay_cash:"מזומן", f_pay_bank:"העברה",
+    btn_save:"שמור", btn_cancel_edit:"חזור",
+    action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור",
+    save_ok:"נשמר!", save_err:"שגיאה",
+    empty_deals:"ריק כאן.",
+    nav_deals:"עסקאות", nav_stats:"דוחות", nav_recommenders:"ממליצים", nav_recommend:"ממליץ על עסק", nav_profile:"פרופיל",
+    sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
+    sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
+    lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
+    lb_deals:"עסקאות:", filt_all:"הכל", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   en:{
-    rec_chip:"Your social capital", rec_title:"Recommend trusted businesses", rec_sub:"Choose a business you are ready to recommend.", rec_btn_label:"Choose a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_payout_pending:"Awaiting payout", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_chip:"Sources of trust", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche ג€” a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
+    rec_chip:"Your social capital", rec_title:"Recommend trusted businesses", rec_sub:"Choose a business you are ready to recommend.", rec_btn_label:"Choose a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_payout_pending:"Awaiting payout", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_chip:"Sources of trust", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
 
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
     debt_label:"Agent payout still needs to be closed", debt_open:"Open list", debt_sheet_title:"Agent payout still needs to be closed", debt_sheet_sub:"Only active deals where the agent payout is still owed are shown here.", debt_sheet_empty:"There are no active deals with unpaid agent payout right now.", debt_client:"Client", debt_agent:"Agent", debt_reward:"Agent payout", debt_status:"Status", filt_active:"Active", filt_history:"History",
-    st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"ג³ Awaiting confirmation",
+    st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
     pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
     st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
     st_funnel_title:"Conversion Funnel", st_total_leads:"Total leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected",
@@ -819,7 +813,7 @@ const i18n = {
     ag_deals:"Brought clients:", ag_comm:"Paid",
     rd_title:"Influencer Radar", rd_promo_title:"Looking for new partners?", rd_promo_desc:"Upgrade to PRO to unlock top influencer contacts.",
     rd_promo_btn:"Learn about PRO", radar_loading:"Loading...",
-    tab_profile:"Business Settings", sub_title:"Current plan:", btn_upgrade:"Upgrade to PRO (149 ג‚×)",
+    tab_profile:"Business Settings", sub_title:"Current plan:", btn_upgrade:"Upgrade to PRO (149 ₪)",
     pr_name:"Name", pr_niche:"Niche", pr_comm:"Reward", pr_pay:"Payment", pr_link:"Instagram / website", pr_phone:"Phone",
     btn_edit:"Edit Data", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:",
@@ -837,73 +831,73 @@ const i18n = {
     nav_deals:"Deals", nav_stats:"Reports", nav_recommenders:"Agents", nav_recommend:"Recommend", nav_profile:"Profile",
     sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
     sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
-    lb_blur_alert:"Upgrade to PRO to unlock contacts. נ",
+    lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
     lb_deals:"Deals:", filt_all:"All", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   ar:{
-    rec_chip:"״±״£״³…״§„ƒ ״§„״§״¬״×…״§״¹", rec_title:"״£ˆ״µ ״¨״£״¹…״§„ …ˆ״«ˆ‚״©", rec_sub:"״§״®״×״± ״§„†״´״§״· ״§„״° ״£†״× …״³״×״¹״¯ „„״×ˆ״µ״© ״¨‡.", rec_btn_label:"״§״®״×״± †״´״§״·״§‹", rec_note:"״×ˆ״µ״© ˆ״§״­״¯״© = ״¹…„ …״¯״¹ˆ ˆ״§״­״¯. ˆ״¨״¹״¯‡״§ ״×ƒ…„ ״§„…†״¸ˆ…״© ״§„…״³״§״± ״×„‚״§״¦״§‹.", rec_stat_total:"״§„״×ˆ״µ״§״×", rec_stat_waiting:"״¨״§†״×״¸״§״± ״§„״´ƒ״±", rec_stat_done:"…ƒ״×…„״©", rec_list_title:"״×ˆ״µ״§״×", rec_list_sub:"״§„״×ˆ״µ״§״× ״§„״µ״§״¯״±״© ״§„†״´״·״© ˆ״§„…ƒ״×…„״©.", rec_empty:"„… ״×ˆ״µ ״¨״£ ״¹…„ ״¨״¹״¯.", rec_prefill:"״£״±״¯ ״§„״×ˆ״µ״© ״¨״¹…„", rec_waiting:"‚״¯ ״§„״×†״°", rec_payout_pending:"״¨״§†״×״¸״§״± ״§„״¯״¹", rec_done:"…ƒ״×…„", rec_client:"״§„״¹…„", dec_take:"״£״­״×״¸ ״¨‡", dec_gift:"‡״¯״© „„״¹…„", dec_support:"״¯״¹… ״§„״¹…„", ag_chip:"…״µ״§״¯״± ״§„״«‚״©", ag_tab_mine:"״®״§״µ״×", ag_tab_leaders:"‚״§״¯״© …״¬״§„", ag_mine_caption:"״§„״£״´״®״§״µ ״§„״°† ˆ״µˆ† ״¨״¹…„ƒ ״¨״§„״¹„ ˆ״¬„״¨ˆ† ״§„״¹…„״§״¡.", ag_leaders_caption:"…ˆ״µˆ† ״£‚ˆ״§״¡  …״¬״§„ƒ ג€” …״₪״´״± „„״×״¹״§ˆ†.", ag_cta_partner:"״§‚״×״±״§״­ ״×״¹״§ˆ†",
+    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصِ بأعمال موثوقة", rec_sub:"اختر النشاط الذي أنت مستعد للتوصية به.", rec_btn_label:"اختر نشاطاً", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_payout_pending:"بانتظار الدفع", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_chip:"مصادر الثقة", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
 
-    loader_sub:"״¬״§״± ״§„״×״­…„...", err_title:"״§†״×‡״× ״§„״¬„״³״©", err_sub:"״¹״¯ ״¥„‰ ״§„…״±״§״³„ ˆ״§״­״µ„ ״¹„‰ ״±״§״¨״· ״¯״®ˆ„ ״¬״¯״¯.", err_preview:"״±״³״§„״×ƒ:",
-    err_prefill:"״×״³״¬„ ״§„״¯״®ˆ„ …״±״© ״£״®״±‰\n״§״¶״÷״· ״¥״±״³״§„ „„״­״µˆ„ ״¹„‰ ״±״§״¨״· ״¬״¯״¯ {pointer}",
-    debt_label:"„״§ ״²״§„ ״¬״¨ ״¥״÷„״§‚ ״¯† ״§„ˆƒ„", debt_open:"״×״­ ״§„‚״§״¦…״©", debt_sheet_title:"„״§ ״²״§„ ״¬״¨ ״¥״÷„״§‚ ״¯† ״§„ˆƒ„", debt_sheet_sub:"״¸‡״± ‡†״§ ‚״· ״§„״µ‚״§״× ״§„†״´״·״© ״§„״× …״§ ״²״§„״× ״×״×״·„״¨ ״¯״¹ …ƒ״§״£״© ״§„ˆƒ„.", debt_sheet_empty:"„״§ ״×ˆ״¬״¯ ״§„״¢† ״µ‚״§״× †״´״·״© ״¹„‡״§ ״¯† „„ˆƒ„.", debt_client:"״§„״¹…„", debt_agent:"״§„ˆƒ„", debt_reward:"״¯״¹״© ״§„ˆƒ„", debt_status:"״§„״­״§„״©", filt_active:"†״´״·", filt_history:"״§„״³״¬„",
-    st_new:"״¬״¯״¯", st_prog:"‚״¯ ״§„״¥״¬״±״§״¡", st_closed:"…״÷„‚״©", st_rej:"…״±ˆ״¶״©", st_pending:"ג³ ״¨״§†״×״¸״§״± ״§„״×״£ƒ״¯",
-    pending_note:"״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§… …† ״§„ˆƒ„", card_agent:"״§„ˆƒ„:", card_manage:"״¥״¯״§״±״©",
-    st_fin_title:"״§„…״§„״©", st_revenue:"״§„״¥״±״§״¯״§״×", st_commission:"״§„…״¯ˆ״¹״§״×", st_net:"״µ״§ ״§„״¯״®„", st_pending_cnt:" ״§†״×״¸״§״± ״§„ˆƒ„",
-    st_funnel_title:"…״³״§״± ״§„״×״­ˆ„", st_total_leads:"״¥״¬…״§„:", f_active:"‚״¯ ״§„״¥״¬״±״§״¡", f_closed:"…״÷„‚״©", f_rejected:"…״±ˆ״¶״©",
-    st_agents:"…ˆ״µˆ†", st_avg_deal:"…״×ˆ״³״· ״§„״µ‚״©",
-    ag_title:"״§„…ˆ״µˆ†", ag_sub:"‡†״§ ״§„…ˆ״µˆ† ״¨ƒ ˆ״§„״£״´״®״§״µ ״§„״£‚ˆ‰  …״¬״§„ƒ ״§„״°† …ƒ† ״¨״¯״¡ ״×״¹״§ˆ† …״¹‡….",
-    ag_deals:"״§„״¹…„״§״¡:", ag_comm:"…״¯ˆ״¹",
-    rd_title:"״±״§״¯״§״± ״§„…״₪״«״±†", rd_promo_title:"״×״¨״­״« ״¹† ״´״±ƒ״§״¡ ״¬״¯״¯?", rd_promo_desc:"‚… ״¨״§„״×״±‚״© ״¥„‰ PRO „״×״­ ״¬‡״§״× ״§״×״µ״§„ ״£״¶„ ״§„…״₪״«״±†.",
-    rd_promo_btn:"״×״±‚״© PRO", radar_loading:"״¬״§״±...",
-    tab_profile:"״¥״¹״¯״§״¯״§״× ״§„״¹…„", sub_title:"״§„״®״·״© ״§„״­״§„״©:", btn_upgrade:"״×״±‚״© ״¥„‰ PRO (149 ג‚×)",
-    pr_name:"״§„״§״³…", pr_niche:"״§„…״¬״§„", pr_comm:"…ƒ״§״£״©", pr_pay:"״·״±‚״© ״§„״¯״¹", pr_link:"״¥†״³״×״÷״±״§… / …ˆ‚״¹", pr_phone:"״§„‡״§״×",
-    btn_edit:"״×״¹״¯„ ״§„״¨״§†״§״×", wa_btn:"WhatsApp", tg_btn:"Telegram",
-    m_title:"״¥״¯״§״±״© ״§„״µ‚״©", m_client:"״§„״¹…„:", m_agent:"״§„ˆƒ„:", m_date:"״§„״×״§״±״®:",
-    m_close:"״¥״÷„״§‚ ״§„״µ‚״©", m_reject:"״±״¶ ״§„״µ‚״©", m_mark_paid:"״×… ״§„״¯״¹", m_cancel:"״±״¬ˆ״¹",
-    m_lbl_amount:"…״¨„״÷ ״§„״µ‚״© (״£״±‚״§… ‚״·)", m_confirm_close:"״×״£ƒ״¯ ״§„״¥״÷„״§‚",
-    m_reject_sure:"‡„ ״£†״× …״×״£ƒ״¯ …† ״§„״±״¶?", m_confirm_reject:"†״¹…״ ״£״±״¶",
-    edit_title:"״×״¹״¯„", f_name:"״§״³… ״§„״¹…„", f_niche:"״§„״¦״©",
-    f_subniche:"״×״®״µ״µ", f_comm:"…ƒ״§״£״©",
-    f_pay:"״·״±‚״© ״§„״¯״¹", f_link:"״±״§״¨״· (…ˆ‚״¹ / ״³ˆ״´״§„)",
-    f_pay_cash:"†‚״¯״§‹", f_pay_bank:"״×״­ˆ„",
-    btn_save:"״­״¸", btn_cancel_edit:"״±״¬ˆ״¹",
-    action_processing:"״¬״§״±...", action_success:"״×…!", action_close:"״¥״÷„״§‚",
-    save_ok:"״×… ״§„״­״¸!", save_err:"״®״·״£",
-    empty_deals:"״§״±״÷ ‡†״§.",
-    nav_deals:"״§„״µ‚״§״×", nav_stats:"״×‚״§״±״±", nav_recommenders:"״§„…ˆ״µˆ†", nav_recommend:"״£ˆ״µ ״¨״¹…„", nav_profile:"״§„…„",
-    sub_standard:"…״¹״§״±", sub_desc_standard:"״§„…״²״§״× ״§„״£״³״§״³״©. ״­״¯ˆ״¯ ״§„״µ‚״§״× …״·״¨‚״©.",
-    sub_desc_pro:"ˆ״µˆ„ ƒ״§…„: ״µ‚״§״× ״÷״± …״­״¯ˆ״¯״© ˆ״¬‡״§״× ״§״×״µ״§„ ״£״¶„ ״§„ˆƒ„״§״¡.",
-    lb_blur_alert:"‚… ״¨״§„״×״±‚״© ״¥„‰ PRO „״×״­ ״¬‡״§״× ״§„״§״×״µ״§„. נ",
-    lb_deals:"״µ‚״§״×:", filt_all:"״§„ƒ„", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
+    loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
+    err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
+    debt_label:"لا يزال يجب إغلاق دين الوكيل", debt_open:"فتح القائمة", debt_sheet_title:"لا يزال يجب إغلاق دين الوكيل", debt_sheet_sub:"يظهر هنا فقط الصفقات النشطة التي ما زالت تتطلب دفع مكافأة الوكيل.", debt_sheet_empty:"لا توجد الآن صفقات نشطة عليها دين للوكيل.", debt_client:"العميل", debt_agent:"الوكيل", debt_reward:"دفعة الوكيل", debt_status:"الحالة", filt_active:"نشط", filt_history:"السجل",
+    st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
+    pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
+    st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
+    st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة",
+    st_agents:"موصون", st_avg_deal:"متوسط الصفقة",
+    ag_title:"الموصون", ag_sub:"هنا الموصون بك والأشخاص الأقوى في مجالك الذين يمكن بدء تعاون معهم.",
+    ag_deals:"العملاء:", ag_comm:"مدفوع",
+    rd_title:"رادار المؤثرين", rd_promo_title:"تبحث عن شركاء جدد?", rd_promo_desc:"قم بالترقية إلى PRO لفتح جهات اتصال أفضل المؤثرين.",
+    rd_promo_btn:"ترقية PRO", radar_loading:"جاري...",
+    tab_profile:"إعدادات العمل", sub_title:"الخطة الحالية:", btn_upgrade:"ترقية إلى PRO (149 ₪)",
+    pr_name:"الاسم", pr_niche:"المجال", pr_comm:"مكافأة", pr_pay:"طريقة الدفع", pr_link:"إنستغرام / موقع", pr_phone:"الهاتف",
+    btn_edit:"تعديل البيانات", wa_btn:"WhatsApp", tg_btn:"Telegram",
+    m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:",
+    m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_mark_paid:"تم الدفع", m_cancel:"رجوع",
+    m_lbl_amount:"مبلغ الصفقة (أرقام فقط)", m_confirm_close:"تأكيد الإغلاق",
+    m_reject_sure:"هل أنت متأكد من الرفض?", m_confirm_reject:"نعم، أرفض",
+    edit_title:"تعديل", f_name:"اسم العمل", f_niche:"الفئة",
+    f_subniche:"تخصص", f_comm:"مكافأة",
+    f_pay:"طريقة الدفع", f_link:"رابط (موقع / سوشيال)",
+    f_pay_cash:"نقداً", f_pay_bank:"تحويل",
+    btn_save:"حفظ", btn_cancel_edit:"رجوع",
+    action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق",
+    save_ok:"تم الحفظ!", save_err:"خطأ",
+    empty_deals:"فارغ هنا.",
+    nav_deals:"الصفقات", nav_stats:"تقارير", nav_recommenders:"الموصون", nav_recommend:"أوصي بعمل", nav_profile:"الملف",
+    sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
+    sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
+    lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
+    lb_deals:"صفقات:", filt_all:"الكل", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   }
 };
 
 const CLEAN_BIZ_I18N = {
   ru: {
-    rec_sub:"׀’ׁ‹׀±׀µׁ€׀¸ׁ‚׀µ ׀±׀¸׀·׀½׀µׁ, ׀÷׀¾ׁ‚׀¾ׁ€ׁ‹׀¹ ׀³׀¾ׁ‚׀¾׀²ׁ‹ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ.",
-    rec_note:"׀׀´׀½׀° ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ = ׀¾׀´׀¸׀½ ׀¿ׁ€׀¸׀³׀»׀°ׁˆׁ‘׀½׀½ׁ‹׀¹ ׀÷׀»׀¸׀µ׀½ׁ‚. ׀”׀°׀»ׁׁˆ׀µ ׁ׀¸ׁׁ‚׀µ׀¼׀° ׁ׀°׀¼׀° ׀¿ׁ€׀¾׀²׀µ׀´ׁ‘ׁ‚ ׁ׀´׀µ׀»׀÷ׁƒ ׀¿׀¾ ׁׁ†׀µ׀½׀°ׁ€׀¸ׁ ׀±׀»׀°׀³׀¾׀´׀°ׁ€׀½׀¾ׁׁ‚׀¸ ׀±׀µ׀· ׀»׀¸ׁˆ׀½׀¸ׁ… ׁ€ׁƒׁ‡׀½ׁ‹ׁ… ׁˆ׀°׀³׀¾׀².",
-    rec_list_sub:"׀׀÷ׁ‚׀¸׀²׀½ׁ‹׀µ ׀¸ ׀·׀°׀²׀µׁ€ׁˆׁ‘׀½׀½ׁ‹׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸, ׀¾ׁ‚׀¿ׁ€׀°׀²׀»׀µ׀½׀½ׁ‹׀µ ׀¾ׁ‚ ׀¸׀¼׀µ׀½׀¸ ׀²׀°ׁˆ׀µ׀³׀¾ ׀±׀¸׀·׀½׀µׁ׀°.",
-    rec_empty:"׀’ׁ‹ ׀¿׀¾׀÷׀° ׀½׀µ ׀¾ׁ‚׀¿ׁ€׀°׀²׀»ׁ׀»׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¹.",
-    debt_label:"׀ ׀²ׁ‹׀¿׀»׀°ׁ‚׀µ ׀°׀³׀µ׀½ׁ‚׀°׀¼",
-    debt_open:"׀ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹",
-    debt_sheet_title:"׀ ׀²ׁ‹׀¿׀»׀°ׁ‚׀µ ׀°׀³׀µ׀½ׁ‚׀°׀¼",
-    debt_sheet_sub:"׀—׀´׀µׁׁ ׀¿׀¾׀÷׀°׀·׀°׀½ׁ‹ ׁ‚׀¾׀»ׁ׀÷׀¾ ׀°׀÷ׁ‚׀¸׀²׀½ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸, ׀³׀´׀µ ׁ׀»׀µ׀´ׁƒׁׁ‰׀¸׀¹ ׁˆ׀°׀³ ג€” ׀²ׁ‹׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀°׀³׀µ׀½ׁ‚ׁƒ ׀²׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸׀µ.",
-    card_manage:"׀£׀¿ׁ€׀°׀²׀»׀µ׀½׀¸׀µ ׁ׀´׀µ׀»׀÷׀¾׀¹",
-    card_next_step:"׀¡׀»׀µ׀´ׁƒׁׁ‰׀¸׀¹ ׁˆ׀°׀³",
-    m_income:"׀”׀¾ׁ…׀¾׀´:"
+    rec_sub:"Выберите бизнес, который готовы рекомендовать.",
+    rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности без лишних ручных шагов.",
+    rec_list_sub:"Активные и завершённые рекомендации, отправленные от имени вашего бизнеса.",
+    rec_empty:"Вы пока не отправляли рекомендаций.",
+    debt_label:"К выплате агентам",
+    debt_open:"Открыть выплаты",
+    debt_sheet_title:"К выплате агентам",
+    debt_sheet_sub:"Здесь показаны только активные сделки, где следующий шаг — выплатить агенту вознаграждение.",
+    card_manage:"Управление сделкой",
+    card_next_step:"Следующий шаг",
+    m_income:"Доход:"
   },
   he: {
-    rec_sub:"׳‘׳—׳¨׳• ׳¢׳¡׳§ ׳©׳׳×׳ ׳׳•׳›׳ ׳™׳ ׳׳”׳׳׳™׳¥ ׳¢׳׳™׳•.",
-    rec_note:"׳”׳׳׳¦׳” ׳׳—׳× = ׳׳§׳•׳— ׳׳•׳–׳׳ ׳׳—׳“. ׳׳©׳ ׳”׳׳¢׳¨׳›׳× ׳׳׳©׳™׳›׳” ׳׳‘׳“ ׳‘׳׳™ ׳¦׳¢׳“׳™׳ ׳™׳“׳ ׳™׳™׳ ׳׳™׳•׳×׳¨׳™׳.",
-    rec_list_sub:"׳”׳׳׳¦׳•׳× ׳₪׳¢׳™׳׳•׳× ׳•׳”׳™׳¡׳˜׳•׳¨׳™׳” ׳©׳ ׳©׳׳—׳• ׳‘׳©׳ ׳”׳¢׳¡׳§ ׳©׳׳›׳.",
-    rec_empty:"׳¢׳“׳™׳™׳ ׳׳ ׳©׳׳—׳×׳ ׳”׳׳׳¦׳•׳×.",
-    debt_label:"׳׳×׳©׳׳•׳ ׳׳¡׳•׳›׳ ׳™׳",
-    debt_open:"׳₪׳×׳™׳—׳× ׳”׳×׳©׳׳•׳׳™׳",
-    debt_sheet_title:"׳׳×׳©׳׳•׳ ׳׳¡׳•׳›׳ ׳™׳",
-    debt_sheet_sub:"׳›׳׳ ׳׳•׳¦׳’׳•׳× ׳¨׳§ ׳¢׳¡׳§׳׳•׳× ׳₪׳¢׳™׳׳•׳× ׳©׳‘׳”׳ ׳”׳¦׳¢׳“ ׳”׳‘׳ ׳”׳•׳ ׳׳©׳׳ ׳׳¡׳•׳›׳ ׳׳× ׳”׳×׳’׳׳•׳.",
-    card_manage:"׳ ׳™׳”׳•׳ ׳¢׳¡׳§׳”",
-    card_next_step:"׳”׳©׳׳‘ ׳”׳‘׳",
-    m_income:"׳¨׳•׳•׳—:"
+    rec_sub:"בחרו עסק שאתם מוכנים להמליץ עליו.",
+    rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד בלי צעדים ידניים מיותרים.",
+    rec_list_sub:"המלצות פעילות והיסטוריה שנשלחו בשם העסק שלכם.",
+    rec_empty:"עדיין לא שלחתם המלצות.",
+    debt_label:"לתשלום לסוכנים",
+    debt_open:"פתיחת התשלומים",
+    debt_sheet_title:"לתשלום לסוכנים",
+    debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן הצעד הבא הוא לשלם לסוכן את התגמול.",
+    card_manage:"ניהול עסקה",
+    card_next_step:"השלב הבא",
+    m_income:"רווח:"
   },
   en: {
     rec_sub:"Choose a business you are ready to recommend.",
@@ -919,17 +913,17 @@ const CLEAN_BIZ_I18N = {
     m_income:"Income:"
   },
   ar: {
-    rec_sub:"״§״®״×״± ״§„†״´״§״· ״§„״° ״£†״× …״³״×״¹״¯ „„״×ˆ״µ״© ״¨‡.",
-    rec_note:"״×ˆ״µ״© ˆ״§״­״¯״© = ״¹…„ …״¯״¹ˆ ˆ״§״­״¯. ˆ״¨״¹״¯‡״§ ״×ƒ…„ ״§„…†״¸ˆ…״© …״³״§״± ״§„״´ƒ״± ״×„‚״§״¦״§‹ ״¨״¯ˆ† ״®״·ˆ״§״× ״¯ˆ״© ״²״§״¦״¯״©.",
-    rec_list_sub:"״§„״×ˆ״µ״§״× ״§„†״´״·״© ˆ״§„…ƒ״×…„״© ״§„…״±״³„״© ״¨״§״³… ״¹…„ƒ.",
-    rec_empty:"„… ״×״±״³„ ״£ ״×ˆ״µ״§״× ״¨״¹״¯.",
-    debt_label:"…״³״×״­‚״§״× „„ˆƒ„״§״¡",
-    debt_open:"״×״­ ״§„״¯״¹״§״×",
-    debt_sheet_title:"…״³״×״­‚״§״× „„ˆƒ„״§״¡",
-    debt_sheet_sub:"״×״¸‡״± ‡†״§ ‚״· ״§„״µ‚״§״× ״§„†״´״·״© ״§„״× ״×ƒˆ† ‡״§ ״§„״®״·ˆ״© ״§„״×״§„״© ‡ ״¯״¹ …ƒ״§״£״© ״§„ˆƒ„.",
-    card_manage:"״¥״¯״§״±״© ״§„״µ‚״©",
-    card_next_step:"״§„״®״·ˆ״© ״§„״×״§„״©",
-    m_income:"״§„״¯״®„:"
+    rec_sub:"اختر النشاط الذي أنت مستعد للتوصية به.",
+    rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة مسار الشكر تلقائياً بدون خطوات يدوية زائدة.",
+    rec_list_sub:"التوصيات النشطة والمكتملة المرسلة باسم عملك.",
+    rec_empty:"لم ترسل أي توصيات بعد.",
+    debt_label:"مستحقات للوكلاء",
+    debt_open:"فتح الدفعات",
+    debt_sheet_title:"مستحقات للوكلاء",
+    debt_sheet_sub:"تظهر هنا فقط الصفقات النشطة التي تكون فيها الخطوة التالية هي دفع مكافأة الوكيل.",
+    card_manage:"إدارة الصفقة",
+    card_next_step:"الخطوة التالية",
+    m_income:"الدخل:"
   }
 };
 Object.entries(CLEAN_BIZ_I18N).forEach(([locale, values]) => {
@@ -938,35 +932,35 @@ Object.entries(CLEAN_BIZ_I18N).forEach(([locale, values]) => {
 
 function getManageDealLabels() {
   const map = {
-    ru: { agentPhone:'׀¢׀µ׀»׀µׁ„׀¾׀½ ׀°׀³׀µ׀½ׁ‚׀°:', status:'׀¡ׁ‚׀°ׁ‚ׁƒׁ:', debt:'׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³:' },
-    he: { agentPhone:'׳˜׳׳₪׳•׳ ׳”׳¡׳•׳›׳:', status:'׳¡׳˜׳˜׳•׳¡:', debt:'׳×׳©׳׳•׳ ׳׳¡׳•׳›׳:' },
+    ru: { agentPhone:'Телефон агента:', status:'Статус:', debt:'Оплатить долг:' },
+    he: { agentPhone:'טלפון הסוכן:', status:'סטטוס:', debt:'תשלום לסוכן:' },
     en: { agentPhone:'Agent phone:', status:'Status:', debt:'Agent payout:' },
-    ar: { agentPhone:'‡״§״× ״§„ˆƒ„:', status:'״§„״­״§„״©:', debt:'״³״¯״§״¯ ״¯† ״§„ˆƒ„:' }
+    ar: { agentPhone:'هاتف الوكيل:', status:'الحالة:', debt:'سداد دين الوكيل:' }
   };
   return map[lang] || map.ru;
 }
 
 function getPhoneFieldLabel() {
   const map = {
-    ru: '׀¢׀µ׀»׀µׁ„׀¾׀½',
-    he: '׳˜׳׳₪׳•׳',
+    ru: 'Телефон',
+    he: 'טלפון',
     en: 'Phone',
-    ar: '״§„‡״§״×'
+    ar: 'الهاتف'
   };
   return map[lang] || map.ru;
 }
 
 function getPhoneActionLabels() {
   const map = {
-    ru: { call:'׀׀¾׀·׀²׀¾׀½׀¸ׁ‚ׁ', wa:'WhatsApp' },
-    he: { call:'׳׳”׳×׳§׳©׳¨', wa:'WhatsApp' },
+    ru: { call:'Позвонить', wa:'WhatsApp' },
+    he: { call:'להתקשר', wa:'WhatsApp' },
     en: { call:'Call', wa:'WhatsApp' },
-    ar: { call:'״§״×״µ״§„', wa:'WhatsApp' }
+    ar: { call:'اتصال', wa:'WhatsApp' }
   };
   return map[lang] || map.ru;
 }
 
-// ג•ג• STATE ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ STATE ═════════════════════════════════════════════════════════════
 const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
 let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
@@ -975,7 +969,6 @@ let agentDashData = null;
 let agentDashToken = '';
 let leaderboardData = null;
 let recommendationRows = [];
-let recommendMode = 'incoming';
 let dealFilter = 'active';
 let activeDealId = null;
 let currentTab = 'deals';
@@ -988,7 +981,7 @@ const RTL_TABS = ['profile','recommend','recommenders','stats','deals'];
 function isRTLLang(targetLang = lang) { return targetLang === 'he' || targetLang === 'ar'; }
 function getTabOrder(targetLang = lang) { return isRTLLang(targetLang) ? RTL_TABS : LTR_TABS; }
 
-// ג•ג• THEME ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ THEME ═════════════════════════════════════════════════════════════
 function applyTheme() {
   const saved = localStorage.getItem('winwin_biz_theme');
   const isDark = saved !== 'light';
@@ -1006,7 +999,7 @@ function toggleTheme() {
   feather.replace();
 }
 
-// ג•ג• VIEW ORDER / SWIPE ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ VIEW ORDER / SWIPE ═════════════════════════════════════════════
 function applyViewOrder(isRTL) {
   const wrapper = document.getElementById('viewsWrapper');
   if (!wrapper) return;
@@ -1063,7 +1056,7 @@ document.querySelector('.app').addEventListener('touchend', e => {
   }
 });
 
-// ג•ג• NAVIGATION ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ NAVIGATION ════════════════════════════════════════════════════════
 function switchTab(tabId, btnEl) {
   currentTab = tabId;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -1073,7 +1066,7 @@ function switchTab(tabId, btnEl) {
   window.scrollTo(0, 0);
 }
 
-// ג•ג• FULLSCREEN UTIL (agent cabinet pattern) ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ FULLSCREEN UTIL (agent cabinet pattern) ════════════════════════════
 function closeFullscreen(id) {
   const el = document.getElementById(id);
   el.classList.add('slide-out');
@@ -1105,7 +1098,7 @@ function openUpgradePage() {
   window.location.href = target.toString();
 }
 
-// ג•ג• ANIMATE NUMBER ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ ANIMATE NUMBER ════════════════════════════════════════════════════
 function animNum(id, to, suffix='', dur=1000) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1119,7 +1112,7 @@ function animNum(id, to, suffix='', dur=1000) {
   requestAnimationFrame(step);
 }
 
-// ג•ג• LANG ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ LANG ══════════════════════════════════════════════════════════════
 function setLang(l) {
   lang = l;
   const isRTL = isRTLLang(l);
@@ -1191,7 +1184,7 @@ function applyI18n() {
   if (agentPhoneLbl) agentPhoneLbl.textContent = manageLabels.agentPhone;
   if (statusLbl) statusLbl.textContent = manageLabels.status;
   if (debtLbl) debtLbl.textContent = manageLabels.debt;
-  if (incomeLbl) incomeLbl.textContent = L.m_income || '׀”׀¾ׁ…׀¾׀´:';
+  if (incomeLbl) incomeLbl.textContent = L.m_income || 'Доход:';
   if (compactStatusLbl) compactStatusLbl.textContent = manageLabels.status;
   if (compactDebtLbl) compactDebtLbl.textContent = manageLabels.debt;
   if (compactDateLbl) compactDateLbl.textContent = L.m_date;
@@ -1202,19 +1195,19 @@ function applyI18n() {
   if (payCash) payCash.textContent = L.f_pay_cash;
   if (payBank) payBank.textContent = L.f_pay_bank;
 
-  // Build prefill message silently ג€” baked into WA button href, never shown to user
-  const pointer = (lang === 'he' || lang === 'ar') ? 'נ‘ˆ' : 'נ‘‰';
+  // Build prefill message silently — baked into WA button href, never shown to user
+  const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
   const prefill = (L.err_prefill || i18n.ru.err_prefill).replace('{pointer}', pointer);
   const phone   = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
   const btnWa   = document.getElementById('errBtnWa');
   if (btnWa) btnWa.href = `https://wa.me/${phone}?text=${encodeURIComponent(prefill)}`;
 }
 
-// ג•ג• CATEGORIES POPULATE ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ CATEGORIES POPULATE ═══════════════════════════════════════════════
 function populateCategories() {
   const sel = document.getElementById('f_niche');
   if (!sel) return;
-  sel.innerHTML = `<option value="" disabled selected>׀’ׁ‹׀±׀µׁ€׀¸ׁ‚׀µ...</option>`;
+  sel.innerHTML = `<option value="" disabled selected>Выберите...</option>`;
   for (const cat in CATEGORIES) {
     const opt = document.createElement('option');
     opt.value = cat;
@@ -1223,7 +1216,7 @@ function populateCategories() {
   }
 }
 
-// ג•ג• INIT ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ INIT ══════════════════════════════════════════════════════════════
 async function init() {
   applyTheme();
   populateCategories();
@@ -1256,7 +1249,7 @@ async function init() {
     const res = await fetch(`${API_URL}/api/business?token=${token}`);
     if (!res.ok) throw new Error('auth');
     const fresh = await res.json();
-    // Log full API response to console ג€” open DevTools to see field names
+    // Log full API response to console — open DevTools to see field names
     console.log('[Win-Win Biz] API response:', JSON.stringify(fresh).slice(0,500));
     const freshStr = JSON.stringify(fresh);
     bizData = fresh;
@@ -1266,7 +1259,7 @@ async function init() {
       if (!cached) showApp();
       renderAll();
     } else if (cached) {
-      // Data unchanged ג€” make sure app is shown
+      // Data unchanged — make sure app is shown
       if (document.getElementById('globalLoader').style.display !== 'none') showApp();
       renderAll();
     } else {
@@ -1344,7 +1337,7 @@ function showApp() {
 }
 
 function showError() {
-  // Hide loading state completely ג€” prevents white/stuck loader
+  // Hide loading state completely — prevents white/stuck loader
   var spinner = document.getElementById('loaderSpinner');
   var subTxt  = document.getElementById('t_loader_sub');
   if (spinner) spinner.style.display = 'none';
@@ -1365,11 +1358,11 @@ function showError() {
   }
 }
 
-// ג•ג• RENDER ALL ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ RENDER ALL ════════════════════════════════════════════════════════
 function renderAll() {
   if (!bizData) return;
 
-  // Log what we got from API ג€” helps diagnose field name mismatches
+  // Log what we got from API — helps diagnose field name mismatches
   console.log('[Win-Win Biz] bizData keys:', Object.keys(bizData));
   console.log('[Win-Win Biz] deals count:', (bizData.deals||bizData.leads||[]).length);
   console.log('[Win-Win Biz] stats:', bizData.stats);
@@ -1395,7 +1388,7 @@ function renderAll() {
   }
   if (!bizData.stats) bizData.stats = {};
 
-  document.getElementById('companyName').textContent = bizData.name || bizData.business_name || 'ג€”';
+  document.getElementById('companyName').textContent = bizData.name || bizData.business_name || '—';
 
   try { renderDeals(); } catch(e) { console.error('[Biz] renderDeals:', e); }
   try { renderStats(); } catch(e) { console.error('[Biz] renderStats:', e); }
@@ -1419,7 +1412,7 @@ function updateReturnBtns() {
   }
 }
 
-// ג•ג• DEALS ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ DEALS ═════════════════════════════════════════════════════════════
 function setFilter(f) {
   dealFilter = f;
   document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
@@ -1431,16 +1424,16 @@ function setFilter(f) {
 function getStatusData(status) {
   const L = i18n[lang] || i18n.ru;
   const payoutPendingText = {
-    ru:'׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³',
-    he:'׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳ ׳׳¡׳•׳›׳',
+    ru:'Оплатить долг',
+    he:'ממתינים לתשלום לסוכן',
     en:'Awaiting agent payout',
-    ar:'״¨״§†״×״¸״§״± ״¯״¹ ״§„ˆƒ„'
+    ar:'بانتظار دفع الوكيل'
   };
   const receiptPendingText = {
-    ru:'׀–׀´ׁ‘׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸׀µ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸ׁ',
-    he:'׳׳׳×׳™׳ ׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳”',
+    ru:'Ждём подтверждение получения',
+    he:'ממתינים לאישור קבלה',
     en:'Awaiting receipt confirmation',
-    ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§…'
+    ar:'بانتظار تأكيد الاستلام'
   };
   const map = {
     new:                  { text:L.st_new,     cls:'st-new',      icon:'clock' },
@@ -1470,16 +1463,16 @@ function getDealStatusCodes(deal) {
 
 function getActiveDealsPromoHtml() {
   const promoTitle = {
-    ru:'׀¢ׁ‘׀¿׀»ׁ‹׀µ ׀÷׀»׀¸׀µ׀½ׁ‚ׁ‹ ׀½׀°ׁ‡׀¸׀½׀°ׁׁ‚ׁׁ ׁ ׀´׀¾׀²׀µׁ€׀¸ׁ',
-    he:'׳׳§׳•׳—׳•׳× ׳—׳׳™׳ ׳׳×׳—׳™׳׳™׳ ׳‘׳׳׳•׳',
+    ru:'Тёплые клиенты начинаются с доверия',
+    he:'לקוחות חמים מתחילים באמון',
     en:'Warm clients start with trust',
-    ar:'״§„״¹…„״§״¡ ״§„״¯״§״¦ˆ† ״¨״¯״£ˆ† ״¨״§„״«‚״©'
+    ar:'العملاء الدافئون يبدأون بالثقة'
   };
   const promoBtn = {
-    ru:'׀׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ',
-    he:'׳׳”׳׳׳™׳¥ ׳¢׳ ׳¢׳¡׳§',
+    ru:'Порекомендовать бизнес',
+    he:'להמליץ על עסק',
     en:'Recommend a business',
-    ar:'״§„״×ˆ״µ״© ״¨״¹…„'
+    ar:'التوصية بعمل'
   };
   return `
     <div class="page-hero deals-empty-hero" style="margin-bottom:16px;">
@@ -1700,31 +1693,31 @@ function getPreservedAgentRecommendationSource() {
 
 function getDealActionLabel(status) {
   const map = {
-    ru: { new:'׀’׀·ׁׁ‚ׁ ׀² ׁ€׀°׀±׀¾ׁ‚ׁƒ', in_progress:'׀—׀°׀²׀µׁ€ׁˆ׀¸ׁ‚ׁ ׀¸׀»׀¸ ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ', pending_confirmation:'׀–׀´ׁ‘׀¼ ׁ€׀µׁˆ׀µ׀½׀¸ׁ', closed:'׀¡׀´׀µ׀»׀÷׀° ׀·׀°׀²׀µׁ€ׁˆ׀µ׀½׀°', rejected:'׀¡׀´׀µ׀»׀÷׀° ׀¾ׁ‚׀÷׀»׀¾׀½׀µ׀½׀°' },
-    he: { new:'׳׳§׳‘׳ ׳׳˜׳™׳₪׳•׳', in_progress:'׳ ׳™׳”׳•׳', pending_confirmation:'׳׳”׳–׳›׳™׳¨ ׳”׳—׳׳˜׳”', closed:'׳₪׳¨׳˜׳™׳', rejected:'׳₪׳¨׳˜׳™׳' },
+    ru: { new:'Взять в работу', in_progress:'Завершить или отклонить', pending_confirmation:'Ждём решения', closed:'Сделка завершена', rejected:'Сделка отклонена' },
+    he: { new:'לקבל לטיפול', in_progress:'ניהול', pending_confirmation:'להזכיר החלטה', closed:'פרטים', rejected:'פרטים' },
     en: { new:'Take into work', in_progress:'Manage', pending_confirmation:'Remind decision', closed:'Details', rejected:'Details' },
-    ar: { new:'‚״¨ˆ„ „„״¹…„', in_progress:'״¥״¯״§״±״©', pending_confirmation:'״×״°ƒ״± ״¨״§„‚״±״§״±', closed:'״×״§״µ„', rejected:'״×״§״µ„' }
+    ar: { new:'قبول للعمل', in_progress:'إدارة', pending_confirmation:'تذكير بالقرار', closed:'تفاصيل', rejected:'تفاصيل' }
   };
-  return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || '׀£׀¿ׁ€׀°׀²׀»ׁׁ‚ׁ';
+  return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || 'Управлять';
 }
 function getDealNextStep(status) {
   const payoutPendingText = {
-    ru:'׀׀¿׀»׀°ׁ‚׀¸ׁ‚ׁ ׀´׀¾׀»׀³',
-    he:'׳™׳© ׳׳©׳׳ ׳׳¡׳•׳›׳ ׳׳× ׳”׳×׳’׳׳•׳',
+    ru:'Оплатить долг',
+    he:'יש לשלם לסוכן את התגמול',
     en:'The agent payout still needs to be paid',
-    ar:'…״§ ״²״§„ ״¬״¨ ״¯״¹ …ƒ״§״£״© ״§„ˆƒ„'
+    ar:'ما زال يجب دفع مكافأة الوكيل'
   };
   const receiptPendingText = {
-    ru:'׀–׀´ׁ‘׀¼ ׀¿׀¾׀´ׁ‚׀²׀µׁ€׀¶׀´׀µ׀½׀¸׀µ ׀¿׀¾׀»ׁƒׁ‡׀µ׀½׀¸ׁ ׀¾ׁ‚ ׀°׀³׀µ׀½ׁ‚׀°',
-    he:'׳׳׳×׳™׳ ׳™׳ ׳׳׳™׳©׳•׳¨ ׳§׳‘׳׳” ׳׳”׳¡׳•׳›׳',
+    ru:'Ждём подтверждение получения от агента',
+    he:'ממתינים לאישור קבלה מהסוכן',
     en:'Waiting for the agent to confirm receipt',
-    ar:'״¨״§†״×״¸״§״± ״×״£ƒ״¯ ״§„״§״³״×„״§… …† ״§„ˆƒ„'
+    ar:'بانتظار تأكيد الاستلام من الوكيل'
   };
   const map = {
-    ru: { new:'׀ׁƒ׀¶׀½׀¾ ׀¿ׁ€׀¸׀½ׁׁ‚ׁ ׀¸׀»׀¸ ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ', in_progress:'׀ׁƒ׀¶׀½׀¾ ׀·׀°׀²׀µׁ€ׁˆ׀¸ׁ‚ׁ ׀¸׀»׀¸ ׀¾ׁ‚׀÷׀»׀¾׀½׀¸ׁ‚ׁ', pending_confirmation:'׀–׀´ׁ‘׀¼ ׁ€׀µׁˆ׀µ׀½׀¸׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»ׁ', closed:'׀¡׀´׀µ׀»׀÷׀° ׀·׀°׀²׀µׁ€ׁˆ׀µ׀½׀°', rejected:'׀¡׀´׀µ׀»׀÷׀° ׀¾ׁ‚׀÷׀»׀¾׀½׀µ׀½׀°' },
-    he: { new:'׳™׳© ׳׳§׳‘׳ ׳׳• ׳׳“׳—׳•׳×', in_progress:'׳™׳© ׳׳¡׳™׳™׳ ׳׳• ׳׳“׳—׳•׳×', pending_confirmation:'׳׳׳×׳™׳ ׳™׳ ׳׳”׳—׳׳˜׳× ׳”׳׳׳׳™׳¥', closed:'׳”׳¢׳¡׳§׳” ׳”׳•׳©׳׳׳”', rejected:'׳”׳¢׳¡׳§׳” ׳ ׳“׳—׳×׳”' },
+    ru: { new:'Нужно принять или отклонить', in_progress:'Нужно завершить или отклонить', pending_confirmation:'Ждём решение рекомендателя', closed:'Сделка завершена', rejected:'Сделка отклонена' },
+    he: { new:'יש לקבל או לדחות', in_progress:'יש לסיים או לדחות', pending_confirmation:'ממתינים להחלטת הממליץ', closed:'העסקה הושלמה', rejected:'העסקה נדחתה' },
     en: { new:'Accept or reject', in_progress:'Complete or reject', pending_confirmation:'Waiting for recommender decision', closed:'Deal completed', rejected:'Deal rejected' },
-    ar: { new:'״§‚״¨„ ״£ˆ ״§״±״¶', in_progress:'״£ƒ…„ ״£ˆ ״§״±״¶', pending_confirmation:'״¨״§†״×״¸״§״± ‚״±״§״± ״§„…ˆ״µ', closed:'״§ƒ״×…„״× ״§„״µ‚״©', rejected:'״×… ״±״¶ ״§„״µ‚״©' }
+    ar: { new:'اقبل أو ارفض', in_progress:'أكمل أو ارفض', pending_confirmation:'بانتظار قرار الموصي', closed:'اكتملت الصفقة', rejected:'تم رفض الصفقة' }
   };
   if (['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(status)) {
     return payoutPendingText[lang] || payoutPendingText.ru;
@@ -1742,7 +1735,7 @@ function getPhoneDigits(phone) {
 function renderPhoneLink(phone, opts = {}) {
   const raw = String(phone || '').trim();
   const digits = getPhoneDigits(raw);
-  if (!digits) return 'ג€”';
+  if (!digits) return '—';
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
   return `<a href="tel:${digits}" class="deal-wa-link"${attrs}>${raw}</a>`;
 }
@@ -1750,7 +1743,7 @@ function renderPhoneLink(phone, opts = {}) {
 function renderPhoneContact(phone, opts = {}) {
   const raw = String(phone || '').trim();
   const digits = getPhoneDigits(raw);
-  if (!digits) return 'ג€”';
+  if (!digits) return '—';
   const labels = getPhoneActionLabels();
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
   return `
@@ -1764,7 +1757,7 @@ function renderPhoneContact(phone, opts = {}) {
 }
 
 function renderNamedPhoneContact(name, phone, opts = {}) {
-  const rawName = String(name || '').trim() || 'ג€”';
+  const rawName = String(name || '').trim() || '—';
   const raw = String(phone || '').trim();
   const digits = getPhoneDigits(raw);
   if (!digits) return rawName;
@@ -1788,17 +1781,17 @@ function getDealAgentPhone(deal) {
 function formatDealDebtAmount(deal, currency) {
   const truth = getDealTruth(deal);
   const rewardVal = truth.debtAmount ?? deal.debt_amount ?? deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? deal.pending_payout ?? deal.pending_debt ?? deal.debt ?? null;
-  if (rewardVal == null || rewardVal === '') return 'ג€”';
+  if (rewardVal == null || rewardVal === '') return '—';
   return Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${currency}` : String(rewardVal);
 }
 
 function formatDealIncomeAmount(deal, currency) {
   const rawAmount = deal.amount ?? deal.deal_amount ?? null;
   const rawCommission = deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? null;
-  if (rawAmount == null || rawAmount === '' || rawCommission == null || rawCommission === '') return 'ג€”';
+  if (rawAmount == null || rawAmount === '' || rawCommission == null || rawCommission === '') return '—';
   const amountNum = Number(rawAmount);
   const commissionNum = Number(rawCommission);
-  if (!Number.isFinite(amountNum) || !Number.isFinite(commissionNum)) return 'ג€”';
+  if (!Number.isFinite(amountNum) || !Number.isFinite(commissionNum)) return '—';
   return `${Math.round((amountNum - commissionNum) * 10) / 10} ${currency}`;
 }
 
@@ -1823,7 +1816,7 @@ function renderDebtDealsSheet() {
   const box = document.getElementById('debtDealsList');
   if (!box) return;
   const L = i18n[lang] || i18n.ru;
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const deals = getDebtVisibleDeals();
   if (!deals.length) {
     box.innerHTML = `<div class="debt-empty">${L.debt_sheet_empty || i18n.ru.debt_sheet_empty}</div>`;
@@ -1833,10 +1826,10 @@ function renderDebtDealsSheet() {
   box.innerHTML = deals.map(d => {
     const statusCode = getDisplayDealStatus(d);
     const statusMeta = getStatusData(statusCode);
-    const clientName = d.client_name || d.name || 'ג€”';
-    const agentName = d.agent_name || d.sender_name || d.agent || 'ג€”';
+    const clientName = d.client_name || d.name || '—';
+    const agentName = d.agent_name || d.sender_name || d.agent || '—';
     const rewardText = formatDealDebtAmount(d, curr);
-    const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : 'ג€”');
+    const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : '—');
     return `
       <div class="debt-deal-card" role="button" tabindex="0" onclick="openDebtDealDetail(${d.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealDetail(${d.id});}">
         <div class="debt-deal-head">
@@ -1874,7 +1867,7 @@ function toggleEmptyHeroCopy(btn) {
   const open = box.classList.toggle('open');
   btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   const label = btn.querySelector('.toggle-label');
-  const labels = {ru:['׀׀¾׀´ׁ€׀¾׀±׀½׀µ׀µ','׀¡׀÷ׁ€ׁ‹ׁ‚ׁ'], he:['׳¢׳•׳“','׳”׳¡׳×׳¨'], en:['Details','Hide'], ar:['״×״§״µ„','״¥״®״§״¡']};
+  const labels = {ru:['Подробнее','Скрыть'], he:['עוד','הסתר'], en:['Details','Hide'], ar:['تفاصيل','إخفاء']};
   const pair = labels[lang] || labels.ru;
   if (label) label.textContent = open ? pair[1] : pair[0];
   const icon = btn.querySelector('svg');
@@ -1888,18 +1881,18 @@ async function remindDecision(id) {
     });
     if (!res.ok) throw new Error();
     const msg = {
-      ru:'׀׀°׀¿׀¾׀¼׀¸׀½׀°׀½׀¸׀µ ׀¾ׁ‚׀¿ׁ€׀°׀²׀»׀µ׀½׀¾ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»ׁ.',
-      he:'׳”׳×׳–׳›׳•׳¨׳× ׳ ׳©׳׳—׳” ׳׳׳׳׳™׳¥.',
+      ru:'Напоминание отправлено рекомендателю.',
+      he:'התזכורת נשלחה לממליץ.',
       en:'Reminder sent to recommender.',
-      ar:'״×… ״¥״±״³״§„ ״×״°ƒ״± ״¥„‰ ״§„…ˆ״µ.'
+      ar:'تم إرسال تذكير إلى الموصي.'
     };
     showNotice((msg[lang] || msg.ru));
   } catch(e) {
     const msg = {
-      ru:'׀׀µ ׁƒ׀´׀°׀»׀¾ׁׁ ׀¾ׁ‚׀¿ׁ€׀°׀²׀¸ׁ‚ׁ ׀½׀°׀¿׀¾׀¼׀¸׀½׀°׀½׀¸׀µ.',
-      he:'׳׳ ׳ ׳™׳×׳ ׳׳©׳׳•׳— ׳×׳–׳›׳•׳¨׳×.',
+      ru:'Не удалось отправить напоминание.',
+      he:'לא ניתן לשלוח תזכורת.',
       en:'Could not send reminder.',
-      ar:'״×״¹״°״± ״¥״±״³״§„ ״§„״×״°ƒ״±.'
+      ar:'تعذر إرسال التذكير.'
     };
     showNotice((msg[lang] || msg.ru));
   }
@@ -1910,7 +1903,7 @@ function renderDeals() {
   const container = document.getElementById('dealsContainer');
   const L = i18n[lang] || i18n.ru;
   const deals = bizData.deals || [];
-  const curr  = bizData.currency || 'ג‚×';
+  const curr  = bizData.currency || '₪';
 
   deals.forEach(d => {
     if (!d.client_name  && d.name)          d.client_name  = d.name;
@@ -1934,35 +1927,35 @@ function renderDeals() {
     const totalRevenue = Math.round(s.total_revenue || 0);
     const recommenders = s.agents_count || 0;
     const titleMap = {
-      ru: dealFilter === 'active' ? '׀׀¾׀÷׀° ׀½׀µׁ‚ ׀°׀÷ׁ‚׀¸׀²׀½ׁ‹ׁ… ׁ׀´׀µ׀»׀¾׀÷' : '׀˜ׁׁ‚׀¾ׁ€׀¸ׁ ׁ׀´׀µ׀»׀¾׀÷ ׀¿׀¾׀÷׀° ׀¿ׁƒׁׁ‚׀°',
-      he: dealFilter === 'active' ? '׳›׳¨׳’׳¢ ׳׳™׳ ׳¢׳¡׳§׳׳•׳× ׳₪׳¢׳™׳׳•׳×' : '׳”׳™׳¡׳˜׳•׳¨׳™׳™׳× ׳”׳¢׳¡׳§׳׳•׳× ׳¢׳“׳™׳™׳ ׳¨׳™׳§׳”',
+      ru: dealFilter === 'active' ? 'Пока нет активных сделок' : 'История сделок пока пуста',
+      he: dealFilter === 'active' ? 'כרגע אין עסקאות פעילות' : 'היסטוריית העסקאות עדיין ריקה',
       en: dealFilter === 'active' ? 'No active deals yet' : 'Deal history is still empty',
-      ar: dealFilter === 'active' ? '„״§ ״×ˆ״¬״¯ ״µ‚״§״× †״´״·״© ״­״§„״§‹' : '״³״¬„ ״§„״µ‚״§״× …״§ ״²״§„ ״§״±״÷״§‹'
+      ar: dealFilter === 'active' ? 'لا توجد صفقات نشطة حالياً' : 'سجل الصفقات ما زال فارغاً'
     };
     const subMap = {
-      ru: dealFilter === 'active' ? '׀—׀°׀¿ׁƒׁׁ‚׀¸ׁ‚׀µ ׀½׀¾׀²ׁƒׁ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸ׁ ׀¸׀»׀¸ ׀¾ׁ‚׀÷ׁ€׀¾׀¹ׁ‚׀µ ׀²׀÷׀»׀°׀´׀÷ׁƒ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»׀µ׀¹, ׁ‡ׁ‚׀¾׀±ׁ‹ ׁƒׁ׀¸׀»׀¸ׁ‚ׁ ׀¿׀¾ׁ‚׀¾׀÷ ׁ‚ׁ‘׀¿׀»ׁ‹ׁ… ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀².' : '׀׀°׀÷ ׁ‚׀¾׀»ׁ׀÷׀¾ ׀¿׀¾ׁ׀²ׁׁ‚ׁׁ ׀·׀°׀²׀µׁ€ׁˆׁ‘׀½׀½ׁ‹׀µ ׁ׀´׀µ׀»׀÷׀¸, ׀¾׀½׀¸ ׀¾׀÷׀°׀¶ׁƒׁ‚ׁׁ ׀·׀´׀µׁׁ.',
-      he: dealFilter === 'active' ? '׳–׳” ׳–׳׳ ׳˜׳•׳‘ ׳׳”׳׳׳™׳¥ ׳¢׳ ׳¢׳¡׳§ ׳—׳“׳© ׳׳• ׳׳‘׳“׳•׳§ ׳׳™ ׳›׳‘׳¨ ׳׳‘׳™׳ ׳׳›׳ ׳׳§׳•׳—׳•׳×.' : '׳›׳׳ ׳×׳•׳₪׳™׳¢ ׳”׳™׳¡׳˜׳•׳¨׳™׳™׳× ׳”׳¢׳¡׳§׳׳•׳× ׳©׳”׳•׳©׳׳׳•.',
+      ru: dealFilter === 'active' ? 'Запустите новую рекомендацию или откройте вкладку рекомендателей, чтобы усилить поток тёплых клиентов.' : 'Как только появятся завершённые сделки, они окажутся здесь.',
+      he: dealFilter === 'active' ? 'זה זמן טוב להמליץ על עסק חדש או לבדוק מי כבר מביא לכם לקוחות.' : 'כאן תופיע היסטוריית העסקאות שהושלמו.',
       en: dealFilter === 'active' ? 'A good moment to send a new recommendation or see who already brings you clients.' : 'Completed deals will appear here.',
-      ar: dealFilter === 'active' ? '‡״°״§ ˆ‚״× …†״§״³״¨ „״¨״¯״¡ ״×ˆ״µ״© ״¬״¯״¯״© ״£ˆ ׳׳¨׳׳•׳× ׳׳™ ׳›׳‘׳¨ ׳׳‘׳™׳ „ƒ ״¹…„״§״¡.' : '״³״×״¸‡״± ‡†״§ ״§„״µ‚״§״× ״§„…ƒ״×…„״©.'
+      ar: dealFilter === 'active' ? 'هذا وقت مناسب لبدء توصية جديدة أو לראות מי כבר מביא لك عملاء.' : 'ستظهر هنا الصفقات المكتملة.'
     };
-    const primaryMap = { ru:'׀׀¾ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀¾׀²׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ', he:'׳׳”׳׳׳™׳¥ ׳¢׳ ׳¢׳¡׳§', en:'Recommend a business', ar:'״£ˆ״µ ״¨״¹…„' };
-    const secondaryMap = { ru:'׀ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׀°׀³׀µ׀½ׁ‚׀¾׀²', he:'׳₪׳×׳— ׳׳׳׳™׳¦׳™׳', en:'Open agents', ar:'״§״×״­ ״§„…ˆ״µ†' };
-    const closedLbl = {ru:'׀—׀°׀÷ׁ€ׁ‹ׁ‚׀¾',he:'׳ ׳¡׳’׳¨׳•',en:'Closed',ar:'…״÷„‚״©'};
-    const revenueLbl = {ru:'׀׀±׀¾ׁ€׀¾ׁ‚',he:'׳׳—׳–׳•׳¨',en:'Revenue',ar:'״§„״¥״±״§״¯'};
-    const agentsLbl = {ru:'׀׀³׀µ׀½ׁ‚ׁ‹',he:'׳׳׳׳™׳¦׳™׳',en:'Agents',ar:'ˆƒ„״§״¡'};
+    const primaryMap = { ru:'Порекомендовать бизнес', he:'להמליץ על עסק', en:'Recommend a business', ar:'أوصِ بعمل' };
+    const secondaryMap = { ru:'Открыть агентов', he:'פתח ממליצים', en:'Open agents', ar:'افتح الموصين' };
+    const closedLbl = {ru:'Закрыто',he:'נסגרו',en:'Closed',ar:'مغلقة'};
+    const revenueLbl = {ru:'Оборот',he:'מחזור',en:'Revenue',ar:'الإيراد'};
+    const agentsLbl = {ru:'Агенты',he:'ממליצים',en:'Agents',ar:'وكلاء'};
     const heroTitle = {
-      ru:'׀¢ׁ‘׀¿׀»ׁ‹׀µ ׀÷׀»׀¸׀µ׀½ׁ‚ׁ‹ ׀½׀°ׁ‡׀¸׀½׀°ׁׁ‚ׁׁ ׁ ׀´׀¾׀²׀µׁ€׀¸ׁ',
-      he:'׳׳§׳•׳—׳•׳× ׳—׳׳™׳ ׳׳×׳—׳™׳׳™׳ ׳‘׳׳׳•׳',
+      ru:'Тёплые клиенты начинаются с доверия',
+      he:'לקוחות חמים מתחילים באמון',
       en:'Warm clients start with trust',
-      ar:'״§„״¹…„״§״¡ ״§„״¯״§״¦ˆ† ״¨״¯״£ˆ† ״¨״§„״«‚״©'
+      ar:'العملاء الدافئون يبدأون بالثقة'
     };
     const heroText = {
-      ru:'׀—׀°׀¿ׁƒׁ׀÷׀°׀¹ׁ‚׀µ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸ ׀¸ ׀¿׀¾׀´׀÷׀»ׁׁ‡׀°׀¹ׁ‚׀µ ׁ׀¸׀»ׁ׀½ׁ‹ׁ… ׀°׀³׀µ׀½ׁ‚׀¾׀² ׀² ׁ׀²׀¾׀µ׀¹ ׀½׀¸ׁˆ׀µ, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀¿ׁ€׀¸׀²׀»׀µ׀÷׀°ׁ‚ׁ ׁ‚ׁ‘׀¿׀»ׁ‹ׁ… ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀² ׀±׀µ׀· ׁ…׀¾׀»׀¾׀´׀½׀¾׀³׀¾ ׁ‚ׁ€׀°ׁ„׀¸׀÷׀°.',
-      he:'׳”׳₪׳¢׳™׳׳• ׳”׳׳׳¦׳•׳× ׳•׳¦׳¨׳₪׳• ׳׳׳׳™׳¦׳™׳ ׳—׳–׳§׳™׳ ׳‘׳ ׳™׳©׳” ׳©׳׳›׳ ׳›׳“׳™ ׳׳”׳‘׳™׳ ׳׳§׳•׳—׳•׳× ׳—׳׳™׳ ׳‘׳׳™ ׳×׳ ׳•׳¢׳” ׳§׳¨׳”.',
+      ru:'Запускайте рекомендации и подключайте сильных агентов в своей нише, чтобы привлекать тёплых клиентов без холодного трафика.',
+      he:'הפעילו המלצות וצרפו ממליצים חזקים בנישה שלכם כדי להביא לקוחות חמים בלי תנועה קרה.',
       en:'Launch recommendations and connect strong agents in your niche to attract warm clients without cold traffic.',
-      ar:'״§״¨״¯״£ ״§„״×ˆ״µ״§״× ˆ״§״±״¨״· …ˆ״µ† ״£‚ˆ״§״¡  …״¬״§„ƒ „״¬״°״¨ ״¹…„״§״¡ ״¯״§״¦† ״¨״¯ˆ† ״²״§״±״§״× ״¨״§״±״¯״©.'
+      ar:'ابدأ التوصيات واربط موصين أقوياء في مجالك لجذب عملاء دافئين بدون زيارات باردة.'
     };
-    const detailsLbl = {ru:'׀׀¾׀´ׁ€׀¾׀±׀½׀µ׀µ', he:'׳¢׳•׳“', en:'Details', ar:'״×״§״µ„'};
+    const detailsLbl = {ru:'Подробнее', he:'עוד', en:'Details', ar:'تفاصيل'};
     const msgMap = subMap;
     container.innerHTML = `
       <div class="page-hero deals-empty-hero">
@@ -1993,17 +1986,17 @@ function renderDeals() {
     const isPayoutPending = isPayoutPendingBusinessDeal(d);
     const tone = getDealTone(statusCode, isPayoutPending);
     const nextStep  = getDealNextStep(statusCode);
-    const amountVal = d.amount ? `${d.amount} ${curr}` : 'ג€”';
-    const commVal = d.commission ? `${d.commission} ${curr}` : 'ג€”';
+    const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
+    const commVal = d.commission ? `${d.commission} ${curr}` : '—';
     const incomeVal = formatDealIncomeAmount(d, curr);
 
     let innerAction = '';
     if (dealFilter === 'active') {
       if (statusCode === 'pending_confirmation') {
-        const remindLabel = { ru:'׀׀°׀¿׀¾׀¼׀½׀¸ׁ‚ׁ ׀¾ ׀²ׁ‹׀±׀¾ׁ€׀µ', he:'׳׳”׳–׳›׳™׳¨ ׳¢׳ ׳”׳‘׳—׳™׳¨׳”', en:'Remind about the choice', ar:'״°ƒ‘״± ״¨״§„״§״®״×״§״±' };
+        const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
-        const manageLabel = { ru:'׀ׁ‚׀÷ׁ€ׁ‹ׁ‚ׁ ׁƒ׀¿ׁ€׀°׀²׀»׀µ׀½׀¸׀µ', he:'׳₪׳×׳— ׳ ׳™׳”׳•׳', en:'Open management', ar:'״§״×״­ ״§„״¥״¯״§״±״©' };
+        const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
         innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
       }
     }
@@ -2022,19 +2015,19 @@ function renderDeals() {
         </div>
         <div class="deal-pending-note ${tone || 'warning'}"><i data-feather="${tone === 'danger' ? 'alert-circle' : (tone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>
         <div class="deal-summary-pills">
-          <span class="meta-pill">נ₪ ${d.agent_name || 'ג€”'}</span>
-          <span class="meta-pill">נ’µ ${amountVal}</span>
-          <span class="meta-pill">נ ${commVal}</span>
+          <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
+          <span class="meta-pill">💵 ${amountVal}</span>
+          <span class="meta-pill">🎁 ${commVal}</span>
         </div>
         <div class="deal-extra" id="deal_extra_${d.id}">
           <div class="deal-inline-meta">
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || '׀ ׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»ׁ'}</div><div class="deal-mini-val">${d.agent_name || 'ג€”'}</div></div>
-            <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || '׀¡׀»׀µ׀´ׁƒׁׁ‰׀¸׀¹ ׁˆ׀°׀³'}</div><div class="deal-mini-val">${nextStep}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
+            <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
           </div>
           <div class="deal-receipt">
-            <div class="receipt-line"><span>נ’µ ׀§׀µ׀÷:</span><span>${amountVal}</span></div>
-            <div class="receipt-line"><span>נ ׀‘׀¾׀½ׁƒׁ:</span><span>${commVal}</span></div>
-            <div class="receipt-line total"><span>ג… ׀”׀¾ׁ…׀¾׀´:</span><span class="net-profit">${incomeVal}</span></div>
+            <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
+            <div class="receipt-line"><span>🎁 Бонус:</span><span>${commVal}</span></div>
+            <div class="receipt-line total"><span>✅ Доход:</span><span class="net-profit">${incomeVal}</span></div>
           </div>
           <div class="deal-actions-row" style="margin-top:12px;">${innerAction}</div>
         </div>
@@ -2048,10 +2041,10 @@ function renderDeals() {
   feather.replace();
 }
 
-// ג•ג• STATS ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ STATS ════════════════════════════════════════════════════════════
 function renderStats() {
   const s    = bizData.stats || {};
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const active   = s.active   || 0;
   const closed   = s.closed   || 0;
   const rejected = s.rejected || 0;
@@ -2097,7 +2090,7 @@ function renderStats() {
   }
 }
 
-// ג•ג• RECOMMENDERS ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ RECOMMENDERS ═══════════════════════════════════════════════════════
 function setRecommendersMode(mode) {
   recommendersMode = mode;
   document.getElementById('agTabMine').classList.toggle('active', mode === 'mine');
@@ -2115,7 +2108,7 @@ function renderRecommenders() {
 function renderMyRecommenders() {
   const container = document.getElementById('agentsList');
   const L = i18n[lang] || i18n.ru;
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const deals = bizData.deals || [];
   const agentMap = {};
   deals.forEach(d => {
@@ -2140,7 +2133,7 @@ function renderMyRecommenders() {
           <div class="agent-avatar">${a.name.charAt(0).toUpperCase()}</div>
           <div class="agent-info">
             <div class="agent-name">${a.name}</div>
-            <div class="reco-sub">${L.ag_deals} <b>${a.count}</b>${a.last ? ' ֲ· ' + formatShortDate(a.last) : ''}</div>
+            <div class="reco-sub">${L.ag_deals} <b>${a.count}</b>${a.last ? ' · ' + formatShortDate(a.last) : ''}</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
@@ -2152,19 +2145,19 @@ function renderMyRecommenders() {
         </div>
       </div>
       <div class="reco-meta">
-        <span class="meta-pill">נ‘¥ ${a.count}</span>
-        <span class="meta-pill">נ ${Math.round(a.comm)} ${curr}</span>
-        ${a.waiting ? `<span class="meta-pill">ג³ ${a.waiting}</span>` : ''}
+        <span class="meta-pill">👥 ${a.count}</span>
+        <span class="meta-pill">🎁 ${Math.round(a.comm)} ${curr}</span>
+        ${a.waiting ? `<span class="meta-pill">⏳ ${a.waiting}</span>` : ''}
       </div>
       <div class="deal-extra" id="reco_extra_${idx}">
         <div class="deal-inline-meta">
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'׀ׁ€׀¸׀²ׁ‘׀» ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀²':(lang==='en')?'Clients referred':(lang==='ar')?'״§„״¹…„״§״¡ ״§„…״­״§„ˆ†':'׀ׁ€׀¸׀²ׁ‘׀» ׀÷׀»׀¸׀µ׀½ׁ‚׀¾׀²'}</div><div class="deal-mini-val">${a.count}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'׀–׀´ׁƒׁ‚ ׁ€׀µׁˆ׀µ׀½׀¸ׁ':(lang==='en')?'Awaiting':(lang==='ar')?'‚״¯ ״§„״§†״×״¸״§״±':'׀–׀´ׁƒׁ‚ ׁ€׀µׁˆ׀µ׀½׀¸ׁ'}</div><div class="deal-mini-val">${a.waiting || 0}</div></div>
+          <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'Привёл клиентов':(lang==='en')?'Clients referred':(lang==='ar')?'العملاء المحالون':'Привёл клиентов'}</div><div class="deal-mini-val">${a.count}</div></div>
+          <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'Ждут решения':(lang==='en')?'Awaiting':(lang==='ar')?'قيد الانتظار':'Ждут решения'}</div><div class="deal-mini-val">${a.waiting || 0}</div></div>
         </div>
         <div class="deal-receipt">
-          <div class="receipt-line"><span>נ’¼ ${lang==='ru' ? '׀”׀¾ׁ…׀¾׀´ ׀´׀»ׁ ׀±׀¸׀·׀½׀µׁ׀°' : (lang==='en' ? 'Business income' : (lang==='he' ? '׀”׀¾ׁ…׀¾׀´ ׀´׀»ׁ ׀±׀¸׀·׀½׀µׁ׀°' : '״¯״®„ ״§„״¹…„'))}:</span><span>${Math.round(a.income || 0)} ${curr}</span></div>
-          <div class="receipt-line"><span>נ ${L.ag_comm || '׀’ׁ‹׀¿׀»׀°ׁ‡׀µ׀½׀¾'}:</span><span>${Math.round(a.comm)} ${curr}</span></div>
-          <div class="receipt-line"><span>${(lang==='he')?'׀׀¾ׁ׀»׀µ׀´׀½ׁׁ ׀°׀÷ׁ‚׀¸׀²׀½׀¾ׁׁ‚ׁ':(lang==='en')?'Last activity':(lang==='ar')?'״¢״®״± †״´״§״·':'׀׀¾ׁ׀»׀µ׀´׀½ׁׁ ׀°׀÷ׁ‚׀¸׀²׀½׀¾ׁׁ‚ׁ'}:</span><span>${a.last ? formatShortDate(a.last) : 'ג€”'}</span></div>
+          <div class="receipt-line"><span>💼 ${lang==='ru' ? 'Доход для бизнеса' : (lang==='en' ? 'Business income' : (lang==='he' ? 'Доход для бизнеса' : 'دخل العمل'))}:</span><span>${Math.round(a.income || 0)} ${curr}</span></div>
+          <div class="receipt-line"><span>🎁 ${L.ag_comm || 'Выплачено'}:</span><span>${Math.round(a.comm)} ${curr}</span></div>
+          <div class="receipt-line"><span>${(lang==='he')?'Последняя активность':(lang==='en')?'Last activity':(lang==='ar')?'آخر نشاط':'Последняя активность'}:</span><span>${a.last ? formatShortDate(a.last) : '—'}</span></div>
         </div>
       </div>
     </div>`).join('');
@@ -2200,7 +2193,7 @@ async function loadLeadersInline() {
 function renderLeadersInline() {
   const container = document.getElementById('leadersInlineList');
   const L = i18n[lang] || i18n.ru;
-  const curr = bizData && bizData.currency ? bizData.currency : 'ג‚×';
+  const curr = bizData && bizData.currency ? bizData.currency : '₪';
   const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
   const agents = (leaderboardData && leaderboardData.top_agents) ? leaderboardData.top_agents : [];
   if (!agents.length) {
@@ -2209,14 +2202,14 @@ function renderLeadersInline() {
   }
   container.innerHTML = agents.map(a => {
     let badge = a.rank, rankClass = '';
-    if (a.rank === 1) { badge = 'נ¥‡'; rankClass = 'lb-rank-1'; }
-    else if (a.rank === 2) { badge = 'נ¥ˆ'; rankClass = 'lb-rank-2'; }
-    else if (a.rank === 3) { badge = 'נ¥‰'; rankClass = 'lb-rank-3'; }
+    if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
     const niches = (a.niche_categories || []).map(n => `<span class="meta-pill">${(typeof getCatName==='function') ? getCatName(n,lang) : n}</span>`).join('');
     let cta = `<button class="btn-primary btn-outline" onclick="switchTab('profile', null)">${L.rd_promo_btn}</button>`;
     if (isPro && a.wa_phone) {
       const waLink = 'https://wa.me/' + String(a.wa_phone).replace(/\D/g,'');
-      cta = `<a class="btn-primary btn-wa" href="${waLink}" target="_blank"><i data-feather="message-circle" style="width:16px;height:16px;"></i> ${L.ag_cta_partner || '׀ׁ€׀µ׀´׀»׀¾׀¶׀¸ׁ‚ׁ ׁ׀¾ׁ‚ׁ€ׁƒ׀´׀½׀¸ׁ‡׀µׁׁ‚׀²׀¾'}</a>`;
+      cta = `<a class="btn-primary btn-wa" href="${waLink}" target="_blank"><i data-feather="message-circle" style="width:16px;height:16px;"></i> ${L.ag_cta_partner || 'Предложить сотрудничество'}</a>`;
     }
     return `
       <div class="reco-card">
@@ -2229,7 +2222,7 @@ function renderLeadersInline() {
             </div>
           </div>
           <div class="agent-comm">
-            <div class="agent-comm-lbl">${L.lb_earned || '׀—׀°ׁ€׀°׀±׀¾ׁ‚׀°׀½׀¾'}</div>
+            <div class="agent-comm-lbl">${L.lb_earned || 'Заработано'}</div>
             <div class="agent-comm-val">${Math.round(a.earned || 0)} ${curr}</div>
           </div>
         </div>
@@ -2240,7 +2233,7 @@ function renderLeadersInline() {
   feather.replace();
 }
 
-// ג•ג• RECOMMEND ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ RECOMMEND ═══════════════════════════════════════════════════════════
 function normalizeRecommendationStatus(row) {
   const status = row.status || row.reward_status || row.decision_status || row.settlement_status || '';
   if ([
@@ -2271,8 +2264,8 @@ function normalizeOutgoingRecommendations() {
       || []);
   return raw.map((r, idx) => ({
     id: r.id || idx,
-    business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || 'ג€”',
-    client_name: r.client_name || r.invited_client_name || r.receiver_name || r.name || 'ג€”',
+    business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || '—',
+    client_name: r.client_name || r.invited_client_name || r.receiver_name || r.name || '—',
     client_phone: r.client_phone || r.invited_client_phone || r.receiver_phone || r.phone || '',
     status: normalizeRecommendationStatus(r),
     date: r.start_date || r.date || r.created_at || '',
@@ -2290,258 +2283,13 @@ function normalizeOutgoingRecommendations() {
   }));
 }
 
-function getRecommendShellCopy() {
-  const map = {
-    ru: {
-      pageTitle:'Рекомендации',
-      incoming:'Входящие',
-      outgoing:'Исходящие',
-      incomingAction:'Посмотрите, что требует внимания сейчас.',
-      incomingButton:'Открыть сделки',
-      incomingList:'Входящие рекомендации',
-      incomingEmpty:'Пока нет входящих рекомендаций.',
-      outgoingAction:'Выберите бизнес для новой рекомендации.',
-      outgoingButton:'Выбрать бизнес',
-      outgoingList:'Исходящие рекомендации',
-      outgoingEmpty:'Пока нет исходящих рекомендаций.',
-      incomingMetrics:['Выручка','Выплаты','Чистыми'],
-      outgoingMetrics:['Заработано','Ожидают','Закрыто'],
-      nextStep:'Следующий шаг',
-      debt:'Долг'
-    },
-    he: {
-      pageTitle:'׳”׳׳׳¦׳•׳×',
-      incoming:'׳ ׳›׳ ׳¡׳•׳×',
-      outgoing:'׳™׳•׳¦׳׳•׳×',
-      incomingAction:'׳‘׳“׳§׳• ׳׳” ׳“׳•׳¨׳© ׳×׳©׳•׳׳× ׳׳‘ ׳¢׳›׳©׳™׳•.',
-      incomingButton:'׳₪׳×׳™׳—׳× ׳¢׳¡׳§׳׳•׳×',
-      incomingList:'׳”׳׳׳¦׳•׳× ׳ ׳›׳ ׳¡׳•׳×',
-      incomingEmpty:'׳¢׳“׳™׳™׳ ׳׳™׳ ׳”׳׳׳¦׳•׳× ׳ ׳›׳ ׳¡׳•׳×.',
-      outgoingAction:'׳‘׳—׳¨׳• ׳¢׳¡׳§ ׳׳”׳׳׳¦׳” ׳—׳“׳©׳”.',
-      outgoingButton:'׳‘׳—׳™׳¨׳× ׳¢׳¡׳§',
-      outgoingList:'׳”׳׳׳¦׳•׳× ׳™׳•׳¦׳׳•׳×',
-      outgoingEmpty:'׳¢׳“׳™׳™׳ ׳׳™׳ ׳”׳׳׳¦׳•׳× ׳™׳•׳¦׳׳•׳×.',
-      incomingMetrics:['׳׳—׳–׳•׳¨','׳×׳©׳׳•׳׳™׳','׳ ׳˜׳•'],
-      outgoingMetrics:['׳”׳•׳¨׳•׳•׳—','׳׳׳×׳™׳ ׳™׳','׳ ׳¡׳’׳¨׳•'],
-      nextStep:'׳”׳©׳׳‘ ׳”׳‘׳',
-      debt:'׳—׳•׳‘'
-    },
-    en: {
-      pageTitle:'Recommendations',
-      incoming:'Incoming',
-      outgoing:'Outgoing',
-      incomingAction:'See what needs attention now.',
-      incomingButton:'Open deals',
-      incomingList:'Incoming recommendations',
-      incomingEmpty:'No incoming recommendations yet.',
-      outgoingAction:'Choose a business for a new recommendation.',
-      outgoingButton:'Choose a business',
-      outgoingList:'Outgoing recommendations',
-      outgoingEmpty:'No outgoing recommendations yet.',
-      incomingMetrics:['Revenue','Payouts','Net'],
-      outgoingMetrics:['Earned','Pending','Closed'],
-      nextStep:'Next step',
-      debt:'Debt'
-    },
-    ar: {
-      pageTitle:'״§„״×ˆ״µ״§״×',
-      incoming:'״§„ˆ״§״±״¯״©',
-      outgoing:'״§„״µ״§״¯״±״©',
-      incomingAction:'״±״§״¬״¹ …״§ ״­״×״§״¬ ״¥„‰ ״§†״×״¨״§‡ ״§„״¢†.',
-      incomingButton:'״×״­ ״§„״µ‚״§״×',
-      incomingList:'״§„״×ˆ״µ״§״× ״§„ˆ״§״±״¯״©',
-      incomingEmpty:'„״§ ״×ˆ״¬״¯ ״×ˆ״µ״§״× ˆ״§״±״¯״© ״¨״¹״¯.',
-      outgoingAction:'״§״®״×״± †״´״§״·״§‹ „״×ˆ״µ״© ״¬״¯״¯״©.',
-      outgoingButton:'״§״®״×״± †״´״§״·״§‹',
-      outgoingList:'״§„״×ˆ״µ״§״× ״§„״µ״§״¯״±״©',
-      outgoingEmpty:'„״§ ״×ˆ״¬״¯ ״×ˆ״µ״§״× ״µ״§״¯״±״© ״¨״¹״¯.',
-      incomingMetrics:['״§„״¥״±״§״¯','״§„״¯״¹״§״×','״§„״µ״§'],
-      outgoingMetrics:['…ƒ״×״³״¨','…״¹„‘‚','…״÷„‚'],
-      nextStep:'״§„״®״·ˆ״© ״§„״×״§„״©',
-      debt:'״¯†'
-    }
-  };
-  return map[lang] || map.ru;
-}
-
-function setRecommendMode(mode) {
-  recommendMode = mode === 'outgoing' ? 'outgoing' : 'incoming';
-  const incomingBtn = document.getElementById('recTabIncoming');
-  const outgoingBtn = document.getElementById('recTabOutgoing');
-  if (incomingBtn) incomingBtn.classList.toggle('active', recommendMode === 'incoming');
-  if (outgoingBtn) outgoingBtn.classList.toggle('active', recommendMode === 'outgoing');
-  renderRecommend();
-}
-
-function handleRecommendMainAction() {
-  if (recommendMode === 'outgoing') {
-    openRecommendFlow();
-    return;
-  }
-  const navBtn = document.querySelector('.nav-item[data-tab="deals"]');
-  switchTab('deals', navBtn || null);
-}
-
-function toMetricNumber(value) {
-  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
-  const normalized = String(value ?? '').replace(',', '.').replace(/[^\d.-]/g, '');
-  const parsed = Number(normalized);
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function formatMetricAmount(value, curr) {
-  const amount = toMetricNumber(value);
-  const rounded = Number.isInteger(amount) ? amount : Math.round(amount * 100) / 100;
-  return `${rounded} ${curr}`;
-}
-
-function getOutgoingRecommendMetrics(rows) {
-  const earned = agentDashData && agentDashData.total_earned !== undefined
-    ? agentDashData.total_earned
-    : rows.filter(r => ['closed','completed','done'].includes(r.status)).reduce((sum, row) => sum + toMetricNumber(row.reward), 0);
-  const pending = agentDashData && agentDashData.pending_payout !== undefined
-    ? agentDashData.pending_payout
-    : rows.reduce((sum, row) => {
-        const truth = getDealTruth(row);
-        return sum + toMetricNumber(truth.debtAmount || row.debt_amount || 0);
-      }, 0);
-  const closed = agentDashData && agentDashData.success_deals !== undefined
-    ? agentDashData.success_deals
-    : rows.filter(r => ['closed','completed','done'].includes(r.status)).length;
-  return { earned, pending, closed };
-}
-
-function getIncomingRecommendationDeals() {
-  const deals = Array.isArray(bizData?.deals) ? bizData.deals : [];
-  const active = deals.filter(isBusinessActiveDeal);
-  if (active.length) return active;
-  return deals.filter(isBusinessHistoryDeal).slice(0, 6);
-}
-
-function renderRecommendShell() {
-  const listEl = document.getElementById('recommendList');
-  const totalEl = document.getElementById('rec_stat_total');
-  const waitingEl = document.getElementById('rec_stat_waiting');
-  const doneEl = document.getElementById('rec_stat_done');
-  const pageTitleEl = document.getElementById('t_rec_page_title');
-  const incomingTabEl = document.getElementById('t_rec_mode_incoming');
-  const outgoingTabEl = document.getElementById('t_rec_mode_outgoing');
-  const chipEl = document.getElementById('t_rec_chip');
-  const titleEl = document.getElementById('t_rec_title');
-  const subEl = document.getElementById('t_rec_sub');
-  const btnLabelEl = document.getElementById('t_rec_btn_label');
-  const mainBtnEl = document.querySelector('#view-recommend .cta-block .btn-primary');
-  const listTitleEl = document.getElementById('t_rec_list_title');
-  const listSubEl = document.getElementById('t_rec_list_sub');
-  const stat1LabelEl = document.getElementById('t_rec_stat_total');
-  const stat2LabelEl = document.getElementById('t_rec_stat_waiting');
-  const stat3LabelEl = document.getElementById('t_rec_stat_done');
-  const L = i18n[lang] || i18n.ru;
-  const copy = getRecommendShellCopy();
-  const curr = bizData.currency || '׳’ג€ֳ—';
-
-  if (pageTitleEl) pageTitleEl.textContent = copy.pageTitle;
-  if (incomingTabEl) incomingTabEl.textContent = copy.incoming;
-  if (outgoingTabEl) outgoingTabEl.textContent = copy.outgoing;
-  if (chipEl) chipEl.style.display = 'none';
-  if (subEl) subEl.style.display = 'none';
-  if (listSubEl) listSubEl.style.display = 'none';
-  if (mainBtnEl) mainBtnEl.onclick = handleRecommendMainAction;
-
-  const incomingBtn = document.getElementById('recTabIncoming');
-  const outgoingBtn = document.getElementById('recTabOutgoing');
-  if (incomingBtn) incomingBtn.classList.toggle('active', recommendMode === 'incoming');
-  if (outgoingBtn) outgoingBtn.classList.toggle('active', recommendMode === 'outgoing');
-
-  if (recommendMode === 'outgoing') {
-    const rows = normalizeOutgoingRecommendations();
-    const metrics = getOutgoingRecommendMetrics(rows);
-    recommendationRows = rows;
-    if (stat1LabelEl) stat1LabelEl.textContent = copy.outgoingMetrics[0];
-    if (stat2LabelEl) stat2LabelEl.textContent = copy.outgoingMetrics[1];
-    if (stat3LabelEl) stat3LabelEl.textContent = copy.outgoingMetrics[2];
-    if (titleEl) titleEl.textContent = copy.outgoingAction;
-    if (btnLabelEl) btnLabelEl.textContent = copy.outgoingButton;
-    if (listTitleEl) listTitleEl.textContent = copy.outgoingList;
-    if (totalEl) totalEl.textContent = formatMetricAmount(metrics.earned, curr);
-    if (waitingEl) waitingEl.textContent = formatMetricAmount(metrics.pending, curr);
-    if (doneEl) doneEl.textContent = String(metrics.closed || 0);
-    if (!rows.length) {
-      listEl.innerHTML = `<div class="empty-state">${copy.outgoingEmpty}</div>`;
-      return true;
-    }
-    listEl.innerHTML = rows.map((r, idx) => {
-      const statusText = getRecommendStatusLabel(r.status, L);
-      const rewardLine = r.reward ? `<span class="meta-pill">׳ ֲֲֲ ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
-      const decisionLine = r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '';
-      return `
-      <div class="reco-card" onclick="openRecommendDetail(${idx})">
-        <div class="reco-top">
-          <div>
-            <div class="reco-title">${r.business_name}</div>
-            <div class="reco-sub">${L.rec_client || '׳€ֲ׳€ֲ»׳€ֲ¸׳€ֲµ׳€ֲ½׳ג€'}: <b>${r.client_name}</b>${r.date ? ' ײ²ֲ· ' + formatShortDate(r.date) : ''}</div>
-          </div>
-          <div class="status-badge ${statusText.cls}">${statusText.text}</div>
-        </div>
-        <div class="reco-meta">
-          ${rewardLine}
-          ${decisionLine}
-        </div>
-      </div>`;
-    }).join('');
-    return true;
-  }
-
-  recommendationRows = [];
-  const stats = bizData.stats || {};
-  const deals = getIncomingRecommendationDeals();
-  if (stat1LabelEl) stat1LabelEl.textContent = copy.incomingMetrics[0];
-  if (stat2LabelEl) stat2LabelEl.textContent = copy.incomingMetrics[1];
-  if (stat3LabelEl) stat3LabelEl.textContent = copy.incomingMetrics[2];
-  if (titleEl) titleEl.textContent = copy.incomingAction;
-  if (btnLabelEl) btnLabelEl.textContent = copy.incomingButton;
-  if (listTitleEl) listTitleEl.textContent = copy.incomingList;
-  if (totalEl) totalEl.textContent = formatMetricAmount(stats.total_revenue || 0, curr);
-  if (waitingEl) waitingEl.textContent = formatMetricAmount(stats.total_commission || 0, curr);
-  if (doneEl) doneEl.textContent = formatMetricAmount(stats.total_earned || 0, curr);
-  if (!deals.length) {
-    listEl.innerHTML = `<div class="empty-state">${copy.incomingEmpty}</div>`;
-    return true;
-  }
-  listEl.innerHTML = deals.map(deal => {
-    const status = getDisplayDealStatus(deal, L);
-    const truth = getDealTruth(deal);
-    const nextStep = getDealNextStep(deal, L);
-    const dateText = deal.date ? formatShortDate(deal.date) : '';
-    const manageTarget = JSON.stringify(deal.id);
-    const debtLine = truth.debtAmount > 0 ? `<span class="meta-pill">${copy.debt}: ${truth.debtAmount} ${curr}</span>` : '';
-    const nextLine = nextStep ? `<span class="meta-pill">${copy.nextStep}: ${nextStep}</span>` : '';
-    return `
-      <div class="reco-card" onclick='openManageDeal(${manageTarget})'>
-        <div class="reco-top">
-          <div>
-            <div class="reco-title">${deal.client_name || deal.name || 'ג€”'}</div>
-            <div class="reco-sub">${deal.agent_name || deal.sender_name || 'ג€”'}${dateText ? ' ײ²ֲ· ' + dateText : ''}</div>
-          </div>
-          <div class="status-badge ${status.cls}">${status.text}</div>
-        </div>
-        <div class="reco-meta">
-          ${nextLine}
-          ${debtLine}
-        </div>
-      </div>`;
-  }).join('');
-  return true;
-}
-
 function renderRecommend() {
-  if (renderRecommendShell()) return;
   const listEl = document.getElementById('recommendList');
   const totalEl = document.getElementById('rec_stat_total');
   const waitingEl = document.getElementById('rec_stat_waiting');
   const doneEl = document.getElementById('rec_stat_done');
   const L = i18n[lang] || i18n.ru;
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const rows = normalizeOutgoingRecommendations();
   recommendationRows = rows;
   const waiting = rows.filter(r => ['in_progress','pending','pending_confirmation','awaiting_reward'].includes(r.status)).length;
@@ -2555,14 +2303,14 @@ function renderRecommend() {
   }
   listEl.innerHTML = rows.map((r, idx) => {
     const statusText = getRecommendStatusLabel(r.status, L);
-    const rewardLine = r.reward ? `<span class="meta-pill">נ ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
+    const rewardLine = r.reward ? `<span class="meta-pill">🎁 ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
     const decisionLine = r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '';
     return `
       <div class="reco-card" onclick="openRecommendDetail(${idx})">
         <div class="reco-top">
           <div>
             <div class="reco-title">${r.business_name}</div>
-            <div class="reco-sub">${L.rec_client || '׀׀»׀¸׀µ׀½ׁ‚'}: <b>${r.client_name}</b>${r.date ? ' ֲ· ' + formatShortDate(r.date) : ''}</div>
+            <div class="reco-sub">${L.rec_client || 'Клиент'}: <b>${r.client_name}</b>${r.date ? ' · ' + formatShortDate(r.date) : ''}</div>
           </div>
           <div class="status-badge ${statusText.cls}">${statusText.text}</div>
         </div>
@@ -2576,45 +2324,45 @@ function renderRecommend() {
 
 function getRecommendStatusLabel(status, L) {
   const map = {
-    in_progress: { text: L.rec_waiting || '׀’ ׁ€׀°׀±׀¾ׁ‚׀µ', cls: 'st-progress' },
-    pending: { text: L.rec_waiting || '׀’ ׁ€׀°׀±׀¾ׁ‚׀µ', cls: 'st-progress' },
-    pending_confirmation: { text: L.rec_waiting || '׀’ ׁ€׀°׀±׀¾ׁ‚׀µ', cls: 'st-pending' },
-    awaiting_reward: { text: L.rec_payout_pending || '׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ', cls: 'st-pending' },
-    closed: { text: L.rec_done || '׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾', cls: 'st-closed' },
-    completed: { text: L.rec_done || '׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾', cls: 'st-closed' },
-    done: { text: L.rec_done || '׀—׀°׀²׀µׁ€ׁˆ׀µ׀½׀¾', cls: 'st-closed' },
+    in_progress: { text: L.rec_waiting || 'В работе', cls: 'st-progress' },
+    pending: { text: L.rec_waiting || 'В работе', cls: 'st-progress' },
+    pending_confirmation: { text: L.rec_waiting || 'В работе', cls: 'st-pending' },
+    awaiting_reward: { text: L.rec_payout_pending || 'Ожидаем выплату', cls: 'st-pending' },
+    closed: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
+    completed: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
+    done: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
   };
   return map[status] || { text: status, cls: 'st-new' };
 }
 
 function formatDecision(decision, L) {
-  if (decision === 'take') return 'נ’³ ' + (L.dec_take || '׀—׀°׀±ׁ€׀°ׁ‚ׁ ׁ׀µ׀±׀µ');
-  if (decision === 'gift_client') return 'נ ' + (L.dec_gift || '׀׀¾׀´׀°ׁ€׀¸ׁ‚ׁ ׀÷׀»׀¸׀µ׀½ׁ‚ׁƒ');
-  if (decision === 'support_business') return 'נ₪ ' + (L.dec_support || '׀׀¾׀´׀´׀µׁ€׀¶׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ');
+  if (decision === 'take') return '💳 ' + (L.dec_take || 'Забрать себе');
+  if (decision === 'gift_client') return '🎁 ' + (L.dec_gift || 'Подарить клиенту');
+  if (decision === 'support_business') return '🤝 ' + (L.dec_support || 'Поддержать бизнес');
   return decision;
 }
 
 function getRecommendDetailLabels() {
   const map = {
-    ru: { title:'׀”׀µׁ‚׀°׀»׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ†׀¸׀¸', back:'׀׀°׀·׀°׀´', business:'׀‘׀¸׀·׀½׀µׁ', client:'׀׀»׀¸׀µ׀½ׁ‚', phone:'׀¢׀µ׀»׀µׁ„׀¾׀½ ׀÷׀»׀¸׀µ׀½ׁ‚׀°', date:'׀”׀°ׁ‚׀° ׁ׀´׀µ׀»׀÷׀¸', stage:'׀¢׀µ׀÷ׁƒׁ‰׀¸׀¹ ׁׁ‚׀°׀¿', bonus:'׀‘׀¾׀½ׁƒׁ', settlement:'׀¡׀¿׀¾ׁ׀¾׀± ׁ€׀°ׁׁ‡ׁ‘ׁ‚׀°', payout:'׀¡׀¾ׁׁ‚׀¾ׁ׀½׀¸׀µ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁ‹', payout_waiting:'׀׀¶׀¸׀´׀°׀µ׀¼ ׀²ׁ‹׀¿׀»׀°ׁ‚ׁƒ', settlement_open:'׀ ׀°ׁׁ‡ׁ‘ׁ‚ ׀µׁ‰ׁ‘ ׀¾ׁ‚׀÷ׁ€ׁ‹ׁ‚', closed:'׀—׀°׀÷ׁ€ׁ‹ׁ‚׀°', debt:'׀•ׁׁ‚ׁ ׀´׀¾׀»׀³' },
-    he: { title:'׳₪׳¨׳˜׳™ ׳”׳”׳׳׳¦׳”', back:'׳—׳–׳¨׳”', business:'׳¢׳¡׳§', client:'׳׳§׳•׳—', phone:'׳˜׳׳₪׳•׳ ׳׳§׳•׳—', date:'׳×׳׳¨׳™׳', stage:'׳©׳׳‘ ׳ ׳•׳›׳—׳™', bonus:'׳‘׳•׳ ׳•׳¡', settlement:'׳׳•׳₪׳ ׳”׳×׳’׳׳•׳', payout:'׳׳¦׳‘ ׳×׳©׳׳•׳', payout_waiting:'׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳', settlement_open:'׳”׳¡׳׳™׳§׳” ׳¢׳“׳™׳™׳ ׳₪׳×׳•׳—׳”', closed:'׳ ׳¡׳’׳¨׳”', debt:'׳™׳© ׳—׳•׳‘' },
+    ru: { title:'Детали рекомендации', back:'Назад', business:'Бизнес', client:'Клиент', phone:'Телефон клиента', date:'Дата сделки', stage:'Текущий этап', bonus:'Бонус', settlement:'Способ расчёта', payout:'Состояние выплаты', payout_waiting:'Ожидаем выплату', settlement_open:'Расчёт ещё открыт', closed:'Закрыта', debt:'Есть долг' },
+    he: { title:'פרטי ההמלצה', back:'חזרה', business:'עסק', client:'לקוח', phone:'טלפון לקוח', date:'תאריך', stage:'שלב נוכחי', bonus:'בונוס', settlement:'אופן התגמול', payout:'מצב תשלום', payout_waiting:'ממתינים לתשלום', settlement_open:'הסליקה עדיין פתוחה', closed:'נסגרה', debt:'יש חוב' },
     en: { title:'Recommendation details', back:'Back', business:'Business', client:'Client', phone:'Client phone', date:'Deal date', stage:'Current stage', bonus:'Bonus', settlement:'Settlement mode', payout:'Payout state', payout_waiting:'Awaiting payout', settlement_open:'Settlement is still open', closed:'Closed', debt:'Debt open' },
-    ar: { title:'״×״§״µ„ ״§„״×ˆ״µ״©', back:'״±״¬ˆ״¹', business:'״§„†״´״§״·', client:'״§„״¹…„', phone:'‡״§״× ״§„״¹…„', date:'״×״§״±״® ״§„״µ‚״©', stage:'״§„…״±״­„״© ״§„״­״§„״©', bonus:'״§„…ƒ״§״£״©', settlement:'״·״±‚״© ״§„״×״³ˆ״©', payout:'״­״§„״© ״§„״¯״¹', payout_waiting:'״¨״§†״×״¸״§״± ״§„״¯״¹', settlement_open:'״§„״×״³ˆ״© …״§ ״²״§„״× …״×ˆ״­״©', closed:'…״÷„‚״©', debt:'‡†״§ƒ ״¯†' }
+    ar: { title:'تفاصيل التوصية', back:'رجوع', business:'النشاط', client:'العميل', phone:'هاتف العميل', date:'تاريخ الصفقة', stage:'المرحلة الحالية', bonus:'المكافأة', settlement:'طريقة التسوية', payout:'حالة الدفع', payout_waiting:'بانتظار الدفع', settlement_open:'التسوية ما زالت مفتوحة', closed:'مغلقة', debt:'هناك دين' }
   };
   return map[lang] || map.ru;
 }
 
 function formatRecommendDecisionPlain(decision, L) {
-  if (decision === 'take') return L.dec_take || '׀—׀°׀±ׁ€׀°ׁ‚ׁ ׁ׀µ׀±׀µ';
-  if (decision === 'gift_client') return L.dec_gift || '׀׀¾׀´׀°ׁ€׀¸ׁ‚ׁ ׀÷׀»׀¸׀µ׀½ׁ‚ׁƒ';
-  if (decision === 'support_business') return L.dec_support || '׀׀¾׀´׀´׀µׁ€׀¶׀°ׁ‚ׁ ׀±׀¸׀·׀½׀µׁ';
-  return decision || 'ג€”';
+  if (decision === 'take') return L.dec_take || 'Забрать себе';
+  if (decision === 'gift_client') return L.dec_gift || 'Подарить клиенту';
+  if (decision === 'support_business') return L.dec_support || 'Поддержать бизнес';
+  return decision || '—';
 }
 
 function formatRecommendAmount(value, curr) {
-  if (value === null || value === undefined || value === '') return 'ג€”';
+  if (value === null || value === undefined || value === '') return '—';
   const raw = String(value).trim();
-  if (!raw) return 'ג€”';
+  if (!raw) return '—';
   return /^-?\d+(\.\d+)?$/.test(raw) ? `${raw} ${curr}` : raw;
 }
 
@@ -2626,7 +2374,7 @@ function getRecommendPayoutState(row, labels, curr) {
   if (truth.debtAmount > 0) return `${labels.debt}: ${truth.debtAmount} ${curr}`;
   if (truth.hasOpenSettlement === true || ['pending_confirmation','in_progress'].includes(row.status)) return labels.settlement_open;
   if (row.status === 'done') return labels.closed;
-  return 'ג€”';
+  return '—';
 }
 
 function openRecommendDetail(index) {
@@ -2634,20 +2382,20 @@ function openRecommendDetail(index) {
   if (!row) return;
   const L = i18n[lang] || i18n.ru;
   const labels = getRecommendDetailLabels();
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const statusText = getRecommendStatusLabel(row.status, L).text;
   const clientPhone = renderPhoneContact(row.client_phone);
   document.getElementById('recommendDetailContent').innerHTML = `
     <div class="sheet-card" style="margin-top:0;">
       <div class="sheet-title">${labels.title}</div>
       <div class="deal-inline-meta">
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || 'ג€”'}</div></div>
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || 'ג€”'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || '—'}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${clientPhone}</div></div>
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : 'ג€”'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : '—'}</div></div>
       </div>
       <div class="deal-inline-meta" style="margin-bottom:0;">
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || 'ג€”'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || '—'}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.bonus}</div><div class="deal-mini-val">${formatRecommendAmount(row.reward, curr)}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.settlement}</div><div class="deal-mini-val">${formatRecommendDecisionPlain(row.decision, L)}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>
@@ -2678,7 +2426,7 @@ async function openRecommendFlow() {
     target.searchParams.set('lang', lang);
     window.location.href = target.toString();
   } catch (e) {
-    showNotice((L.catalog_err || '׀׀°ׁ‚׀°׀»׀¾׀³ ׀²ׁ€׀µ׀¼׀µ׀½׀½׀¾ ׀½׀µ׀´׀¾ׁׁ‚ׁƒ׀¿׀µ׀½.'));
+    showNotice((L.catalog_err || 'Каталог временно недоступен.'));
   }
 }
 
@@ -2693,14 +2441,14 @@ function formatShortDate(dateStr) {
   }
 }
 
-// ג•ג• PROFILE ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
-// ג•ג• PROFILE ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ PROFILE ═══════════════════════════════════════════════════════════
+// ══ PROFILE ═══════════════════════════════════════════════════════════
 function renderProfile() {
   const L    = i18n[lang] || i18n.ru;
-  document.getElementById('pr_name').textContent  = bizData.name || 'ג€”';
-  document.getElementById('pr_comm').textContent  = bizData.commission || 'ג€”';
-  document.getElementById('pr_pay').textContent   = bizData.payment_method || 'ג€”';
-  document.getElementById('pr_phone').textContent = bizData.phone || 'ג€”';
+  document.getElementById('pr_name').textContent  = bizData.name || '—';
+  document.getElementById('pr_comm').textContent  = bizData.commission || '—';
+  document.getElementById('pr_pay').textContent   = bizData.payment_method || '—';
+  document.getElementById('pr_phone').textContent = bizData.phone || '—';
   const rawLink = bizData.business_info || bizData.social_link || bizData.website || bizData.instagram || '';
   const linkRow = document.getElementById('pr_link_row');
   const linkEl = document.getElementById('pr_link');
@@ -2710,7 +2458,7 @@ function renderProfile() {
     linkEl.innerHTML = `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent1);font-weight:800;text-decoration:none;">${String(rawLink).trim()}</a>`;
     linkRow.style.display = 'flex';
   } else if (linkRow && linkEl) {
-    linkEl.textContent = 'ג€”';
+    linkEl.textContent = '—';
     linkRow.style.display = 'none';
   }
 
@@ -2722,7 +2470,7 @@ function renderProfile() {
       `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${getCatName(n,lang)}</span>`
     ).join(' ');
   } else {
-    nicheEl.textContent = 'ג€”';
+    nicheEl.textContent = '—';
   }
 
   // Subscription
@@ -2745,7 +2493,7 @@ function renderProfile() {
   }
 }
 
-// ג•ג• EDIT FORM ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ EDIT FORM ════════════════════════════════════════════════════════
 function renderEditForm() {
   if (!bizData) return;
   document.getElementById('f_name').value = bizData.name || '';
@@ -2871,20 +2619,20 @@ async function submitEdit() {
   }
 }
 
-// ג•ג• MANAGE DEAL ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ MANAGE DEAL ════════════════════════════════════════════════════════
 function openManageDeal(id) {
   activeDealId = id;
   const deal = (bizData.deals || []).find(d => d.id === id);
   if (!deal) return;
-  const curr = bizData.currency || 'ג‚×';
+  const curr = bizData.currency || '₪';
   const statusCode = getDisplayDealStatus(deal);
   const statusMeta = getStatusData(statusCode);
-  const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || 'ג€”', deal.client_phone);
+  const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
   const isPayoutPending = isPayoutPendingBusinessDeal(deal);
   const tone = getDealTone(statusCode, isPayoutPending);
-  const agentName = deal.agent_name || deal.sender_name || 'ג€”';
+  const agentName = deal.agent_name || deal.sender_name || '—';
   const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
-  const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : 'ג€”');
+  const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = formatDealDebtAmount(deal, curr);
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
@@ -2906,7 +2654,7 @@ function openManageDeal(id) {
   const closeBtn  = document.getElementById('m_btn_go_close');
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
   closeBtn.onclick = isPayoutPending ? () => submitDealAction('close') : () => setStep('close');
-  document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || '׀׀¿׀»׀°ׁ‚ׁƒ ׀¿ׁ€׀¾׀¸׀·׀²ׁ‘׀»') : ((i18n[lang] || i18n.ru).m_close || '׀—׀°׀÷ׁ€ׁ‹ׁ‚ׁ ׁ׀´׀µ׀»׀÷ׁƒ');
+  document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
   if (deal.status === 'new') {
     acceptBtn.style.display = 'flex';
     closeBtn.style.display = 'none';
@@ -2962,18 +2710,18 @@ async function submitDealAction(actionType) {
     document.getElementById('m_spinner').style.display = 'none';
 
     if (actionType === 'accept') {
-      document.getElementById('m_result_msg').textContent = (lang==='he') ? '׀¡׀´׀µ׀»׀÷׀° ׀²׀·ׁׁ‚׀° ׀² ׁ€׀°׀±׀¾ׁ‚ׁƒ.' : (lang==='en') ? 'Deal taken into work.' : (lang==='ar') ? '״×… ‚״¨ˆ„ ״§„״µ‚״© „„״¹…„.' : '׀¡׀´׀µ׀»׀÷׀° ׀²׀·ׁׁ‚׀° ׀² ׁ€׀°׀±׀¾ׁ‚ׁƒ.';
+      document.getElementById('m_result_msg').textContent = (lang==='he') ? 'Сделка взята в работу.' : (lang==='en') ? 'Deal taken into work.' : (lang==='ar') ? 'تم قبول الصفقة للعمل.' : 'Сделка взята в работу.';
       document.getElementById('m_result_msg').style.color = 'var(--green)';
       const deal = (bizData.deals || []).find(d => d.id === activeDealId);
       if (deal) deal.status = 'in_progress';
     } else if (actionType === 'close' && data.message === 'agent_notified') {
-      const agentName = data.agent_name || 'ג€”';
-      const commStr   = data.comm_str   || 'ג€”';
+      const agentName = data.agent_name || '—';
+      const commStr   = data.comm_str   || '—';
       const msgs = {
-        ru:`ג³ ׀ׁ‚׀»׀¸ׁ‡׀½׀¾! ׀£׀²׀µ׀´׀¾׀¼׀¸׀»׀¸ ׁ€׀µ׀÷׀¾׀¼׀µ׀½׀´׀°ׁ‚׀µ׀»ׁ ${agentName}.\n\n׀׀¶׀¸׀´׀°׀µ׀¼ ׀µ׀³׀¾ ׁ€׀µׁˆ׀µ׀½׀¸׀µ ׀¿׀¾ ׀²׀¾׀·׀½׀°׀³ׁ€׀°׀¶׀´׀µ׀½׀¸ׁ ${commStr}.\n\n׀׀°׀÷ ׁ‚׀¾׀»ׁ׀÷׀¾ ׁ€׀µׁˆ׀¸ׁ‚ ג€” ׀¿ׁ€׀¸׀´ׁ‘ׁ‚ ׁƒ׀²׀µ׀´׀¾׀¼׀»׀µ׀½׀¸׀µ.`,
-        he:`ג³ ׳׳¦׳•׳™׳! ׳”׳•׳“׳¢׳ ׳• ׳׳׳׳׳™׳¥ ${agentName}.\n\n׳׳׳×׳™׳ ׳™׳ ׳׳”׳—׳׳˜׳×׳• ׳׳’׳‘׳™ ${commStr}.`,
-        en:`ג³ Done! Notified recommender ${agentName}.\n\nWaiting for decision on ${commStr} reward.`,
-        ar:`ג³ ״×…! ״£״¨„״÷†״§ ״§„…ˆ״µ ${agentName}.\n\n††״×״¸״± ‚״±״§״±‡ ״¨״´״£† ${commStr}.`,
+        ru:`⏳ Отлично! Уведомили рекомендателя ${agentName}.\n\nОжидаем его решение по вознаграждению ${commStr}.\n\nКак только решит — придёт уведомление.`,
+        he:`⏳ מצוין! הודענו לממליץ ${agentName}.\n\nממתינים להחלטתו לגבי ${commStr}.`,
+        en:`⏳ Done! Notified recommender ${agentName}.\n\nWaiting for decision on ${commStr} reward.`,
+        ar:`⏳ تم! أبلغنا الموصي ${agentName}.\n\nننتظر قراره بشأن ${commStr}.`,
       };
       document.getElementById('m_result_msg').textContent = msgs[lang] || msgs.ru;
       document.getElementById('m_result_msg').style.color = 'var(--purple)';
@@ -3008,14 +2756,14 @@ async function submitDealAction(actionType) {
 
   } catch(e) {
     document.getElementById('m_spinner').style.display = 'none';
-    document.getElementById('m_result_msg').textContent = '׀ׁˆ׀¸׀±׀÷׀°. ׀׀¾׀¿ׁ€׀¾׀±ׁƒ׀¹ׁ‚׀µ ׀µׁ‰ׁ‘ ׁ€׀°׀·.';
+    document.getElementById('m_result_msg').textContent = 'Ошибка. Попробуйте ещё раз.';
     document.getElementById('m_result_msg').style.color = 'var(--red)';
   }
 
   setTimeout(closeManageDeal, 3000);
 }
 
-// ג•ג• LEADERBOARD ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
+// ══ LEADERBOARD ══════════════════════════════════════════════════════
 
 async function openLeaderboard(btnEl) {
   if (btnEl) {
@@ -3030,7 +2778,7 @@ async function openLeaderboard(btnEl) {
   const contentBox = document.getElementById('lbContent');
 
   if (!leaderboardData) {
-    contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2);">׀—׀°׀³ׁ€ׁƒ׀·׀÷׀°...</div>`;
+    contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2);">Загрузка...</div>`;
     try {
       var bizId = bizData && bizData.id;
       var lbToken = token;
@@ -3043,10 +2791,10 @@ async function openLeaderboard(btnEl) {
         leaderboardData = await res.json();
         renderLeaderboardUI();
       } else {
-        contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">׀ׁˆ׀¸׀±׀÷׀° ׀·׀°׀³ׁ€ׁƒ׀·׀÷׀¸ ׁ€׀µ׀¹ׁ‚׀¸׀½׀³׀°.</div>`;
+        contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка загрузки рейтинга.</div>`;
       }
     } catch(e) {
-      contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">׀ׁˆ׀¸׀±׀÷׀° ׁ׀µׁ‚׀¸.</div>`;
+      contentBox.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);">Ошибка сети.</div>`;
     }
   } else {
     renderLeaderboardUI();
@@ -3058,11 +2806,11 @@ let lbActiveNiche = 'all';
 function renderLeaderboardUI() {
   if (!leaderboardData) return;
   const L      = i18n[lang] || i18n.ru;
-  const curr   = bizData && bizData.currency ? bizData.currency : 'ג‚×';
+  const curr   = bizData && bizData.currency ? bizData.currency : '₪';
   const isPro  = bizData && (bizData.is_pro || bizData.subscription === 'pro');
   const agents = leaderboardData.top_agents || [];
 
-  // ׀¡׀¾׀±׀¸ׁ€׀°׀µ׀¼ ׁƒ׀½׀¸׀÷׀°׀»ׁ׀½ׁ‹׀µ ׀½׀¸ׁˆ׀¸ ׀¸׀· ׀²ׁ׀µׁ… ׀°׀³׀µ׀½ׁ‚׀¾׀²
+  // Собираем уникальные ниши из всех агентов
   const allNiches = [];
   agents.forEach(function(a) {
     (a.niche_categories || []).forEach(function(n) {
@@ -3072,32 +2820,32 @@ function renderLeaderboardUI() {
 
   let html = '';
 
-  // PRO: ׁ„׀¸׀»ׁׁ‚ׁ€ ׀¿׀¾ ׀½׀¸ׁˆ׀°׀¼ ג€” ׀³׀¾ׁ€׀¸׀·׀¾׀½ׁ‚׀°׀»ׁ׀½ׁ‹׀¹ ׁ׀÷ׁ€׀¾׀»׀» ׁ‚׀°׀±׀¾׀²
+  // PRO: фильтр по нишам — горизонтальный скролл табов
   if (isPro && allNiches.length > 1) {
     html += `<div id="lbNicheTabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;scrollbar-width:none;">`;
     html += `<button onclick="filterLbNiche('all')" id="lbTab_all"
       style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent1);background:var(--accent1);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;"
-    >${L.filt_all || '׀’ׁ׀µ'}</button>`;
+    >${L.filt_all || 'Все'}</button>`;
     allNiches.forEach(function(n) {
       var label = (typeof getCatName === 'function') ? getCatName(n, lang) : n;
-      html += `<button onclick="filterLbNiche('${n.replace(/'/g,"\'")}')" id="lbTab_${n.replace(/[^a-zA-Z׀°-ׁ׀-׀¯0-9]/g,'_')}"
+      html += `<button onclick="filterLbNiche('${n.replace(/'/g,"\'")}')" id="lbTab_${n.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')}"
         style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;"
       >${label}</button>`;
     });
     html += `</div>`;
   }
 
-  // ׀¡׀¿׀¸ׁ׀¾׀÷ ׀°׀³׀µ׀½ׁ‚׀¾׀²
+  // Список агентов
   html += `<div id="lbAgentList" style="display:flex;flex-direction:column;gap:10px;">`;
   html += buildLbAgents(agents, isPro, curr, L, lbActiveNiche);
   html += `</div>`;
 
-  // Standard: ׀¿ׁ€׀¾׀¼׀¾ ׀±׀»׀¾׀÷
+  // Standard: промо блок
   if (!isPro) {
     html += `<div class="pro-promo" style="margin-top:20px;">
-      <h3>נ ${L.rd_promo_title || '׀ׁ‚׀÷ׁ€׀¾׀¹ׁ‚׀µ ׀¿׀¾׀»׀½ׁ‹׀¹ ׀´׀¾ׁׁ‚ׁƒ׀¿'}</h3>
-      <p>${L.rd_promo_desc || '׀׀µׁ€׀µ׀¹׀´׀¸ׁ‚׀µ ׀½׀° PRO, ׁ‡ׁ‚׀¾׀±ׁ‹ ׀²׀¸׀´׀µׁ‚ׁ ׀÷׀¾׀½ׁ‚׀°׀÷ׁ‚ׁ‹ ׀°׀³׀µ׀½ׁ‚׀¾׀² ׀¸ ׁ„׀¸׀»ׁׁ‚ׁ€׀¾׀²׀°ׁ‚ׁ ׀¿׀¾ ׀½׀¸ׁˆ׀°׀¼.'}</p>
-      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');openUpgradePage()">${L.rd_promo_btn || '׀׀¾׀´ׁ€׀¾׀±׀½׀µ׀µ ׀¾ PRO'}</button>
+      <h3>🌟 ${L.rd_promo_title || 'Откройте полный доступ'}</h3>
+      <p>${L.rd_promo_desc || 'Перейдите на PRO, чтобы видеть контакты агентов и фильтровать по нишам.'}</p>
+      <button class="btn-primary btn-gold" onclick="closeFullscreen('leaderboardSheet');openUpgradePage()">${L.rd_promo_btn || 'Подробнее о PRO'}</button>
     </div>`;
   }
 
@@ -3112,18 +2860,18 @@ function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
     });
   }
   if (!filtered.length) {
-    return `<div style="text-align:center;padding:30px;color:var(--text2);">${L.empty_deals || '׀׀µׁ‚ ׀´׀°׀½׀½ׁ‹ׁ…'}</div>`;
+    return `<div style="text-align:center;padding:30px;color:var(--text2);">${L.empty_deals || 'Нет данных'}</div>`;
   }
   return filtered.map(function(a) {
     var badge = a.rank, rankClass = '';
-    if (a.rank === 1) { badge = 'נ¥‡'; rankClass = 'lb-rank-1'; }
-    else if (a.rank === 2) { badge = 'נ¥ˆ'; rankClass = 'lb-rank-2'; }
-    else if (a.rank === 3) { badge = 'נ¥‰'; rankClass = 'lb-rank-3'; }
+    if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
+    else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
+    else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
 
     var blurClass = !isPro ? 'lb-blurred' : '';
-    var clickAttr = !isPro ? `onclick="alert('${(L.lb_blur_alert||'׀”׀¾ׁׁ‚ׁƒ׀¿׀½׀¾ ׀½׀° PRO').replace(/'/g,"\\'")}')"`  : '';
+    var clickAttr = !isPro ? `onclick="alert('${(L.lb_blur_alert||'Доступно на PRO').replace(/'/g,"\\'")}')"`  : '';
 
-    // ׀׀½׀¾׀¿׀÷׀° ׁ׀²ׁ׀·׀¸ ג€” ׁ‚׀¾׀»ׁ׀÷׀¾ PRO ׀¸ ׀µׁ׀»׀¸ ׀µׁׁ‚ׁ wa_phone
+    // Кнопка связи — только PRO и если есть wa_phone
     var contactBtn = '';
     if (isPro && a.wa_phone) {
       var waLink = 'https://wa.me/' + a.wa_phone.replace(/\D/g,'');
@@ -3142,12 +2890,12 @@ function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
         <div class="lb-rank-badge ${rankClass}">${badge}</div>
         <div class="agent-info ${blurClass}" style="flex:1;" ${clickAttr}>
           <div class="agent-name" style="font-weight:700;font-size:.95rem;">${a.name}</div>
-          <div style="font-size:.8rem;color:var(--text2);margin-top:2px;">${L.lb_deals||'׀¡׀´׀µ׀»׀¾׀÷:'} <b>${a.deals_count}</b></div>
+          <div style="font-size:.8rem;color:var(--text2);margin-top:2px;">${L.lb_deals||'Сделок:'} <b>${a.deals_count}</b></div>
           ${niches ? `<div style="margin-top:4px;">${niches}</div>` : ''}
           ${contactBtn}
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div style="font-size:.72rem;color:var(--text2);">${L.lb_earned||'׀—׀°ׁ€׀°׀±׀¾ׁ‚׀°׀½׀¾'}</div>
+          <div style="font-size:.72rem;color:var(--text2);">${L.lb_earned||'Заработано'}</div>
           <div style="font-weight:800;font-size:.95rem;">${Math.round(a.earned)} ${curr}</div>
         </div>
       </div>
@@ -3157,7 +2905,7 @@ function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
 
 function filterLbNiche(niche) {
   lbActiveNiche = niche;
-  // ׀׀±׀½׀¾׀²׀»ׁ׀µ׀¼ ׁׁ‚׀¸׀»׀¸ ׁ‚׀°׀±׀¾׀²
+  // Обновляем стили табов
   var tabs = document.getElementById('lbNicheTabs');
   if (tabs) {
     tabs.querySelectorAll('button').forEach(function(btn) {
@@ -3165,7 +2913,7 @@ function filterLbNiche(niche) {
       btn.style.color = 'var(--text)';
       btn.style.borderColor = 'var(--border)';
     });
-    var activeId = 'lbTab_' + (niche === 'all' ? 'all' : niche.replace(/[^a-zA-Z׀°-ׁ׀-׀¯0-9]/g,'_'));
+    var activeId = 'lbTab_' + (niche === 'all' ? 'all' : niche.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_'));
     var activeBtn = document.getElementById(activeId);
     if (activeBtn) {
       activeBtn.style.background = 'var(--accent1)';
@@ -3173,16 +2921,16 @@ function filterLbNiche(niche) {
       activeBtn.style.borderColor = 'var(--accent1)';
     }
   }
-  // ׀׀µׁ€׀µׁ€׀¸ׁ׀¾׀²ׁ‹׀²׀°׀µ׀¼ ׁ‚׀¾׀»ׁ׀÷׀¾ ׁ׀¿׀¸ׁ׀¾׀÷ ׀°׀³׀µ׀½ׁ‚׀¾׀²
+  // Перерисовываем только список агентов
   const L     = i18n[lang] || i18n.ru;
-  const curr  = bizData && bizData.currency ? bizData.currency : 'ג‚×';
+  const curr  = bizData && bizData.currency ? bizData.currency : '₪';
   const isPro = bizData && (bizData.is_pro || bizData.subscription === 'pro');
   var listEl  = document.getElementById('lbAgentList');
   if (listEl) listEl.innerHTML = buildLbAgents(leaderboardData.top_agents || [], isPro, curr, L, niche);
 }
 
-// ג•ג• BOOT ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•ג•
-// Global error handler ג€” if any JS crashes before init, show error screen
+// ══ BOOT ══════════════════════════════════════════════════════════════
+// Global error handler — if any JS crashes before init, show error screen
 window.onerror = function(msg, src, line, col, err) {
   console.error('Win-Win biz error:', msg, src, line);
   try {
