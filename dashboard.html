@@ -123,9 +123,10 @@
         .action-icon { width:48px; height:48px; border-radius:14px; background:rgba(47,128,237,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .action-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
         .action-sub { font-size:.78rem; color:var(--text2); line-height:1.4; }
-        .home-primary-cta { width:100%; display:flex; align-items:center; justify-content:center; border:none; border-radius:999px; padding:20px 22px; min-height:64px; margin:2px 0 16px; cursor:pointer; background:radial-gradient(circle at 50% 14%, rgba(132,211,255,.34), rgba(86,204,242,.18) 34%, rgba(47,128,237,.96) 100%); color:#fff; font-family:inherit; font-size:1rem; font-weight:800; letter-spacing:-.01em; box-shadow:0 22px 40px rgba(47,128,237,.28), inset 0 2px 6px rgba(255,255,255,.2), inset 0 -12px 18px rgba(22,66,160,.12); transition:transform .18s ease, box-shadow .18s ease, filter .18s ease; }
+        .home-primary-cta { width:min(100%, 260px); display:flex; align-items:center; justify-content:center; border:none; border-radius:999px; padding:22px 26px; min-height:108px; margin:4px auto 18px; cursor:pointer; background:radial-gradient(circle at 50% 12%, rgba(142,219,255,.38), rgba(86,204,242,.2) 32%, rgba(47,128,237,.96) 100%); color:#fff; font-family:inherit; font-size:1rem; font-weight:800; letter-spacing:-.01em; box-shadow:0 24px 42px rgba(47,128,237,.3), inset 0 3px 8px rgba(255,255,255,.22), inset 0 -14px 20px rgba(22,66,160,.14); transition:transform .18s ease, box-shadow .18s ease, filter .18s ease; }
         .home-primary-cta:hover { filter:brightness(1.03); box-shadow:0 22px 42px rgba(47,128,237,.34), inset 0 1px 0 rgba(255,255,255,.22); }
         .home-primary-cta:active { transform:translateY(1px) scale(.988); box-shadow:0 10px 22px rgba(47,128,237,.24), inset 0 1px 0 rgba(255,255,255,.18); }
+        .home-primary-cta-text { display:block; white-space:pre-line; text-align:center; line-height:1.12; }
 
         .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; }
         .section-caption { font-size:.82rem; color:var(--text2); line-height:1.45; margin:-4px 0 14px; }
@@ -509,7 +510,8 @@
             </div>
 
             <button class="home-primary-cta" type="button" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
-                <span id="t_home_primary_cta">Порекомендовать бизнес</span>
+                <span id="t_home_primary_cta" class="home-primary-cta-text">Рекомендовать
+бизнес</span>
             </button>
 
             <div class="card action-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, rgba(242, 201, 76, 0.05), rgba(242, 153, 74, 0.05)); border-color: rgba(242, 201, 76, 0.3);">
@@ -1079,7 +1081,7 @@ const i18n = {
     deals_lbl:"Закрыто",
     pending_lbl:"Ожидают выплаты",
     active_lbl:"В работе",
-    home_primary_cta:"Порекомендовать бизнес",
+    home_primary_cta:"Рекомендовать\nбизнес",
     action_kicker:"Главное действие",
     action_title:"Рекомендуйте с уверенностью",
     action_sub:"Откройте каталог и передайте дальше бизнес, которому готовы доверить свою репутацию",
@@ -1231,7 +1233,7 @@ const i18n = {
     pro_agent_title:"🏆 PRO-агент"
   },
   he: {
-    greeting:"׳‘׳¨׳•׳ ׳©׳•׳‘׳,", balance_label:"׳”׳”׳•׳ ׳”׳—׳‘׳¨׳×׳™ ׳©׳׳", deals_lbl:"׳¡׳’׳•׳¨׳•׳×", pending_lbl:"׳׳׳×׳™׳", active_lbl:"׳‘׳¢׳‘׳•׳“׳”", home_primary_cta:"להמליץ על עסק", action_title:"׳¢׳–׳¨׳• ׳׳¢׳¡׳§ ׳”׳׳”׳•׳‘ ׳¢׳׳™׳›׳", action_sub:"׳₪׳×׳—׳• ׳׳× ׳”׳§׳˜׳׳•׳’ ׳•׳§׳—׳• ׳”׳׳׳¦׳” ׳¨׳׳©׳•׳ ׳”",
+    greeting:"׳‘׳¨׳•׳ ׳©׳•׳‘׳,", balance_label:"׳”׳”׳•׳ ׳”׳—׳‘׳¨׳×׳™ ׳©׳׳", deals_lbl:"׳¡׳’׳•׳¨׳•׳×", pending_lbl:"׳׳׳×׳™׳", active_lbl:"׳‘׳¢׳‘׳•׳“׳”", home_primary_cta:"להמליץ\nעל עסק", action_title:"׳¢׳–׳¨׳• ׳׳¢׳¡׳§ ׳”׳׳”׳•׳‘ ׳¢׳׳™׳›׳", action_sub:"׳₪׳×׳—׳• ׳׳× ׳”׳§׳˜׳׳•׳’ ׳•׳§׳—׳• ׳”׳׳׳¦׳” ׳¨׳׳©׳•׳ ׳”",
     events:"׳׳™׳¨׳•׳¢׳™׳ ׳׳—׳¨׳•׳ ׳™׳", catalog_title:"׳§׳˜׳׳•׳’ ׳¢׳¡׳§׳™׳", history_title:"׳”׳”׳׳׳¦׳•׳× ׳©׳׳™", active_sec:"נ•’ ׳‘׳×׳”׳׳™׳", debt_sec:"נ’° ׳׳׳×׳™׳ ׳•׳× ׳׳×׳©׳׳•׳", done_sec:"ג… ׳”׳™׳¡׳˜׳•׳¨׳™׳”",
     wallet_title:"׳₪׳™׳ ׳ ׳¡׳™׳", avg_lbl:"׳”׳›׳ ׳¡׳” ׳׳׳•׳¦׳¢׳× ׳׳¢׳¡׳§׳” ג‚×", eff_sub:"% ׳¢׳¡׳§׳׳•׳× ׳©׳ ׳¡׳’׳¨׳•", eff_accum:"׳׳¦׳˜׳‘׳¨", eff_above:"׳׳¢׳ ׳”׳׳׳•׳¦׳¢", eff_below:"׳׳×׳—׳× ׳׳׳׳•׳¦׳¢", eff_avg:"׳׳׳•׳¦׳¢:",
     funnel:"׳׳©׳₪׳", f_active:"׳‘׳¢׳‘׳•׳“׳”", f_closed:"׳¡׳’׳•׳¨", f_rejected:"׳ ׳“׳—׳”", total_leads:"׳¡׳”׳´׳›:", awaiting:"׳׳׳×׳™׳ ׳™׳ ׳׳×׳©׳׳•׳ ׳:", all_paid:"ג… ׳›׳ ׳”׳×׳©׳׳•׳׳™׳ ׳”׳×׳§׳‘׳׳•", chart_title:"׳׳₪׳™ ׳ ׳™׳©׳”",
@@ -1256,7 +1258,7 @@ const i18n = {
     err_expired_title: "׳₪׳’ ׳×׳•׳§׳₪׳• ׳©׳ ׳׳•׳©׳‘ ׳–׳”", err_expired_sub: "׳׳•׳©׳‘ ׳–׳” ׳”׳¡׳×׳™׳™׳, ׳׳—׳¥ ׳¢׳ ׳›׳₪׳×׳•׳¨ ׳”׳׳¡׳ ׳’'׳¨ ׳•׳§׳‘׳ ׳§׳™׳©׳•׳¨ ׳›׳ ׳™׳¡׳” ׳—׳“׳©.", err_preview: "׳”׳”׳•׳“׳¢׳” ׳©׳׳:", err_prefill: "׳׳”׳™׳›׳ ׳¡ ׳©׳•׳‘ ׳׳׳–׳•׳¨ ׳”׳׳™׳©׳™\n׳׳—׳¥ ׳¢׳ ׳©׳׳— ׳•׳§׳‘׳ ׳§׳™׳©׳•׳¨ ׳—׳“׳© {pointer}", pro_agent_title: "נ ׳¡׳•׳›׳ PRO"
   },
   en: {
-    greeting:"Welcome back,", balance_label:"Your Social Capital", deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active", home_primary_cta:"Recommend a business", action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
+    greeting:"Welcome back,", balance_label:"Your Social Capital", deals_lbl:"Closed", pending_lbl:"Pending", active_lbl:"Active", home_primary_cta:"Recommend\nbusiness", action_title:"Help a business you love", action_sub:"Open the catalog and make a recommendation",
     events:"Recent events", catalog_title:"Business Catalog", history_title:"My Recommendations", active_sec:"נ•’ In progress", debt_sec:"נ’° Awaiting payment", done_sec:"ג… History",
     wallet_title:"Finances", avg_lbl:"Average earnings per deal ג‚×", eff_sub:"% of deals closed", eff_accum:"Accumulating", eff_above:"Above average", eff_below:"Below average", eff_avg:"Average:",
     funnel:"Funnel", f_active:"Active", f_closed:"Closed", f_rejected:"Rejected", total_leads:"Total:", awaiting:"Awaiting payment from:", all_paid:"ג… All payouts received", chart_title:"By niche",
@@ -1281,7 +1283,7 @@ const i18n = {
     err_expired_title: "Session Expired", err_expired_sub: "This session has ended, click the messenger button to get a new login link.", err_preview: "Your message:", err_prefill: "Log in again to my dashboard\nTap Send to get a new login link {pointer}", pro_agent_title: "נ PRO Agent"
   },
   ar: {
-    greeting:"״£‡„״§‹ ״¨״¹ˆ״¯״×ƒ,", balance_label:"״±״£״³ …״§„ƒ ״§„״§״¬״×…״§״¹", deals_lbl:"…״÷„‚״©", pending_lbl:"…״¹„‚", active_lbl:"†״´״·", home_primary_cta:"أوصِ بعمل", action_title:"״³״§״¹״¯ ״¹…„״§‹ ״×״­״¨‡", action_sub:"״§״×״­ ״§„ƒ״×״§„ˆ״¬ ˆ‚״¯… ״×ˆ״µ״©",
+    greeting:"״£‡„״§‹ ״¨״¹ˆ״¯״×ƒ,", balance_label:"״±״£״³ …״§„ƒ ״§„״§״¬״×…״§״¹", deals_lbl:"…״÷„‚״©", pending_lbl:"…״¹„‚", active_lbl:"†״´״·", home_primary_cta:"أوصِ\nبعمل", action_title:"״³״§״¹״¯ ״¹…„״§‹ ״×״­״¨‡", action_sub:"״§״×״­ ״§„ƒ״×״§„ˆ״¬ ˆ‚״¯… ״×ˆ״µ״©",
     events:"״§„״£״­״¯״§״« ״§„״£״®״±״©", catalog_title:"ƒ״×״§„ˆ״¬ ״§„״£״¹…״§„", history_title:"״×ˆ״µ״§״×", active_sec:"נ•’ ‚״¯ ״§„״×†״°", debt_sec:"נ’° †״×״¸״± ״§„״¯״¹", done_sec:"ג… ״§„״³״¬„",
     wallet_title:"״§„…״§„״©", avg_lbl:"…״×ˆ״³״· ״§„״£״±״¨״§״­ „ƒ„ ״µ‚״© ג‚×", eff_sub:"% …† ״§„״µ‚״§״× ״§„…״÷„‚״©", eff_accum:"״×״±״§ƒ…", eff_above:"ˆ‚ ״§„…״×ˆ״³״·", eff_below:"״¯ˆ† ״§„…״×ˆ״³״·", eff_avg:"…״×ˆ״³״·:",
     funnel:"״§„…״³״§״±", f_active:"†״´״·", f_closed:"…״÷„‚", f_rejected:"…״±ˆ״¶", total_leads:"״§„…״¬…ˆ״¹:", awaiting:" ״§†״×״¸״§״± ״§„״¯״¹ …†:", all_paid:"ג… ״×… ״§״³״×„״§… ״¬…״¹ ״§„…״¯ˆ״¹״§״×", chart_title:"״­״³״¨ ״§„†״´",
