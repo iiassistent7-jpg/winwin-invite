@@ -119,7 +119,6 @@
         .action-card:active { transform:scale(.98); background:var(--surface); }
         .action-card-primary { border-style:solid; border-color:rgba(47,128,237,.28); background:linear-gradient(135deg, rgba(86,204,242,.12), rgba(47,128,237,.08)); box-shadow:0 10px 30px rgba(47,128,237,.14); }
         .action-card-primary .action-icon { background:#fff; box-shadow:0 8px 18px rgba(47,128,237,.12); }
-        .action-card-soft { border-style:solid; border-color:rgba(255,255,255,.08); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)); box-shadow:0 8px 24px rgba(0,0,0,.16); }
         .action-kicker { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--accent2); margin-bottom:4px; }
         .action-icon { width:48px; height:48px; border-radius:14px; background:rgba(47,128,237,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .action-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
@@ -514,15 +513,6 @@
                 <i data-feather="heart"></i>
                 <span id="t_home_primary_cta">Порекомендовать бизнес</span>
             </button>
-
-            <div class="card action-card action-card-soft" onclick="switchTab('catalog', document.querySelectorAll('.nav-item')[1])">
-                <div class="action-icon"><i data-feather="heart"></i></div>
-                <div>
-                    <div class="action-kicker" id="t_action_kicker">Главное действие</div>
-                    <div class="action-title" id="t_action_title">Помогите бизнесу, которому доверяете</div>
-                    <div class="action-sub" id="t_action_sub">Откройте каталог и порекомендуйте хороший бизнес</div>
-                </div>
-            </div>
 
             <div class="card action-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, rgba(242, 201, 76, 0.05), rgba(242, 153, 74, 0.05)); border-color: rgba(242, 201, 76, 0.3);">
                 <div class="action-icon" style="background: rgba(242, 201, 76, 0.15); color: #F2C94C;"><i data-feather="award"></i></div>
