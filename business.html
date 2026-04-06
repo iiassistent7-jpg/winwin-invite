@@ -449,23 +449,23 @@
 
     <!-- ── VIEW: Recommend ───────────────────────────────────────── -->
     <div id="view-recommend" class="view">
-      <div class="page-hero" style="margin-bottom:12px;">
-        <h3 id="t_rec_title">Клиенты</h3>
+      <div class="mini-stats">
+        <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Выручка</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Выплаты</div></div>
+        <div class="mini-stat"><div class="val" id="rec_stat_done">0</div><div class="lbl" id="t_rec_stat_done">Доход</div></div>
+      </div>
+      <div class="page-hero" style="margin-bottom:12px; text-align:center;">
+        <h3 id="t_rec_title">Ваши клиенты</h3>
       </div>
       <div class="segmented-tabs" style="margin-bottom:14px;">
         <button class="seg-tab active" id="recTabIncoming" onclick="setRecommendMode('incoming')">Входящие</button>
         <button class="seg-tab" id="recTabOutgoing" onclick="setRecommendMode('outgoing')">Исходящие</button>
       </div>
       <div class="cta-block">
-        <h3 id="t_rec_mode_title">Открывайте сделки и ведите клиентов дальше.</h3>
+        <h3 id="t_rec_mode_title">Здесь все клиенты, которых порекомендовали вам.</h3>
         <button class="btn-primary btn-accent" onclick="handleRecommendMainAction()">
           <span id="t_rec_btn_label">Открыть сделки</span>
         </button>
-      </div>
-      <div class="mini-stats">
-        <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Выручка</div></div>
-        <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Выплаты</div></div>
-        <div class="mini-stat"><div class="val" id="rec_stat_done">0</div><div class="lbl" id="t_rec_stat_done">Чистыми</div></div>
       </div>
       <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Входящие клиенты</div>
       <div id="recommendList"></div>
@@ -2291,18 +2291,18 @@ function normalizeOutgoingRecommendations() {
 function getRecommendShellCopy() {
   const map = {
     ru: {
-      title: 'Клиенты',
+      title: 'Ваши клиенты',
       incoming: 'Входящие',
       outgoing: 'Исходящие',
-      incomingHero: 'Открывайте сделки и ведите клиентов дальше.',
-      outgoingHero: 'Выберите бизнес и отправьте клиента дальше.',
+      incomingHero: 'Здесь все клиенты, которых порекомендовали вам.',
+      outgoingHero: 'Выберите бизнес для рекомендации.',
       incomingBtn: 'Открыть сделки',
       outgoingBtn: 'Выбрать бизнес',
       incomingList: 'Входящие клиенты',
       outgoingList: 'Исходящие клиенты',
       inRevenue: 'Выручка',
       inPayouts: 'Выплаты',
-      inNet: 'Чистыми',
+      inNet: 'Доход',
       outEarned: 'Заработано',
       outWaiting: 'Ожидают',
       outClosed: 'Закрыто',
@@ -2312,11 +2312,11 @@ function getRecommendShellCopy() {
       emptyOutgoing: 'Вы пока не отправляли клиентов.'
     },
     he: {
-      title: 'לקוחות',
+      title: 'הלקוחות שלכם',
       incoming: 'נכנסים',
       outgoing: 'יוצאים',
-      incomingHero: 'פתחו עסקאות והובילו את הלקוחות קדימה.',
-      outgoingHero: 'בחרו עסק והעבירו אליו לקוח.',
+      incomingHero: 'כאן כל הלקוחות שהמליצו לכם עליהם.',
+      outgoingHero: 'בחרו עסק להמלצה.',
       incomingBtn: 'פתחו עסקאות',
       outgoingBtn: 'בחירת עסק',
       incomingList: 'לקוחות נכנסים',
@@ -2333,18 +2333,18 @@ function getRecommendShellCopy() {
       emptyOutgoing: 'עדיין לא שלחתם לקוחות.'
     },
     en: {
-      title: 'Clients',
+      title: 'Your clients',
       incoming: 'Incoming',
       outgoing: 'Outgoing',
-      incomingHero: 'Open deals and move clients forward.',
-      outgoingHero: 'Choose a business and send a client onward.',
+      incomingHero: 'All clients recommended to you are shown here.',
+      outgoingHero: 'Choose a business to recommend.',
       incomingBtn: 'Open deals',
       outgoingBtn: 'Choose business',
       incomingList: 'Incoming clients',
       outgoingList: 'Outgoing clients',
       inRevenue: 'Revenue',
       inPayouts: 'Payouts',
-      inNet: 'Net',
+      inNet: 'Income',
       outEarned: 'Earned',
       outWaiting: 'Waiting',
       outClosed: 'Closed',
@@ -2354,18 +2354,18 @@ function getRecommendShellCopy() {
       emptyOutgoing: 'You have not sent any clients yet.'
     },
     ar: {
-      title: 'العملاء',
+      title: 'عملاؤكم',
       incoming: 'الوارد',
       outgoing: 'الصادر',
-      incomingHero: 'افتح الصفقات وحرّك العملاء إلى الخطوة التالية.',
-      outgoingHero: 'اختر نشاطاً وأرسل إليه عميلاً.',
+      incomingHero: 'هنا كل العملاء الذين تمت التوصية بهم لكم.',
+      outgoingHero: 'اختر نشاطاً للتوصية به.',
       incomingBtn: 'افتح الصفقات',
       outgoingBtn: 'اختر نشاطاً',
       incomingList: 'العملاء الواردون',
       outgoingList: 'العملاء الصادرون',
       inRevenue: 'الإيراد',
       inPayouts: 'الدفعات',
-      inNet: 'الصافي',
+      inNet: 'الدخل',
       outEarned: 'تم كسبه',
       outWaiting: 'بانتظار',
       outClosed: 'مغلق',
