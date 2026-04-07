@@ -168,6 +168,11 @@
     .btn-action:active { background:var(--border); }
     .btn-accent  { background:var(--accent2); color:#fff; }
     .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+    .deals-main-cta-wrap { display:flex; justify-content:center; margin:0 0 16px; }
+    .deals-main-cta { width:min(100%, 78%); min-height:98px; display:flex; align-items:center; justify-content:center; border:none; border-radius:999px; padding:22px 28px; cursor:pointer; background:radial-gradient(circle at 50% 12%, rgba(142,219,255,.38), rgba(86,204,242,.2) 32%, rgba(47,128,237,.96) 100%); color:#fff; font-family:inherit; font-size:1rem; font-weight:800; letter-spacing:-.01em; box-shadow:0 24px 42px rgba(47,128,237,.3), inset 0 3px 8px rgba(255,255,255,.22), inset 0 -14px 20px rgba(22,66,160,.14); transition:transform .18s ease, box-shadow .18s ease, filter .18s ease; }
+    .deals-main-cta:hover { filter:brightness(1.03); box-shadow:0 22px 42px rgba(47,128,237,.34), inset 0 1px 0 rgba(255,255,255,.22); }
+    .deals-main-cta:active { transform:translateY(1px) scale(.988); box-shadow:0 10px 22px rgba(47,128,237,.24), inset 0 1px 0 rgba(255,255,255,.18); }
+    .deals-main-cta-text { display:block; white-space:pre-line; text-align:center; line-height:1.12; }
     .btn-green   { background:rgba(39,174,96,.15); color:var(--green); border:1px solid rgba(39,174,96,.3); }
     .btn-red     { background:rgba(235,87,87,.15); color:var(--red);   border:1px solid rgba(235,87,87,.3); }
     .btn-gold    { background:linear-gradient(135deg,#F2C94C,#F2994A); color:#1A1A2E; border:none; }
@@ -1471,24 +1476,17 @@ function getDealStatusCodes(deal) {
 }
 
 function getActiveDealsPromoHtml() {
-  const promoTitle = {
-    ru:'Тёплые клиенты начинаются с доверия',
-    he:'לקוחות חמים מתחילים באמון',
-    en:'Warm clients start with trust',
-    ar:'العملاء الدافئون يبدأون بالثقة'
-  };
   const promoBtn = {
-    ru:'Порекомендовать бизнес',
-    he:'להמליץ על עסק',
-    en:'Recommend a business',
-    ar:'التوصية بعمل'
+    ru:'\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u043e\u0432\u0430\u0442\u044c\n\u0431\u0438\u0437\u043d\u0435\u0441',
+    he:'\u05dc\u05d4\u05de\u05dc\u05d9\u05e5\n\u05e2\u05dc \u05e2\u05e1\u05e7',
+    en:'Recommend\na business',
+    ar:'\u0623\u0648\u0635\u0650\n\u0628\u0639\u0645\u0644'
   };
   return `
-    <div class="page-hero deals-empty-hero" style="margin-bottom:16px;">
-      <h3>${promoTitle[lang] || promoTitle.ru}</h3>
-      <div class="deals-empty-actions" style="margin-top:16px;">
-        <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${promoBtn[lang] || promoBtn.ru}</button>
-      </div>
+    <div class="deals-main-cta-wrap">
+      <button class="deals-main-cta" type="button" onclick="event.stopPropagation();openRecommendFlow()">
+        <span class="deals-main-cta-text">${promoBtn[lang] || promoBtn.ru}</span>
+      </button>
     </div>`;
 }
 
