@@ -2121,9 +2121,65 @@ function serializeLeadForAttr(lead) {
 
 function normalizeDashboardLead(lead) {
     const normalized = Object.assign({}, lead || {});
+    const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj || {}, key);
+    const parseTruthBool = value => {
+        if (value === true || value === false) return value;
+        if (value === 1 || value === '1') return true;
+        if (value === 0 || value === '0') return false;
+        if (typeof value === 'string') {
+            const v = value.trim().toLowerCase();
+            if (['true', 'yes', 'y'].includes(v)) return true;
+            if (['false', 'no', 'n'].includes(v)) return false;
+        }
+        return null;
+    };
+    const parseTruthNumber = value => {
+        const n = Number(value);
+        return Number.isFinite(n) ? n : 0;
+    };
+    const normalizeSettlementMode = value => {
+        const v = String(value || '').trim().toLowerCase();
+        if (v === 'gift') return 'gift_client';
+        if (v === 'support') return 'support_business';
+        return v;
+    };
+    const rawLead = lead || {};
+    const hasExplicitTruth = [
+        'settlement_status',
+        'settlement_mode',
+        'history_ready',
+        'has_open_settlement',
+        'has_open_agent_payout',
+        'debt_amount'
+    ].some(key => hasOwn(rawLead, key));
     if (normalized.id == null) normalized.id = normalized.lead_id ?? normalized.deal_id ?? normalized.recommendation_id;
-    normalized.status = String(normalized.status || normalized.reward_status || normalized.decision_status || '').trim().toLowerCase();
-    normalized.decision = String(normalized.decision || normalized.agent_decision || normalized.reward_decision || '').trim().toLowerCase();
+    normalized.settlement_status = String(normalized.settlement_status || '').trim().toLowerCase();
+    normalized.reward_status = String(normalized.reward_status || '').trim().toLowerCase();
+    normalized.decision_status = String(normalized.decision_status || '').trim().toLowerCase();
+    normalized.settlement_mode = normalizeSettlementMode(normalized.settlement_mode);
+    normalized.status = String(
+        normalized.settlement_status ||
+        normalized.status ||
+        normalized.reward_status ||
+        normalized.decision_status ||
+        ''
+    ).trim().toLowerCase();
+    normalized.decision = normalizeSettlementMode(
+        normalized.decision ||
+        normalized.agent_decision ||
+        normalized.reward_decision ||
+        normalized.settlement_mode ||
+        ''
+    );
+    normalized.history_ready = parseTruthBool(normalized.history_ready);
+    normalized.has_open_settlement = parseTruthBool(normalized.has_open_settlement);
+    normalized.has_open_agent_payout = parseTruthBool(normalized.has_open_agent_payout);
+    normalized.debt_amount = parseTruthNumber(
+        hasOwn(rawLead, 'debt_amount')
+            ? normalized.debt_amount
+            : pickFirstFilled(normalized.pending_payout, normalized.pending_debt, normalized.debt)
+    );
+    normalized.has_explicit_truth = hasExplicitTruth;
     if (normalized.commission == null) normalized.commission = pickFirstFilled(normalized.agent_bonus, normalized.bonus, normalized.reward_amount, normalized.commission_amount, normalized.reward);
     if (normalized.amount == null) normalized.amount = pickFirstFilled(normalized.check_amount, normalized.deal_amount, normalized.sum, normalized.total_amount);
     if (!normalized.biz_name) normalized.biz_name = normalized.business_name || normalized.business || '—';
@@ -2156,8 +2212,17 @@ function getDashboardLeads() {
 }
 
 function getDealProjection(lead) {
+    lead = normalizeDashboardLead(lead);
     const status = String(lead?.status || '').toLowerCase();
     const decision = String(lead?.decision || '').toLowerCase();
+    const settlementStatus = String(lead?.settlement_status || '').toLowerCase();
+    const settlementMode = String(lead?.settlement_mode || decision || '').toLowerCase();
+    const historyReady = lead?.history_ready === true;
+    const hasOpenSettlement = lead?.has_open_settlement === true;
+    const hasOpenAgentPayout = lead?.has_open_agent_payout === true;
+    const debtAmount = Number.isFinite(Number(lead?.debt_amount)) ? Number(lead.debt_amount) : 0;
+    const hasExplicitTruth = lead?.has_explicit_truth === true;
+    const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
     const labels = {
         new: { ru:'Новая', he:'חדשה', en:'New', ar:'جديدة' },
         in_progress: { ru:'В работе', he:'בעבודה', en:'In progress', ar:'قيد العمل' },
@@ -2172,19 +2237,70 @@ function getDealProjection(lead) {
 
     const finalStatuses = new Set(['closed', 'confirmed', 'completed', 'done', 'gift_closed']);
     const rejectedStatuses = new Set(['rejected']);
-    const pendingPaymentStatuses = new Set(['pending_business_payment']);
+    const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
     const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation']);
     const awaitingDecisionStatuses = new Set(['pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward']);
-    const isSupportFinal = (status.includes('support') || decision === 'support_business') && (
-        /waiv/.test(status) ||
-        /no[_-]?further/.test(status) ||
-        /(support|business_support).*(confirm|complete|completed|done|final|closed|settled)/.test(status)
-    );
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const giftCompletedStatuses = new Set(['gift_closed']);
+    const supportCompletedStatuses = new Set(['support_business_completed']);
+    const supportInProgressStatuses = new Set(['support_business_in_progress']);
+
+    if (hasExplicitTruth) {
+        if (historyReady && !hasOpenObligations) {
+            return { bucket:'history', counter:'closed', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
+        }
+        if (status === 'rejected' && !hasOpenObligations) {
+            return { bucket:'history', counter:'rejected', debt:false, remind:false, cls:'pill-red', icon:'x-circle', color:'var(--red)', label:getLabel('rejected') };
+        }
+        if (settlementMode === 'take' && (hasOpenAgentPayout || pendingPaymentStatuses.has(settlementStatus))) {
+            return { bucket:'active', counter:'active', debt:true, remind:true, cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', label:getLabel('awaiting_payment') };
+        }
+        if (
+            settlementMode === 'take' &&
+            hasOpenSettlement &&
+            !hasOpenAgentPayout &&
+            debtAmount <= 0 &&
+            payoutCompletedStatuses.has(settlementStatus)
+        ) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_client') };
+        }
+        if (
+            settlementMode === 'gift_client' &&
+            !hasOpenSettlement &&
+            !hasOpenAgentPayout &&
+            debtAmount <= 0 &&
+            giftCompletedStatuses.has(settlementStatus)
+        ) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
+        }
+        if (
+            settlementMode === 'support_business' &&
+            !hasOpenSettlement &&
+            !hasOpenAgentPayout &&
+            debtAmount <= 0 &&
+            supportCompletedStatuses.has(settlementStatus)
+        ) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
+        }
+        if (hasOpenSettlement && !settlementMode) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_decision') };
+        }
+        if (status === 'closed' && !settlementMode && !historyReady) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_decision') };
+        }
+        if (settlementMode === 'support_business' && (hasOpenSettlement || supportInProgressStatuses.has(settlementStatus))) {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('support_in_progress') };
+        }
+        if (status === 'new') {
+            return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-blue', icon:'clock', color:'var(--accent2)', label:getLabel('new') };
+        }
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('in_progress') };
+    }
 
     if (rejectedStatuses.has(status)) {
         return { bucket:'history', counter:'rejected', debt:false, remind:false, cls:'pill-red', icon:'x-circle', color:'var(--red)', label:getLabel('rejected') };
     }
-    if (isSupportFinal) {
+    if (decision === 'support_business' && supportCompletedStatuses.has(status)) {
         return { bucket:'history', counter:'closed', debt:false, remind:false, cls:'pill-green', icon:'check-circle', color:'var(--green)', label:getLabel('completed') };
     }
     if (finalStatuses.has(status)) {
@@ -2196,7 +2312,7 @@ function getDealProjection(lead) {
     if (awaitingClientStatuses.has(status)) {
         return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_client') };
     }
-    if (status && status.includes('support')) {
+    if (decision === 'support_business' && supportInProgressStatuses.has(status)) {
         return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('support_in_progress') };
     }
     if (awaitingDecisionStatuses.has(status)) {
@@ -2235,7 +2351,19 @@ function getWalletStageMeta(lead) {
     const projection = getDealProjection(lead);
     const status = String(lead.status || '').toLowerCase();
     const decision = String(lead.decision || '').toLowerCase();
-    const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
+    const settlementStatus = String(lead.settlement_status || '').toLowerCase();
+    const settlementMode = String(lead.settlement_mode || decision || '').toLowerCase();
+    const hasDecision = ['take', 'gift_client', 'support_business'].includes(settlementMode);
+    const historyReady = lead.history_ready === true;
+    const hasOpenSettlement = lead.has_open_settlement === true;
+    const hasOpenAgentPayout = lead.has_open_agent_payout === true;
+    const debtAmount = Number.isFinite(Number(lead.debt_amount)) ? Number(lead.debt_amount) : 0;
+    const hasExplicitTruth = lead.has_explicit_truth === true;
+    const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
+    const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const giftCompletedStatuses = new Set(['gift_closed']);
+    const supportCompletedStatuses = new Set(['support_business_completed']);
     const labels = {
         choose_settlement: { ru:'Нужно выбрать способ расчёта', he:'צריך לבחור דרך סגירה', en:'Choose settlement method', ar:'يجب اختيار طريقة التسوية' },
         awaiting_payment: { ru:'Ожидаем выплату', he:'ממתינים לתשלום', en:'Awaiting payout', ar:'بانتظار الدفع' },
@@ -2243,6 +2371,40 @@ function getWalletStageMeta(lead) {
         closed: { ru:'Закрыта', he:'סגורה', en:'Closed', ar:'مغلقة' }
     };
     const getLabel = key => (labels[key] && (labels[key][lang] || labels[key].ru)) || labels.choose_settlement.ru;
+    const branchClosedLabel = mode => `${getSettlementMethodLabel(mode)} / ${getLabel('closed')}`;
+
+    if (hasExplicitTruth) {
+        if (historyReady && !hasOpenObligations) {
+            return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
+        }
+        if (!hasDecision && (hasOpenSettlement || status === 'closed')) {
+            return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action:null };
+        }
+        if (settlementMode === 'take' && (hasOpenAgentPayout || pendingPaymentStatuses.has(settlementStatus))) {
+            return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
+        }
+        if (
+            settlementMode === 'take' &&
+            hasOpenSettlement &&
+            !hasOpenAgentPayout &&
+            debtAmount <= 0 &&
+            payoutCompletedStatuses.has(settlementStatus)
+        ) {
+            return { key:'awaiting_receipt', label:getLabel('awaiting_receipt'), cls:'pill-gold', icon:'clock', color:'var(--gold)', action: lead.id != null ? 'confirm_receipt' : null };
+        }
+        if (settlementMode === 'gift_client') {
+            if (!historyReady && !hasOpenSettlement && !hasOpenAgentPayout && debtAmount <= 0 && giftCompletedStatuses.has(settlementStatus)) {
+                return { key:'gift_client_completed', label:branchClosedLabel('gift_client'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
+            }
+            return { key:'gift_client', label:getSettlementMethodLabel('gift_client'), cls:'pill-blue', icon:'gift', color:'var(--accent2)', action:null };
+        }
+        if (settlementMode === 'support_business') {
+            if (!historyReady && !hasOpenSettlement && !hasOpenAgentPayout && debtAmount <= 0 && supportCompletedStatuses.has(settlementStatus)) {
+                return { key:'support_business_completed', label:branchClosedLabel('support_business'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
+            }
+            return { key:'support_business', label:getSettlementMethodLabel('support_business'), cls:'pill-blue', icon:'briefcase', color:'var(--accent2)', action:null };
+        }
+    }
 
     if (projection.bucket === 'history' && projection.counter === 'closed') {
         return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
@@ -2300,10 +2462,42 @@ function isWalletDeal(lead) {
     const projection = getDealProjection(lead);
     const status = String(lead.status || '').toLowerCase();
     const decision = String(lead.decision || '').toLowerCase();
+    const settlementStatus = String(lead.settlement_status || '').toLowerCase();
+    const settlementMode = String(lead.settlement_mode || decision || '').toLowerCase();
+    const historyReady = lead.history_ready === true;
+    const hasOpenSettlement = lead.has_open_settlement === true;
+    const hasOpenAgentPayout = lead.has_open_agent_payout === true;
+    const debtAmount = Number.isFinite(Number(lead.debt_amount)) ? Number(lead.debt_amount) : 0;
+    const hasExplicitTruth = lead.has_explicit_truth === true;
+    const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
+    const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const giftCompletedStatuses = new Set(['gift_closed']);
+    const supportCompletedStatuses = new Set(['support_business_completed']);
+
+    if (hasExplicitTruth) {
+        if (status === 'rejected') return false;
+        if (!settlementMode && (hasOpenSettlement || status === 'closed')) return true;
+        if (settlementMode === 'take') {
+            if (historyReady && !hasOpenObligations) return true;
+            if (hasOpenAgentPayout || pendingPaymentStatuses.has(settlementStatus)) return true;
+            if (hasOpenSettlement && !hasOpenAgentPayout && debtAmount <= 0 && payoutCompletedStatuses.has(settlementStatus)) return true;
+            return false;
+        }
+        if (settlementMode === 'gift_client') {
+            if (!historyReady) return true;
+            return false;
+        }
+        if (settlementMode === 'support_business') {
+            if (!historyReady) return true;
+            return false;
+        }
+        return false;
+    }
+
     if (projection.debt) return true;
     if (projection.bucket === 'history' && projection.counter === 'closed') return true;
     if (['pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward', 'pending_client_confirmation', 'awaiting_client_confirmation'].includes(status)) return true;
-    if (status.includes('support')) return true;
     return ['take', 'gift_client', 'support_business'].includes(decision);
 }
 
