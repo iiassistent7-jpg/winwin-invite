@@ -2378,7 +2378,7 @@ function getWalletStageMeta(lead) {
             return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
         }
         if (!hasDecision && (hasOpenSettlement || status === 'closed')) {
-            return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action:null };
+            return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action: lead.id != null ? 'choose_settlement' : null };
         }
         if (settlementMode === 'take' && (hasOpenAgentPayout || pendingPaymentStatuses.has(settlementStatus))) {
             return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
@@ -2413,7 +2413,7 @@ function getWalletStageMeta(lead) {
         return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
     }
     if (!hasDecision) {
-        return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action:null };
+        return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action: lead.id != null ? 'choose_settlement' : null };
     }
     return { key:'awaiting_receipt', label:getLabel('awaiting_receipt'), cls:'pill-gold', icon:'clock', color:'var(--gold)', action: decision === 'take' && lead.id != null ? 'confirm_receipt' : null };
 }
@@ -2425,6 +2425,20 @@ function walletStatusPill(lead) {
 
 function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     const L = i18n[lang] || i18n.ru;
+    if (stage.action === 'choose_settlement') {
+        const labels = {
+            take: { ru:'Забрать себе', he:'לקחת לעצמי', en:'Keep for myself', ar:'أحتفظ به' },
+            gift_client: { ru:'Подарить клиенту', he:'להעניק ללקוח', en:'Gift to client', ar:'هدية للعميل' },
+            support_business: { ru:'Поддержать бизнес', he:'לתמוך בעסק', en:'Support business', ar:'دعم العمل' }
+        };
+        return {
+            kind: 'choose_settlement',
+            choices: ['take', 'gift_client', 'support_business'].map(choice => ({
+                value: choice,
+                label: (labels[choice] && (labels[choice][lang] || labels[choice].ru)) || choice
+            }))
+        };
+    }
     if (stage.action === 'remind') {
         return {
             label: L.remind_debt || 'Напомнить о долге',
@@ -2447,6 +2461,19 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
 function renderWalletActionButton(lead, context = 'card') {
     const action = getWalletActionConfig(lead);
     if (!action) return '';
+    if (action.kind === 'choose_settlement') {
+        if (context !== 'sheet') return '';
+        const styles = {
+            take: 'background:var(--accent2); color:#fff;',
+            gift_client: 'background:transparent; color:var(--text); border:1px solid var(--border);',
+            support_business: 'background:transparent; color:var(--text); border:1px solid var(--border);'
+        };
+        return action.choices.map(choice => `
+            <button class="btn-primary" style="${styles[choice.value] || ''}" onclick="submitSettlementChoice(${JSON.stringify(lead.id)}, '${choice.value}')">
+                ${escapeHtml(choice.label)}
+            </button>
+        `).join('');
+    }
     const onclick = context === 'card' ? `event.stopPropagation(); ${action.onclick}` : action.onclick;
     const cls = context === 'card' ? 'btn-primary wallet-card-btn' : 'btn-primary';
     return `
@@ -2603,7 +2630,10 @@ function openDealDetail(lead) {
 
     const actionsContainer = document.getElementById('dealActionButtons');
     actionsContainer.innerHTML = '';
-    if (projection.remind) {
+    const walletActionHtml = renderWalletActionButton(lead, 'sheet');
+    if (walletActionHtml) {
+        actionsContainer.innerHTML = walletActionHtml;
+    } else if (projection.remind) {
         const btnText = L.remind_debt || 'Напомнить о долге';
         const safeBizName = lead.biz_name.replace(/'/g, "\\'");
         actionsContainer.innerHTML = `
@@ -2801,6 +2831,44 @@ async function remindDebt(leadId, bizName) {
         showReminderToast(messageMap[outcome] || L.remind_error);
     } catch(e) {
         showReminderToast(L.remind_error);
+    }
+}
+
+async function submitSettlementChoice(leadId, actionType) {
+    if (!['take', 'gift_client', 'support_business'].includes(actionType)) return;
+    const endpoints = [`${API_URL}/api/dashboard/action`, `${API_URL}/api/dashboard`];
+    let response = null;
+
+    for (const endpoint of endpoints) {
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token, deal_id: leadId, action: actionType })
+            });
+            if (res.ok) {
+                response = res;
+                break;
+            }
+        } catch (e) {}
+    }
+
+    if (!response) {
+        alert((i18n[lang] || i18n.ru).save_err || 'Не удалось сохранить выбор.');
+        return;
+    }
+
+    try {
+        const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!dashRes.ok) throw new Error('Refresh error');
+        dashData = await dashRes.json();
+        renderAll();
+        const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
+        if (refreshedLead && document.getElementById('dealSheet').classList.contains('active')) {
+            openWalletDealDetail(refreshedLead);
+        }
+    } catch (e) {
+        alert((i18n[lang] || i18n.ru).save_err || 'Не удалось обновить данные.');
     }
 }
 
