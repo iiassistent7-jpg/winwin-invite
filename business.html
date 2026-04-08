@@ -1523,13 +1523,28 @@ function hasExplicitDealTruth(deal) {
 }
 
 function getDealTruth(deal) {
+  const normalizeSettlementMode = value => {
+    const v = String(value || '').trim().toLowerCase();
+    if (v === 'gift') return 'gift_client';
+    if (v === 'support') return 'support_business';
+    return v;
+  };
   const explicit = hasExplicitDealTruth(deal);
   const historyReady = parseTruthBool(deal.history_ready);
   const hasOpenSettlement = parseTruthBool(deal.has_open_settlement);
   const hasOpenAgentPayout = parseTruthBool(deal.has_open_agent_payout);
   const debtAmount = parseTruthNumber(deal.debt_amount);
   const settlementStatus = String(deal.settlement_status || '').trim().toLowerCase();
-  const settlementMode = String(deal.settlement_mode || '').trim().toLowerCase();
+  const settlementMode = normalizeSettlementMode(
+    deal.settlement_mode ||
+    deal.agent_decision ||
+    deal.reward_decision ||
+    deal.decision ||
+    ''
+  );
+  const status = String(deal.status || '').trim().toLowerCase();
+  const rewardStatus = String(deal.reward_status || '').trim().toLowerCase();
+  const decisionStatus = String(deal.decision_status || '').trim().toLowerCase();
   return {
     explicit,
     historyReady,
@@ -1537,35 +1552,66 @@ function getDealTruth(deal) {
     hasOpenAgentPayout,
     debtAmount,
     settlementStatus,
-    settlementMode
+    settlementMode,
+    status,
+    rewardStatus,
+    decisionStatus
   };
 }
 
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
   if (truth.explicit) {
-    if (truth.settlementStatus && [
-      'pending_business_payment',
-      'awaiting_business_payment',
-      'pending_reward_payment',
-      'awaiting_reward',
-      'pending_receipt',
-      'awaiting_receipt',
-      'pending_agent_confirmation',
-      'confirmed',
-      'gift_closed',
-      'completed',
-      'done',
-      'rejected',
-      'closed'
-    ].includes(truth.settlementStatus)) {
-      return truth.settlementStatus;
+    const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
+    const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt']);
+    const giftCompletedStatuses = new Set(['gift_closed']);
+    const supportCompletedStatuses = new Set(['support_business_completed']);
+    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
+
+    if (truth.historyReady === true && !hasOpenObligations) return 'closed';
+    if (truth.status === 'rejected') return 'rejected';
+
+    if (
+      truth.settlementMode === 'take' &&
+      (truth.hasOpenAgentPayout === true || truth.debtAmount > 0 || pendingPaymentStatuses.has(truth.settlementStatus))
+    ) {
+      return 'pending_business_payment';
     }
-    if (truth.historyReady === true) return 'closed';
-    if (truth.hasOpenAgentPayout === true) return 'pending_business_payment';
-    if (truth.hasOpenSettlement === true) {
-      return truth.settlementMode === 'take' ? 'pending_receipt' : 'awaiting_receipt';
+
+    if (
+      truth.settlementMode === 'take' &&
+      truth.hasOpenSettlement === true &&
+      truth.hasOpenAgentPayout !== true &&
+      truth.debtAmount <= 0 &&
+      payoutCompletedStatuses.has(truth.settlementStatus)
+    ) {
+      return 'pending_receipt';
     }
+
+    if (
+      truth.settlementMode === 'gift_client' &&
+      truth.hasOpenSettlement !== true &&
+      truth.hasOpenAgentPayout !== true &&
+      truth.debtAmount <= 0 &&
+      giftCompletedStatuses.has(truth.settlementStatus)
+    ) {
+      return 'closed';
+    }
+
+    if (
+      truth.settlementMode === 'support_business' &&
+      truth.hasOpenSettlement !== true &&
+      truth.hasOpenAgentPayout !== true &&
+      truth.debtAmount <= 0 &&
+      supportCompletedStatuses.has(truth.settlementStatus)
+    ) {
+      return 'closed';
+    }
+
+    if (truth.hasOpenSettlement === true) return 'pending_confirmation';
+    if (truth.status === 'closed') return 'pending_confirmation';
+    if (['new','in_progress','rejected'].includes(truth.status)) return truth.status;
+    if (['pending_confirmation','pending'].includes(truth.status)) return 'pending_confirmation';
   }
   const statuses = getDealStatusCodes(deal);
   const priority = [
@@ -1584,8 +1630,16 @@ function isDebtRelevantActiveDeal(deal) {
   const truth = getDealTruth(deal);
   if (truth.explicit) {
     if (truth.historyReady === true) return false;
+    if (truth.status === 'rejected') return false;
+    if (truth.settlementMode !== 'take') return false;
     if (truth.hasOpenAgentPayout === true) return true;
     if (truth.debtAmount > 0) return true;
+    if ([
+      'pending_business_payment',
+      'awaiting_business_payment',
+      'pending_reward_payment',
+      'awaiting_reward'
+    ].includes(truth.settlementStatus)) return true;
     return false;
   }
   const statuses = getDealStatusCodes(deal);
@@ -1600,10 +1654,7 @@ function isDebtRelevantActiveDeal(deal) {
     'pending_business_payment',
     'awaiting_business_payment',
     'pending_reward_payment',
-    'awaiting_reward',
-    'pending_receipt',
-    'awaiting_receipt',
-    'pending_agent_confirmation'
+    'awaiting_reward'
   ].includes(s));
   const isFinal = statuses.some(s => [
     'confirmed',
@@ -1613,15 +1664,18 @@ function isDebtRelevantActiveDeal(deal) {
     'rejected'
   ].includes(s));
   if (isFinal) return false;
-  if (hasPaymentPendingStatus) return true;
-  if (numericDebt) return true;
+  if (hasPaymentPendingStatus) return decision === 'take' || !decision;
+  if (numericDebt) return decision === 'take';
   return decision === 'take' && statuses.includes('pending_business_payment');
 }
 
 function isBusinessActiveDeal(deal) {
   const truth = getDealTruth(deal);
-  if (truth.explicit && truth.historyReady !== null) {
-    return truth.historyReady !== true;
+  if (truth.explicit) {
+    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
+    if (truth.historyReady === true && !hasOpenObligations) return false;
+    if (truth.status === 'rejected') return false;
+    return true;
   }
   const status = getPrimaryDealStatus(deal);
   return ['new','in_progress','pending_confirmation'].includes(status) || isDebtRelevantActiveDeal(deal);
@@ -1629,8 +1683,11 @@ function isBusinessActiveDeal(deal) {
 
 function isBusinessHistoryDeal(deal) {
   const truth = getDealTruth(deal);
-  if (truth.explicit && truth.historyReady !== null) {
-    return truth.historyReady === true;
+  if (truth.explicit) {
+    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
+    if (truth.historyReady === true && !hasOpenObligations) return true;
+    if (truth.status === 'rejected' && !hasOpenObligations) return true;
+    return false;
   }
   const status = getPrimaryDealStatus(deal);
   return !isDebtRelevantActiveDeal(deal) && ['closed','rejected','confirmed','gift_closed','completed','done'].includes(status);
@@ -2247,21 +2304,73 @@ function renderLeadersInline() {
 
 // ══ RECOMMEND ═══════════════════════════════════════════════════════════
 function normalizeRecommendationStatus(row) {
-  const status = row.status || row.reward_status || row.decision_status || row.settlement_status || '';
+  const truth = getDealTruth(row);
+  const status = String(row.status || '').trim().toLowerCase();
+  const rewardStatus = String(row.reward_status || '').trim().toLowerCase();
+  const decisionStatus = String(row.decision_status || '').trim().toLowerCase();
+  const fallbackStatus = status || rewardStatus || decisionStatus || String(row.settlement_status || '').trim().toLowerCase();
+
+  if (truth.explicit) {
+    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
+    if (truth.historyReady === true && !hasOpenObligations) return 'done';
+    if (truth.status === 'rejected') return 'rejected';
+    if (
+      truth.settlementMode === 'take' &&
+      (
+        truth.hasOpenAgentPayout === true ||
+        truth.debtAmount > 0 ||
+        ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(truth.settlementStatus)
+      )
+    ) {
+      return 'awaiting_reward';
+    }
+    if (
+      truth.settlementMode === 'take' &&
+      truth.hasOpenSettlement === true &&
+      truth.hasOpenAgentPayout !== true &&
+      truth.debtAmount <= 0 &&
+      ['pending_receipt','awaiting_receipt'].includes(truth.settlementStatus)
+    ) {
+      return 'pending_confirmation';
+    }
+    if (
+      (
+        truth.settlementMode === 'gift_client' &&
+        truth.hasOpenSettlement !== true &&
+        truth.hasOpenAgentPayout !== true &&
+        truth.debtAmount <= 0 &&
+        truth.settlementStatus === 'gift_closed'
+      ) ||
+      (
+        truth.settlementMode === 'support_business' &&
+        truth.hasOpenSettlement !== true &&
+        truth.hasOpenAgentPayout !== true &&
+        truth.debtAmount <= 0 &&
+        truth.settlementStatus === 'support_business_completed'
+      )
+    ) {
+      return 'done';
+    }
+    if (truth.hasOpenSettlement === true || truth.status === 'closed') return 'pending_confirmation';
+    if (['pending_confirmation','pending'].includes(truth.status)) return 'pending_confirmation';
+    if (['new','in_progress'].includes(truth.status)) return truth.status;
+  }
+
   if ([
     'pending_business_payment',
     'awaiting_business_payment',
     'pending_reward_payment',
     'awaiting_reward'
-  ].includes(status)) return 'awaiting_reward';
+  ].includes(fallbackStatus)) return 'awaiting_reward';
   if ([
     'confirmed',
     'gift_closed',
     'completed',
     'done',
     'closed'
-  ].includes(status)) return 'done';
-  if (['pending_confirmation', 'pending'].includes(status)) return 'pending_confirmation';
+  ].includes(fallbackStatus)) return 'done';
+  if (['pending_confirmation', 'pending'].includes(fallbackStatus)) return 'pending_confirmation';
+  if (fallbackStatus === 'rejected') return 'rejected';
   return 'in_progress';
 }
 
