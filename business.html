@@ -2970,7 +2970,7 @@ function openManageDeal(id) {
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
-  closeBtn.onclick = isPayoutPending ? () => submitDealAction('close') : () => setStep('close');
+  closeBtn.onclick = isPayoutPending ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
   if (deal.status === 'new') {
     acceptBtn.style.display = 'flex';
@@ -3050,6 +3050,21 @@ async function submitDealAction(actionType) {
         if (hasOwn(deal, 'history_ready')) deal.history_ready = false;
         if (hasOwn(deal, 'settlement_status')) deal.settlement_status = 'pending_agent_confirmation';
         if (hasOwn(deal, 'debt_amount')) deal.debt_amount = 0;
+      }
+    } else if (actionType === 'biz_paid') {
+      document.getElementById('m_result_msg').textContent = L.action_success;
+      document.getElementById('m_result_msg').style.color = 'var(--green)';
+      const deal = (bizData.deals || []).find(d => d.id === activeDealId);
+      if (deal) {
+        const nextSettlementStatus = String(data.settlement_status || '').trim().toLowerCase();
+        deal.has_open_agent_payout = false;
+        deal.has_open_settlement = true;
+        deal.history_ready = false;
+        deal.debt_amount = 0;
+        deal.settlement_mode = String(data.settlement_mode || deal.settlement_mode || 'take').trim().toLowerCase();
+        deal.settlement_status = nextSettlementStatus === 'pending_agent_receipt'
+          ? 'pending_receipt'
+          : (nextSettlementStatus || 'pending_receipt');
       }
     } else {
       document.getElementById('m_result_msg').textContent = L.action_success;
