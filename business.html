@@ -1518,7 +1518,7 @@ function parseTruthNumber(value) {
 }
 
 function hasExplicitDealTruth(deal) {
-  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount']
+  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','agent_decision','biz_claimed_paid','business_sent','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
     .some(key => hasOwn(deal, key));
 }
 
@@ -1534,6 +1534,13 @@ function getDealTruth(deal) {
   const hasOpenSettlement = parseTruthBool(deal.has_open_settlement);
   const hasOpenAgentPayout = parseTruthBool(deal.has_open_agent_payout);
   const debtAmount = parseTruthNumber(deal.debt_amount);
+  const bizClaimedPaid = parseTruthBool(deal.biz_claimed_paid);
+  const businessSent = parseTruthBool(deal.business_sent);
+  const agentConfirmedReceipt = parseTruthBool(deal.agent_confirmed_receipt);
+  const giftClosed = parseTruthBool(deal.gift_closed);
+  const autoClosed = parseTruthBool(deal.auto_closed);
+  const payDisputePending = parseTruthBool(deal.pay_dispute_pending);
+  const agentPayDisputes = parseTruthNumber(deal.agent_pay_disputes);
   const settlementStatus = String(deal.settlement_status || '').trim().toLowerCase();
   const settlementMode = normalizeSettlementMode(
     deal.settlement_mode ||
@@ -1551,6 +1558,13 @@ function getDealTruth(deal) {
     hasOpenSettlement,
     hasOpenAgentPayout,
     debtAmount,
+    bizClaimedPaid,
+    businessSent,
+    agentConfirmedReceipt,
+    giftClosed,
+    autoClosed,
+    payDisputePending,
+    agentPayDisputes,
     settlementStatus,
     settlementMode,
     status,
@@ -1559,61 +1573,112 @@ function getDealTruth(deal) {
   };
 }
 
+function isTakeSettlementDisputed(truth) {
+  const disputeStatuses = new Set(['agent_not_got', 'payment_dispute', 'pending_payment_dispute']);
+  return truth.settlementMode === 'take'
+    && truth.agentConfirmedReceipt !== true
+    && (
+      truth.payDisputePending === true
+      || truth.agentPayDisputes > 0
+      || [truth.settlementStatus, truth.status, truth.rewardStatus, truth.decisionStatus].some(code => disputeStatuses.has(code))
+    );
+}
+
+function hasTakePaymentSent(truth) {
+  return truth.bizClaimedPaid === true || truth.businessSent === true;
+}
+
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
+  const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
+  const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt']);
+  const giftCompletedStatuses = new Set(['gift_closed']);
+  const supportCompletedStatuses = new Set(['support_business_completed']);
   if (truth.explicit) {
-    const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt']);
-    const giftCompletedStatuses = new Set(['gift_closed']);
-    const supportCompletedStatuses = new Set(['support_business_completed']);
     const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
 
-    if (truth.historyReady === true && !hasOpenObligations) return 'closed';
     if (truth.status === 'rejected') return 'rejected';
 
-    if (
-      truth.settlementMode === 'take' &&
-      (truth.hasOpenAgentPayout === true || truth.debtAmount > 0 || pendingPaymentStatuses.has(truth.settlementStatus))
-    ) {
-      return 'pending_business_payment';
-    }
-
-    if (
-      truth.settlementMode === 'take' &&
-      truth.hasOpenSettlement === true &&
-      truth.hasOpenAgentPayout !== true &&
-      truth.debtAmount <= 0 &&
-      payoutCompletedStatuses.has(truth.settlementStatus)
-    ) {
-      return 'pending_receipt';
+    if (truth.settlementMode === 'take') {
+      if (truth.agentConfirmedReceipt === true) return 'closed';
+      if (isTakeSettlementDisputed(truth)) return 'pending_business_payment';
+      if (
+        truth.hasOpenAgentPayout === true ||
+        truth.debtAmount > 0 ||
+        pendingPaymentStatuses.has(truth.settlementStatus) ||
+        truth.bizClaimedPaid === false ||
+        truth.businessSent === false
+      ) {
+        return 'pending_business_payment';
+      }
+      if (
+        hasTakePaymentSent(truth) ||
+        (
+          payoutCompletedStatuses.has(truth.settlementStatus) &&
+          truth.hasOpenAgentPayout !== true &&
+          truth.debtAmount <= 0
+        )
+      ) {
+        return 'pending_receipt';
+      }
+      if (truth.status === 'closed' || truth.hasOpenSettlement === true) return 'pending_business_payment';
     }
 
     if (
       truth.settlementMode === 'gift_client' &&
-      truth.hasOpenSettlement !== true &&
-      truth.hasOpenAgentPayout !== true &&
-      truth.debtAmount <= 0 &&
-      giftCompletedStatuses.has(truth.settlementStatus)
+      (
+        truth.giftClosed === true ||
+        (
+          truth.hasOpenSettlement !== true &&
+          truth.hasOpenAgentPayout !== true &&
+          truth.debtAmount <= 0 &&
+          giftCompletedStatuses.has(truth.settlementStatus)
+        )
+      )
     ) {
       return 'closed';
     }
 
     if (
       truth.settlementMode === 'support_business' &&
-      truth.hasOpenSettlement !== true &&
-      truth.hasOpenAgentPayout !== true &&
-      truth.debtAmount <= 0 &&
-      supportCompletedStatuses.has(truth.settlementStatus)
+      (
+        truth.autoClosed === true ||
+        (
+          truth.hasOpenSettlement !== true &&
+          truth.hasOpenAgentPayout !== true &&
+          truth.debtAmount <= 0 &&
+          supportCompletedStatuses.has(truth.settlementStatus)
+        )
+      )
     ) {
       return 'closed';
     }
 
+    if (truth.historyReady === true && !hasOpenObligations) return 'closed';
     if (truth.hasOpenSettlement === true) return 'pending_confirmation';
     if (truth.status === 'closed') return 'pending_confirmation';
     if (['new','in_progress','rejected'].includes(truth.status)) return truth.status;
     if (['pending_confirmation','pending'].includes(truth.status)) return 'pending_confirmation';
   }
   const statuses = getDealStatusCodes(deal);
+  const disputeStatuses = new Set(['agent_not_got', 'payment_dispute', 'pending_payment_dispute']);
+  const finalStatuses = new Set(['confirmed','gift_closed','support_business_completed','completed','done']);
+  const decision = truth.settlementMode;
+
+  if (!decision && statuses.includes('closed')) return 'pending_confirmation';
+  if (!decision && statuses.some(code => ['pending_confirmation', 'pending_agent_confirmation', 'pending'].includes(code))) {
+    return 'pending_confirmation';
+  }
+  if (decision === 'take') {
+    if (statuses.some(code => disputeStatuses.has(code))) return 'pending_business_payment';
+    if (statuses.some(code => ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_client_confirmation','awaiting_client_confirmation'].includes(code))) {
+      return 'pending_receipt';
+    }
+    if (statuses.some(code => pendingPaymentStatuses.has(code)) || statuses.includes('closed')) return 'pending_business_payment';
+  }
+  if ((decision === 'gift_client' || decision === 'support_business') && (statuses.includes('closed') || statuses.some(code => finalStatuses.has(code)))) {
+    return 'closed';
+  }
   const priority = [
     'pending_business_payment',
     'awaiting_business_payment',
@@ -1623,74 +1688,19 @@ function getDisplayDealStatus(deal) {
     'awaiting_receipt',
     'pending_agent_confirmation'
   ];
-  return priority.find(code => statuses.includes(code)) || getPrimaryDealStatus(deal);
+  return priority.find(code => statuses.includes(code)) || (finalStatuses.has(getPrimaryDealStatus(deal)) ? 'closed' : getPrimaryDealStatus(deal));
 }
 
 function isDebtRelevantActiveDeal(deal) {
-  const truth = getDealTruth(deal);
-  if (truth.explicit) {
-    if (truth.historyReady === true) return false;
-    if (truth.status === 'rejected') return false;
-    if (truth.settlementMode !== 'take') return false;
-    if (truth.hasOpenAgentPayout === true) return true;
-    if (truth.debtAmount > 0) return true;
-    if ([
-      'pending_business_payment',
-      'awaiting_business_payment',
-      'pending_reward_payment',
-      'awaiting_reward'
-    ].includes(truth.settlementStatus)) return true;
-    return false;
-  }
-  const statuses = getDealStatusCodes(deal);
-  const decision = String(deal.agent_decision || deal.decision || '').trim().toLowerCase();
-  const numericDebt = [
-    deal.pending_payout,
-    deal.pending_debt,
-    deal.debt_amount,
-    deal.debt
-  ].some(v => Number(v) > 0);
-  const hasPaymentPendingStatus = statuses.some(s => [
-    'pending_business_payment',
-    'awaiting_business_payment',
-    'pending_reward_payment',
-    'awaiting_reward'
-  ].includes(s));
-  const isFinal = statuses.some(s => [
-    'confirmed',
-    'gift_closed',
-    'completed',
-    'done',
-    'rejected'
-  ].includes(s));
-  if (isFinal) return false;
-  if (hasPaymentPendingStatus) return decision === 'take' || !decision;
-  if (numericDebt) return decision === 'take';
-  return decision === 'take' && statuses.includes('pending_business_payment');
+  return getDisplayDealStatus(deal) === 'pending_business_payment';
 }
 
 function isBusinessActiveDeal(deal) {
-  const truth = getDealTruth(deal);
-  if (truth.explicit) {
-    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
-    if (truth.historyReady === true && !hasOpenObligations) return false;
-    if (truth.status === 'rejected') return false;
-    return true;
-  }
-  const status = getPrimaryDealStatus(deal);
-  return ['new','in_progress','pending_confirmation'].includes(status) || isDebtRelevantActiveDeal(deal);
+  return !['closed', 'rejected'].includes(getDisplayDealStatus(deal));
 }
 
 function isBusinessHistoryDeal(deal) {
-  const truth = getDealTruth(deal);
-  if (truth.explicit) {
-    const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
-    if (truth.historyReady === true && !hasOpenObligations) return true;
-    if (truth.status === 'rejected' && !hasOpenObligations) return true;
-    return false;
-  }
-  const status = getPrimaryDealStatus(deal);
-  return !isDebtRelevantActiveDeal(deal) && ['closed','rejected','confirmed','gift_closed','completed','done'].includes(status);
+  return ['closed', 'rejected'].includes(getDisplayDealStatus(deal));
 }
 
 function getDebtVisibleDeals() {
@@ -1698,12 +1708,7 @@ function getDebtVisibleDeals() {
 }
 
 function isPayoutPendingBusinessDeal(deal) {
-  const truth = getDealTruth(deal);
-  if (truth.explicit) {
-    return truth.hasOpenAgentPayout === true;
-  }
-  const statusCode = getDisplayDealStatus(deal);
-  return ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode);
+  return getDisplayDealStatus(deal) === 'pending_business_payment';
 }
 
 function firstArray(items) {
@@ -2972,10 +2977,14 @@ function openManageDeal(id) {
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
   closeBtn.onclick = isPayoutPending ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
-  if (deal.status === 'new') {
+  if (statusCode === 'new') {
     acceptBtn.style.display = 'flex';
     closeBtn.style.display = 'none';
     if (rejectBtn) rejectBtn.style.display = 'flex';
+  } else if (statusCode === 'pending_confirmation' || statusCode === 'pending_receipt') {
+    acceptBtn.style.display = 'none';
+    closeBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
   } else if (isPayoutPending) {
     acceptBtn.style.display = 'none';
     closeBtn.style.display = 'flex';
