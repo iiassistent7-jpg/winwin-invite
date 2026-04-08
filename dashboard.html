@@ -132,8 +132,10 @@
         .section-caption { font-size:.82rem; color:var(--text2); line-height:1.45; margin:-4px 0 14px; }
 
         /* ג”€ג”€ Activity items ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
-        .activity-item { display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); align-items:center; cursor:pointer; transition:.15s; }
-        .activity-item:last-child { border-bottom:none; padding-bottom:0; }
+        .activity-block { border-bottom:1px solid var(--border); }
+        .activity-block:last-child { border-bottom:none; }
+        .activity-item { display:flex; gap:12px; padding:13px 0; align-items:center; cursor:pointer; transition:.15s; }
+        .activity-block:last-child .activity-item { padding-bottom:0; }
         .activity-item:active { opacity:.7; }
         .act-icon { width:40px; height:40px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .act-title { font-size:.92rem; font-weight:600; margin-bottom:2px; }
@@ -141,6 +143,8 @@
         .act-right { margin-left:auto; text-align:right; flex-shrink:0; }
         .act-amount { font-size:.92rem; font-weight:700; }
         .act-date { font-size:.72rem; color:var(--text2); margin-top:2px; }
+        .activity-actions { padding:0 0 13px 52px; }
+        body.rtl .activity-actions { padding:0 52px 13px 0; }
         .wallet-deal-card { padding:16px; cursor:pointer; transition:.18s; }
         .wallet-deal-card:active { transform:scale(.985); }
         .wallet-card-top { display:flex; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
@@ -152,6 +156,9 @@
         .wallet-card-actions { margin-top:14px; }
         .wallet-card-btn { padding:11px 14px; border-radius:12px; font-size:.82rem; }
         .wallet-card-next { font-size:.78rem; color:var(--text2); line-height:1.45; margin-top:12px; }
+        .settlement-choice-grid { display:flex; flex-direction:column; gap:10px; }
+        .settlement-choice-grid-inline { gap:8px; }
+        .settlement-choice-grid-inline .btn-primary { padding:11px 14px; border-radius:12px; font-size:.82rem; }
         .wallet-phone-link { color:var(--accent2); text-decoration:none; }
         .wallet-summary { padding:18px; }
         .wallet-summary-head { font-size:.8rem; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:.6px; margin-bottom:12px; }
@@ -2547,21 +2554,39 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     return null;
 }
 
+function renderSettlementChoiceButtons(lead, context = 'sheet') {
+    const action = getWalletActionConfig(lead);
+    if (!action || action.kind !== 'choose_settlement') return '';
+    const styles = {
+        take: 'background:var(--accent2); color:#fff;',
+        gift_client: 'background:transparent; color:var(--text); border:1px solid var(--border);',
+        support_business: 'background:transparent; color:var(--text); border:1px solid var(--border);'
+    };
+    const buttonClass = context === 'sheet'
+        ? 'btn-primary'
+        : context === 'card'
+            ? 'btn-primary wallet-card-btn'
+            : 'btn-primary';
+    const wrapClass = context === 'inline'
+        ? 'settlement-choice-grid settlement-choice-grid-inline'
+        : 'settlement-choice-grid';
+    const clickPrefix = context === 'sheet' ? '' : 'event.stopPropagation(); ';
+    return `
+        <div class="${wrapClass}">
+            ${action.choices.map(choice => `
+                <button class="${buttonClass}" style="${styles[choice.value] || ''}" onclick="${clickPrefix}submitSettlementChoice(${JSON.stringify(lead.id)}, '${choice.value}')">
+                    ${escapeHtml(choice.label)}
+                </button>
+            `).join('')}
+        </div>
+    `;
+}
+
 function renderWalletActionButton(lead, context = 'card') {
     const action = getWalletActionConfig(lead);
     if (!action) return '';
     if (action.kind === 'choose_settlement') {
-        if (context !== 'sheet') return '';
-        const styles = {
-            take: 'background:var(--accent2); color:#fff;',
-            gift_client: 'background:transparent; color:var(--text); border:1px solid var(--border);',
-            support_business: 'background:transparent; color:var(--text); border:1px solid var(--border);'
-        };
-        return action.choices.map(choice => `
-            <button class="btn-primary" style="${styles[choice.value] || ''}" onclick="submitSettlementChoice(${JSON.stringify(lead.id)}, '${choice.value}')">
-                ${escapeHtml(choice.label)}
-            </button>
-        `).join('');
+        return renderSettlementChoiceButtons(lead, context);
     }
     const onclick = context === 'card' ? `event.stopPropagation(); ${action.onclick}` : action.onclick;
     const cls = context === 'card' ? 'btn-primary wallet-card-btn' : 'btn-primary';
@@ -2660,18 +2685,22 @@ function dealItemHtml(lead) {
     const curr = dashData?.currency || '₪';
     const hasComm = lead.commission != null;
     const commColor = projection.debt ? 'var(--gold)' : 'var(--green)';
+    const inlineActions = renderSettlementChoiceButtons(lead, 'inline');
     return `
-    <div class="activity-item" onclick='openDealDetail(${serializeLeadForAttr(lead)})'>
-        <div class="act-icon">${iconForStatus(lead)}</div>
-        <div style="flex:1;min-width:0;">
-            <div class="act-title">${lead.biz_name}</div>
-            <div class="act-sub">${({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент')}: ${lead.client_name}</div>
+    <div class="activity-block">
+        <div class="activity-item" onclick='openDealDetail(${serializeLeadForAttr(lead)})'>
+            <div class="act-icon">${iconForStatus(lead)}</div>
+            <div style="flex:1;min-width:0;">
+                <div class="act-title">${lead.biz_name}</div>
+                <div class="act-sub">${({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент')}: ${lead.client_name}</div>
+            </div>
+            <div class="act-right">
+                ${statusPill(lead)}
+                <div class="act-date">${lead.date}</div>
+                ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
+            </div>
         </div>
-        <div class="act-right">
-            ${statusPill(lead)}
-            <div class="act-date">${lead.date}</div>
-            ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
-        </div>
+        ${inlineActions ? `<div class="activity-actions">${inlineActions}</div>` : ''}
     </div>`;
 }
 
