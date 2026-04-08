@@ -3002,6 +3002,16 @@ function setStep(step) {
   document.getElementById('t_m_cancel_bottom').style.display = step === 'result' ? 'none' : 'flex';
 }
 
+async function refreshBusinessDataFromBackend() {
+  const res = await fetch(`${API_URL}/api/business?token=${token}`);
+  if (!res.ok) throw new Error('refresh_business');
+  const fresh = await res.json();
+  bizData = fresh;
+  sessionStorage.setItem(`biz_cache_${token}`, JSON.stringify(fresh));
+  renderAll();
+  return fresh;
+}
+
 async function submitDealAction(actionType) {
   const L = i18n[lang] || i18n.ru;
   const activeDeal = (bizData.deals || []).find(d => d.id === activeDealId);
@@ -3052,20 +3062,9 @@ async function submitDealAction(actionType) {
         if (hasOwn(deal, 'debt_amount')) deal.debt_amount = 0;
       }
     } else if (actionType === 'biz_paid') {
+      await refreshBusinessDataFromBackend();
       document.getElementById('m_result_msg').textContent = L.action_success;
       document.getElementById('m_result_msg').style.color = 'var(--green)';
-      const deal = (bizData.deals || []).find(d => d.id === activeDealId);
-      if (deal) {
-        const nextSettlementStatus = String(data.settlement_status || '').trim().toLowerCase();
-        deal.has_open_agent_payout = false;
-        deal.has_open_settlement = true;
-        deal.history_ready = false;
-        deal.debt_amount = 0;
-        deal.settlement_mode = String(data.settlement_mode || deal.settlement_mode || 'take').trim().toLowerCase();
-        deal.settlement_status = nextSettlementStatus === 'pending_agent_receipt'
-          ? 'pending_receipt'
-          : (nextSettlementStatus || 'pending_receipt');
-      }
     } else {
       document.getElementById('m_result_msg').textContent = L.action_success;
       document.getElementById('m_result_msg').style.color = 'var(--green)';
