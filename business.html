@@ -394,10 +394,12 @@
           <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
         </div>
       </div>
+      <div id="dealsSummaryMount"></div>
       <div class="deals-filter">
         <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">В работе</button>
         <button class="filter-tab"        onclick="setFilter('history')" id="t_filt_history">История</button>
       </div>
+      <div id="dealsPromoMount"></div>
       <div id="dealsContainer"></div>
     </div>
 
@@ -1908,6 +1910,8 @@ async function remindDecision(id) {
 function renderDeals() {
 
   const container = document.getElementById('dealsContainer');
+  const summaryMount = document.getElementById('dealsSummaryMount');
+  const promoMount = document.getElementById('dealsPromoMount');
   const L = i18n[lang] || i18n.ru;
   const deals = bizData.deals || [];
   const curr  = bizData.currency || '₪';
@@ -1928,11 +1932,28 @@ function renderDeals() {
       : isBusinessHistoryDeal(d);
   });
 
+  const s = bizData.stats || {};
+  const totalClosed = s.closed || 0;
+  const totalRevenue = Math.round(s.total_revenue || 0);
+  const recommenders = s.agents_count || 0;
+  const closedLbl = {ru:'Закрыто',he:'נסגרו',en:'Closed',ar:'مغلقة'};
+  const revenueLbl = {ru:'Оборот',he:'מחזור',en:'Revenue',ar:'الإيراد'};
+  const agentsLbl = {ru:'Агенты',he:'ממליצים',en:'Agents',ar:'وكلاء'};
+
+  if (summaryMount) {
+    summaryMount.innerHTML = `
+      <div class="revenue-pill"><span class="pill-label">${revenueLbl[lang] || revenueLbl.ru}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
+      <div class="deals-empty-stats">
+        <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
+        <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
+      </div>`;
+  }
+
+  if (promoMount) {
+    promoMount.innerHTML = dealFilter === 'active' ? getActiveDealsPromoHtml() : '';
+  }
+
   if (!filtered.length) {
-    const s = bizData.stats || {};
-    const totalClosed = s.closed || 0;
-    const totalRevenue = Math.round(s.total_revenue || 0);
-    const recommenders = s.agents_count || 0;
     const titleMap = {
       ru: dealFilter === 'active' ? 'Пока нет активных сделок' : 'История сделок пока пуста',
       he: dealFilter === 'active' ? 'כרגע אין עסקאות פעילות' : 'היסטוריית העסקאות עדיין ריקה',
@@ -1965,23 +1986,9 @@ function renderDeals() {
     const detailsLbl = {ru:'Подробнее', he:'עוד', en:'Details', ar:'تفاصيل'};
     const msgMap = subMap;
     container.innerHTML = `
-      <div class="page-hero deals-empty-hero">
-        <h3>${heroTitle[lang] || heroTitle.ru}</h3>
-        <button type="button" class="ghost-chip empty-copy-toggle" aria-expanded="false" onclick="event.stopPropagation();toggleEmptyHeroCopy(this)">
-          <span class="toggle-label">${detailsLbl[lang] || detailsLbl.ru}</span>
-          <i data-feather="chevron-down" style="width:14px;height:14px;transition:.2s"></i>
-        </button>
-        <div class="empty-copy">${heroText[lang] || heroText.ru}</div>
-        <div class="revenue-pill"><span class="pill-label">${revenueLbl[lang] || revenueLbl.ru}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
-        <div class="deals-empty-stats">
-          <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
-          <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
-        </div>
-        <div class="deals-empty-actions">
-          <button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendFlow()">${primaryMap[lang] || primaryMap.ru}</button>
-          <button class="btn-primary btn-outline" onclick="event.stopPropagation();switchTab('recommenders')">${secondaryMap[lang] || secondaryMap.ru}</button>
-        </div>
-        <div class="soft-note">${msgMap[lang] || msgMap.ru}</div>
+      <div class="empty-state">
+        <div class="deals-empty-title">${titleMap[lang] || titleMap.ru}</div>
+        <div class="deals-empty-sub">${subMap[lang] || subMap.ru}</div>
       </div>`;
     feather.replace();
     return;
@@ -2041,9 +2048,7 @@ function renderDeals() {
       </div>`;
   }).join('');
 
-  container.innerHTML = dealFilter === 'active'
-    ? `${getActiveDealsPromoHtml()}${dealsHtml}`
-    : dealsHtml;
+  container.innerHTML = dealsHtml;
 
   feather.replace();
 }
