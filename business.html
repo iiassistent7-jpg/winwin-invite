@@ -1613,6 +1613,22 @@ function hasTakePaymentSent(truth) {
   return truth.bizClaimedPaid === true || truth.businessSent === true;
 }
 
+function isTakeSettlementFinalized(truth) {
+  if (truth.settlementMode !== 'take') return false;
+  if (truth.agentConfirmedReceipt === true) return true;
+  const finalStatuses = new Set(['confirmed','completed','done']);
+  const hasFinalStatus = [
+    truth.settlementStatus,
+    truth.status,
+    truth.rewardStatus,
+    truth.decisionStatus
+  ].some(code => finalStatuses.has(code));
+  return hasFinalStatus
+    && truth.hasOpenSettlement !== true
+    && truth.hasOpenAgentPayout !== true
+    && truth.debtAmount <= 0;
+}
+
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
   const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
@@ -1625,7 +1641,7 @@ function getDisplayDealStatus(deal) {
     if (truth.status === 'rejected') return 'rejected';
 
     if (truth.settlementMode === 'take') {
-      if (truth.agentConfirmedReceipt === true) return 'closed';
+      if (isTakeSettlementFinalized(truth)) return 'closed';
       if (isTakeSettlementDisputed(truth)) return 'pending_business_payment';
       if (
         truth.pendingAgentReceipt === true ||
@@ -2022,9 +2038,12 @@ function getBusinessDealSettlementInfo(deal) {
   const agentName = String(deal.agent_name || deal.sender_name || deal.agent || '—').trim() || '—';
   const clientName = String(deal.client_name || deal.name || '—').trim() || '—';
   const isClosedLike = ['closed','completed','done'].includes(statusCode) || (truth.historyReady === true && truth.hasOpenSettlement !== true && truth.hasOpenAgentPayout !== true && truth.debtAmount <= 0);
-  const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(statusCode)
-    || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && (truth.pendingAgentReceipt === true || hasTakePaymentSent(truth)));
-  const paymentPending = !waitingAgentReceipt && (
+  const takeSettlementFinalized = decisionKey === 'take' && (isTakeSettlementFinalized(truth) || isClosedLike);
+  const waitingAgentReceipt = !takeSettlementFinalized && (
+    ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(statusCode)
+    || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && (truth.pendingAgentReceipt === true || hasTakePaymentSent(truth)))
+  );
+  const paymentPending = !takeSettlementFinalized && !waitingAgentReceipt && (
     ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode)
     || truth.hasOpenAgentPayout === true
     || truth.debtAmount > 0
@@ -2064,10 +2083,10 @@ function getBusinessDealSettlementInfo(deal) {
       decisionKey,
       decisionLabel:formatRecommendDecisionPlain('take', L),
       decisionPill:formatDecision('take', L),
-      nextStep: paymentPending ? copy.nextPayAgent : (waitingAgentReceipt ? copy.nextWaitAgentReceipt : copy.nextTakeDone),
-      targetDetail:`${copy.targetPayAgent}: ${agentName}`,
-      nextStepTone: paymentPending ? 'danger' : (waitingAgentReceipt ? 'warning' : 'success'),
-      targetTone:'danger'
+      nextStep: takeSettlementFinalized ? copy.nextTakeDone : (paymentPending ? copy.nextPayAgent : (waitingAgentReceipt ? copy.nextWaitAgentReceipt : copy.nextTakeDone)),
+      targetDetail: takeSettlementFinalized ? agentName : `${copy.targetPayAgent}: ${agentName}`,
+      nextStepTone: takeSettlementFinalized ? 'success' : (paymentPending ? 'danger' : (waitingAgentReceipt ? 'warning' : 'success')),
+      targetTone: takeSettlementFinalized ? 'success' : 'danger'
     };
   }
 
@@ -2424,9 +2443,12 @@ function renderStats() {
 
   const explicitDebtDeals = getDebtVisibleDeals();
   const explicitDebtAmount = explicitDebtDeals.reduce((sum, deal) => sum + Math.max(0, parseTruthNumber(deal.debt_amount)), 0);
-  const debt = explicitDebtDeals.length
-    ? (explicitDebtAmount > 0 ? explicitDebtAmount : (s.pending_debt || 0))
-    : (s.pending_debt || 0);
+  const hasExplicitDealTruthRows = (bizData.deals || []).some(hasExplicitDealTruth);
+  const debt = hasExplicitDealTruthRows
+    ? explicitDebtAmount
+    : (explicitDebtDeals.length
+      ? (explicitDebtAmount > 0 ? explicitDebtAmount : (s.pending_debt || 0))
+      : (s.pending_debt || 0));
   const banner = document.getElementById('debtBanner');
   if (debt > 0 || explicitDebtDeals.length > 0) {
     banner.style.display = 'flex';
