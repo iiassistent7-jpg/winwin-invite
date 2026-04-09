@@ -1540,8 +1540,19 @@ function parseTruthNumber(value) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function getOutstandingBusinessDebtAmount(deal) {
+  const keys = ['debt_amount', 'pending_payout', 'pending_debt', 'debt'];
+  for (const key of keys) {
+    if (!hasOwn(deal, key)) continue;
+    const raw = deal[key];
+    if (raw == null || String(raw).trim() === '') continue;
+    return Math.max(0, parseTruthNumber(raw));
+  }
+  return 0;
+}
+
 function hasExplicitDealTruth(deal) {
-  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','agent_decision','biz_claimed_paid','business_sent','pending_agent_receipt','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
+  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','pending_payout','pending_debt','debt','agent_decision','biz_claimed_paid','business_sent','pending_agent_receipt','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
     .some(key => hasOwn(deal, key));
 }
 
@@ -1556,7 +1567,7 @@ function getDealTruth(deal) {
   const historyReady = parseTruthBool(deal.history_ready);
   const hasOpenSettlement = parseTruthBool(deal.has_open_settlement);
   const hasOpenAgentPayout = parseTruthBool(deal.has_open_agent_payout);
-  const debtAmount = parseTruthNumber(deal.debt_amount);
+  const debtAmount = getOutstandingBusinessDebtAmount(deal);
   const bizClaimedPaid = parseTruthBool(deal.biz_claimed_paid);
   const businessSent = parseTruthBool(deal.business_sent);
   const pendingAgentReceipt = parseTruthBool(deal.pending_agent_receipt);
@@ -1637,6 +1648,34 @@ function isTakeSettlementFinalized(truth) {
     && truth.debtAmount <= 0;
 }
 
+function isBusinessDealFinalized(deal, truth = getDealTruth(deal)) {
+  const statuses = getDealStatusCodes(deal);
+  const hardFinalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed', 'support_business_completed']);
+  const hasReceiptClearedSnapshot =
+    truth.pendingAgentReceipt === false &&
+    (hasOwn(deal, 'pending_payout') || hasOwn(deal, 'debt_amount') || hasOwn(deal, 'pending_debt'));
+  const hasOpenObligations =
+    truth.hasOpenSettlement === true ||
+    truth.hasOpenAgentPayout === true ||
+    truth.debtAmount > 0 ||
+    truth.payDisputePending === true ||
+    truth.agentPayDisputes > 0;
+
+  if (truth.status === 'rejected' || statuses.includes('rejected')) return false;
+  if (truth.settlementMode === 'take' && isTakeSettlementFinalized(truth)) return true;
+  if (hasOpenObligations) return false;
+  if (truth.historyReady === true) return true;
+  if (hasReceiptClearedSnapshot) return true;
+  if ([truth.settlementStatus, truth.status, truth.rewardStatus, truth.decisionStatus].some(code => hardFinalStatuses.has(code))) {
+    return true;
+  }
+  if (truth.agentConfirmedReceipt === true) return true;
+  if (truth.pendingAgentReceipt === false && (hasTakePaymentSent(truth) || statuses.includes('closed'))) {
+    return true;
+  }
+  return false;
+}
+
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
   const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
@@ -1647,6 +1686,7 @@ function getDisplayDealStatus(deal) {
     const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
 
     if (truth.status === 'rejected') return 'rejected';
+    if (isBusinessDealFinalized(deal, truth)) return 'closed';
 
     if (truth.settlementMode === 'take') {
       if (isTakeSettlementFinalized(truth)) return 'closed';
@@ -1711,6 +1751,7 @@ function getDisplayDealStatus(deal) {
   const finalStatuses = new Set(['confirmed','gift_closed','support_business_completed','completed','done']);
   const decision = truth.settlementMode;
 
+  if (isBusinessDealFinalized(deal, truth)) return 'closed';
   if (!decision && statuses.includes('closed')) return 'pending_confirmation';
   if (!decision && statuses.some(code => ['pending_confirmation', 'pending_agent_confirmation', 'pending'].includes(code))) {
     return 'pending_confirmation';
@@ -1913,10 +1954,21 @@ function getDealAgentPhone(deal) {
 }
 
 function formatDealDebtAmount(deal, currency) {
+  return formatOutstandingDealDebtAmount(deal, currency);
   const truth = getDealTruth(deal);
   const rewardVal = truth.debtAmount ?? deal.debt_amount ?? deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? deal.pending_payout ?? deal.pending_debt ?? deal.debt ?? null;
   if (rewardVal == null || rewardVal === '') return '—';
   return Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${currency}` : String(rewardVal);
+}
+
+function formatOutstandingDealDebtAmount(deal, currency) {
+  const statusCode = getDisplayDealStatus(deal);
+  const explicitDebtAmount = getOutstandingBusinessDebtAmount(deal);
+  if (explicitDebtAmount > 0) return `${explicitDebtAmount} ${currency}`;
+  if (statusCode !== 'pending_business_payment') return '—';
+  const fallbackRewardVal = deal.commission ?? deal.agent_reward ?? deal.reward_amount ?? null;
+  if (fallbackRewardVal == null || fallbackRewardVal === '') return '—';
+  return Number.isFinite(Number(fallbackRewardVal)) ? `${Number(fallbackRewardVal)} ${currency}` : String(fallbackRewardVal);
 }
 
 function formatDealIncomeAmount(deal, currency) {
@@ -2197,7 +2249,7 @@ function renderDebtDealsSheet() {
     const statusMeta = projection.statusMeta;
     const clientName = d.client_name || d.name || '—';
     const agentName = d.agent_name || d.sender_name || d.agent || '—';
-    const rewardText = formatDealDebtAmount(d, curr);
+    const rewardText = formatOutstandingDealDebtAmount(d, curr);
     const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : '—');
     return `
       <div class="debt-deal-card" role="button" tabindex="0" onclick="openDebtDealDetail(${row.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealDetail(${row.id});}">
@@ -2450,7 +2502,7 @@ function renderStats() {
   }, 80);
 
   const explicitDebtDeals = getDebtVisibleDeals();
-  const explicitDebtAmount = explicitDebtDeals.reduce((sum, deal) => sum + Math.max(0, parseTruthNumber(deal.debt_amount)), 0);
+  const explicitDebtAmount = explicitDebtDeals.reduce((sum, deal) => sum + getOutstandingBusinessDebtAmount(deal), 0);
   const hasExplicitDealTruthRows = (bizData.deals || []).some(hasExplicitDealTruth);
   const debt = hasExplicitDealTruthRows
     ? explicitDebtAmount
@@ -3531,7 +3583,7 @@ function openManageDeal(id) {
   const agentName = deal.agent_name || deal.sender_name || '—';
   const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
-  const debtValue = formatDealDebtAmount(deal, curr);
+  const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
@@ -3601,7 +3653,25 @@ async function refreshBusinessDataFromBackend() {
 async function submitDealAction(actionType) {
   const L = i18n[lang] || i18n.ru;
   const activeDeal = (bizData.deals || []).find(d => d.id === activeDealId);
+  const projection = activeDeal ? getBusinessDealProjection(activeDeal) : null;
   const isPayoutPending = activeDeal ? isPayoutPendingBusinessDeal(activeDeal) : false;
+  const allowedModes = {
+    accept: ['accept_or_reject'],
+    close: ['close_only', 'close_or_reject'],
+    reject: ['accept_or_reject', 'close_or_reject'],
+    biz_paid: ['mark_paid']
+  };
+  if (!activeDeal || !projection || !(allowedModes[actionType] || []).includes(projection.actionMode)) {
+    const blockedMsg = {
+      ru: 'Эта сделка уже завершена, поэтому бизнес-действие больше недоступно.',
+      he: 'העסקה הזו כבר הושלמה, ולכן הפעולה העסקית הזו כבר לא זמינה.',
+      en: 'This deal is already finalized, so this business action is no longer available.',
+      ar: 'هذه الصفقة مكتملة بالفعل، لذلك لم يعد هذا الإجراء التجاري متاحاً.'
+    };
+    showNotice(blockedMsg[lang] || blockedMsg.ru);
+    closeManageDeal();
+    return;
+  }
   if (actionType === 'close' && !isPayoutPending && !document.getElementById('m_amount').value) return;
   setStep('result');
   document.getElementById('m_spinner').style.display = 'block';
