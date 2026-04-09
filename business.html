@@ -566,7 +566,7 @@
             <div class="manage-info-value" id="m_val_date_compact"></div>
           </div>
         </div>
-        <div class="manage-summary-grid">
+        <div class="manage-summary-grid" id="m_box_settlement_group">
           <div class="manage-info-box" id="m_box_decision">
             <div class="manage-info-label" id="t_m_lbl_decision">Решение рекомендателя</div>
             <div class="manage-info-value" id="m_val_decision"></div>
@@ -3285,6 +3285,7 @@ function openManageDeal(id) {
   if (!deal) return;
   const curr = bizData.currency || '₪';
   const statusCode = getDisplayDealStatus(deal);
+  const showSettlementGroup = statusCode !== 'in_progress';
   const statusMeta = getStatusData(statusCode);
   const clarityCopy = getBusinessDealClarityCopy();
   const settlementInfo = getBusinessDealSettlementInfo(deal);
@@ -3308,17 +3309,22 @@ function openManageDeal(id) {
   document.getElementById('m_val_debt').textContent = debtValue;
   document.getElementById('m_val_debt_compact').textContent = debtValue;
   document.getElementById('m_val_income').textContent = incomeValue;
-  document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
-  document.getElementById('t_m_lbl_target').textContent = clarityCopy.targetField;
-  document.getElementById('t_m_lbl_next_step').textContent = clarityCopy.nextStepField;
-  document.getElementById('m_val_decision').textContent = settlementInfo.decisionLabel;
-  document.getElementById('m_val_target').textContent = settlementInfo.targetDetail;
-  document.getElementById('m_val_next_step').textContent = settlementInfo.nextStep;
+  document.getElementById('m_box_settlement_group').style.display = showSettlementGroup ? 'grid' : 'none';
+  if (showSettlementGroup) {
+    document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
+    document.getElementById('t_m_lbl_target').textContent = clarityCopy.targetField;
+    document.getElementById('t_m_lbl_next_step').textContent = clarityCopy.nextStepField;
+    document.getElementById('m_val_decision').textContent = settlementInfo.decisionLabel;
+    document.getElementById('m_val_target').textContent = settlementInfo.targetDetail;
+    document.getElementById('m_val_next_step').textContent = settlementInfo.nextStep;
+  }
   document.getElementById('m_box_status').className = `manage-info-box ${tone === 'success' ? 'manage-info-box-positive' : (tone === 'danger' ? 'manage-info-box-danger' : 'manage-info-box-warning')}`;
   document.getElementById('m_box_debt').className = `manage-info-box${isPayoutPending ? ' manage-info-box-danger' : ''}`;
-  document.getElementById('m_box_decision').className = getToneBoxClass(settlementInfo.decisionKey ? 'success' : 'warning');
-  document.getElementById('m_box_target').className = getToneBoxClass(settlementInfo.targetTone);
-  document.getElementById('m_box_next_step').className = getToneBoxClass(settlementInfo.nextStepTone);
+  if (showSettlementGroup) {
+    document.getElementById('m_box_decision').className = getToneBoxClass(settlementInfo.decisionKey ? 'success' : 'warning');
+    document.getElementById('m_box_target').className = getToneBoxClass(settlementInfo.targetTone);
+    document.getElementById('m_box_next_step').className = getToneBoxClass(settlementInfo.nextStepTone);
+  }
   document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
