@@ -1468,7 +1468,7 @@ function getStatusData(status) {
     ar:'بانتظار دفع الوكيل'
   };
   const receiptPendingText = {
-    ru:'Ждём подтверждение получения',
+    ru:'Ждём подтверждение оплаты агентом',
     he:'ממתינים לאישור קבלה',
     en:'Awaiting receipt confirmation',
     ar:'بانتظار تأكيد الاستلام'
@@ -1486,6 +1486,7 @@ function getStatusData(status) {
     pending_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
     awaiting_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
     pending_agent_confirmation: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
+    pending_agent_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
   };
   return map[status] || { text:status, cls:'st-new', icon:'circle' };
 }
@@ -1540,7 +1541,7 @@ function parseTruthNumber(value) {
 }
 
 function hasExplicitDealTruth(deal) {
-  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','agent_decision','biz_claimed_paid','business_sent','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
+  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','agent_decision','biz_claimed_paid','business_sent','pending_agent_receipt','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
     .some(key => hasOwn(deal, key));
 }
 
@@ -1558,6 +1559,7 @@ function getDealTruth(deal) {
   const debtAmount = parseTruthNumber(deal.debt_amount);
   const bizClaimedPaid = parseTruthBool(deal.biz_claimed_paid);
   const businessSent = parseTruthBool(deal.business_sent);
+  const pendingAgentReceipt = parseTruthBool(deal.pending_agent_receipt);
   const agentConfirmedReceipt = parseTruthBool(deal.agent_confirmed_receipt);
   const giftClosed = parseTruthBool(deal.gift_closed);
   const autoClosed = parseTruthBool(deal.auto_closed);
@@ -1582,6 +1584,7 @@ function getDealTruth(deal) {
     debtAmount,
     bizClaimedPaid,
     businessSent,
+    pendingAgentReceipt,
     agentConfirmedReceipt,
     giftClosed,
     autoClosed,
@@ -1613,7 +1616,7 @@ function hasTakePaymentSent(truth) {
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
   const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
-  const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt','pending_agent_confirmation']);
+  const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt']);
   const giftCompletedStatuses = new Set(['gift_closed']);
   const supportCompletedStatuses = new Set(['support_business_completed']);
   if (truth.explicit) {
@@ -1625,6 +1628,7 @@ function getDisplayDealStatus(deal) {
       if (truth.agentConfirmedReceipt === true) return 'closed';
       if (isTakeSettlementDisputed(truth)) return 'pending_business_payment';
       if (
+        truth.pendingAgentReceipt === true ||
         hasTakePaymentSent(truth) ||
         payoutCompletedStatuses.has(truth.settlementStatus)
       ) {
@@ -1689,7 +1693,7 @@ function getDisplayDealStatus(deal) {
   }
   if (decision === 'take') {
     if (statuses.some(code => disputeStatuses.has(code))) return 'pending_business_payment';
-    if (statuses.some(code => ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_client_confirmation','awaiting_client_confirmation'].includes(code))) {
+    if (statuses.some(code => ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt','pending_client_confirmation','awaiting_client_confirmation'].includes(code))) {
       return 'pending_receipt';
     }
     if (statuses.some(code => pendingPaymentStatuses.has(code)) || statuses.includes('closed')) return 'pending_business_payment';
@@ -1704,7 +1708,8 @@ function getDisplayDealStatus(deal) {
     'awaiting_reward',
     'pending_receipt',
     'awaiting_receipt',
-    'pending_agent_confirmation'
+    'pending_agent_confirmation',
+    'pending_agent_receipt'
   ];
   return priority.find(code => statuses.includes(code)) || (finalStatuses.has(getPrimaryDealStatus(deal)) ? 'closed' : getPrimaryDealStatus(deal));
 }
@@ -1797,9 +1802,9 @@ function getDealNextStep(status) {
     ar:'ما زال يجب دفع مكافأة الوكيل'
   };
   const receiptPendingText = {
-    ru:'Ждём подтверждение получения от агента',
+    ru:'Ждём подтверждение оплаты агентом',
     he:'ממתינים לאישור קבלה מהסוכן',
-    en:'Waiting for the agent to confirm receipt',
+    en:'Waiting for the agent to confirm payment',
     ar:'بانتظار تأكيد الاستلام من الوكيل'
   };
   const map = {
@@ -1811,7 +1816,7 @@ function getDealNextStep(status) {
   if (['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(status)) {
     return payoutPendingText[lang] || payoutPendingText.ru;
   }
-  if (['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(status)) {
+  if (['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(status)) {
     return receiptPendingText[lang] || receiptPendingText.ru;
   }
   return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || '';
@@ -1920,7 +1925,7 @@ function getBusinessDealClarityCopy() {
       nextWaitDecision:'Ждём решение рекомендателя',
       nextRejected:'Сделка отклонена',
       nextPayAgent:'Оплатить бонус агенту',
-      nextWaitAgentReceipt:'Ждём подтверждение получения от агента',
+      nextWaitAgentReceipt:'Ждём подтверждение оплаты агентом',
       nextTakeDone:'Бонус агенту обработан',
       nextSendClient:'Отправить подарок / бонус клиенту',
       nextGiftDone:'Подарок клиенту отправлен',
@@ -1960,7 +1965,7 @@ function getBusinessDealClarityCopy() {
       nextWaitDecision:'Waiting for recommender decision',
       nextRejected:'Deal rejected',
       nextPayAgent:'Pay the agent reward',
-      nextWaitAgentReceipt:'Wait for the agent to confirm receipt',
+      nextWaitAgentReceipt:'Wait for the agent to confirm payment',
       nextTakeDone:'Agent reward is already handled',
       nextSendClient:'Send the gift / reward to the client',
       nextGiftDone:'Gift already sent to the client',
@@ -2017,8 +2022,8 @@ function getBusinessDealSettlementInfo(deal) {
   const agentName = String(deal.agent_name || deal.sender_name || deal.agent || '—').trim() || '—';
   const clientName = String(deal.client_name || deal.name || '—').trim() || '—';
   const isClosedLike = ['closed','completed','done'].includes(statusCode) || (truth.historyReady === true && truth.hasOpenSettlement !== true && truth.hasOpenAgentPayout !== true && truth.debtAmount <= 0);
-  const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(statusCode)
-    || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && hasTakePaymentSent(truth));
+  const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(statusCode)
+    || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && (truth.pendingAgentReceipt === true || hasTakePaymentSent(truth)));
   const paymentPending = !waitingAgentReceipt && (
     ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode)
     || truth.hasOpenAgentPayout === true
@@ -2591,7 +2596,7 @@ function normalizeRecommendationStatus(row) {
       truth.agentConfirmedReceipt !== true &&
       (
         hasTakePaymentSent(truth) ||
-        ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(truth.settlementStatus)
+        ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(truth.settlementStatus)
       )
     ) {
       return 'pending_confirmation';
@@ -2611,7 +2616,7 @@ function normalizeRecommendationStatus(row) {
       truth.hasOpenSettlement === true &&
       truth.hasOpenAgentPayout !== true &&
       truth.debtAmount <= 0 &&
-      ['pending_receipt','awaiting_receipt'].includes(truth.settlementStatus)
+      ['pending_receipt','awaiting_receipt','pending_agent_receipt'].includes(truth.settlementStatus)
     ) {
       return 'pending_confirmation';
     }
@@ -2993,7 +2998,7 @@ function isOutgoingRecommenderAwaitingReceipt(row) {
   if (isTakeSettlementDisputed(truth)) return false;
   const settlementStatus = String((row && row.settlement_status) || truth.settlementStatus || '').trim().toLowerCase();
   return hasTakePaymentSent(truth)
-    || ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(settlementStatus);
+    || ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(settlementStatus);
 }
 
 function getOutgoingRecommendReceiptChoices() {

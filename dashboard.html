@@ -2166,6 +2166,7 @@ function normalizeDashboardLead(lead) {
         'agent_decision',
         'biz_claimed_paid',
         'business_sent',
+        'pending_agent_receipt',
         'agent_confirmed_receipt',
         'gift_closed',
         'auto_closed',
@@ -2196,6 +2197,7 @@ function normalizeDashboardLead(lead) {
     normalized.has_open_agent_payout = parseTruthBool(normalized.has_open_agent_payout);
     normalized.biz_claimed_paid = parseTruthBool(normalized.biz_claimed_paid);
     normalized.business_sent = parseTruthBool(normalized.business_sent);
+    normalized.pending_agent_receipt = parseTruthBool(normalized.pending_agent_receipt);
     normalized.agent_confirmed_receipt = parseTruthBool(normalized.agent_confirmed_receipt);
     normalized.gift_closed = parseTruthBool(normalized.gift_closed);
     normalized.auto_closed = parseTruthBool(normalized.auto_closed);
@@ -2297,7 +2299,7 @@ function getExplicitLeadStage(lead) {
     const debtAmount = Number.isFinite(Number(lead.debt_amount)) ? Number(lead.debt_amount) : 0;
     const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
     const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation', 'pending_agent_receipt']);
     const giftCompletedStatuses = new Set(['gift_closed']);
     const supportCompletedStatuses = new Set(['support_business_completed']);
     const supportInProgressStatuses = new Set(['support_business_in_progress']);
@@ -2326,6 +2328,7 @@ function getExplicitLeadStage(lead) {
             return 'awaiting_payment';
         }
         if (
+            lead.pending_agent_receipt === true ||
             hasPaymentSent ||
             (
                 payoutCompletedStatuses.has(settlementStatus) &&
@@ -2406,9 +2409,9 @@ function getDealProjection(lead) {
     const finalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed', 'support_business_completed']);
     const rejectedStatuses = new Set(['rejected']);
     const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
-    const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation', 'pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
+    const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation', 'pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation', 'pending_agent_receipt']);
     const awaitingDecisionStatuses = new Set(['pending_confirmation', 'awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation', 'pending_agent_receipt']);
     const giftCompletedStatuses = new Set(['gift_closed']);
     const supportCompletedStatuses = new Set(['support_business_completed']);
     const supportInProgressStatuses = new Set(['support_business_in_progress']);
@@ -2736,7 +2739,7 @@ function isWalletDeal(lead) {
     const hasExplicitTruth = lead.has_explicit_truth === true;
     const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
     const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_receipt']);
     const giftCompletedStatuses = new Set(['gift_closed']);
     const supportCompletedStatuses = new Set(['support_business_completed']);
     const explicitStage = hasExplicitTruth ? getExplicitLeadStage(lead) : null;
@@ -2747,7 +2750,7 @@ function isWalletDeal(lead) {
 
     if (projection.debt) return true;
     if (projection.bucket === 'history' && projection.counter === 'closed') return true;
-    if (['pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward', 'pending_client_confirmation', 'awaiting_client_confirmation'].includes(status)) return true;
+    if (['pending_confirmation', 'pending_agent_confirmation', 'pending_agent_receipt', 'awaiting_reward', 'pending_client_confirmation', 'awaiting_client_confirmation'].includes(status)) return true;
     return ['take', 'gift_client', 'support_business'].includes(decision);
 }
 
