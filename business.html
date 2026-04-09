@@ -1616,6 +1616,14 @@ function hasTakePaymentSent(truth) {
 function isTakeSettlementFinalized(truth) {
   if (truth.settlementMode !== 'take') return false;
   if (truth.agentConfirmedReceipt === true) return true;
+  const receiptClearedWithoutOpenObligations =
+    truth.pendingAgentReceipt === false
+    && truth.hasOpenSettlement !== true
+    && truth.hasOpenAgentPayout !== true
+    && truth.debtAmount <= 0
+    && truth.payDisputePending !== true
+    && truth.agentPayDisputes <= 0;
+  if (receiptClearedWithoutOpenObligations) return true;
   const finalStatuses = new Set(['confirmed','completed','done']);
   const hasFinalStatus = [
     truth.settlementStatus,
