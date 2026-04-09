@@ -6,6 +6,7 @@
   <title>Win-Win · Бизнес Кабинет</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
+  <script src="recommender-decision-ui.js"></script>
   <style>
     /* ── CSS Variables ──────────────────────────────────────────────── */
     :root {
@@ -151,6 +152,7 @@
 .deal-summary-pills { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 14px; }
 .deal-actions-row { display:flex; gap:10px; flex-wrap:wrap; }
 .deal-actions-row .btn-primary { flex:1 1 150px; }
+.settlement-choice-grid { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
 .deal-extra { display:none; margin-top:12px; }
 .deal-extra.open { display:block; }
 .deal-warning { background:rgba(242,201,76,.10); border:1px solid rgba(242,201,76,.25); color:#f3d46b; border-radius:14px; padding:12px 14px; font-size:.86rem; line-height:1.5; margin-bottom:16px; }
@@ -634,6 +636,7 @@
         <span id="t_rec_detail_back_top">Назад</span>
       </button>
       <div id="recommendDetailContent"></div>
+      <div id="recommendDetailActions"></div>
       <button class="btn-primary btn-accent" onclick="closeRecommendDetail()" id="t_rec_detail_back_bottom">Назад</button>
     </div>
   </div>
@@ -2388,8 +2391,9 @@ function normalizeOutgoingRecommendations() {
       || bizData.recommendations_sent
       || bizData.sent_recommendations
       || []);
-  return raw.map((r, idx) => ({
-    id: r.id || idx,
+  return raw.map((r, idx) => Object.assign({}, r, {
+    id: r.id || r.deal_id || r.lead_id || r.recommendation_id || idx,
+    action_deal_id: r.id || r.deal_id || r.lead_id || r.recommendation_id || null,
     business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || '—',
     client_name: r.client_name || r.invited_client_name || r.receiver_name || r.name || '—',
     client_phone: r.client_phone || r.invited_client_phone || r.receiver_phone || r.phone || '',
@@ -2657,6 +2661,75 @@ function getRecommendStatusLabel(status, L) {
   return map[status] || { text: status, cls: 'st-new' };
 }
 
+function getRecommendDecisionChoices(L) {
+  return [
+    { value:'take', label:L.dec_take || 'Забрать себе' },
+    { value:'gift_client', label:L.dec_gift || 'Подарить клиенту' },
+    { value:'support_business', label:L.dec_support || 'Поддержать бизнес' }
+  ];
+}
+
+function isOutgoingRecommenderPendingChoice(row) {
+  const truth = getDealTruth(row || {});
+  const status = String((row && row.status) || '').trim().toLowerCase();
+  const settlementStatus = String((row && row.settlement_status) || '').trim().toLowerCase();
+  const decisionStatus = String((row && row.decision_status) || '').trim().toLowerCase();
+  const settlementMode = String(truth.settlementMode || (row && row.decision) || '').trim().toLowerCase();
+  const hasDecision = ['take', 'gift_client', 'support_business'].includes(settlementMode);
+  const hasClosureEvidence = [
+    row && row.amount,
+    row && row.reward,
+    row && row.business_close_date,
+    row && row.closed_at,
+    row && row.business_closed_at
+  ].some(value => String(value == null ? '' : value).trim() !== '');
+  const pendingChoiceStatuses = new Set(['pending_confirmation', 'pending_agent_confirmation', 'pending_agent_choice', 'awaiting_reward']);
+  const finalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed', 'support_business_completed', 'rejected']);
+
+  if (hasDecision || truth.historyReady === true || truth.hasOpenAgentPayout === true) return false;
+  if (finalStatuses.has(status) || finalStatuses.has(settlementStatus) || finalStatuses.has(decisionStatus)) return false;
+  if (
+    truth.bizClaimedPaid === true ||
+    truth.businessSent === true ||
+    truth.agentConfirmedReceipt === true ||
+    truth.giftClosed === true ||
+    truth.autoClosed === true
+  ) return false;
+  if (truth.hasOpenSettlement === true) return true;
+  if (pendingChoiceStatuses.has(status) || pendingChoiceStatuses.has(settlementStatus) || pendingChoiceStatuses.has(decisionStatus)) return true;
+  if (truth.status === 'closed' || settlementStatus === 'closed') return true;
+  return hasClosureEvidence && truth.debtAmount <= 0 && ['in_progress', 'active', 'new', ''].includes(status);
+}
+
+function getOutgoingRecommendPendingStageLabel() {
+  const map = {
+    ru: 'Нужно выбрать способ расчёта',
+    he: 'צריך לבחור דרך סגירה',
+    en: 'Choose settlement method',
+    ar: 'يجب اختيار طريقة التسوية'
+  };
+  return map[lang] || map.ru;
+}
+
+function renderRecommendDetailActionButtons(row) {
+  const dealId = row && (row.action_deal_id ?? row.id ?? row.deal_id ?? row.lead_id ?? row.recommendation_id);
+  if (dealId == null || !isOutgoingRecommenderPendingChoice(row)) return '';
+  if (!(window.WinWinRecommenderDecisionUI && typeof window.WinWinRecommenderDecisionUI.render === 'function')) return '';
+  const L = i18n[lang] || i18n.ru;
+  return window.WinWinRecommenderDecisionUI.render({
+    dealId,
+    choices: getRecommendDecisionChoices(L),
+    buttonClass: 'btn-primary',
+    wrapClass: 'settlement-choice-grid',
+    onAction: 'submitOutgoingSettlementChoice'
+  });
+}
+
+function getRecommendDetailStageText(row, L) {
+  if (isOutgoingRecommenderPendingChoice(row)) return getOutgoingRecommendPendingStageLabel();
+  return getRecommendStatusLabel(row.status, L).text;
+}
+
 function formatDecision(decision, L) {
   if (decision === 'take') return '💳 ' + (L.dec_take || 'Забрать себе');
   if (decision === 'gift_client') return '🎁 ' + (L.dec_gift || 'Подарить клиенту');
@@ -2705,7 +2778,7 @@ function openRecommendDetail(index) {
   const L = i18n[lang] || i18n.ru;
   const labels = getRecommendDetailLabels();
   const curr = bizData.currency || '₪';
-  const statusText = getRecommendStatusLabel(row.status, L).text;
+  const statusText = getRecommendDetailStageText(row, L);
   const clientPhone = renderPhoneContact(row.client_phone);
   document.getElementById('recommendDetailContent').innerHTML = `
     <div class="sheet-card" style="margin-top:0;">
@@ -2723,6 +2796,7 @@ function openRecommendDetail(index) {
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>
       </div>
     </div>`;
+  document.getElementById('recommendDetailActions').innerHTML = renderRecommendDetailActionButtons(row);
   document.getElementById('t_rec_detail_back_top').textContent = labels.back;
   document.getElementById('t_rec_detail_back_bottom').textContent = labels.back;
   openFullscreen('recommendDetailSheet');
@@ -2730,7 +2804,69 @@ function openRecommendDetail(index) {
 }
 
 function closeRecommendDetail() {
+  const actionsEl = document.getElementById('recommendDetailActions');
+  if (actionsEl) actionsEl.innerHTML = '';
   closeFullscreen('recommendDetailSheet');
+}
+
+async function refreshBusinessRecommendationContext() {
+  const cacheKey = `biz_cache_${token}`;
+  const res = await fetch(`${API_URL}/api/business?token=${token}`);
+  if (!res.ok) throw new Error('refresh_business');
+  bizData = await res.json();
+  sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
+  await loadPreservedAgentDashboard(true);
+  renderAll();
+  return recommendationRows;
+}
+
+async function submitOutgoingSettlementChoice(dealId, actionType) {
+  if (!['take', 'gift_client', 'support_business'].includes(actionType)) return;
+  const L = i18n[lang] || i18n.ru;
+  const actionToken = agentDashToken || (bizData && bizData.agent_dashboard_token ? String(bizData.agent_dashboard_token).trim() : '');
+  if (!actionToken) {
+    showNotice(L.save_err || 'Save error');
+    return;
+  }
+
+  const actionsEl = document.getElementById('recommendDetailActions');
+  if (actionsEl) {
+    actionsEl.querySelectorAll('button').forEach(btn => { btn.disabled = true; });
+  }
+
+  let response = null;
+  for (const endpoint of [`${API_URL}/api/dashboard/action`, `${API_URL}/api/dashboard`]) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ token: actionToken, deal_id: dealId, action: actionType })
+      });
+      if (res.ok) {
+        response = res;
+        break;
+      }
+    } catch (e) {}
+  }
+
+  if (!response) {
+    if (actionsEl) {
+      actionsEl.querySelectorAll('button').forEach(btn => { btn.disabled = false; });
+    }
+    showNotice(L.save_err || 'Save error');
+    return;
+  }
+
+  try {
+    await refreshBusinessRecommendationContext();
+    const nextIndex = recommendationRows.findIndex(item => String(item.action_deal_id ?? item.id) === String(dealId));
+    if (nextIndex >= 0 && document.getElementById('recommendDetailSheet').classList.contains('active')) {
+      openRecommendDetail(nextIndex);
+    }
+    showNotice(L.save_ok || 'Changes saved!');
+  } catch (e) {
+    showNotice(L.save_err || 'Save error');
+  }
 }
 
 async function openRecommendFlow() {

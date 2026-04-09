@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="referral-share.js"></script>
+    <script src="recommender-decision-ui.js"></script>
     <style>
         /* ג”€ג”€ Light theme ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ */
         :root {
@@ -2613,11 +2614,6 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
 function renderSettlementChoiceButtons(lead, context = 'sheet', force = false) {
     const action = force ? getSettlementChoiceConfig() : getWalletActionConfig(lead);
     if (!action || action.kind !== 'choose_settlement') return '';
-    const styles = {
-        take: 'background:var(--accent2); color:#fff;',
-        gift_client: 'background:transparent; color:var(--text); border:1px solid var(--border);',
-        support_business: 'background:transparent; color:var(--text); border:1px solid var(--border);'
-    };
     const buttonClass = context === 'sheet'
         ? 'btn-primary'
         : context === 'card'
@@ -2627,15 +2623,17 @@ function renderSettlementChoiceButtons(lead, context = 'sheet', force = false) {
         ? 'settlement-choice-grid settlement-choice-grid-inline'
         : 'settlement-choice-grid';
     const clickPrefix = context === 'sheet' ? '' : 'event.stopPropagation(); ';
-    return `
-        <div class="${wrapClass}">
-            ${action.choices.map(choice => `
-                <button class="${buttonClass}" style="${styles[choice.value] || ''}" onclick="${clickPrefix}submitSettlementChoice(${JSON.stringify(lead.id)}, '${choice.value}')">
-                    ${escapeHtml(choice.label)}
-                </button>
-            `).join('')}
-        </div>
-    `;
+    if (window.WinWinRecommenderDecisionUI && typeof window.WinWinRecommenderDecisionUI.render === 'function') {
+        return window.WinWinRecommenderDecisionUI.render({
+            dealId: lead.id,
+            choices: action.choices,
+            buttonClass,
+            wrapClass,
+            onAction: 'submitSettlementChoice',
+            clickPrefix
+        });
+    }
+    return '';
 }
 
 function renderWalletActionButton(lead, context = 'card') {
