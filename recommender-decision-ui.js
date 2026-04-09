@@ -16,11 +16,6 @@
         const wrapClass = String(opts.wrapClass || 'settlement-choice-grid');
         const onAction = String(opts.onAction || 'submitSettlementChoice');
         const clickPrefix = String(opts.clickPrefix || '');
-        const styles = Object.assign({
-            take: 'background:var(--accent2); color:#fff;',
-            gift_client: 'background:transparent; color:var(--text); border:1px solid var(--border);',
-            support_business: 'background:transparent; color:var(--text); border:1px solid var(--border);'
-        }, opts.styles || {});
 
         if (dealId == null || !choices.length) return '';
 
@@ -31,8 +26,8 @@
                 const label = choice && choice.label ? choice.label : value;
                 if (!value) return '';
                 return [
-                    '<button class="', buttonClass, '" style="', styles[value] || '', '" onclick="',
-                    clickPrefix, onAction, '(', JSON.stringify(dealId), ", '", value, '\')">',
+                    '<button class="', buttonClass, ' recommender-decision-btn" type="button" data-decision-choice="', value, '" onclick="',
+                    clickPrefix, "WinWinRecommenderDecisionUI.handleChoiceClick(this, '", onAction, "', ", JSON.stringify(dealId), ", '", value, "')\">",
                     escapeHtml(label),
                     '</button>'
                 ].join('');
@@ -41,5 +36,26 @@
         ].join('');
     }
 
-    global.WinWinRecommenderDecisionUI = { render: render };
+    function handleChoiceClick(button, handlerName, dealId, choiceValue) {
+        const root = button && typeof button.closest === 'function'
+            ? button.closest('.settlement-choice-grid')
+            : null;
+        if (root) {
+            root.querySelectorAll('.recommender-decision-btn').forEach(function(node) {
+                node.classList.remove('is-selected');
+            });
+        }
+        if (button && button.classList) {
+            button.classList.add('is-selected');
+        }
+        const handler = global[handlerName];
+        if (typeof handler === 'function') {
+            return handler(dealId, choiceValue);
+        }
+    }
+
+    global.WinWinRecommenderDecisionUI = {
+        render: render,
+        handleChoiceClick: handleChoiceClick
+    };
 })(window);
