@@ -1407,6 +1407,7 @@ function renderAll() {
   // Normalize: backend may return "leads" instead of "deals"
   if (!bizData.deals && bizData.leads) bizData.deals = bizData.leads;
   if (!bizData.deals) bizData.deals = [];
+  bizData.deals = normalizeBusinessDeals(bizData.deals);
 
   // Normalize stats field names
   if (!bizData.stats && (bizData.total_revenue !== undefined || bizData.total_earned !== undefined)) {
@@ -1820,6 +1821,22 @@ function getDealNextStep(status) {
   return ((map[lang] || map.ru)[status]) || ((map.ru)[status]) || '';
 }
 
+function normalizeBusinessDeal(deal) {
+  if (!deal || typeof deal !== 'object') return deal;
+  if (!deal.client_name && deal.name) deal.client_name = deal.name;
+  if (!deal.client_phone && deal.phone) deal.client_phone = deal.phone;
+  if (!deal.agent_name && deal.sender_name) deal.agent_name = deal.sender_name;
+  if (!deal.agent_name && deal.agent) deal.agent_name = deal.agent;
+  if (!deal.date && deal.created_at) deal.date = String(deal.created_at).slice(0,10);
+  if ((deal.amount == null || deal.amount === '') && deal.deal_amount != null && deal.deal_amount !== '') deal.amount = deal.deal_amount;
+  if ((deal.commission == null || deal.commission === '') && deal.agent_reward != null && deal.agent_reward !== '') deal.commission = deal.agent_reward;
+  return deal;
+}
+
+function normalizeBusinessDeals(deals) {
+  return Array.isArray(deals) ? deals.map(normalizeBusinessDeal) : [];
+}
+
 function getPhoneDigits(phone) {
   return String(phone || '').replace(/\D/g, '');
 }
@@ -2011,14 +2028,30 @@ function getBusinessDealSettlementInfo(deal) {
   const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(statusCode)
     || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && hasTakePaymentSent(truth));
 
+  if (['new','in_progress'].includes(statusCode)) {
+    return {
+      decisionKey:'',
+      decisionLabel:copy.decisionPending,
+      decisionPill:`⏳ ${copy.decisionPendingShort}`,
+      nextStep:getDealNextStep(statusCode),
+      targetDetail:copy.targetPending,
+      nextStepTone:'warning',
+      targetTone:'warning'
+    };
+  }
+
   if (!decisionKey) {
     return {
       decisionKey:'',
       decisionLabel:copy.decisionPending,
       decisionPill:`⏳ ${copy.decisionPendingShort}`,
-      nextStep: statusCode === 'rejected' ? copy.nextRejected : copy.nextWaitDecision,
+      nextStep: statusCode === 'pending_confirmation'
+        ? copy.nextWaitDecision
+        : (statusCode === 'rejected' ? copy.nextRejected : getDealNextStep(statusCode)),
       targetDetail:copy.targetPending,
-      nextStepTone: statusCode === 'rejected' ? 'danger' : 'warning',
+      nextStepTone: statusCode === 'rejected'
+        ? 'danger'
+        : (statusCode === 'closed' ? 'success' : 'warning'),
       targetTone:'warning'
     };
   }
@@ -2070,6 +2103,44 @@ function getBusinessDealSettlementInfo(deal) {
   };
 }
 
+function getBusinessDealProjection(deal) {
+  const normalizedDeal = normalizeBusinessDeal(deal);
+  const statusCode = getDisplayDealStatus(normalizedDeal);
+  const statusMeta = getStatusData(statusCode);
+  const settlementInfo = getBusinessDealSettlementInfo(normalizedDeal);
+  const isPayoutPending = statusCode === 'pending_business_payment';
+  const tone = getDealTone(statusCode, isPayoutPending);
+  const waitingRecommenderDecision = statusCode === 'pending_confirmation' && !settlementInfo.decisionKey;
+  const waitingAgentConfirmation = statusCode === 'pending_receipt';
+  const isFinalState = ['closed','rejected'].includes(statusCode);
+  const canCloseSettlement = statusCode === 'pending_confirmation' && ['gift_client','support_business'].includes(settlementInfo.decisionKey);
+
+  let actionMode = 'close_or_reject';
+  if (statusCode === 'new') {
+    actionMode = 'accept_or_reject';
+  } else if (waitingRecommenderDecision || waitingAgentConfirmation || isFinalState) {
+    actionMode = 'view_only';
+  } else if (isPayoutPending) {
+    actionMode = 'mark_paid';
+  } else if (canCloseSettlement) {
+    actionMode = 'close_only';
+  }
+
+  return {
+    deal: normalizedDeal,
+    statusCode,
+    statusMeta,
+    settlementInfo,
+    isPayoutPending,
+    tone,
+    nextStep:settlementInfo.nextStep,
+    nextStepTone:settlementInfo.nextStepTone || tone || 'warning',
+    showSettlementGroup:Boolean(settlementInfo.decisionKey) || ['pending_confirmation','pending_business_payment','pending_receipt'].includes(statusCode),
+    listActionMode:waitingRecommenderDecision ? 'remind_decision' : 'manage',
+    actionMode
+  };
+}
+
 function openDebtDealDetail(id) {
   closeFullscreen('debtDealsSheet');
   openManageDeal(id);
@@ -2091,14 +2162,15 @@ function renderDebtDealsSheet() {
     return;
   }
   box.innerHTML = deals.map(d => {
-    const statusCode = getDisplayDealStatus(d);
-    const statusMeta = getStatusData(statusCode);
+    const projection = getBusinessDealProjection(d);
+    const row = projection.deal;
+    const statusMeta = projection.statusMeta;
     const clientName = d.client_name || d.name || '—';
     const agentName = d.agent_name || d.sender_name || d.agent || '—';
     const rewardText = formatDealDebtAmount(d, curr);
     const dateText = d.date || (d.created_at ? String(d.created_at).slice(0,10) : '—');
     return `
-      <div class="debt-deal-card" role="button" tabindex="0" onclick="openDebtDealDetail(${d.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealDetail(${d.id});}">
+      <div class="debt-deal-card" role="button" tabindex="0" onclick="openDebtDealDetail(${row.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealDetail(${row.id});}">
         <div class="debt-deal-head">
           <div>
             <div class="debt-deal-name">${clientName}</div>
@@ -2174,16 +2246,6 @@ function renderDeals() {
   const deals = bizData.deals || [];
   const curr  = bizData.currency || '₪';
 
-  deals.forEach(d => {
-    if (!d.client_name  && d.name)          d.client_name  = d.name;
-    if (!d.client_phone && d.phone)         d.client_phone = d.phone;
-    if (!d.agent_name   && d.sender_name)   d.agent_name   = d.sender_name;
-    if (!d.agent_name   && d.agent)         d.agent_name   = d.agent;
-    if (!d.date         && d.created_at)    d.date         = d.created_at.slice(0,10);
-    if (!d.amount       && d.deal_amount)   d.amount       = d.deal_amount;
-    if (!d.commission   && d.agent_reward)  d.commission   = d.agent_reward;
-  });
-
   const filtered = deals.filter(d => {
     return dealFilter === 'active'
       ? isBusinessActiveDeal(d)
@@ -2253,35 +2315,41 @@ function renderDeals() {
   }
 
   const dealsHtml = filtered.map(d => {
-    const statusCode = getDisplayDealStatus(d);
-    const st        = getStatusData(statusCode);
-    const isPayoutPending = isPayoutPendingBusinessDeal(d);
-    const tone = getDealTone(statusCode, isPayoutPending);
-    const settlementInfo = getBusinessDealSettlementInfo(d);
+    const projection = getBusinessDealProjection(d);
+    const row = projection.deal;
+    const st = projection.statusMeta;
+    const settlementInfo = projection.settlementInfo;
+    const tone = projection.tone;
     const clarityCopy = getBusinessDealClarityCopy();
-    const nextStep  = settlementInfo.nextStep;
-    const nextStepTone = settlementInfo.nextStepTone || tone || 'warning';
+    const nextStep = projection.nextStep;
+    const nextStepTone = projection.nextStepTone;
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
     const incomeVal = formatDealIncomeAmount(d, curr);
+    const settlementPill = projection.showSettlementGroup ? `<span class="meta-pill">${settlementInfo.decisionPill}</span>` : '';
+    const settlementDetails = projection.showSettlementGroup ? `
+          <div class="deal-inline-meta">
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${clarityCopy.decisionField}</div><div class="deal-mini-val">${settlementInfo.decisionLabel}</div></div>
+            <div class="${getDecisionMiniBoxClass(settlementInfo.targetTone)}"><div class="deal-mini-lbl">${clarityCopy.targetField}</div><div class="deal-mini-val">${settlementInfo.targetDetail}</div></div>
+          </div>` : '';
 
     let innerAction = '';
     if (dealFilter === 'active') {
-      if (statusCode === 'pending_confirmation' && !settlementInfo.decisionKey) {
+      if (projection.listActionMode === 'remind_decision') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
-        innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
+        innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${row.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
         const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
-        innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${d.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
+        innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${row.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
       }
     }
 
     return `
-      <div class="deal-card${tone === 'warning' ? ' pending' : ''}${tone === 'danger' ? ' unpaid' : ''}" onclick="toggleDealExtra(${d.id})">
+      <div class="deal-card${projection.tone === 'warning' ? ' pending' : ''}${projection.tone === 'danger' ? ' unpaid' : ''}" onclick="toggleDealExtra(${row.id})">
         <div class="deal-card-header">
           <div>
-            <div class="deal-client">${d.client_name}</div>
-            <div class="deal-date">${d.date}</div>
+            <div class="deal-client">${row.client_name}</div>
+            <div class="deal-date">${row.date}</div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
             <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
@@ -2293,13 +2361,10 @@ function renderDeals() {
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
           <span class="meta-pill">💵 ${amountVal}</span>
           <span class="meta-pill">🎁 ${commVal}</span>
-          <span class="meta-pill">${settlementInfo.decisionPill}</span>
+          ${settlementPill}
         </div>
-        <div class="deal-extra" id="deal_extra_${d.id}">
-          <div class="deal-inline-meta">
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${clarityCopy.decisionField}</div><div class="deal-mini-val">${settlementInfo.decisionLabel}</div></div>
-            <div class="${getDecisionMiniBoxClass(settlementInfo.targetTone)}"><div class="deal-mini-lbl">${clarityCopy.targetField}</div><div class="deal-mini-val">${settlementInfo.targetDetail}</div></div>
-          </div>
+        <div class="deal-extra" id="deal_extra_${row.id}">
+          ${settlementDetails}
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
             <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
@@ -2784,15 +2849,16 @@ function renderRecommend() {
     }
 
     listEl.innerHTML = rows.map(d => {
-      const statusCode = getDisplayDealStatus(d);
-      const st = getStatusData(statusCode);
-      const nextStep = getDealNextStep(statusCode);
-      const clientName = d.client_name || copy.client;
+      const projection = getBusinessDealProjection(d);
+      const row = projection.deal;
+      const st = projection.statusMeta;
+      const nextStep = projection.nextStep;
+      const clientName = row.client_name || copy.client;
       const sourceName = d.agent_name || '—';
       const amountVal = d.amount ? formatRecommendMetric(d.amount, curr) : '—';
       const when = d.date ? ` · ${formatShortDate(d.date)}` : '';
       return `
-        <div class="reco-card" onclick="openManageDeal(${d.id})">
+        <div class="reco-card" onclick="openManageDeal(${row.id})">
           <div class="reco-top">
             <div>
               <div class="reco-title">${clientName}</div>
@@ -3284,14 +3350,16 @@ function openManageDeal(id) {
   const deal = (bizData.deals || []).find(d => d.id === id);
   if (!deal) return;
   const curr = bizData.currency || '₪';
-  const statusCode = getDisplayDealStatus(deal);
-  const showSettlementGroup = statusCode !== 'in_progress';
-  const statusMeta = getStatusData(statusCode);
+  const projection = getBusinessDealProjection(deal);
+  const row = projection.deal;
+  const statusCode = projection.statusCode;
+  const showSettlementGroup = projection.showSettlementGroup;
+  const statusMeta = projection.statusMeta;
   const clarityCopy = getBusinessDealClarityCopy();
-  const settlementInfo = getBusinessDealSettlementInfo(deal);
+  const settlementInfo = projection.settlementInfo;
   const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
-  const isPayoutPending = isPayoutPendingBusinessDeal(deal);
-  const tone = getDealTone(statusCode, isPayoutPending);
+  const isPayoutPending = projection.isPayoutPending;
+  const tone = projection.tone;
   const agentName = deal.agent_name || deal.sender_name || '—';
   const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
@@ -3325,37 +3393,16 @@ function openManageDeal(id) {
     document.getElementById('m_box_target').className = getToneBoxClass(settlementInfo.targetTone);
     document.getElementById('m_box_next_step').className = getToneBoxClass(settlementInfo.nextStepTone);
   }
-  document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
+  document.getElementById('m_amount').value = row.amount || row.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
-  closeBtn.onclick = isPayoutPending ? () => submitDealAction('biz_paid') : () => setStep('close');
+  const closeIsPaymentAction = projection.actionMode === 'mark_paid';
+  closeBtn.onclick = closeIsPaymentAction ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
-  if (statusCode === 'new') {
-    acceptBtn.style.display = 'flex';
-    closeBtn.style.display = 'none';
-    if (rejectBtn) rejectBtn.style.display = 'flex';
-  } else if (statusCode === 'pending_confirmation' && !settlementInfo.decisionKey) {
-    acceptBtn.style.display = 'none';
-    closeBtn.style.display = 'none';
-    if (rejectBtn) rejectBtn.style.display = 'none';
-  } else if (statusCode === 'pending_receipt') {
-    acceptBtn.style.display = 'none';
-    closeBtn.style.display = 'none';
-    if (rejectBtn) rejectBtn.style.display = 'none';
-  } else if (statusCode === 'pending_confirmation' && ['gift_client','support_business'].includes(settlementInfo.decisionKey)) {
-    acceptBtn.style.display = 'none';
-    closeBtn.style.display = 'flex';
-    if (rejectBtn) rejectBtn.style.display = 'none';
-  } else if (isPayoutPending) {
-    acceptBtn.style.display = 'none';
-    closeBtn.style.display = 'flex';
-    if (rejectBtn) rejectBtn.style.display = 'none';
-  } else {
-    acceptBtn.style.display = 'none';
-    closeBtn.style.display = 'flex';
-    if (rejectBtn) rejectBtn.style.display = 'flex';
-  }
+  acceptBtn.style.display = projection.actionMode === 'accept_or_reject' ? 'flex' : 'none';
+  closeBtn.style.display = ['close_only','close_or_reject','mark_paid'].includes(projection.actionMode) ? 'flex' : 'none';
+  if (rejectBtn) rejectBtn.style.display = ['accept_or_reject','close_or_reject'].includes(projection.actionMode) ? 'flex' : 'none';
   setStep('main');
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
   closeFullscreen('debtDealsSheet');
