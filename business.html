@@ -2752,7 +2752,22 @@ function normalizeOutgoingRecommendations() {
       || bizData.recommendations_sent
       || bizData.sent_recommendations
       || []);
-  return raw.map((r, idx) => Object.assign({}, r, {
+  const businessIncomingIds = new Set(
+    (bizData.deals || []).reduce((ids, d) => {
+      [d && d.id, d && d.deal_id, d && d.lead_id].forEach(v => {
+        if (v != null && String(v).trim() !== '') ids.push(String(v).trim());
+      });
+      return ids;
+    }, [])
+  );
+  return raw
+    .filter(r => {
+      const rowIds = [r && r.id, r && r.deal_id, r && r.lead_id, r && r.recommendation_id]
+        .filter(v => v != null && String(v).trim() !== '')
+        .map(v => String(v).trim());
+      return !rowIds.some(id => businessIncomingIds.has(id));
+    })
+    .map((r, idx) => Object.assign({}, r, {
     id: r.id || r.deal_id || r.lead_id || r.recommendation_id || idx,
     action_deal_id: r.id || r.deal_id || r.lead_id || r.recommendation_id || null,
     business_name: r.business_name || r.biz_name || r.business || r.receiver_name || r.partner_name || r.recommended_business || '—',
