@@ -564,6 +564,20 @@
             <div class="manage-info-value" id="m_val_date_compact"></div>
           </div>
         </div>
+        <div class="manage-summary-grid">
+          <div class="manage-info-box" id="m_box_decision">
+            <div class="manage-info-label" id="t_m_lbl_decision">Решение рекомендателя</div>
+            <div class="manage-info-value" id="m_val_decision"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_target">
+            <div class="manage-info-label" id="t_m_lbl_target">Кому направить</div>
+            <div class="manage-info-value" id="m_val_target"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_next_step">
+            <div class="manage-info-label" id="t_m_lbl_next_step">Что делать бизнесу</div>
+            <div class="manage-info-value" id="m_val_next_step"></div>
+          </div>
+        </div>
         <div class="manage-contact-grid">
           <div class="manage-contact-card">
             <div class="manage-info-label" id="t_m_lbl_client_compact">Клиент:</div>
@@ -1879,6 +1893,181 @@ function getDealTone(statusCode, isPayoutPending) {
   return '';
 }
 
+function getBusinessDealClarityCopy() {
+  const map = {
+    ru: {
+      decisionField:'Решение рекомендателя',
+      targetField:'Кому направить',
+      nextStepField:'Что делать бизнесу',
+      decisionPending:'Решение ещё не выбрано',
+      decisionPendingShort:'Ждём решение',
+      targetPending:'Получатель ещё не определён',
+      nextWaitDecision:'Ждём решение рекомендателя',
+      nextRejected:'Сделка отклонена',
+      nextPayAgent:'Оплатить бонус агенту',
+      nextWaitAgentReceipt:'Ждём подтверждение получения от агента',
+      nextTakeDone:'Бонус агенту обработан',
+      nextSendClient:'Отправить подарок / бонус клиенту',
+      nextGiftDone:'Подарок клиенту отправлен',
+      nextCloseWithoutPayout:'Закрыть сделку без выплаты агенту',
+      nextSupportDone:'Выплата не нужна, бизнес поддержан',
+      targetPayAgent:'Оплатить агенту',
+      targetSendClient:'Отправить клиенту',
+      targetNoPayout:'Выплата не нужна'
+    },
+    he: {
+      decisionField:'החלטת הממליץ',
+      targetField:'למי זה מיועד',
+      nextStepField:'מה העסק צריך לעשות',
+      decisionPending:'ההחלטה עדיין לא נבחרה',
+      decisionPendingShort:'ממתינים להחלטה',
+      targetPending:'הנמען עדיין לא הוגדר',
+      nextWaitDecision:'ממתינים להחלטת הממליץ',
+      nextRejected:'העסקה נדחתה',
+      nextPayAgent:'לשלם את הבונוס לסוכן',
+      nextWaitAgentReceipt:'ממתינים לאישור קבלה מהסוכן',
+      nextTakeDone:'בונוס הסוכן טופל',
+      nextSendClient:'לשלוח מתנה / בונוס ללקוח',
+      nextGiftDone:'המתנה ללקוח נשלחה',
+      nextCloseWithoutPayout:'לסגור את העסקה בלי תשלום לסוכן',
+      nextSupportDone:'לא נדרש תשלום, העסק נתמך',
+      targetPayAgent:'לשלם לסוכן',
+      targetSendClient:'לשלוח ללקוח',
+      targetNoPayout:'לא נדרש תשלום'
+    },
+    en: {
+      decisionField:'Recommender decision',
+      targetField:'Who should receive it',
+      nextStepField:'What the business should do',
+      decisionPending:'Decision not chosen yet',
+      decisionPendingShort:'Awaiting decision',
+      targetPending:'Recipient is not defined yet',
+      nextWaitDecision:'Waiting for recommender decision',
+      nextRejected:'Deal rejected',
+      nextPayAgent:'Pay the agent reward',
+      nextWaitAgentReceipt:'Wait for the agent to confirm receipt',
+      nextTakeDone:'Agent reward is already handled',
+      nextSendClient:'Send the gift / reward to the client',
+      nextGiftDone:'Gift already sent to the client',
+      nextCloseWithoutPayout:'Close the deal without agent payout',
+      nextSupportDone:'No payout needed, business supported',
+      targetPayAgent:'Pay agent',
+      targetSendClient:'Send to client',
+      targetNoPayout:'No payout needed'
+    },
+    ar: {
+      decisionField:'قرار الموصي',
+      targetField:'لمن يوجَّه ذلك',
+      nextStepField:'ماذا يجب على النشاط أن يفعل',
+      decisionPending:'لم يتم اختيار القرار بعد',
+      decisionPendingShort:'بانتظار القرار',
+      targetPending:'لم يتم تحديد المستلم بعد',
+      nextWaitDecision:'بانتظار قرار الموصي',
+      nextRejected:'تم رفض الصفقة',
+      nextPayAgent:'ادفع مكافأة الوكيل',
+      nextWaitAgentReceipt:'بانتظار تأكيد الاستلام من الوكيل',
+      nextTakeDone:'تمت معالجة مكافأة الوكيل',
+      nextSendClient:'أرسل الهدية / المكافأة إلى العميل',
+      nextGiftDone:'تم إرسال الهدية إلى العميل',
+      nextCloseWithoutPayout:'أغلق الصفقة بدون دفع للوكيل',
+      nextSupportDone:'لا حاجة إلى دفع، تم دعم النشاط',
+      targetPayAgent:'ادفع للوكيل',
+      targetSendClient:'أرسل للعميل',
+      targetNoPayout:'لا حاجة إلى دفع'
+    }
+  };
+  return map[lang] || map.ru;
+}
+
+function getToneBoxClass(tone) {
+  if (tone === 'success') return 'manage-info-box manage-info-box-positive';
+  if (tone === 'danger') return 'manage-info-box manage-info-box-danger';
+  if (tone === 'warning') return 'manage-info-box manage-info-box-warning';
+  return 'manage-info-box';
+}
+
+function getDecisionMiniBoxClass(tone) {
+  if (tone === 'success') return 'deal-mini-box deal-mini-box-positive';
+  if (tone === 'danger') return 'deal-mini-box deal-mini-box-danger';
+  if (tone === 'warning') return 'deal-mini-box deal-mini-box-warning';
+  return 'deal-mini-box';
+}
+
+function getBusinessDealSettlementInfo(deal) {
+  const L = i18n[lang] || i18n.ru;
+  const copy = getBusinessDealClarityCopy();
+  const truth = getDealTruth(deal);
+  const statusCode = getDisplayDealStatus(deal);
+  const decisionKey = String(truth.settlementMode || '').trim().toLowerCase();
+  const agentName = String(deal.agent_name || deal.sender_name || deal.agent || '—').trim() || '—';
+  const clientName = String(deal.client_name || deal.name || '—').trim() || '—';
+  const isClosedLike = ['closed','completed','done'].includes(statusCode) || (truth.historyReady === true && truth.hasOpenSettlement !== true && truth.hasOpenAgentPayout !== true && truth.debtAmount <= 0);
+  const paymentPending = ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode)
+    || truth.hasOpenAgentPayout === true
+    || truth.debtAmount > 0
+    || (decisionKey === 'take' && (truth.bizClaimedPaid === false || truth.businessSent === false));
+  const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(statusCode)
+    || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && hasTakePaymentSent(truth));
+
+  if (!decisionKey) {
+    return {
+      decisionKey:'',
+      decisionLabel:copy.decisionPending,
+      decisionPill:`⏳ ${copy.decisionPendingShort}`,
+      nextStep: statusCode === 'rejected' ? copy.nextRejected : copy.nextWaitDecision,
+      targetDetail:copy.targetPending,
+      nextStepTone: statusCode === 'rejected' ? 'danger' : 'warning',
+      targetTone:'warning'
+    };
+  }
+
+  if (decisionKey === 'take') {
+    return {
+      decisionKey,
+      decisionLabel:formatRecommendDecisionPlain('take', L),
+      decisionPill:formatDecision('take', L),
+      nextStep: paymentPending ? copy.nextPayAgent : (waitingAgentReceipt ? copy.nextWaitAgentReceipt : copy.nextTakeDone),
+      targetDetail:`${copy.targetPayAgent}: ${agentName}`,
+      nextStepTone: paymentPending ? 'danger' : (waitingAgentReceipt ? 'warning' : 'success'),
+      targetTone:'danger'
+    };
+  }
+
+  if (decisionKey === 'gift_client') {
+    return {
+      decisionKey,
+      decisionLabel:formatRecommendDecisionPlain('gift_client', L),
+      decisionPill:formatDecision('gift_client', L),
+      nextStep: isClosedLike ? copy.nextGiftDone : copy.nextSendClient,
+      targetDetail:`${copy.targetSendClient}: ${clientName}`,
+      nextStepTone: isClosedLike ? 'success' : 'warning',
+      targetTone:'warning'
+    };
+  }
+
+  if (decisionKey === 'support_business') {
+    return {
+      decisionKey,
+      decisionLabel:formatRecommendDecisionPlain('support_business', L),
+      decisionPill:formatDecision('support_business', L),
+      nextStep: isClosedLike ? copy.nextSupportDone : copy.nextCloseWithoutPayout,
+      targetDetail:copy.targetNoPayout,
+      nextStepTone:'success',
+      targetTone:'success'
+    };
+  }
+
+  return {
+    decisionKey,
+    decisionLabel:decisionKey,
+    decisionPill:decisionKey,
+    nextStep:getDealNextStep(statusCode),
+    targetDetail:copy.targetPending,
+    nextStepTone:'warning',
+    targetTone:'warning'
+  };
+}
+
 function openDebtDealDetail(id) {
   closeFullscreen('debtDealsSheet');
   openManageDeal(id);
@@ -2066,14 +2255,17 @@ function renderDeals() {
     const st        = getStatusData(statusCode);
     const isPayoutPending = isPayoutPendingBusinessDeal(d);
     const tone = getDealTone(statusCode, isPayoutPending);
-    const nextStep  = getDealNextStep(statusCode);
+    const settlementInfo = getBusinessDealSettlementInfo(d);
+    const clarityCopy = getBusinessDealClarityCopy();
+    const nextStep  = settlementInfo.nextStep;
+    const nextStepTone = settlementInfo.nextStepTone || tone || 'warning';
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
     const incomeVal = formatDealIncomeAmount(d, curr);
 
     let innerAction = '';
     if (dealFilter === 'active') {
-      if (statusCode === 'pending_confirmation') {
+      if (statusCode === 'pending_confirmation' && !settlementInfo.decisionKey) {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${d.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
       } else {
@@ -2094,13 +2286,18 @@ function renderDeals() {
             <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
           </div>
         </div>
-        <div class="deal-pending-note ${tone || 'warning'}"><i data-feather="${tone === 'danger' ? 'alert-circle' : (tone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>
+        <div class="deal-pending-note ${nextStepTone}"><i data-feather="${nextStepTone === 'danger' ? 'alert-circle' : (nextStepTone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
           <span class="meta-pill">💵 ${amountVal}</span>
           <span class="meta-pill">🎁 ${commVal}</span>
+          <span class="meta-pill">${settlementInfo.decisionPill}</span>
         </div>
         <div class="deal-extra" id="deal_extra_${d.id}">
+          <div class="deal-inline-meta">
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${clarityCopy.decisionField}</div><div class="deal-mini-val">${settlementInfo.decisionLabel}</div></div>
+            <div class="${getDecisionMiniBoxClass(settlementInfo.targetTone)}"><div class="deal-mini-lbl">${clarityCopy.targetField}</div><div class="deal-mini-val">${settlementInfo.targetDetail}</div></div>
+          </div>
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
             <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
@@ -3087,6 +3284,8 @@ function openManageDeal(id) {
   const curr = bizData.currency || '₪';
   const statusCode = getDisplayDealStatus(deal);
   const statusMeta = getStatusData(statusCode);
+  const clarityCopy = getBusinessDealClarityCopy();
+  const settlementInfo = getBusinessDealSettlementInfo(deal);
   const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
   const isPayoutPending = isPayoutPendingBusinessDeal(deal);
   const tone = getDealTone(statusCode, isPayoutPending);
@@ -3107,8 +3306,17 @@ function openManageDeal(id) {
   document.getElementById('m_val_debt').textContent = debtValue;
   document.getElementById('m_val_debt_compact').textContent = debtValue;
   document.getElementById('m_val_income').textContent = incomeValue;
+  document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
+  document.getElementById('t_m_lbl_target').textContent = clarityCopy.targetField;
+  document.getElementById('t_m_lbl_next_step').textContent = clarityCopy.nextStepField;
+  document.getElementById('m_val_decision').textContent = settlementInfo.decisionLabel;
+  document.getElementById('m_val_target').textContent = settlementInfo.targetDetail;
+  document.getElementById('m_val_next_step').textContent = settlementInfo.nextStep;
   document.getElementById('m_box_status').className = `manage-info-box ${tone === 'success' ? 'manage-info-box-positive' : (tone === 'danger' ? 'manage-info-box-danger' : 'manage-info-box-warning')}`;
   document.getElementById('m_box_debt').className = `manage-info-box${isPayoutPending ? ' manage-info-box-danger' : ''}`;
+  document.getElementById('m_box_decision').className = getToneBoxClass(settlementInfo.decisionKey ? 'success' : 'warning');
+  document.getElementById('m_box_target').className = getToneBoxClass(settlementInfo.targetTone);
+  document.getElementById('m_box_next_step').className = getToneBoxClass(settlementInfo.nextStepTone);
   document.getElementById('m_amount').value = deal.amount || deal.deal_amount || '';
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
@@ -3119,9 +3327,17 @@ function openManageDeal(id) {
     acceptBtn.style.display = 'flex';
     closeBtn.style.display = 'none';
     if (rejectBtn) rejectBtn.style.display = 'flex';
-  } else if (statusCode === 'pending_confirmation' || statusCode === 'pending_receipt') {
+  } else if (statusCode === 'pending_confirmation' && !settlementInfo.decisionKey) {
     acceptBtn.style.display = 'none';
     closeBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
+  } else if (statusCode === 'pending_receipt') {
+    acceptBtn.style.display = 'none';
+    closeBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
+  } else if (statusCode === 'pending_confirmation' && ['gift_client','support_business'].includes(settlementInfo.decisionKey)) {
+    acceptBtn.style.display = 'none';
+    closeBtn.style.display = 'flex';
     if (rejectBtn) rejectBtn.style.display = 'none';
   } else if (isPayoutPending) {
     acceptBtn.style.display = 'none';
