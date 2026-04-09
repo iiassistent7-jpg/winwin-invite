@@ -2233,6 +2233,53 @@ function getDashboardLeads() {
     return Array.isArray(dashData?.leads) ? dashData.leads.map(normalizeDashboardLead) : [];
 }
 
+function isPendingAgentChoiceLead(lead) {
+    lead = normalizeDashboardLead(lead);
+    const status = String(lead.status || '').toLowerCase();
+    const settlementStatus = String(lead.settlement_status || '').toLowerCase();
+    const settlementMode = String(lead.settlement_mode || lead.decision || '').toLowerCase();
+    const hasDecision = ['take', 'gift_client', 'support_business'].includes(settlementMode);
+    const historyReady = lead.history_ready === true;
+    const hasOpenSettlement = lead.has_open_settlement === true;
+    const hasOpenAgentPayout = lead.has_open_agent_payout === true;
+    const debtAmount = Number.isFinite(Number(lead.debt_amount)) ? Number(lead.debt_amount) : 0;
+    const hasDealClosureEvidence = [
+        lead.amount,
+        lead.commission,
+        lead.business_close_date,
+        lead.closed_at,
+        lead.business_closed_at
+    ].some(value => String(value ?? '').trim() !== '');
+    const pendingChoiceStatuses = new Set([
+        'pending_confirmation',
+        'pending_agent_confirmation',
+        'pending_agent_choice',
+        'awaiting_reward'
+    ]);
+    const finalStatuses = new Set([
+        'confirmed',
+        'completed',
+        'done',
+        'gift_closed',
+        'support_business_completed',
+        'rejected'
+    ]);
+
+    if (hasDecision || historyReady || hasOpenAgentPayout) return false;
+    if (finalStatuses.has(status) || finalStatuses.has(settlementStatus)) return false;
+    if (
+        lead.biz_claimed_paid === true ||
+        lead.business_sent === true ||
+        lead.agent_confirmed_receipt === true ||
+        lead.gift_closed === true ||
+        lead.auto_closed === true
+    ) return false;
+    if (hasOpenSettlement) return true;
+    if (pendingChoiceStatuses.has(status) || pendingChoiceStatuses.has(settlementStatus)) return true;
+    if (status === 'closed') return true;
+    return hasDealClosureEvidence && debtAmount <= 0 && ['in_progress', 'active', 'new', ''].includes(status);
+}
+
 function getExplicitLeadStage(lead) {
     lead = normalizeDashboardLead(lead);
     const status = String(lead.status || '').toLowerCase();
@@ -2286,7 +2333,7 @@ function getExplicitLeadStage(lead) {
         if (status === 'closed' || hasOpenSettlement) return 'awaiting_payment';
     }
 
-    if (!hasDecision && (hasOpenSettlement || status === 'closed')) return 'choose_settlement';
+    if (isPendingAgentChoiceLead(lead)) return 'choose_settlement';
 
     if (settlementMode === 'gift_client') {
         if (
@@ -2337,6 +2384,7 @@ function getDealProjection(lead) {
     const debtAmount = Number.isFinite(Number(lead?.debt_amount)) ? Number(lead.debt_amount) : 0;
     const hasExplicitTruth = lead?.has_explicit_truth === true;
     const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
+    const pendingAgentChoice = isPendingAgentChoiceLead(lead);
     const labels = {
         new: { ru:'Новая', he:'חדשה', en:'New', ar:'جديدة' },
         in_progress: { ru:'В работе', he:'בעבודה', en:'In progress', ar:'قيد العمل' },
@@ -2374,7 +2422,7 @@ function getDealProjection(lead) {
         if (explicitStage === 'awaiting_receipt') {
             return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_client') };
         }
-        if (explicitStage === 'choose_settlement') {
+        if (explicitStage === 'choose_settlement' || pendingAgentChoice) {
             return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_decision') };
         }
         if (explicitStage === 'support_business') {
@@ -2392,6 +2440,9 @@ function getDealProjection(lead) {
         return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('in_progress') };
     }
 
+    if (pendingAgentChoice) {
+        return { bucket:'active', counter:'active', debt:false, remind:false, cls:'pill-gold', icon:'clock', color:'var(--gold)', label:getLabel('awaiting_decision') };
+    }
     if (rejectedStatuses.has(status)) {
         return { bucket:'history', counter:'rejected', debt:false, remind:false, cls:'pill-red', icon:'x-circle', color:'var(--red)', label:getLabel('rejected') };
     }
@@ -2473,6 +2524,7 @@ function getWalletStageMeta(lead) {
     const hasExplicitTruth = lead.has_explicit_truth === true;
     const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
     const explicitStage = hasExplicitTruth ? getExplicitLeadStage(lead) : null;
+    const pendingAgentChoice = isPendingAgentChoiceLead(lead);
     const labels = {
         choose_settlement: { ru:'Нужно выбрать способ расчёта', he:'צריך לבחור דרך סגירה', en:'Choose settlement method', ar:'يجب اختيار طريقة التسوية' },
         awaiting_payment: { ru:'Ожидаем выплату', he:'ממתינים לתשלום', en:'Awaiting payout', ar:'بانتظار الدفع' },
@@ -2485,7 +2537,7 @@ function getWalletStageMeta(lead) {
         if (explicitStage === 'closed') {
             return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
         }
-        if (explicitStage === 'choose_settlement') {
+        if (explicitStage === 'choose_settlement' || pendingAgentChoice) {
             return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action: lead.id != null ? 'choose_settlement' : null };
         }
         if (explicitStage === 'awaiting_payment') {
@@ -2508,7 +2560,7 @@ function getWalletStageMeta(lead) {
     if (projection.debt || status === 'pending_business_payment') {
         return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
     }
-    if (!hasDecision) {
+    if (pendingAgentChoice || !hasDecision) {
         return { key:'choose_settlement', label:getLabel('choose_settlement'), cls:'pill-blue', icon:'help-circle', color:'var(--accent2)', action: lead.id != null ? 'choose_settlement' : null };
     }
     return { key:'awaiting_receipt', label:getLabel('awaiting_receipt'), cls:'pill-gold', icon:'clock', color:'var(--gold)', action: decision === 'take' && lead.id != null ? 'confirm_receipt' : null };
@@ -2519,21 +2571,25 @@ function walletStatusPill(lead) {
     return `<span class="pill ${stage.cls}">${escapeHtml(stage.label)}</span>`;
 }
 
+function getSettlementChoiceConfig() {
+    const labels = {
+        take: { ru:'Забрать себе', he:'לקחת לעצמי', en:'Keep for myself', ar:'أحتفظ به' },
+        gift_client: { ru:'Подарить клиенту', he:'להעניק ללקוח', en:'Gift to client', ar:'هدية للعميل' },
+        support_business: { ru:'Поддержать бизнес', he:'לתמוך בעסק', en:'Support business', ar:'دعم العمل' }
+    };
+    return {
+        kind: 'choose_settlement',
+        choices: ['take', 'gift_client', 'support_business'].map(choice => ({
+            value: choice,
+            label: (labels[choice] && (labels[choice][lang] || labels[choice].ru)) || choice
+        }))
+    };
+}
+
 function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     const L = i18n[lang] || i18n.ru;
     if (stage.action === 'choose_settlement') {
-        const labels = {
-            take: { ru:'Забрать себе', he:'לקחת לעצמי', en:'Keep for myself', ar:'أحتفظ به' },
-            gift_client: { ru:'Подарить клиенту', he:'להעניק ללקוח', en:'Gift to client', ar:'هدية للعميل' },
-            support_business: { ru:'Поддержать бизнес', he:'לתמוך בעסק', en:'Support business', ar:'دعم العمل' }
-        };
-        return {
-            kind: 'choose_settlement',
-            choices: ['take', 'gift_client', 'support_business'].map(choice => ({
-                value: choice,
-                label: (labels[choice] && (labels[choice][lang] || labels[choice].ru)) || choice
-            }))
-        };
+        return getSettlementChoiceConfig();
     }
     if (stage.action === 'remind') {
         return {
@@ -2554,8 +2610,8 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     return null;
 }
 
-function renderSettlementChoiceButtons(lead, context = 'sheet') {
-    const action = getWalletActionConfig(lead);
+function renderSettlementChoiceButtons(lead, context = 'sheet', force = false) {
+    const action = force ? getSettlementChoiceConfig() : getWalletActionConfig(lead);
     if (!action || action.kind !== 'choose_settlement') return '';
     const styles = {
         take: 'background:var(--accent2); color:#fff;',
@@ -2596,6 +2652,31 @@ function renderWalletActionButton(lead, context = 'card') {
             ${escapeHtml(action.label)}
         </button>
     `;
+}
+
+function renderDetailActionButtons(lead) {
+    lead = normalizeDashboardLead(lead);
+    const projection = getDealProjection(lead);
+    const decision = String(lead.decision || lead.settlement_mode || '').toLowerCase();
+    const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
+    const hasClosureEvidence = [
+        lead.amount,
+        lead.commission,
+        lead.business_close_date,
+        lead.closed_at,
+        lead.business_closed_at
+    ].some(value => String(value ?? '').trim() !== '');
+
+    if (
+        !hasDecision &&
+        projection.bucket === 'active' &&
+        !projection.debt &&
+        (isPendingAgentChoiceLead(lead) || hasClosureEvidence)
+    ) {
+        return renderSettlementChoiceButtons(lead, 'sheet', true);
+    }
+
+    return renderWalletActionButton(lead, 'sheet');
 }
 
 function isWalletDeal(lead) {
@@ -2707,6 +2788,7 @@ function dealItemHtml(lead) {
 function openDealDetail(lead) {
     lead = normalizeDashboardLead(lead);
     const projection = getDealProjection(lead);
+    const detailStagePill = walletStatusPill(lead);
     const L = i18n[lang]||i18n.ru;
     const curr = dashData?.currency || '₪';
     const LABELS = {
@@ -2724,7 +2806,7 @@ function openDealDetail(lead) {
         <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('biz')}</div><div class="deal-detail-val">${lead.biz_name}</div></div>
         <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
     if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
-    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${statusPill(lead)}</div></div>`;
+    rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${detailStagePill}</div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('date')}</div><div class="deal-detail-val">${lead.date}</div></div>`;
     if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('amount')}</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
     if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:${projection.debt ? 'var(--gold)' : 'var(--green)'}">+${lead.commission} ${curr}</div></div>`;
@@ -2733,9 +2815,9 @@ function openDealDetail(lead) {
 
     const actionsContainer = document.getElementById('dealActionButtons');
     actionsContainer.innerHTML = '';
-    const walletActionHtml = renderWalletActionButton(lead, 'sheet');
-    if (walletActionHtml) {
-        actionsContainer.innerHTML = walletActionHtml;
+    const detailActionHtml = renderDetailActionButtons(lead);
+    if (detailActionHtml) {
+        actionsContainer.innerHTML = detailActionHtml;
     } else if (projection.remind) {
         const btnText = L.remind_debt || 'Напомнить о долге';
         const safeBizName = lead.biz_name.replace(/'/g, "\\'");
@@ -2788,7 +2870,7 @@ function openWalletDealDetail(lead) {
     rows += row(lbl('current_stage'), walletStatusPill(lead));
 
     document.getElementById('dealDetailContent').innerHTML = rows;
-    document.getElementById('dealActionButtons').innerHTML = renderWalletActionButton(lead, 'sheet');
+    document.getElementById('dealActionButtons').innerHTML = renderDetailActionButtons(lead);
 
     document.getElementById('dealSheet').classList.add('active');
     document.body.style.overflow = 'hidden';
