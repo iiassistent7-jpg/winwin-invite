@@ -1625,6 +1625,12 @@ function getDisplayDealStatus(deal) {
       if (truth.agentConfirmedReceipt === true) return 'closed';
       if (isTakeSettlementDisputed(truth)) return 'pending_business_payment';
       if (
+        hasTakePaymentSent(truth) ||
+        payoutCompletedStatuses.has(truth.settlementStatus)
+      ) {
+        return 'pending_receipt';
+      }
+      if (
         truth.hasOpenAgentPayout === true ||
         truth.debtAmount > 0 ||
         pendingPaymentStatuses.has(truth.settlementStatus) ||
@@ -1632,16 +1638,6 @@ function getDisplayDealStatus(deal) {
         truth.businessSent === false
       ) {
         return 'pending_business_payment';
-      }
-      if (
-        hasTakePaymentSent(truth) ||
-        (
-          payoutCompletedStatuses.has(truth.settlementStatus) &&
-          truth.hasOpenAgentPayout !== true &&
-          truth.debtAmount <= 0
-        )
-      ) {
-        return 'pending_receipt';
       }
       if (truth.status === 'closed' || truth.hasOpenSettlement === true) return 'pending_business_payment';
     }
@@ -2021,12 +2017,14 @@ function getBusinessDealSettlementInfo(deal) {
   const agentName = String(deal.agent_name || deal.sender_name || deal.agent || '—').trim() || '—';
   const clientName = String(deal.client_name || deal.name || '—').trim() || '—';
   const isClosedLike = ['closed','completed','done'].includes(statusCode) || (truth.historyReady === true && truth.hasOpenSettlement !== true && truth.hasOpenAgentPayout !== true && truth.debtAmount <= 0);
-  const paymentPending = ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode)
-    || truth.hasOpenAgentPayout === true
-    || truth.debtAmount > 0
-    || (decisionKey === 'take' && (truth.bizClaimedPaid === false || truth.businessSent === false));
   const waitingAgentReceipt = ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(statusCode)
     || (decisionKey === 'take' && truth.agentConfirmedReceipt !== true && hasTakePaymentSent(truth));
+  const paymentPending = !waitingAgentReceipt && (
+    ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward'].includes(statusCode)
+    || truth.hasOpenAgentPayout === true
+    || truth.debtAmount > 0
+    || (decisionKey === 'take' && (truth.bizClaimedPaid === false || truth.businessSent === false))
+  );
 
   if (['new','in_progress'].includes(statusCode)) {
     return {
@@ -2590,6 +2588,16 @@ function normalizeRecommendationStatus(row) {
     if (truth.status === 'rejected') return 'rejected';
     if (
       truth.settlementMode === 'take' &&
+      truth.agentConfirmedReceipt !== true &&
+      (
+        hasTakePaymentSent(truth) ||
+        ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(truth.settlementStatus)
+      )
+    ) {
+      return 'pending_confirmation';
+    }
+    if (
+      truth.settlementMode === 'take' &&
       (
         truth.hasOpenAgentPayout === true ||
         truth.debtAmount > 0 ||
@@ -2978,10 +2986,52 @@ function getOutgoingRecommendPendingStageLabel() {
   return map[lang] || map.ru;
 }
 
+function isOutgoingRecommenderAwaitingReceipt(row) {
+  const truth = getDealTruth(row || {});
+  if (String(truth.settlementMode || '').trim().toLowerCase() !== 'take') return false;
+  if (truth.agentConfirmedReceipt === true) return false;
+  if (isTakeSettlementDisputed(truth)) return false;
+  const settlementStatus = String((row && row.settlement_status) || truth.settlementStatus || '').trim().toLowerCase();
+  return hasTakePaymentSent(truth)
+    || ['pending_receipt','awaiting_receipt','pending_agent_confirmation'].includes(settlementStatus);
+}
+
+function getOutgoingRecommendReceiptChoices() {
+  const map = {
+    ru: [
+      { value:'confirm_receipt', label:'Получил благодарность', selectedClass:'is-selected-positive' },
+      { value:'agent_not_got', label:'Не получил благодарность', selectedClass:'is-selected-danger' }
+    ],
+    he: [
+      { value:'confirm_receipt', label:'קיבלתי את התגמול', selectedClass:'is-selected-positive' },
+      { value:'agent_not_got', label:'לא קיבלתי את התגמול', selectedClass:'is-selected-danger' }
+    ],
+    en: [
+      { value:'confirm_receipt', label:'Received gratitude', selectedClass:'is-selected-positive' },
+      { value:'agent_not_got', label:'Did not receive gratitude', selectedClass:'is-selected-danger' }
+    ],
+    ar: [
+      { value:'confirm_receipt', label:'استلمت الامتنان', selectedClass:'is-selected-positive' },
+      { value:'agent_not_got', label:'لم أستلم الامتنان', selectedClass:'is-selected-danger' }
+    ]
+  };
+  return map[lang] || map.ru;
+}
+
 function renderRecommendDetailActionButtons(row) {
   const dealId = row && (row.action_deal_id ?? row.id ?? row.deal_id ?? row.lead_id ?? row.recommendation_id);
-  if (dealId == null || !isOutgoingRecommenderPendingChoice(row)) return '';
+  if (dealId == null) return '';
   if (!(window.WinWinRecommenderDecisionUI && typeof window.WinWinRecommenderDecisionUI.render === 'function')) return '';
+  if (isOutgoingRecommenderAwaitingReceipt(row)) {
+    return window.WinWinRecommenderDecisionUI.render({
+      dealId,
+      choices: getOutgoingRecommendReceiptChoices(),
+      buttonClass: 'btn-primary',
+      wrapClass: 'settlement-choice-grid',
+      onAction: 'submitOutgoingReceiptConfirmation'
+    });
+  }
+  if (!isOutgoingRecommenderPendingChoice(row)) return '';
   const L = i18n[lang] || i18n.ru;
   return window.WinWinRecommenderDecisionUI.render({
     dealId,
@@ -2993,6 +3043,9 @@ function renderRecommendDetailActionButtons(row) {
 }
 
 function getRecommendDetailStageText(row, L) {
+  if (isOutgoingRecommenderAwaitingReceipt(row)) {
+    return getStatusData('pending_receipt').text;
+  }
   if (isOutgoingRecommenderPendingChoice(row)) return getOutgoingRecommendPendingStageLabel();
   return getRecommendStatusLabel(row.status, L).text;
 }
@@ -3131,6 +3184,86 @@ async function submitOutgoingSettlementChoice(dealId, actionType) {
       openRecommendDetail(nextIndex);
     }
     showNotice(L.save_ok || 'Changes saved!');
+  } catch (e) {
+    showNotice(L.save_err || 'Save error');
+  }
+}
+
+async function submitOutgoingReceiptConfirmation(dealId, actionType) {
+  if (!['confirm_receipt', 'agent_not_got'].includes(actionType)) return;
+  const L = i18n[lang] || i18n.ru;
+  const actionToken = agentDashToken || (bizData && bizData.agent_dashboard_token ? String(bizData.agent_dashboard_token).trim() : '');
+  if (!actionToken) {
+    showNotice(L.save_err || 'Save error');
+    return;
+  }
+
+  const actionsEl = document.getElementById('recommendDetailActions');
+  if (actionsEl) {
+    actionsEl.querySelectorAll('button').forEach(btn => { btn.disabled = true; });
+  }
+
+  const successLabelMap = {
+    confirm_receipt: {
+      ru: 'Получение подтверждено.',
+      he: 'הקבלה אושרה.',
+      en: 'Receipt confirmed.',
+      ar: 'تم تأكيد الاستلام.'
+    },
+    agent_not_got: {
+      ru: 'Отметили, что благодарность не получена.',
+      he: 'סימנו שהתגמול לא התקבל.',
+      en: 'Marked as not received.',
+      ar: 'تم تعليمها على أنها لم تُستلم.'
+    }
+  };
+
+  let response = null;
+  const attempts = [
+    {
+      url: `${API_URL}/api/deals/action?token=${encodeURIComponent(actionToken)}`,
+      body: { action: actionType, lead_id: dealId, deal_id: dealId }
+    },
+    {
+      url: `${API_URL}/api/dashboard/action`,
+      body: { token: actionToken, action: actionType, lead_id: dealId, deal_id: dealId }
+    },
+    {
+      url: `${API_URL}/api/dashboard`,
+      body: { token: actionToken, action: actionType, lead_id: dealId, deal_id: dealId }
+    }
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      const res = await fetch(attempt.url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(attempt.body)
+      });
+      if (res.ok) {
+        response = res;
+        break;
+      }
+    } catch (e) {}
+  }
+
+  if (!response) {
+    if (actionsEl) {
+      actionsEl.querySelectorAll('button').forEach(btn => { btn.disabled = false; });
+    }
+    showNotice(L.save_err || 'Save error');
+    return;
+  }
+
+  try {
+    await refreshBusinessRecommendationContext();
+    const nextIndex = recommendationRows.findIndex(item => String(item.action_deal_id ?? item.id) === String(dealId));
+    if (nextIndex >= 0 && document.getElementById('recommendDetailSheet').classList.contains('active')) {
+      openRecommendDetail(nextIndex);
+    }
+    const successMap = successLabelMap[actionType];
+    showNotice((successMap && (successMap[lang] || successMap.ru)) || (L.action_success || 'Done.'));
   } catch (e) {
     showNotice(L.save_err || 'Save error');
   }
