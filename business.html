@@ -976,6 +976,87 @@ function getManageDealLabels() {
   return map[lang] || map.ru;
 }
 
+function getUnifiedClosedStatusText() {
+  const map = {
+    ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E',
+    he: '\u05D4\u05D5\u05E9\u05DC\u05DD',
+    en: 'Completed',
+    ar: '\u0645\u0643\u062A\u0645\u0644'
+  };
+  return map[lang] || map.ru;
+}
+
+function getUnifiedClosedResultLabel() {
+  const map = {
+    ru: '\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442',
+    he: '\u05EA\u05D5\u05E6\u05D0\u05D4',
+    en: 'Result',
+    ar: '\u0627\u0644\u0646\u062A\u064A\u062C\u0629'
+  };
+  return map[lang] || map.ru;
+}
+
+function getUnifiedClosedResultText(resultKey) {
+  const map = {
+    take: {
+      ru: '\u0411\u043E\u043D\u0443\u0441 \u0432\u044B\u043F\u043B\u0430\u0447\u0435\u043D \u0430\u0433\u0435\u043D\u0442\u0443',
+      he: '\u05D4\u05D1\u05D5\u05E0\u05D5\u05E1 \u05E9\u05D5\u05DC\u05DD \u05DC\u05E1\u05D5\u05DB\u05DF',
+      en: 'Bonus paid to the agent',
+      ar: '\u062A\u0645 \u062F\u0641\u0639 \u0627\u0644\u0645\u0643\u0627\u0641\u0623\u0629 \u0644\u0644\u0648\u0643\u064A\u0644'
+    },
+    gift_client: {
+      ru: '\u0411\u043E\u043D\u0443\u0441 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043A\u043B\u0438\u0435\u043D\u0442\u0443',
+      he: '\u05D4\u05D1\u05D5\u05E0\u05D5\u05E1 \u05D4\u05D5\u05E2\u05D1\u05E8 \u05DC\u05DC\u05E7\u05D5\u05D7',
+      en: 'Bonus passed to the client',
+      ar: '\u062A\u0645 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0645\u0643\u0627\u0641\u0623\u0629 \u0644\u0644\u0639\u0645\u064A\u0644'
+    },
+    support_business: {
+      ru: '\u0411\u0438\u0437\u043D\u0435\u0441 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u043D',
+      he: '\u05D4\u05E2\u05E1\u05E7 \u05E7\u05D9\u05D1\u05DC \u05EA\u05DE\u05D9\u05DB\u05D4',
+      en: 'Business supported',
+      ar: '\u062A\u0645 \u062F\u0639\u0645 \u0627\u0644\u0639\u0645\u0644'
+    }
+  };
+  const bucket = map[resultKey] || map.take;
+  return bucket[lang] || bucket.ru;
+}
+
+function inferUnifiedClosedResultKey(deal) {
+  const truth = getDealTruth(deal || {});
+  const statuses = getDealStatusCodes(deal || {});
+  const decisionKey = String(
+    truth.settlementMode
+    || (deal && deal.decision)
+    || (deal && deal.settlement_mode)
+    || ''
+  ).trim().toLowerCase();
+  if (['take', 'gift_client', 'support_business'].includes(decisionKey)) return decisionKey;
+  if (truth.giftClosed === true || truth.settlementStatus === 'gift_closed' || statuses.includes('gift_closed')) return 'gift_client';
+  if (truth.autoClosed === true || truth.settlementStatus === 'support_business_completed' || statuses.includes('support_business_completed')) return 'support_business';
+  if (
+    truth.agentConfirmedReceipt === true
+    || truth.pendingAgentReceipt === false
+    || hasTakePaymentSent(truth)
+    || ['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation', 'pending_agent_receipt'].includes(truth.settlementStatus)
+  ) return 'take';
+  const numericReward = Number(
+    (deal && (deal.commission ?? deal.reward ?? deal.agent_reward ?? deal.pending_payout ?? deal.debt_amount))
+    ?? 0
+  );
+  if (Number.isFinite(numericReward) && numericReward > 0) return 'take';
+  return 'take';
+}
+
+function getUnifiedClosedDealMeta(deal) {
+  const resultKey = inferUnifiedClosedResultKey(deal);
+  return {
+    statusText: getUnifiedClosedStatusText(),
+    resultKey,
+    resultLabel: getUnifiedClosedResultLabel(),
+    resultText: getUnifiedClosedResultText(resultKey)
+  };
+}
+
 function getPhoneFieldLabel() {
   const map = {
     ru: 'Телефон',
@@ -1476,7 +1557,7 @@ function getStatusData(status) {
   const map = {
     new:                  { text:L.st_new,     cls:'st-new',      icon:'clock' },
     in_progress:          { text:L.st_prog,    cls:'st-progress', icon:'clock' },
-    closed:               { text:L.st_closed,  cls:'st-closed',   icon:'check-circle' },
+    closed:               { text:getUnifiedClosedStatusText(), cls:'st-closed', icon:'check-circle' },
     rejected:             { text:L.st_rej,     cls:'st-rejected', icon:'x-circle' },
     pending_confirmation: { text:L.st_pending, cls:'st-pending',  icon:'alert-circle' },
     pending_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
@@ -2190,6 +2271,7 @@ function getBusinessDealProjection(deal) {
   const statusCode = getDisplayDealStatus(normalizedDeal);
   const statusMeta = getStatusData(statusCode);
   const settlementInfo = getBusinessDealSettlementInfo(normalizedDeal);
+  const closedMeta = statusCode === 'closed' ? getUnifiedClosedDealMeta(normalizedDeal) : null;
   const isPayoutPending = statusCode === 'pending_business_payment';
   const tone = getDealTone(statusCode, isPayoutPending);
   const waitingRecommenderDecision = statusCode === 'pending_confirmation' && !settlementInfo.decisionKey;
@@ -2213,6 +2295,7 @@ function getBusinessDealProjection(deal) {
     statusCode,
     statusMeta,
     settlementInfo,
+    closedMeta,
     isPayoutPending,
     tone,
     nextStep:settlementInfo.nextStep,
@@ -2401,15 +2484,18 @@ function renderDeals() {
     const row = projection.deal;
     const st = projection.statusMeta;
     const settlementInfo = projection.settlementInfo;
+    const closedMeta = projection.closedMeta;
     const tone = projection.tone;
     const clarityCopy = getBusinessDealClarityCopy();
-    const nextStep = projection.nextStep;
-    const nextStepTone = projection.nextStepTone;
+    const nextStep = closedMeta ? closedMeta.resultText : projection.nextStep;
+    const nextStepTone = closedMeta ? 'success' : projection.nextStepTone;
     const amountVal = d.amount ? `${d.amount} ${curr}` : '—';
     const commVal = d.commission ? `${d.commission} ${curr}` : '—';
     const incomeVal = formatDealIncomeAmount(d, curr);
-    const settlementPill = projection.showSettlementGroup ? `<span class="meta-pill">${settlementInfo.decisionPill}</span>` : '';
-    const settlementDetails = projection.showSettlementGroup ? `
+    const settlementPill = closedMeta
+      ? `<span class="meta-pill">${closedMeta.resultText}</span>`
+      : (projection.showSettlementGroup ? `<span class="meta-pill">${settlementInfo.decisionPill}</span>` : '');
+    const settlementDetails = projection.showSettlementGroup && !closedMeta ? `
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${clarityCopy.decisionField}</div><div class="deal-mini-val">${settlementInfo.decisionLabel}</div></div>
             <div class="${getDecisionMiniBoxClass(settlementInfo.targetTone)}"><div class="deal-mini-lbl">${clarityCopy.targetField}</div><div class="deal-mini-val">${settlementInfo.targetDetail}</div></div>
@@ -2438,7 +2524,7 @@ function renderDeals() {
             <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
           </div>
         </div>
-        <div class="deal-pending-note ${nextStepTone}"><i data-feather="${nextStepTone === 'danger' ? 'alert-circle' : (nextStepTone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>
+        ${closedMeta ? '' : `<div class="deal-pending-note ${nextStepTone}"><i data-feather="${nextStepTone === 'danger' ? 'alert-circle' : (nextStepTone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>`}
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
           <span class="meta-pill">💵 ${amountVal}</span>
@@ -2447,7 +2533,8 @@ function renderDeals() {
         </div>
         <div class="deal-extra" id="deal_extra_${row.id}">
           ${settlementDetails}
-          <div class="deal-inline-meta">
+          ${closedMeta ? `<div class="deal-inline-meta"><div class="deal-mini-box deal-mini-box-positive"><div class="deal-mini-lbl">${closedMeta.resultLabel}</div><div class="deal-mini-val">${nextStep}</div></div></div>` : ''}
+          <div class="deal-inline-meta"${closedMeta ? ' style="display:none;"' : ''}>
             <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
             <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
           </div>
@@ -2456,7 +2543,7 @@ function renderDeals() {
             <div class="receipt-line"><span>🎁 Бонус:</span><span>${commVal}</span></div>
             <div class="receipt-line total"><span>✅ Доход:</span><span class="net-profit">${incomeVal}</span></div>
           </div>
-          <div class="deal-actions-row" style="margin-top:12px;">${innerAction}</div>
+          ${closedMeta ? '' : `<div class="deal-actions-row" style="margin-top:12px;">${innerAction}</div>`}
         </div>
       </div>`;
   }).join('');
@@ -2962,7 +3049,8 @@ function renderRecommend() {
       const projection = getBusinessDealProjection(d);
       const row = projection.deal;
       const st = projection.statusMeta;
-      const nextStep = projection.nextStep;
+      const closedMeta = projection.closedMeta;
+      const nextStep = closedMeta ? closedMeta.resultText : projection.nextStep;
       const clientName = row.client_name || copy.client;
       const sourceName = d.agent_name || '—';
       const amountVal = d.amount ? formatRecommendMetric(d.amount, curr) : '—';
@@ -2978,6 +3066,7 @@ function renderRecommend() {
           </div>
           <div class="reco-meta">
             <span class="meta-pill">${amountVal}</span>
+            <span class="meta-pill">${sourceName}</span>
             <span class="meta-pill">${nextStep}</span>
           </div>
         </div>`;
@@ -3005,9 +3094,14 @@ function renderRecommend() {
   }
 
   listEl.innerHTML = rows.map((r, idx) => {
+    const closedMeta = ['closed', 'completed', 'done'].includes(String(r.status || '').trim().toLowerCase())
+      ? getUnifiedClosedDealMeta(r)
+      : null;
     const statusText = getRecommendStatusLabel(r.status, L);
     const rewardLine = r.reward ? `<span class="meta-pill">🎁 ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
-    const decisionLine = r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '';
+    const decisionLine = closedMeta
+      ? `<span class="meta-pill">${closedMeta.resultText}</span>`
+      : (r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '');
     return `
       <div class="reco-card" onclick="openRecommendDetail(${idx})">
         <div class="reco-top">
@@ -3035,6 +3129,9 @@ function getRecommendStatusLabel(status, L) {
     completed: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
     done: { text: L.rec_done || 'Завершено', cls: 'st-closed' },
   };
+  map.closed = { text: getUnifiedClosedStatusText(), cls: 'st-closed' };
+  map.completed = { text: getUnifiedClosedStatusText(), cls: 'st-closed' };
+  map.done = { text: getUnifiedClosedStatusText(), cls: 'st-closed' };
   return map[status] || { text: status, cls: 'st-new' };
 }
 
@@ -3200,7 +3297,10 @@ function openRecommendDetail(index) {
   const L = i18n[lang] || i18n.ru;
   const labels = getRecommendDetailLabels();
   const curr = bizData.currency || '₪';
-  const statusText = getRecommendDetailStageText(row, L);
+  const closedMeta = ['closed', 'completed', 'done'].includes(String(row.status || '').trim().toLowerCase())
+    ? getUnifiedClosedDealMeta(row)
+    : null;
+  const statusText = closedMeta ? closedMeta.statusText : getRecommendDetailStageText(row, L);
   const clientPhone = renderPhoneContact(row.client_phone);
   document.getElementById('recommendDetailContent').innerHTML = `
     <div class="sheet-card" style="margin-top:0;">
@@ -3214,8 +3314,8 @@ function openRecommendDetail(index) {
       <div class="deal-inline-meta" style="margin-bottom:0;">
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || '—'}</div></div>
         <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.bonus}</div><div class="deal-mini-val">${formatRecommendAmount(row.reward, curr)}</div></div>
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.settlement}</div><div class="deal-mini-val">${formatRecommendDecisionPlain(row.decision, L)}</div></div>
-        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${closedMeta ? closedMeta.resultLabel : labels.settlement}</div><div class="deal-mini-val">${closedMeta ? closedMeta.resultText : formatRecommendDecisionPlain(row.decision, L)}</div></div>
+        ${closedMeta ? '' : `<div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>`}
       </div>
     </div>`;
   document.getElementById('recommendDetailActions').innerHTML = renderRecommendDetailActionButtons(row);
@@ -3590,8 +3690,10 @@ function openManageDeal(id) {
   const statusCode = projection.statusCode;
   const showSettlementGroup = projection.showSettlementGroup;
   const statusMeta = projection.statusMeta;
+  const closedMeta = projection.closedMeta;
   const clarityCopy = getBusinessDealClarityCopy();
   const settlementInfo = projection.settlementInfo;
+  const manageLabels = getManageDealLabels();
   const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
   const isPayoutPending = projection.isPayoutPending;
   const tone = projection.tone;
@@ -3599,6 +3701,7 @@ function openManageDeal(id) {
   const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
+  const displayDebtValue = closedMeta ? closedMeta.resultText : debtValue;
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
@@ -3607,13 +3710,15 @@ function openManageDeal(id) {
   document.getElementById('m_val_agent_compact').innerHTML = agentPhoneHtml;
   document.getElementById('m_val_date').textContent   = dealDate;
   document.getElementById('m_val_date_compact').textContent   = dealDate;
-  document.getElementById('m_val_status').textContent = statusMeta.text;
-  document.getElementById('m_val_status_compact').textContent = statusMeta.text;
-  document.getElementById('m_val_debt').textContent = debtValue;
-  document.getElementById('m_val_debt_compact').textContent = debtValue;
+  document.getElementById('m_val_status').textContent = closedMeta ? closedMeta.statusText : statusMeta.text;
+  document.getElementById('m_val_status_compact').textContent = closedMeta ? closedMeta.statusText : statusMeta.text;
+  document.getElementById('m_val_debt').textContent = displayDebtValue;
+  document.getElementById('m_val_debt_compact').textContent = displayDebtValue;
   document.getElementById('m_val_income').textContent = incomeValue;
-  document.getElementById('m_box_settlement_group').style.display = showSettlementGroup ? 'grid' : 'none';
-  if (showSettlementGroup) {
+  document.getElementById('t_m_lbl_debt').textContent = closedMeta ? closedMeta.resultLabel : manageLabels.debt;
+  document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta ? closedMeta.resultLabel : manageLabels.debt;
+  document.getElementById('m_box_settlement_group').style.display = (!closedMeta && showSettlementGroup) ? 'grid' : 'none';
+  if (!closedMeta && showSettlementGroup) {
     document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
     document.getElementById('t_m_lbl_target').textContent = clarityCopy.targetField;
     document.getElementById('t_m_lbl_next_step').textContent = clarityCopy.nextStepField;
@@ -3621,9 +3726,9 @@ function openManageDeal(id) {
     document.getElementById('m_val_target').textContent = settlementInfo.targetDetail;
     document.getElementById('m_val_next_step').textContent = settlementInfo.nextStep;
   }
-  document.getElementById('m_box_status').className = `manage-info-box ${tone === 'success' ? 'manage-info-box-positive' : (tone === 'danger' ? 'manage-info-box-danger' : 'manage-info-box-warning')}`;
-  document.getElementById('m_box_debt').className = `manage-info-box${isPayoutPending ? ' manage-info-box-danger' : ''}`;
-  if (showSettlementGroup) {
+  document.getElementById('m_box_status').className = `manage-info-box ${closedMeta || tone === 'success' ? 'manage-info-box-positive' : (tone === 'danger' ? 'manage-info-box-danger' : 'manage-info-box-warning')}`;
+  document.getElementById('m_box_debt').className = `manage-info-box${closedMeta ? ' manage-info-box-positive' : (isPayoutPending ? ' manage-info-box-danger' : '')}`;
+  if (!closedMeta && showSettlementGroup) {
     document.getElementById('m_box_decision').className = getToneBoxClass(settlementInfo.decisionKey ? 'success' : 'warning');
     document.getElementById('m_box_target').className = getToneBoxClass(settlementInfo.targetTone);
     document.getElementById('m_box_next_step').className = getToneBoxClass(settlementInfo.nextStepTone);

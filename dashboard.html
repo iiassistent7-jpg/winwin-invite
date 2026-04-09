@@ -146,6 +146,10 @@
         .act-date { font-size:.72rem; color:var(--text2); margin-top:2px; }
         .activity-actions { padding:0 0 13px 52px; }
         body.rtl .activity-actions { padding:0 52px 13px 0; }
+        .deal-chip-row { display:flex; flex-wrap:wrap; gap:8px; padding:0 0 13px 52px; }
+        body.rtl .deal-chip-row { padding:0 52px 13px 0; }
+        .wallet-chip-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+        .deal-chip { display:inline-flex; align-items:center; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text2); font-size:.74rem; font-weight:600; }
         .wallet-deal-card { padding:16px; cursor:pointer; transition:.18s; }
         .wallet-deal-card:active { transform:scale(.985); }
         .wallet-card-top { display:flex; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
@@ -2380,6 +2384,82 @@ function getExplicitLeadStage(lead) {
     return null;
 }
 
+function getUnifiedClosedStatusText() {
+    const map = {
+        ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E',
+        he: '\u05D4\u05D5\u05E9\u05DC\u05DD',
+        en: 'Completed',
+        ar: '\u0645\u0643\u062A\u0645\u0644'
+    };
+    return map[lang] || map.ru;
+}
+
+function getUnifiedClosedResultLabel() {
+    const map = {
+        ru: '\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442',
+        he: '\u05EA\u05D5\u05E6\u05D0\u05D4',
+        en: 'Result',
+        ar: '\u0627\u0644\u0646\u062A\u064A\u062C\u0629'
+    };
+    return map[lang] || map.ru;
+}
+
+function getUnifiedClosedResultText(resultKey) {
+    const map = {
+        take: {
+            ru: '\u0411\u043E\u043D\u0443\u0441 \u0432\u044B\u043F\u043B\u0430\u0447\u0435\u043D \u0430\u0433\u0435\u043D\u0442\u0443',
+            he: '\u05D4\u05D1\u05D5\u05E0\u05D5\u05E1 \u05E9\u05D5\u05DC\u05DD \u05DC\u05E1\u05D5\u05DB\u05DF',
+            en: 'Bonus paid to the agent',
+            ar: '\u062A\u0645 \u062F\u0641\u0639 \u0627\u0644\u0645\u0643\u0627\u0641\u0623\u0629 \u0644\u0644\u0648\u0643\u064A\u0644'
+        },
+        gift_client: {
+            ru: '\u0411\u043E\u043D\u0443\u0441 \u043F\u0435\u0440\u0435\u0434\u0430\u043D \u043A\u043B\u0438\u0435\u043D\u0442\u0443',
+            he: '\u05D4\u05D1\u05D5\u05E0\u05D5\u05E1 \u05D4\u05D5\u05E2\u05D1\u05E8 \u05DC\u05DC\u05E7\u05D5\u05D7',
+            en: 'Bonus passed to the client',
+            ar: '\u062A\u0645 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0645\u0643\u0627\u0641\u0623\u0629 \u0644\u0644\u0639\u0645\u064A\u0644'
+        },
+        support_business: {
+            ru: '\u0411\u0438\u0437\u043D\u0435\u0441 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u043D',
+            he: '\u05D4\u05E2\u05E1\u05E7 \u05E7\u05D9\u05D1\u05DC \u05EA\u05DE\u05D9\u05DB\u05D4',
+            en: 'Business supported',
+            ar: '\u062A\u0645 \u062F\u0639\u0645 \u0627\u0644\u0639\u0645\u0644'
+        }
+    };
+    const bucket = map[resultKey] || map.take;
+    return bucket[lang] || bucket.ru;
+}
+
+function inferUnifiedClosedResultKey(lead) {
+    lead = normalizeDashboardLead(lead);
+    const decision = String(lead.decision || lead.settlement_mode || '').toLowerCase();
+    const settlementStatus = String(lead.settlement_status || '').toLowerCase();
+    if (['take', 'gift_client', 'support_business'].includes(decision)) return decision;
+    if (lead.gift_closed === true || settlementStatus === 'gift_closed') return 'gift_client';
+    if (lead.auto_closed === true || settlementStatus === 'support_business_completed') return 'support_business';
+    if (
+        lead.agent_confirmed_receipt === true
+        || lead.pending_agent_receipt === false
+        || lead.biz_claimed_paid === true
+        || lead.business_sent === true
+    ) return 'take';
+    const numericBonus = Number(lead.commission ?? lead.reward ?? lead.pending_payout ?? lead.debt_amount ?? 0);
+    if (Number.isFinite(numericBonus) && numericBonus > 0) return 'take';
+    return 'take';
+}
+
+function getUnifiedClosedLeadMeta(lead) {
+    const resultKey = inferUnifiedClosedResultKey(lead);
+    return {
+        statusText: getUnifiedClosedStatusText(),
+        resultLabel: getUnifiedClosedResultLabel(),
+        resultText: getUnifiedClosedResultText(resultKey)
+    };
+}
+
+function isUnifiedClosedProjection(projection) {
+    return projection && projection.bucket === 'history' && projection.counter === 'closed';
+}
+
 function getDealProjection(lead) {
     lead = normalizeDashboardLead(lead);
     const status = String(lead?.status || '').toLowerCase();
@@ -2403,6 +2483,7 @@ function getDealProjection(lead) {
         completed: { ru:'Закрыта', he:'סגורה', en:'Completed', ar:'مغلقة' },
         rejected: { ru:'Отклонена', he:'נדחתה', en:'Rejected', ar:'مرفوضة' }
     };
+    labels.completed = { ru:getUnifiedClosedStatusText(), he:getUnifiedClosedStatusText(), en:getUnifiedClosedStatusText(), ar:getUnifiedClosedStatusText() };
     const getLabel = key => ((labels[key] || labels.in_progress)[lang]) || (labels[key] || labels.in_progress).ru;
 
     const explicitStage = hasExplicitTruth ? getExplicitLeadStage(lead) : null;
@@ -2539,6 +2620,7 @@ function getWalletStageMeta(lead) {
         awaiting_receipt: { ru:'Ждём подтверждение получения', he:'ממתינים לאישור קבלה', en:'Awaiting receipt confirmation', ar:'بانتظار تأكيد الاستلام' },
         closed: { ru:'Закрыта', he:'סגורה', en:'Closed', ar:'مغلقة' }
     };
+    labels.closed = { ru:getUnifiedClosedStatusText(), he:getUnifiedClosedStatusText(), en:getUnifiedClosedStatusText(), ar:getUnifiedClosedStatusText() };
     const getLabel = key => (labels[key] && (labels[key][lang] || labels[key].ru)) || labels.choose_settlement.ru;
 
     if (hasExplicitTruth) {
@@ -2768,6 +2850,8 @@ function getWalletLeads() {
 
 function walletDealCardHtml(lead) {
     lead = normalizeDashboardLead(lead);
+    const projection = getDealProjection(lead);
+    const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
     const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : '—';
     const L = i18n[lang] || i18n.ru;
@@ -2801,18 +2885,19 @@ function walletDealCardHtml(lead) {
                 <div class="wallet-card-val">${formatDateValue(lead.last_update_date)}</div>
             </div>
         </div>
-        <div class="wallet-card-next">${escapeHtml(L.wallet_card_note || '')}</div>
-        <div class="wallet-card-actions">${renderWalletActionButton(lead, 'card') || `<button class="btn-primary wallet-card-btn btn-outline" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>${escapeHtml(L.wallet_card_open || 'Open and take the next step')}</button>`}</div>
+        ${closedMeta ? `<div class="wallet-chip-row"><span class="deal-chip">${escapeHtml(closedMeta.resultText)}</span><span class="deal-chip">${escapeHtml(formatDateValue(lead.business_close_date || lead.last_update_date))}</span></div>` : `<div class="wallet-card-next">${escapeHtml(L.wallet_card_note || '')}</div>`}
+        <div class="wallet-card-actions">${closedMeta ? '' : (renderWalletActionButton(lead, 'card') || `<button class="btn-primary wallet-card-btn btn-outline" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>${escapeHtml(L.wallet_card_open || 'Open and take the next step')}</button>`)}</div>
     </div>`;
 }
 
 function dealItemHtml(lead) {
     lead = normalizeDashboardLead(lead);
     const projection = getDealProjection(lead);
+    const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
     const hasComm = lead.commission != null;
     const commColor = projection.debt ? 'var(--gold)' : 'var(--green)';
-    const inlineActions = renderSettlementChoiceButtons(lead, 'inline');
+    const inlineActions = closedMeta ? '' : renderSettlementChoiceButtons(lead, 'inline');
     return `
     <div class="activity-block">
         <div class="activity-item" onclick='openDealDetail(${serializeLeadForAttr(lead)})'>
@@ -2827,6 +2912,7 @@ function dealItemHtml(lead) {
                 ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
             </div>
         </div>
+        ${closedMeta ? `<div class="deal-chip-row"><span class="deal-chip">${escapeHtml(closedMeta.resultText)}</span>${hasComm ? `<span class="deal-chip">+${escapeHtml(lead.commission)} ${curr}</span>` : ''}</div>` : ''}
         ${inlineActions ? `<div class="activity-actions">${inlineActions}</div>` : ''}
     </div>`;
 }
@@ -2834,6 +2920,7 @@ function dealItemHtml(lead) {
 function openDealDetail(lead) {
     lead = normalizeDashboardLead(lead);
     const projection = getDealProjection(lead);
+    const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const detailStagePill = walletStatusPill(lead);
     const L = i18n[lang]||i18n.ru;
     const curr = dashData?.currency || '₪';
@@ -2853,6 +2940,7 @@ function openDealDetail(lead) {
         <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
     if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${detailStagePill}</div></div>`;
+    if (closedMeta) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${escapeHtml(closedMeta.resultLabel)}</div><div class="deal-detail-val">${escapeHtml(closedMeta.resultText)}</div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('date')}</div><div class="deal-detail-val">${lead.date}</div></div>`;
     if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('amount')}</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
     if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:${projection.debt ? 'var(--gold)' : 'var(--green)'}">+${lead.commission} ${curr}</div></div>`;
@@ -2864,7 +2952,7 @@ function openDealDetail(lead) {
     const detailActionHtml = renderDetailActionButtons(lead);
     if (detailActionHtml) {
         actionsContainer.innerHTML = detailActionHtml;
-    } else if (projection.remind) {
+    } else if (!closedMeta && projection.remind) {
         const btnText = L.remind_debt || 'Напомнить о долге';
         const safeBizName = lead.biz_name.replace(/'/g, "\\'");
         actionsContainer.innerHTML = `
@@ -2883,6 +2971,8 @@ function openDealDetail(lead) {
 
 function openWalletDealDetail(lead) {
     lead = normalizeDashboardLead(lead);
+    const projection = getDealProjection(lead);
+    const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
     const LABELS = {
         biz: { ru:'Бизнес', he:'עסק', en:'Business', ar:'العمل' },
@@ -2912,11 +3002,11 @@ function openWalletDealDetail(lead) {
     if (lead.last_reminder_date) rows += row(lbl('last_reminder_date'), formatDateValue(lead.last_reminder_date));
     rows += row(lbl('amount'), lead.amount != null && String(lead.amount).trim() !== '' ? `${escapeHtml(lead.amount)} ${curr}` : '—');
     rows += row(lbl('bonus'), lead.commission != null && String(lead.commission).trim() !== '' ? `<span style="color:var(--green)">+${escapeHtml(lead.commission)} ${curr}</span>` : '—');
-    rows += row(lbl('settlement_method'), escapeHtml(getSettlementMethodLabel(lead.decision)));
+    rows += row(closedMeta ? escapeHtml(closedMeta.resultLabel) : lbl('settlement_method'), closedMeta ? escapeHtml(closedMeta.resultText) : escapeHtml(getSettlementMethodLabel(lead.decision)));
     rows += row(lbl('current_stage'), walletStatusPill(lead));
 
     document.getElementById('dealDetailContent').innerHTML = rows;
-    document.getElementById('dealActionButtons').innerHTML = renderDetailActionButtons(lead);
+    document.getElementById('dealActionButtons').innerHTML = closedMeta ? '' : renderDetailActionButtons(lead);
 
     document.getElementById('dealSheet').classList.add('active');
     document.body.style.overflow = 'hidden';
