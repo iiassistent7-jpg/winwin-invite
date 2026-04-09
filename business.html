@@ -976,6 +976,28 @@ function getManageDealLabels() {
   return map[lang] || map.ru;
 }
 
+function getGiftClientManageCopy() {
+  const map = {
+    ru: {
+      actionLabel:'Передал клиенту',
+      closeNote:'Подтверждайте только после того, как бонус или подарок действительно передан клиенту.'
+    },
+    he: {
+      actionLabel:'העברתי ללקוח',
+      closeNote:'אשרו רק אחרי שהבונוס או המתנה הועברו בפועל ללקוח.'
+    },
+    en: {
+      actionLabel:'Passed to client',
+      closeNote:'Confirm only after the bonus or gift has actually been passed to the client.'
+    },
+    ar: {
+      actionLabel:'تم التسليم للعميل',
+      closeNote:'أكد فقط بعد أن يتم بالفعل تسليم الهدية أو المكافأة إلى العميل.'
+    }
+  };
+  return map[lang] || map.ru;
+}
+
 function getUnifiedClosedStatusText() {
   const map = {
     ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E',
@@ -3737,9 +3759,29 @@ function openManageDeal(id) {
   const acceptBtn = document.getElementById('m_btn_accept');
   const closeBtn  = document.getElementById('m_btn_go_close');
   const rejectBtn = document.querySelector('#m_step_main .btn-primary.btn-red');
+  const closeWarning = document.querySelector('#m_step_close .deal-warning');
+  const amountLabel = document.getElementById('t_m_lbl_amount');
+  const amountInput = document.getElementById('m_amount');
+  const confirmCloseBtn = document.getElementById('t_m_btn_confirm_close');
   const closeIsPaymentAction = projection.actionMode === 'mark_paid';
+  const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
+  const giftClientCopy = getGiftClientManageCopy();
   closeBtn.onclick = closeIsPaymentAction ? () => submitDealAction('biz_paid') : () => setStep('close');
-  document.getElementById('t_m_btn_close').textContent = isPayoutPending ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл') : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку');
+  document.getElementById('t_m_btn_close').textContent = isPayoutPending
+    ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл')
+    : (isGiftClientSettlementConfirmation ? giftClientCopy.actionLabel : ((i18n[lang] || i18n.ru).m_close || 'Закрыть сделку'));
+  if (confirmCloseBtn) {
+    confirmCloseBtn.textContent = isGiftClientSettlementConfirmation
+      ? giftClientCopy.actionLabel
+      : ((i18n[lang] || i18n.ru).m_confirm_close || 'Подтвердить закрытие');
+  }
+  if (closeWarning) {
+    closeWarning.textContent = isGiftClientSettlementConfirmation
+      ? giftClientCopy.closeNote
+      : 'Важно: подтверждайте закрытие сделки только после фактической оплаты клиентом. После закрытия вернуть сделку назад уже нельзя.';
+  }
+  if (amountLabel) amountLabel.style.display = isGiftClientSettlementConfirmation ? 'none' : 'block';
+  if (amountInput) amountInput.style.display = isGiftClientSettlementConfirmation ? 'none' : 'block';
   acceptBtn.style.display = projection.actionMode === 'accept_or_reject' ? 'flex' : 'none';
   closeBtn.style.display = ['close_only','close_or_reject','mark_paid'].includes(projection.actionMode) ? 'flex' : 'none';
   if (rejectBtn) rejectBtn.style.display = ['accept_or_reject','close_or_reject'].includes(projection.actionMode) ? 'flex' : 'none';
@@ -3775,6 +3817,7 @@ async function submitDealAction(actionType) {
   const activeDeal = (bizData.deals || []).find(d => d.id === activeDealId);
   const projection = activeDeal ? getBusinessDealProjection(activeDeal) : null;
   const isPayoutPending = activeDeal ? isPayoutPendingBusinessDeal(activeDeal) : false;
+  const isGiftClientSettlementConfirmation = projection && projection.actionMode === 'close_only' && projection.settlementInfo && projection.settlementInfo.decisionKey === 'gift_client';
   const allowedModes = {
     accept: ['accept_or_reject'],
     close: ['close_only', 'close_or_reject'],
@@ -3792,7 +3835,7 @@ async function submitDealAction(actionType) {
     closeManageDeal();
     return;
   }
-  if (actionType === 'close' && !isPayoutPending && !document.getElementById('m_amount').value) return;
+  if (actionType === 'close' && !isPayoutPending && !isGiftClientSettlementConfirmation && !document.getElementById('m_amount').value) return;
   setStep('result');
   document.getElementById('m_spinner').style.display = 'block';
   document.getElementById('m_result_msg').textContent  = L.action_processing;
