@@ -980,22 +980,32 @@ function getGiftClientManageCopy() {
   const map = {
     ru: {
       actionLabel:'Передал клиенту',
-      closeNote:'Подтверждайте только после того, как бонус или подарок действительно передан клиенту.'
+      closeNote:'Подтверждайте только после того, как бонус или подарок действительно передан клиенту.',
+      transferLabel:'Передать клиенту:'
     },
     he: {
       actionLabel:'העברתי ללקוח',
-      closeNote:'אשרו רק אחרי שהבונוס או המתנה הועברו בפועל ללקוח.'
+      closeNote:'אשרו רק אחרי שהבונוס או המתנה הועברו בפועל ללקוח.',
+      transferLabel:'להעביר ללקוח:'
     },
     en: {
       actionLabel:'Passed to client',
-      closeNote:'Confirm only after the bonus or gift has actually been passed to the client.'
+      closeNote:'Confirm only after the bonus or gift has actually been passed to the client.',
+      transferLabel:'Pass to client:'
     },
     ar: {
       actionLabel:'تم التسليم للعميل',
-      closeNote:'أكد فقط بعد أن يتم بالفعل تسليم الهدية أو المكافأة إلى العميل.'
+      closeNote:'أكد فقط بعد أن يتم بالفعل تسليم الهدية أو المكافأة إلى العميل.',
+      transferLabel:'يُسلَّم للعميل:'
     }
   };
   return map[lang] || map.ru;
+}
+
+function formatGiftClientTransferAmount(deal, currency) {
+  const rewardVal = deal?.commission ?? deal?.agent_reward ?? deal?.reward_amount ?? deal?.reward ?? deal?.pending_payout ?? null;
+  if (rewardVal == null || rewardVal === '') return '—';
+  return Number.isFinite(Number(rewardVal)) ? `${Number(rewardVal)} ${currency}` : String(rewardVal);
 }
 
 function getUnifiedClosedStatusText() {
@@ -3723,7 +3733,11 @@ function openManageDeal(id) {
   const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
-  const displayDebtValue = closedMeta ? closedMeta.resultText : debtValue;
+  const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
+  const giftClientCopy = getGiftClientManageCopy();
+  const displayDebtValue = closedMeta
+    ? closedMeta.resultText
+    : (isGiftClientSettlementConfirmation ? formatGiftClientTransferAmount(deal, curr) : debtValue);
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
@@ -3737,8 +3751,12 @@ function openManageDeal(id) {
   document.getElementById('m_val_debt').textContent = displayDebtValue;
   document.getElementById('m_val_debt_compact').textContent = displayDebtValue;
   document.getElementById('m_val_income').textContent = incomeValue;
-  document.getElementById('t_m_lbl_debt').textContent = closedMeta ? closedMeta.resultLabel : manageLabels.debt;
-  document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta ? closedMeta.resultLabel : manageLabels.debt;
+  document.getElementById('t_m_lbl_debt').textContent = closedMeta
+    ? closedMeta.resultLabel
+    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
+  document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta
+    ? closedMeta.resultLabel
+    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
   document.getElementById('m_box_settlement_group').style.display = (!closedMeta && showSettlementGroup) ? 'grid' : 'none';
   if (!closedMeta && showSettlementGroup) {
     document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
@@ -3764,8 +3782,6 @@ function openManageDeal(id) {
   const amountInput = document.getElementById('m_amount');
   const confirmCloseBtn = document.getElementById('t_m_btn_confirm_close');
   const closeIsPaymentAction = projection.actionMode === 'mark_paid';
-  const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
-  const giftClientCopy = getGiftClientManageCopy();
   closeBtn.onclick = closeIsPaymentAction ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending
     ? ((i18n[lang] || i18n.ru).m_mark_paid || 'Оплату произвёл')
