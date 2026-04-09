@@ -162,6 +162,8 @@
         .settlement-choice-grid-inline .btn-primary { padding:11px 14px; border-radius:12px; font-size:.82rem; }
         .recommender-decision-btn { background:transparent; color:var(--text); border:1px solid var(--border); }
         .recommender-decision-btn.is-selected { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+        .recommender-decision-btn.is-selected-positive { background:var(--green); color:#fff; border-color:var(--green); }
+        .recommender-decision-btn.is-selected-danger { background:var(--red); color:#fff; border-color:var(--red); }
         .wallet-phone-link { color:var(--accent2); text-decoration:none; }
         .wallet-summary { padding:18px; }
         .wallet-summary-head { font-size:.8rem; color:var(--text2); font-weight:700; text-transform:uppercase; letter-spacing:.6px; margin-bottom:12px; }
@@ -2295,7 +2297,7 @@ function getExplicitLeadStage(lead) {
     const debtAmount = Number.isFinite(Number(lead.debt_amount)) ? Number(lead.debt_amount) : 0;
     const hasOpenObligations = hasOpenSettlement || hasOpenAgentPayout || debtAmount > 0;
     const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
     const giftCompletedStatuses = new Set(['gift_closed']);
     const supportCompletedStatuses = new Set(['support_business_completed']);
     const supportInProgressStatuses = new Set(['support_business_in_progress']);
@@ -2404,9 +2406,9 @@ function getDealProjection(lead) {
     const finalStatuses = new Set(['confirmed', 'completed', 'done', 'gift_closed', 'support_business_completed']);
     const rejectedStatuses = new Set(['rejected']);
     const pendingPaymentStatuses = new Set(['pending_business_payment', 'awaiting_business_payment', 'pending_reward_payment', 'awaiting_reward']);
-    const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation', 'pending_receipt', 'awaiting_receipt']);
-    const awaitingDecisionStatuses = new Set(['pending_confirmation', 'pending_agent_confirmation', 'awaiting_reward']);
-    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt']);
+    const awaitingClientStatuses = new Set(['pending_client_confirmation', 'awaiting_client_confirmation', 'pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
+    const awaitingDecisionStatuses = new Set(['pending_confirmation', 'awaiting_reward']);
+    const payoutCompletedStatuses = new Set(['pending_receipt', 'awaiting_receipt', 'pending_agent_confirmation']);
     const giftCompletedStatuses = new Set(['gift_closed']);
     const supportCompletedStatuses = new Set(['support_business_completed']);
     const supportInProgressStatuses = new Set(['support_business_in_progress']);
@@ -2589,6 +2591,28 @@ function getSettlementChoiceConfig() {
     };
 }
 
+function getReceiptConfirmationConfig() {
+    const labels = {
+        received: { ru:'Получил благодарность', he:'קיבלתי את התגמול', en:'Received gratitude', ar:'استلمت الامتنان' },
+        not_received: { ru:'Не получил благодарность', he:'לא קיבלתי את התגמול', en:'Did not receive gratitude', ar:'لم أستلم الامتنان' }
+    };
+    return {
+        kind: 'confirm_receipt',
+        choices: [
+            {
+                value: 'confirm_receipt',
+                label: (labels.received[lang] || labels.received.ru),
+                selectedClass: 'is-selected-positive'
+            },
+            {
+                value: 'agent_not_got',
+                label: (labels.not_received[lang] || labels.not_received.ru),
+                selectedClass: 'is-selected-danger'
+            }
+        ]
+    };
+}
+
 function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
     const L = i18n[lang] || i18n.ru;
     if (stage.action === 'choose_settlement') {
@@ -2603,12 +2627,7 @@ function getWalletActionConfig(lead, stage = getWalletStageMeta(lead)) {
         };
     }
     if (stage.action === 'confirm_receipt') {
-        return {
-            label: L.confirm_receipt || 'Подтвердить получение',
-            icon: 'check-circle',
-            style: 'background:var(--green); color:#fff;',
-            onclick: `confirmReceipt(${JSON.stringify(lead.id)})`
-        };
+        return getReceiptConfirmationConfig();
     }
     return null;
 }
@@ -2638,12 +2657,31 @@ function renderSettlementChoiceButtons(lead, context = 'sheet', force = false) {
     return '';
 }
 
+function renderReceiptConfirmationButtons(lead, context = 'sheet') {
+    const action = getWalletActionConfig(lead);
+    if (!action || action.kind !== 'confirm_receipt') return '';
+    const buttonClass = context === 'sheet' ? 'btn-primary' : 'btn-primary';
+    const clickPrefix = context === 'sheet' ? '' : 'event.stopPropagation(); ';
+    if (window.WinWinRecommenderDecisionUI && typeof window.WinWinRecommenderDecisionUI.render === 'function') {
+        return window.WinWinRecommenderDecisionUI.render({
+            dealId: lead.id,
+            choices: action.choices,
+            buttonClass,
+            wrapClass: 'settlement-choice-grid',
+            onAction: 'submitReceiptConfirmation',
+            clickPrefix
+        });
+    }
+    return '';
+}
+
 function renderWalletActionButton(lead, context = 'card') {
     const action = getWalletActionConfig(lead);
     if (!action) return '';
     if (action.kind === 'choose_settlement') {
         return renderSettlementChoiceButtons(lead, context);
     }
+    if (action.kind === 'confirm_receipt') return '';
     const onclick = context === 'card' ? `event.stopPropagation(); ${action.onclick}` : action.onclick;
     const cls = context === 'card' ? 'btn-primary wallet-card-btn' : 'btn-primary';
     return `
@@ -2657,6 +2695,7 @@ function renderWalletActionButton(lead, context = 'card') {
 function renderDetailActionButtons(lead) {
     lead = normalizeDashboardLead(lead);
     const projection = getDealProjection(lead);
+    const action = getWalletActionConfig(lead);
     const decision = String(lead.decision || lead.settlement_mode || '').toLowerCase();
     const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
     const hasClosureEvidence = [
@@ -2674,6 +2713,10 @@ function renderDetailActionButtons(lead) {
         (isPendingAgentChoiceLead(lead) || hasClosureEvidence)
     ) {
         return renderSettlementChoiceButtons(lead, 'sheet', true);
+    }
+
+    if (action && action.kind === 'confirm_receipt') {
+        return renderReceiptConfirmationButtons(lead, 'sheet');
     }
 
     return renderWalletActionButton(lead, 'sheet');
@@ -3075,6 +3118,49 @@ async function confirmReceipt(leadId) {
         alert(L.confirm_receipt_success || 'Получение подтверждено.');
     } catch(e) {
         alert(L.confirm_receipt_error || 'Не удалось подтвердить получение.');
+    }
+}
+
+async function submitReceiptConfirmation(leadId, actionType) {
+    const L = i18n[lang] || i18n.ru;
+    if (!['confirm_receipt', 'agent_not_got'].includes(actionType)) return;
+    const errorLabelMap = {
+        ru: 'Не удалось сохранить ответ.',
+        he: 'לא ניתן לשמור את התשובה.',
+        en: 'Could not save the response.',
+        ar: 'تعذر حفظ الرد.'
+    };
+    const successLabelMap = {
+        confirm_receipt: {
+            ru: L.confirm_receipt_success || 'Получение подтверждено.',
+            he: L.confirm_receipt_success || 'הקבלה אושרה.',
+            en: L.confirm_receipt_success || 'Receipt confirmed.',
+            ar: L.confirm_receipt_success || 'تم تأكيد الاستلام.'
+        },
+        agent_not_got: {
+            ru: 'Отметили, что благодарность не получена.',
+            he: 'סימנו שהתגמול לא התקבל.',
+            en: 'Marked as not received.',
+            ar: 'تم تعليمها على أنها لم تُستلم.'
+        }
+    };
+    try {
+        const res = await fetch(`${API_URL}/api/deals/action?token=${token}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ action: actionType, lead_id: leadId, deal_id: leadId })
+        });
+        if (!res.ok) throw new Error('Server error');
+        const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!dashRes.ok) throw new Error('Refresh error');
+        dashData = await dashRes.json();
+        renderAll();
+        const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
+        if (refreshedLead) openWalletDealDetail(refreshedLead);
+        const successMap = successLabelMap[actionType];
+        alert((successMap && (successMap[lang] || successMap.ru)) || (L.action_success || 'Готово.'));
+    } catch (e) {
+        alert(errorLabelMap[lang] || errorLabelMap.ru);
     }
 }
 

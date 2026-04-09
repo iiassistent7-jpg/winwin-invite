@@ -24,9 +24,10 @@
             choices.map(function(choice) {
                 const value = String(choice && choice.value || '').trim().toLowerCase();
                 const label = choice && choice.label ? choice.label : value;
+                const selectedClass = String(choice && choice.selectedClass || '').trim();
                 if (!value) return '';
                 return [
-                    '<button class="', buttonClass, ' recommender-decision-btn" type="button" data-decision-choice="', value, '" onclick="',
+                    '<button class="', buttonClass, ' recommender-decision-btn" type="button" data-decision-choice="', value, '" data-selected-class="', selectedClass, '" onclick="',
                     clickPrefix, "WinWinRecommenderDecisionUI.handleChoiceClick(this, '", onAction, "', ", JSON.stringify(dealId), ", '", value, "')\">",
                     escapeHtml(label),
                     '</button>'
@@ -43,10 +44,16 @@
         if (root) {
             root.querySelectorAll('.recommender-decision-btn').forEach(function(node) {
                 node.classList.remove('is-selected');
+                node.classList.remove('is-selected-positive');
+                node.classList.remove('is-selected-danger');
             });
         }
         if (button && button.classList) {
             button.classList.add('is-selected');
+            const selectedClass = String(button.getAttribute('data-selected-class') || '').trim();
+            if (selectedClass) {
+                button.classList.add(selectedClass);
+            }
         }
         const handler = global[handlerName];
         if (typeof handler === 'function') {

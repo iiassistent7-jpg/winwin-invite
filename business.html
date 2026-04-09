@@ -155,6 +155,8 @@
 .settlement-choice-grid { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
 .recommender-decision-btn { background:transparent; color:var(--text); border:1px solid var(--border); }
 .recommender-decision-btn.is-selected { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+.recommender-decision-btn.is-selected-positive { background:var(--green); color:#fff; border-color:var(--green); }
+.recommender-decision-btn.is-selected-danger { background:var(--red); color:#fff; border-color:var(--red); }
 .deal-extra { display:none; margin-top:12px; }
 .deal-extra.open { display:block; }
 .deal-warning { background:rgba(242,201,76,.10); border:1px solid rgba(242,201,76,.25); color:#f3d46b; border-radius:14px; padding:12px 14px; font-size:.86rem; line-height:1.5; margin-bottom:16px; }
@@ -1610,7 +1612,7 @@ function hasTakePaymentSent(truth) {
 function getDisplayDealStatus(deal) {
   const truth = getDealTruth(deal);
   const pendingPaymentStatuses = new Set(['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward']);
-  const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt']);
+  const payoutCompletedStatuses = new Set(['pending_receipt','awaiting_receipt','pending_agent_confirmation']);
   const giftCompletedStatuses = new Set(['gift_closed']);
   const supportCompletedStatuses = new Set(['support_business_completed']);
   if (truth.explicit) {
