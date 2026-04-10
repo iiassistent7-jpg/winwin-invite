@@ -3857,8 +3857,10 @@ async function submitDealAction(actionType) {
   document.getElementById('m_result_msg').textContent  = L.action_processing;
   document.getElementById('m_result_msg').style.color  = 'var(--text)';
 
-  const payload = { token, deal_id: activeDealId, action: actionType };
-  if (actionType === 'close') {
+  const apiActionType = (actionType === 'close' && isGiftClientSettlementConfirmation) ? 'gift_closed' : actionType;
+  const payload = { token, deal_id: activeDealId, action: apiActionType };
+  if (apiActionType === 'gift_closed') payload.lead_id = activeDealId;
+  if (apiActionType === 'close') {
     const closeAmount = document.getElementById('m_amount').value || (activeDeal && (activeDeal.amount || activeDeal.deal_amount)) || '';
     if (closeAmount) payload.amount = closeAmount;
   }
