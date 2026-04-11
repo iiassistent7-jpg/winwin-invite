@@ -2135,6 +2135,22 @@ function formatPhoneLink(phone) {
     return `<a href="tel:${escapeHtml(hrefValue)}" class="wallet-phone-link" onclick="event.stopPropagation()">${escapeHtml(text)}</a>`;
 }
 
+function renderPhoneContact(phone, opts = {}) {
+    const raw = String(phone || '').trim();
+    const digits = raw.replace(/\D/g, '');
+    if (!digits) return '—';
+    const L = i18n[lang] || i18n.ru;
+    const callLabel = L.call || ({ru:'Позвонить',he:'התקשר',en:'Call',ar:'اتصل'}[lang]||'Позвонить');
+    const waLabel = 'WhatsApp';
+    return `<div class="deal-contact-stack">
+    <div class="deal-contact-number">${raw}</div>
+    <div class="deal-contact-btns">
+      <a class="deal-contact-btn" href="tel:+${digits}">${callLabel}</a>
+      <a class="deal-contact-btn deal-contact-btn-wa" href="https://wa.me/${digits}" target="_blank">${waLabel}</a>
+    </div>
+  </div>`;
+}
+
 function serializeLeadForAttr(lead) {
     return JSON.stringify(lead).replace(/'/g, '&#39;');
 }
@@ -2940,19 +2956,31 @@ function openDealDetail(lead) {
         client:{ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل'},
         phone: {ru:'Телефон', he:'טלפון', en:'Phone', ar:'هاتف'},
         status:{ru:'Статус', he:'סטטוס', en:'Status', ar:'الحالة'},
-        date:  {ru:'Дата', he:'תאריך', en:'Date', ar:'التاريخ'},
+        date:      {ru:'Дата', he:'תאריך', en:'Date', ar:'التاريخ'},
+        start_date:{ru:'Начало', he:'תחילה', en:'Start', ar:'البداية'},
+        biz_phone: {ru:'Тел. бизнеса', he:'טל׳ עסק', en:'Biz Phone', ar:'هاتف العمل'},
         amount:{ru:'Сумма сделки', he:'סכום העסקה', en:'Deal Amount', ar:'مبلغ الصفقة'},
         bonus: {ru:'Ваш бонус', he:'הבונוס שלך', en:'Your Bonus', ar:'مكافأتك'}
     };
     const lbl = k => (LABELS[k]||{})[lang] || LABELS[k].ru;
 
+    const bizPhoneHtml = lead.biz_phone
+      ? renderPhoneContact(lead.biz_phone)
+      : '—';
+    const clientPhoneHtml = lead.client_phone
+      ? renderPhoneContact(lead.client_phone)
+      : null;
     let rows = `
-        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('biz')}</div><div class="deal-detail-val">${lead.biz_name}</div></div>
-        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${lead.client_name}</div></div>`;
-    if (lead.client_phone) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val"><a href="tel:${lead.client_phone}" style="color:var(--accent2)">${lead.client_phone}</a></div></div>`;
+        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('biz')}</div><div class="deal-detail-val">${escapeHtml(lead.biz_name)}</div></div>
+        <div class="deal-detail-row deal-detail-contact"><div class="deal-detail-lbl">${lbl('biz_phone')}</div><div class="deal-detail-val">${bizPhoneHtml}</div></div>
+        <div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('client')}</div><div class="deal-detail-val">${escapeHtml(lead.client_name)}</div></div>`;
+    if (clientPhoneHtml) rows += `<div class="deal-detail-row deal-detail-contact"><div class="deal-detail-lbl">${lbl('phone')}</div><div class="deal-detail-val">${clientPhoneHtml}</div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('status')}</div><div class="deal-detail-val">${detailStagePill}</div></div>`;
     if (closedMeta) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${escapeHtml(closedMeta.resultLabel)}</div><div class="deal-detail-val">${escapeHtml(closedMeta.resultText)}</div></div>`;
     rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('date')}</div><div class="deal-detail-val">${lead.date}</div></div>`;
+    if (lead.start_date && lead.start_date !== lead.date) {
+      rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('start_date')}</div><div class="deal-detail-val">${lead.start_date}</div></div>`;
+    }
     if (lead.amount) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('amount')}</div><div class="deal-detail-val">${lead.amount} ${curr}</div></div>`;
     if (lead.commission) rows += `<div class="deal-detail-row"><div class="deal-detail-lbl">${lbl('bonus')}</div><div class="deal-detail-val" style="color:${projection.debt ? 'var(--gold)' : 'var(--green)'}">+${lead.commission} ${curr}</div></div>`;
 

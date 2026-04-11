@@ -303,6 +303,22 @@
     .manage-info-box { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:12px; min-width:0; }
     .manage-info-label { font-size:.74rem; color:var(--text2); margin-bottom:6px; }
     .manage-info-value { font-size:1rem; font-weight:800; color:var(--text); line-height:1.25; word-break:break-word; }
+    .payment-method-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: .82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .payment-method-btn.selected {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
     .manage-info-box-positive { background:rgba(39,174,96,.08); border-color:rgba(39,174,96,.24); }
     .manage-info-box-positive .manage-info-value { color:var(--green); }
     .manage-info-box-danger { background:rgba(235,87,87,.08); border-color:rgba(235,87,87,.24); }
@@ -564,6 +580,28 @@
           <div class="manage-info-box" id="m_box_date">
             <div class="manage-info-label" id="t_m_lbl_date_compact">Дата:</div>
             <div class="manage-info-value" id="m_val_date_compact"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_amount">
+            <div class="manage-info-label" id="t_m_lbl_amount_compact">Сумма:</div>
+            <div class="manage-info-value" id="m_val_amount_compact"></div>
+          </div>
+          <div class="manage-info-box" id="m_box_commission">
+            <div class="manage-info-label" id="t_m_lbl_commission_compact">Бонус агента:</div>
+            <div class="manage-info-value" id="m_val_commission_compact"></div>
+          </div>
+        </div>
+        <div id="m_box_payment_method" style="display:none;margin-bottom:16px;">
+          <div class="manage-info-label" id="t_m_lbl_payment_method" style="margin-bottom:8px;font-weight:600;">Способ оплаты:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;" id="m_payment_method_btns">
+            <button class="payment-method-btn" data-method="bit" onclick="selectPaymentMethod(this)">Bit</button>
+            <button class="payment-method-btn" data-method="paybox" onclick="selectPaymentMethod(this)">PayBox</button>
+            <button class="payment-method-btn" data-method="paypal" onclick="selectPaymentMethod(this)">PayPal</button>
+            <button class="payment-method-btn" data-method="bank" onclick="selectPaymentMethod(this)">
+              <span class="pm-label" data-ru="Банк. перевод" data-he="העברה בנקאית" data-en="Bank Transfer" data-ar="تحويل بنكي">Банк. перевод</span>
+            </button>
+            <button class="payment-method-btn" data-method="cash" onclick="selectPaymentMethod(this)">
+              <span class="pm-label" data-ru="Наличные" data-he="מזומן" data-en="Cash" data-ar="نقداً">Наличные</span>
+            </button>
           </div>
         </div>
         <div class="manage-summary-grid" id="m_box_settlement_group">
@@ -3862,6 +3900,22 @@ function openManageDeal(id) {
   document.getElementById('m_val_agent_compact').innerHTML = agentPhoneHtml;
   document.getElementById('m_val_date').textContent   = dealDate;
   document.getElementById('m_val_date_compact').textContent   = dealDate;
+  const amountVal = row.amount || row.deal_amount || '';
+  const commVal = deal.commission || deal.agent_bonus || '';
+  if (document.getElementById('m_val_amount_compact')) {
+    document.getElementById('m_val_amount_compact').textContent = amountVal ? `${amountVal} ${curr}` : '—';
+  }
+  if (document.getElementById('m_val_commission_compact')) {
+    document.getElementById('m_val_commission_compact').textContent = commVal ? `+${commVal} ${curr}` : '—';
+  }
+  const isMonetary = !closedMeta && ['take'].includes(settlementInfo.decisionKey || '');
+  const pmBox = document.getElementById('m_box_payment_method');
+  if (pmBox) {
+    pmBox.style.display = isMonetary ? 'block' : 'none';
+    document.querySelectorAll('#m_payment_method_btns .payment-method-btn')
+      .forEach(b => b.classList.remove('selected'));
+    applyPaymentMethodLabels();
+  }
   document.getElementById('m_val_status').textContent = closedMeta ? closedMeta.statusText : statusMeta.text;
   document.getElementById('m_val_status_compact').textContent = closedMeta ? closedMeta.statusText : statusMeta.text;
   document.getElementById('m_val_debt').textContent = displayDebtValue;
@@ -3921,6 +3975,18 @@ function openManageDeal(id) {
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
   closeFullscreen('debtDealsSheet');
   openFullscreen('manageDealSheet');
+}
+
+function selectPaymentMethod(btn) {
+  document.querySelectorAll('#m_payment_method_btns .payment-method-btn')
+    .forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function applyPaymentMethodLabels() {
+  document.querySelectorAll('#m_payment_method_btns .pm-label').forEach(el => {
+    el.textContent = el.dataset[lang] || el.dataset.ru || el.textContent;
+  });
 }
 
 function closeManageDeal() {
