@@ -601,10 +601,15 @@
             <i data-feather="check-circle" style="width:18px;height:18px;"></i>
             <span id="t_m_btn_close">Закрыть сделку</span>
           </button>
+          <button class="btn-primary btn-outline" style="margin-bottom:12px;display:none;" id="m_btn_remind_client" onclick="remindClientGift(activeDealId)">
+            <i data-feather="bell" style="width:18px;height:18px;"></i>
+            <span id="t_m_btn_remind_client">Напомнить клиенту</span>
+          </button>
           <button class="btn-primary btn-red" onclick="setStep('reject')">
             <i data-feather="x-circle" style="width:18px;height:18px;"></i>
             <span id="t_m_btn_reject">Отклонить сделку</span>
           </button>
+          <div id="m_remind_client_sent" style="display:none;margin-top:4px;font-size:.82rem;color:var(--green);font-weight:600;text-align:center;">Напоминание отправлено</div>
         </div>
 
         <!-- Step: close (enter amount) -->
@@ -769,7 +774,7 @@ const i18n = {
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
     debt_label:"Закрыть долг агентам", debt_open:"Открыть список", debt_sheet_title:"Закрыть долг агентам", debt_sheet_sub:"Здесь показаны только активные сделки, где нужно оплатить долг агентам.", debt_sheet_empty:"Сейчас нет активных сделок с задолженностью перед агентом.", debt_client:"Клиент", debt_agent:"Агент", debt_reward:"Оплатить долг", debt_status:"Статус", filt_active:"В работе", filt_history:"История",
     st_new:"Новая", st_prog:"В процессе", st_closed:"Закрыта", st_rej:"Отклонена", st_pending:"⏳ Ждём подтверждения",
-    pending_note:"Ожидаем подтверждения от агента", card_agent:"Агент:", card_manage:"Управлять",
+    pending_note:"Ожидаем подтверждения от агента", waiting_client_confirmation:"⏳ Ждём подтверждения клиента", client_gift_dispute:"⚠️ Клиент не получил подарок", card_agent:"Агент:", card_manage:"Управлять",
     st_fin_title:"Финансы", st_revenue:"Оборот", st_commission:"Выплаты", st_net:"Чистый доход", st_pending_cnt:"Ждут агента", st_net_big:"Главный показатель", st_net_big_sub:"Чистый доход — деньги, которые реально остаются у вас после выплат",
     st_funnel_title:"Воронка конверсии", st_total_leads:"Всего лидов:", f_active:"В процессе", f_closed:"Закрыто", f_rejected:"Отклонено",
     st_agents:"Рекомендатели", st_avg_deal:"Средний чек",
@@ -782,7 +787,7 @@ const i18n = {
     btn_edit:"Изменить данные", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Управление сделкой", m_client:"Клиент:", m_agent:"Агент:", m_date:"Дата:",
     m_close:"Закрыть сделку", m_reject:"Отклонить сделку", m_mark_paid:"Оплату произвёл", m_cancel:"Назад",
-    m_lbl_amount:"Сумма сделки (только цифры)", m_confirm_close:"Подтвердить закрытие",
+    m_lbl_amount:"Сумма сделки (только цифры)", m_confirm_close:"Подтвердить закрытие", remind_client_gift:"Напомнить клиенту", remind_client_gift_sent:"Напоминание отправлено",
     m_reject_sure:"Уверены, что хотите отклонить?", m_confirm_reject:"Да, отклонить",
     edit_title:"Редактирование", f_name:"Название бизнеса", f_niche:"Категория бизнеса",
     f_subniche:"Специализация", f_comm:"Вознаграждение (напр. 10% или 500)",
@@ -805,7 +810,7 @@ const i18n = {
     err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
     debt_label:"🔴 חוב לסוכנים:", debt_open:"פתיחת הרשימה", debt_sheet_title:"חוב לסוכנים", debt_sheet_sub:"כאן מוצגות רק עסקאות פעילות שבהן עדיין צריך לשלם לסוכן את התגמול.", debt_sheet_empty:"כרגע אין עסקאות פעילות עם חוב לסוכן.", debt_client:"לקוח", debt_agent:"סוכן", debt_reward:"תשלום לסוכן", debt_status:"סטטוס", filt_active:"פעיל", filt_history:"היסטוריה",
     st_new:"חדשה", st_prog:"בתהליך", st_closed:"נסגרה", st_rej:"נדחתה", st_pending:"⏳ ממתין לאישור",
-    pending_note:"ממתין לאישור קבלה מהסוכן", card_agent:"סוכן:", card_manage:"ניהול",
+    pending_note:"ממתין לאישור קבלה מהסוכן", waiting_client_confirmation:"⏳ ממתין לאישור הלקוח", client_gift_dispute:"⚠️ הלקוח לא קיבל את המתנה", card_agent:"סוכן:", card_manage:"ניהול",
     st_fin_title:"פיננסים", st_revenue:"הכנסות", st_commission:"תשלומים", st_net:"רווח נקי", st_pending_cnt:"ממתין לסוכן", st_net_big:"המדד המרכזי", st_net_big_sub:"הרווח הנקי — הכסף שנשאר בפועל אחרי התשלומים",
     st_funnel_title:"משפך המרות", st_total_leads:"סה״כ לידים:", f_active:"בתהליך", f_closed:"נסגרו", f_rejected:"נדחו",
     st_agents:"ממליצים", st_avg_deal:"עסקה ממוצעת",
@@ -818,7 +823,7 @@ const i18n = {
     btn_edit:"עריכת נתונים", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"ניהול עסקה", m_client:"לקוח:", m_agent:"סוכן:", m_date:"תאריך:",
     m_close:"סגור עסקה", m_reject:"דחה עסקה", m_mark_paid:"סימנתי ששילמתי", m_cancel:"חזור",
-    m_lbl_amount:"סכום העסקה", m_confirm_close:"אשר סגירה",
+    m_lbl_amount:"סכום העסקה", m_confirm_close:"אשר סגירה", remind_client_gift:"להזכיר ללקוח", remind_client_gift_sent:"התזכורת נשלחה",
     m_reject_sure:"האם אתה בטוח?", m_confirm_reject:"כן, לדחות",
     edit_title:"עריכה", f_name:"שם העסק", f_niche:"תחום",
     f_subniche:"התמחות", f_comm:"תגמול",
@@ -841,7 +846,7 @@ const i18n = {
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
     debt_label:"Agent payout still needs to be closed", debt_open:"Open list", debt_sheet_title:"Agent payout still needs to be closed", debt_sheet_sub:"Only active deals where the agent payout is still owed are shown here.", debt_sheet_empty:"There are no active deals with unpaid agent payout right now.", debt_client:"Client", debt_agent:"Agent", debt_reward:"Agent payout", debt_status:"Status", filt_active:"Active", filt_history:"History",
     st_new:"New", st_prog:"In Progress", st_closed:"Closed", st_rej:"Rejected", st_pending:"⏳ Awaiting confirmation",
-    pending_note:"Awaiting confirmation from agent", card_agent:"Agent:", card_manage:"Manage",
+    pending_note:"Awaiting confirmation from agent", waiting_client_confirmation:"⏳ Waiting for client confirmation", client_gift_dispute:"⚠️ Client did not receive the gift", card_agent:"Agent:", card_manage:"Manage",
     st_fin_title:"Finance", st_revenue:"Revenue", st_commission:"Payouts", st_net:"Net Income", st_pending_cnt:"Awaiting agent",
     st_funnel_title:"Conversion Funnel", st_total_leads:"Total leads:", f_active:"In Progress", f_closed:"Closed", f_rejected:"Rejected",
     st_agents:"Recommenders", st_avg_deal:"Avg Deal",
@@ -854,7 +859,7 @@ const i18n = {
     btn_edit:"Edit Data", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"Manage Deal", m_client:"Client:", m_agent:"Agent:", m_date:"Date:",
     m_close:"Close Deal", m_reject:"Reject Deal", m_mark_paid:"Payment sent", m_cancel:"Back",
-    m_lbl_amount:"Deal amount (digits only)", m_confirm_close:"Confirm closure",
+    m_lbl_amount:"Deal amount (digits only)", m_confirm_close:"Confirm closure", remind_client_gift:"Remind client", remind_client_gift_sent:"Reminder sent",
     m_reject_sure:"Are you sure you want to reject?", m_confirm_reject:"Yes, reject",
     edit_title:"Edit Profile", f_name:"Business Name", f_niche:"Category",
     f_subniche:"Specialization", f_comm:"Reward",
@@ -877,7 +882,7 @@ const i18n = {
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
     debt_label:"لا يزال يجب إغلاق دين الوكيل", debt_open:"فتح القائمة", debt_sheet_title:"لا يزال يجب إغلاق دين الوكيل", debt_sheet_sub:"يظهر هنا فقط الصفقات النشطة التي ما زالت تتطلب دفع مكافأة الوكيل.", debt_sheet_empty:"لا توجد الآن صفقات نشطة عليها دين للوكيل.", debt_client:"العميل", debt_agent:"الوكيل", debt_reward:"دفعة الوكيل", debt_status:"الحالة", filt_active:"نشط", filt_history:"السجل",
     st_new:"جديد", st_prog:"قيد الإجراء", st_closed:"مغلقة", st_rej:"مرفوضة", st_pending:"⏳ بانتظار التأكيد",
-    pending_note:"بانتظار تأكيد الاستلام من الوكيل", card_agent:"الوكيل:", card_manage:"إدارة",
+    pending_note:"بانتظار تأكيد الاستلام من الوكيل", waiting_client_confirmation:"⏳ بانتظار تأكيد العميل", client_gift_dispute:"⚠️ العميل لم يستلم الهدية", card_agent:"الوكيل:", card_manage:"إدارة",
     st_fin_title:"المالية", st_revenue:"الإيرادات", st_commission:"المدفوعات", st_net:"صافي الدخل", st_pending_cnt:"في انتظار الوكيل",
     st_funnel_title:"مسار التحويل", st_total_leads:"إجمالي:", f_active:"قيد الإجراء", f_closed:"مغلقة", f_rejected:"مرفوضة",
     st_agents:"موصون", st_avg_deal:"متوسط الصفقة",
@@ -890,7 +895,7 @@ const i18n = {
     btn_edit:"تعديل البيانات", wa_btn:"WhatsApp", tg_btn:"Telegram",
     m_title:"إدارة الصفقة", m_client:"العميل:", m_agent:"الوكيل:", m_date:"التاريخ:",
     m_close:"إغلاق الصفقة", m_reject:"رفض الصفقة", m_mark_paid:"تم الدفع", m_cancel:"رجوع",
-    m_lbl_amount:"مبلغ الصفقة (أرقام فقط)", m_confirm_close:"تأكيد الإغلاق",
+    m_lbl_amount:"مبلغ الصفقة (أرقام فقط)", m_confirm_close:"تأكيد الإغلاق", remind_client_gift:"تذكير العميل", remind_client_gift_sent:"تم إرسال التذكير",
     m_reject_sure:"هل أنت متأكد من الرفض?", m_confirm_reject:"نعم، أرفض",
     edit_title:"تعديل", f_name:"اسم العمل", f_niche:"الفئة",
     f_subniche:"تخصص", f_comm:"مكافأة",
@@ -1304,7 +1309,7 @@ function applyI18n() {
     't_wa_btn':'wa_btn', 't_tg_btn':'tg_btn',
     't_m_title':'m_title', 't_m_lbl_client':'m_client', 't_m_lbl_agent':'m_agent',
     't_m_lbl_agent_phone':'m_agent_phone', 't_m_lbl_date':'m_date', 't_m_lbl_status':'m_status', 't_m_lbl_debt':'m_debt',
-    't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject',
+    't_m_btn_close':'m_close', 't_m_btn_reject':'m_reject', 't_m_btn_remind_client':'remind_client_gift',
     't_m_cancel':'m_cancel', 't_m_back_top':'m_cancel', 't_m_cancel_bottom':'m_cancel',
     't_m_lbl_amount':'m_lbl_amount', 't_m_btn_confirm_close':'m_confirm_close',
     't_m_reject_sure':'m_reject_sure', 't_m_btn_confirm_reject':'m_confirm_reject',
@@ -1314,7 +1319,7 @@ function applyI18n() {
     't_f_comm':'f_comm', 't_f_pay':'f_pay', 't_f_link':'f_link',
     't_btn_save':'btn_save', 't_btn_cancel_edit':'btn_cancel_edit',
     'nav_deals':'nav_deals', 'nav_stats':'nav_stats', 'nav_recommenders':'nav_recommenders',
-    'nav_recommend':'nav_recommend', 'nav_profile':'nav_profile',
+    'nav_recommend':'nav_recommend', 'nav_profile':'nav_profile', 'm_remind_client_sent':'remind_client_gift_sent',
     't_err_btn_wa':'err_btn_wa', 't_err_btn_tg':'err_btn_tg'
   };
   for (const [id, key] of Object.entries(map)) {
@@ -1572,7 +1577,7 @@ function setFilter(f) {
   renderDeals();
 }
 
-function getStatusData(status) {
+function getStatusData(status, deal = null) {
   const L = i18n[lang] || i18n.ru;
   const payoutPendingText = {
     ru:'Оплатить долг',
@@ -1586,6 +1591,9 @@ function getStatusData(status) {
     en:'Awaiting receipt confirmation',
     ar:'بانتظار تأكيد الاستلام'
   };
+  const giftClientPendingText = L.waiting_client_confirmation || i18n.ru.waiting_client_confirmation;
+  const giftClientDisputeText = L.client_gift_dispute || i18n.ru.client_gift_dispute;
+  const isGiftDisputePending = parseTruthBool(deal && deal.gift_dispute_pending) === true;
   const map = {
     new:                  { text:L.st_new,     cls:'st-new',      icon:'clock' },
     in_progress:          { text:L.st_prog,    cls:'st-progress', icon:'clock' },
@@ -1600,6 +1608,16 @@ function getStatusData(status) {
     awaiting_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
     pending_agent_confirmation: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
     pending_agent_receipt: { text:receiptPendingText[lang] || receiptPendingText.ru, cls:'st-pending', icon:'clock' },
+    pending_client_confirmation: {
+      text:isGiftDisputePending ? giftClientDisputeText : giftClientPendingText,
+      cls:'st-pending',
+      icon:isGiftDisputePending ? 'alert-triangle' : 'clock'
+    },
+    awaiting_client_confirmation: {
+      text:isGiftDisputePending ? giftClientDisputeText : giftClientPendingText,
+      cls:'st-pending',
+      icon:isGiftDisputePending ? 'alert-triangle' : 'clock'
+    },
   };
   return map[status] || { text:status, cls:'st-new', icon:'circle' };
 }
@@ -1665,7 +1683,7 @@ function getOutstandingBusinessDebtAmount(deal) {
 }
 
 function hasExplicitDealTruth(deal) {
-  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','pending_payout','pending_debt','debt','agent_decision','biz_claimed_paid','business_sent','pending_agent_receipt','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes']
+  return ['history_ready','has_open_settlement','has_open_agent_payout','settlement_mode','settlement_status','debt_amount','pending_payout','pending_debt','debt','agent_decision','biz_claimed_paid','business_sent','pending_agent_receipt','agent_confirmed_receipt','gift_closed','auto_closed','pay_dispute_pending','agent_pay_disputes','gift_dispute_pending']
     .some(key => hasOwn(deal, key));
 }
 
@@ -1689,6 +1707,7 @@ function getDealTruth(deal) {
   const autoClosed = parseTruthBool(deal.auto_closed);
   const payDisputePending = parseTruthBool(deal.pay_dispute_pending);
   const agentPayDisputes = parseTruthNumber(deal.agent_pay_disputes);
+  const giftDisputePending = parseTruthBool(deal.gift_dispute_pending);
   const settlementStatus = String(deal.settlement_status || '').trim().toLowerCase();
   const settlementMode = normalizeSettlementMode(
     deal.settlement_mode ||
@@ -1714,6 +1733,7 @@ function getDealTruth(deal) {
     autoClosed,
     payDisputePending,
     agentPayDisputes,
+    giftDisputePending,
     settlementStatus,
     settlementMode,
     status,
@@ -1799,6 +1819,15 @@ function getDisplayDealStatus(deal) {
     const hasOpenObligations = truth.hasOpenSettlement === true || truth.hasOpenAgentPayout === true || truth.debtAmount > 0;
 
     if (truth.status === 'rejected') return 'rejected';
+    if (
+      truth.settlementMode === 'gift_client' &&
+      (
+        truth.giftDisputePending === true ||
+        ['pending_client_confirmation','awaiting_client_confirmation'].includes(truth.settlementStatus)
+      )
+    ) {
+      return 'pending_client_confirmation';
+    }
     if (isBusinessDealFinalized(deal, truth)) return 'closed';
 
     if (truth.settlementMode === 'take') {
@@ -1876,6 +1905,9 @@ function getDisplayDealStatus(deal) {
     }
     if (statuses.some(code => pendingPaymentStatuses.has(code)) || statuses.includes('closed')) return 'pending_business_payment';
   }
+  if (decision === 'gift_client' && (truth.giftDisputePending === true || statuses.some(code => ['pending_client_confirmation','awaiting_client_confirmation'].includes(code)))) {
+    return 'pending_client_confirmation';
+  }
   if ((decision === 'gift_client' || decision === 'support_business') && (statuses.includes('closed') || statuses.some(code => finalStatuses.has(code)))) {
     return 'closed';
   }
@@ -1884,6 +1916,8 @@ function getDisplayDealStatus(deal) {
     'awaiting_business_payment',
     'pending_reward_payment',
     'awaiting_reward',
+    'pending_client_confirmation',
+    'awaiting_client_confirmation',
     'pending_receipt',
     'awaiting_receipt',
     'pending_agent_confirmation',
@@ -2264,13 +2298,19 @@ function getBusinessDealSettlementInfo(deal) {
   }
 
   if (decisionKey === 'gift_client') {
+    const isGiftDisputePending = truth.giftDisputePending === true;
+    const isWaitingClientConfirmation = statusCode === 'pending_client_confirmation';
     return {
       decisionKey,
       decisionLabel:formatRecommendDecisionPlain('gift_client', L),
       decisionPill:formatDecision('gift_client', L),
-      nextStep: isClosedLike ? copy.nextGiftDone : copy.nextSendClient,
+      nextStep: isGiftDisputePending
+        ? (L.client_gift_dispute || i18n.ru.client_gift_dispute)
+        : (isWaitingClientConfirmation
+          ? (L.waiting_client_confirmation || i18n.ru.waiting_client_confirmation)
+          : (isClosedLike ? copy.nextGiftDone : copy.nextSendClient)),
       targetDetail:`${copy.targetSendClient}: ${clientName}`,
-      nextStepTone: isClosedLike ? 'success' : 'warning',
+      nextStepTone: isGiftDisputePending ? 'danger' : (isClosedLike ? 'success' : 'warning'),
       targetTone:'warning'
     };
   }
@@ -2301,11 +2341,14 @@ function getBusinessDealSettlementInfo(deal) {
 function getBusinessDealProjection(deal) {
   const normalizedDeal = normalizeBusinessDeal(deal);
   const statusCode = getDisplayDealStatus(normalizedDeal);
-  const statusMeta = getStatusData(statusCode);
+  const statusMeta = getStatusData(statusCode, normalizedDeal);
   const settlementInfo = getBusinessDealSettlementInfo(normalizedDeal);
   const closedMeta = statusCode === 'closed' ? getUnifiedClosedDealMeta(normalizedDeal) : null;
   const isPayoutPending = statusCode === 'pending_business_payment';
-  const tone = getDealTone(statusCode, isPayoutPending);
+  const giftDisputePending = parseTruthBool(normalizedDeal.gift_dispute_pending) === true;
+  const tone = (statusCode === 'pending_client_confirmation' && giftDisputePending)
+    ? 'danger'
+    : getDealTone(statusCode, isPayoutPending);
   const waitingRecommenderDecision = statusCode === 'pending_confirmation' && !settlementInfo.decisionKey;
   const waitingAgentConfirmation = statusCode === 'pending_receipt';
   const isFinalState = ['closed','rejected'].includes(statusCode);
@@ -2314,6 +2357,8 @@ function getBusinessDealProjection(deal) {
   let actionMode = 'close_or_reject';
   if (statusCode === 'new') {
     actionMode = 'accept_or_reject';
+  } else if (statusCode === 'pending_client_confirmation') {
+    actionMode = 'waiting_client';
   } else if (waitingRecommenderDecision || waitingAgentConfirmation || isFinalState) {
     actionMode = 'view_only';
   } else if (isPayoutPending) {
@@ -2329,6 +2374,7 @@ function getBusinessDealProjection(deal) {
     settlementInfo,
     closedMeta,
     isPayoutPending,
+    giftDisputePending,
     tone,
     nextStep:settlementInfo.nextStep,
     nextStepTone:settlementInfo.nextStepTone || tone || 'warning',
@@ -3734,10 +3780,12 @@ function openManageDeal(id) {
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
   const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
+  const isGiftClientWaitingClient = projection.actionMode === 'waiting_client' && settlementInfo.decisionKey === 'gift_client';
+  const isGiftClientSettlementFlow = isGiftClientSettlementConfirmation || isGiftClientWaitingClient;
   const giftClientCopy = getGiftClientManageCopy();
   const displayDebtValue = closedMeta
     ? closedMeta.resultText
-    : (isGiftClientSettlementConfirmation ? formatGiftClientTransferAmount(deal, curr) : debtValue);
+    : (isGiftClientSettlementFlow ? formatGiftClientTransferAmount(deal, curr) : debtValue);
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
@@ -3753,10 +3801,10 @@ function openManageDeal(id) {
   document.getElementById('m_val_income').textContent = incomeValue;
   document.getElementById('t_m_lbl_debt').textContent = closedMeta
     ? closedMeta.resultLabel
-    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
+    : (isGiftClientSettlementFlow ? giftClientCopy.transferLabel : manageLabels.debt);
   document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta
     ? closedMeta.resultLabel
-    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
+    : (isGiftClientSettlementFlow ? giftClientCopy.transferLabel : manageLabels.debt);
   document.getElementById('m_box_settlement_group').style.display = (!closedMeta && showSettlementGroup) ? 'grid' : 'none';
   if (!closedMeta && showSettlementGroup) {
     document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
@@ -3781,6 +3829,11 @@ function openManageDeal(id) {
   const amountLabel = document.getElementById('t_m_lbl_amount');
   const amountInput = document.getElementById('m_amount');
   const confirmCloseBtn = document.getElementById('t_m_btn_confirm_close');
+  const remindClientBtn = document.getElementById('m_btn_remind_client');
+  const remindClientSent = document.getElementById('m_remind_client_sent');
+  const remindClientAlreadySent = projection.giftDisputePending
+    ? row._giftClientDisputeReminderSent === true
+    : row._giftClientReminderSent === true;
   const closeIsPaymentAction = projection.actionMode === 'mark_paid';
   closeBtn.onclick = closeIsPaymentAction ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending
@@ -3801,6 +3854,15 @@ function openManageDeal(id) {
   acceptBtn.style.display = projection.actionMode === 'accept_or_reject' ? 'flex' : 'none';
   closeBtn.style.display = ['close_only','close_or_reject','mark_paid'].includes(projection.actionMode) ? 'flex' : 'none';
   if (rejectBtn) rejectBtn.style.display = ['accept_or_reject','close_or_reject'].includes(projection.actionMode) ? 'flex' : 'none';
+  if (remindClientBtn) {
+    remindClientBtn.disabled = false;
+    remindClientBtn.style.opacity = '1';
+    remindClientBtn.style.display = projection.actionMode === 'waiting_client' && !remindClientAlreadySent ? 'flex' : 'none';
+  }
+  if (remindClientSent) {
+    remindClientSent.textContent = (i18n[lang] || i18n.ru).remind_client_gift_sent || i18n.ru.remind_client_gift_sent;
+    remindClientSent.style.display = projection.actionMode === 'waiting_client' && remindClientAlreadySent ? 'block' : 'none';
+  }
   setStep('main');
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
   closeFullscreen('debtDealsSheet');
@@ -3826,6 +3888,42 @@ async function refreshBusinessDataFromBackend() {
   sessionStorage.setItem(`biz_cache_${token}`, JSON.stringify(fresh));
   renderAll();
   return fresh;
+}
+
+async function remindClientGift(dealId) {
+  const L = i18n[lang] || i18n.ru;
+  if (!dealId) return;
+  const btn = document.getElementById('m_btn_remind_client');
+  const sentNote = document.getElementById('m_remind_client_sent');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '.65';
+  }
+  try {
+    const res = await fetch(`${API_URL}/api/deals/action`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ token, deal_id: dealId, action: 'remind_client_gift' })
+    });
+    if (!res.ok) throw new Error('remind_client_gift');
+    const deal = (bizData.deals || []).find(d => d.id === dealId);
+    if (deal) {
+      if (parseTruthBool(deal.gift_dispute_pending) === true) deal._giftClientDisputeReminderSent = true;
+      else deal._giftClientReminderSent = true;
+    }
+    sessionStorage.setItem(`biz_cache_${token}`, JSON.stringify(bizData));
+    if (btn) btn.style.display = 'none';
+    if (sentNote) {
+      sentNote.textContent = L.remind_client_gift_sent || i18n.ru.remind_client_gift_sent;
+      sentNote.style.display = 'block';
+    }
+  } catch(e) {
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+    showNotice(L.save_err || 'Save error');
+  }
 }
 
 async function submitDealAction(actionType) {
