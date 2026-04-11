@@ -4000,6 +4000,16 @@ async function submitDealAction(actionType) {
       await refreshBusinessDataFromBackend();
       document.getElementById('m_result_msg').textContent = L.action_success;
       document.getElementById('m_result_msg').style.color = 'var(--green)';
+    } else if (apiActionType === 'gift_closed') {
+      document.getElementById('m_result_msg').textContent = L.action_success;
+      document.getElementById('m_result_msg').style.color = 'var(--green)';
+      const deal = (bizData.deals || []).find(d => d.id === activeDealId);
+      if (deal) {
+        deal.settlement_status = data.settlement_status || 'pending_client_confirmation';
+        deal.biz_claimed_paid = true;
+        if (hasOwn(deal, 'has_open_settlement')) deal.has_open_settlement = true;
+        if (hasOwn(deal, 'history_ready')) deal.history_ready = false;
+      }
     } else {
       document.getElementById('m_result_msg').textContent = L.action_success;
       document.getElementById('m_result_msg').style.color = 'var(--green)';
