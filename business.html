@@ -3273,6 +3273,16 @@ function isOutgoingRecommenderAwaitingReceipt(row) {
     || ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(settlementStatus);
 }
 
+function isOutgoingGiftClientWaitingBusiness(row) {
+  const truth = getDealTruth(row || {});
+  const settlementMode = String(truth.settlementMode || (row && row.decision) || '').trim().toLowerCase();
+  if (settlementMode !== 'gift_client') return false;
+  if (truth.giftClosed === true || truth.autoClosed === true) return false;
+  if (truth.agentConfirmedReceipt === true || truth.clientConfirmedReceipt === true) return false;
+  if (truth.bizClaimedPaid === true) return false;
+  return true;
+}
+
 function getOutgoingRecommendReceiptChoices() {
   const map = {
     ru: [
@@ -3307,6 +3317,17 @@ function renderRecommendDetailActionButtons(row) {
       wrapClass: 'settlement-choice-grid',
       onAction: 'submitOutgoingReceiptConfirmation'
     });
+  }
+  if (isOutgoingGiftClientWaitingBusiness(row)) {
+    const L = i18n[lang] || i18n.ru;
+    const remindLabel = L.remind_gift_client || 'Напомнить о передаче клиенту';
+    const safeId = JSON.stringify(dealId);
+    const safeBizName = JSON.stringify((row && row.business_name) || '—');
+    return `<button class="btn-primary" style="background:var(--gold);color:#1A1A2E;width:100%;"
+      onclick="remindOutgoingGiftClient(${safeId}, ${safeBizName})">
+      <i data-feather="bell" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
+      ${escapeHtml(remindLabel)}
+    </button>`;
   }
   if (!isOutgoingRecommenderPendingChoice(row)) return '';
   const L = i18n[lang] || i18n.ru;
@@ -3418,6 +3439,34 @@ async function refreshBusinessRecommendationContext() {
   await loadPreservedAgentDashboard(true);
   renderAll();
   return recommendationRows;
+}
+
+async function remindOutgoingGiftClient(dealId, bizName) {
+  const L = i18n[lang] || i18n.ru;
+  const actionToken = agentDashToken || (bizData && bizData.agent_dashboard_token
+    ? String(bizData.agent_dashboard_token).trim() : '');
+  if (!actionToken) {
+    showNotice(L.save_err || 'Save error');
+    return;
+  }
+  try {
+    const res = await fetch(`${API_URL}/api/dashboard/action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: actionToken, deal_id: dealId, action: 'remind_debt' })
+    });
+    if (!res.ok) throw new Error('remind_failed');
+    const data = await res.json().catch(() => ({}));
+    const result = data.result || 'sent_now';
+    const messages = {
+      sent_now: L.remind_result_sent_now || L.remind_success || 'Напоминание отправлено.',
+      scheduled_0900: L.remind_result_scheduled_0900 || 'Напоминание запланировано на 09:00.',
+      blocked_24h: L.remind_result_blocked_24h || 'Напоминание уже отправлялось сегодня.'
+    };
+    showNotice(messages[result] || messages.sent_now);
+  } catch(e) {
+    showNotice(L.remind_error || 'Ошибка отправки.');
+  }
 }
 
 async function submitOutgoingSettlementChoice(dealId, actionType) {
