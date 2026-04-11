@@ -3436,6 +3436,7 @@ async function refreshBusinessRecommendationContext() {
 
 async function remindOutgoingGiftClient(dealId) {
   const L = i18n[lang] || i18n.ru;
+  const btn = null;
   const actionToken = agentDashToken || (bizData && bizData.agent_dashboard_token
     ? String(bizData.agent_dashboard_token).trim() : '');
   if (!actionToken) {
