@@ -662,7 +662,11 @@
         <!-- Step: reject -->
         <div class="step-panel" id="m_step_reject">
           <p style="text-align:center;margin-bottom:16px;font-weight:600;" id="t_m_reject_sure">Уверены, что хотите отклонить?</p>
-          <button class="btn-primary" style="background:var(--red);color:#fff;margin-bottom:12px;" onclick="submitDealAction('reject')" id="t_m_btn_confirm_reject">Да, отклонить</button>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:.82rem;color:var(--text2);display:block;margin-bottom:6px;" id="t_m_reject_reason_lbl">Причина отказа (обязательно):</label>
+            <textarea id="m_reject_reason" rows="3" style="width:100%;box-sizing:border-box;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;color:var(--text);font-size:.9rem;resize:none;outline:none;" placeholder="Например: клиент не подходит под наши условия..."></textarea>
+          </div>
+          <button class="btn-primary" style="background:var(--red);color:#fff;margin-bottom:12px;" onclick="submitRejectWithReason()" id="t_m_btn_confirm_reject">Да, отклонить</button>
           <button class="btn-primary btn-outline" onclick="setStep('main')" id="t_m_back2">Отмена</button>
         </div>
 
@@ -1383,6 +1387,13 @@ function applyI18n() {
   if (compactDateLbl) compactDateLbl.textContent = L.m_date;
   if (compactClientLbl) compactClientLbl.textContent = L.m_client;
   if (compactAgentLbl) compactAgentLbl.textContent = L.m_agent;
+  const rejectReasonLbl = document.getElementById('t_m_reject_reason_lbl');
+  if (rejectReasonLbl) rejectReasonLbl.textContent = {
+    ru: 'Причина отказа (обязательно):',
+    he: 'סיבת הסירוב (חובה):',
+    en: 'Reason for rejection (required):',
+    ar: 'سبب الرفض (مطلوب):'
+  }[lang] || 'Причина отказа (обязательно):';
   const payCash = document.getElementById('f_pay_cash_btn');
   const payBank = document.getElementById('f_pay_bank_btn');
   if (payCash) payCash.textContent = L.f_pay_cash;
@@ -3972,6 +3983,8 @@ function openManageDeal(id) {
   closeBtn.style.display = ['close_only','close_or_reject','mark_paid'].includes(projection.actionMode) ? 'flex' : 'none';
   if (rejectBtn) rejectBtn.style.display = ['accept_or_reject','close_or_reject'].includes(projection.actionMode) ? 'flex' : 'none';
   setStep('main');
+  const rejectReasonEl = document.getElementById('m_reject_reason');
+  if (rejectReasonEl) rejectReasonEl.value = '';
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
   closeFullscreen('debtDealsSheet');
   openFullscreen('manageDealSheet');
@@ -4046,7 +4059,7 @@ async function remindClientGift(dealId) {
   }
 }
 
-async function submitDealAction(actionType) {
+async function submitDealAction(actionType, extraPayload = {}) {
   const L = i18n[lang] || i18n.ru;
   const activeDeal = (bizData.deals || []).find(d => d.id === activeDealId);
   const projection = activeDeal ? getBusinessDealProjection(activeDeal) : null;
@@ -4076,7 +4089,7 @@ async function submitDealAction(actionType) {
   document.getElementById('m_result_msg').style.color  = 'var(--text)';
 
   const apiActionType = (actionType === 'close' && isGiftClientSettlementConfirmation) ? 'gift_closed' : actionType;
-  const payload = { token, deal_id: activeDealId, action: apiActionType };
+  const payload = { token, deal_id: activeDealId, action: apiActionType, ...extraPayload };
   if (apiActionType === 'gift_closed') payload.lead_id = activeDealId;
   if (apiActionType === 'close') {
     const closeAmount = document.getElementById('m_amount').value || (activeDeal && (activeDeal.amount || activeDeal.deal_amount)) || '';
@@ -4157,6 +4170,22 @@ async function submitDealAction(actionType) {
   }
 
   setTimeout(closeManageDeal, 3000);
+}
+
+function submitRejectWithReason() {
+  const reason = (document.getElementById('m_reject_reason')?.value || '').trim();
+  if (!reason) {
+    const L = i18n[lang] || i18n.ru;
+    const msg = {
+      ru: 'Пожалуйста, укажите причину отказа.',
+      he: 'אנא ציינו את סיבת הסירוב.',
+      en: 'Please provide a reason for rejection.',
+      ar: 'يرجى تحديد سبب الرفض.'
+    };
+    showNotice(msg[lang] || msg.ru);
+    return;
+  }
+  submitDealAction('reject', { reject_reason: reason });
 }
 
 // ══ LEADERBOARD ══════════════════════════════════════════════════════
