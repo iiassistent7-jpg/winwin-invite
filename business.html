@@ -3450,13 +3450,40 @@ async function remindOutgoingGiftClient(dealId) {
     });
     if (!res.ok) throw new Error('remind_failed');
     const data = await res.json().catch(() => ({}));
-    const result = data.result || 'sent_now';
-    const messages = {
-      sent_now: L.remind_result_sent_now || L.remind_success || 'Напоминание отправлено.',
-      scheduled_0900: L.remind_result_scheduled_0900 || 'Напоминание запланировано на 09:00.',
-      blocked_24h: L.remind_result_blocked_24h || 'Напоминание уже отправлялось сегодня.'
+    const blockedMsgs = {
+      ru: 'Напоминание уже отправлялось в последние 24 часа. Следующее будет доступно позже.',
+      he: 'התזכורת כבר נשלחה ב-24 השעות האחרונות. הבאה תהיה זמינה מאוחר יותר.',
+      en: 'A reminder was already sent in the last 24 hours. The next one will be available later.',
+      ar: 'تم إرسال تذكير بالفعل خلال الـ 24 ساعة الماضية. سيكون التالي متاحاً لاحقاً.'
     };
-    showNotice(messages[result] || messages.sent_now);
+    const scheduledMsgs = {
+      ru: 'Мы уважаем личное время людей. Напоминание поставлено в очередь и будет отправлено в 09:00.',
+      he: 'אנחנו מכבדים את המרחב האישי. התזכורת הוכנסה לתור ותישלח בשעה 09:00.',
+      en: 'We respect personal time. The reminder is queued and will be sent at 09:00.',
+      ar: 'نحن نحترم الوقت الشخصي. التذكير في قائمة الانتظار وسيُرسل الساعة 09:00.'
+    };
+    const sentMsgs = {
+      ru: 'Напоминание отправлено.',
+      he: 'התזכורת נשלחה.',
+      en: 'Reminder sent.',
+      ar: 'تم إرسال التذكير.'
+    };
+
+    if (data.blocked === true) {
+      const reason = data.reason || '';
+      const msg = reason === 'cooldown_24h'
+        ? (blockedMsgs[lang] || blockedMsgs.ru)
+        : (L.remind_error || 'Ошибка отправки.');
+      showNotice(msg);
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+      return;
+    }
+    const result = data.result || 'sent_now';
+    if (result === 'scheduled_0900') {
+      showNotice(scheduledMsgs[lang] || scheduledMsgs.ru);
+    } else {
+      showNotice(sentMsgs[lang] || sentMsgs.ru);
+    }
   } catch(e) {
     showNotice(L.remind_error || 'Ошибка отправки.');
   }
