@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Win-Win Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a38;
+    --text: #e8e8f0;
+    --text2: #7878a0;
+    --accent: #4f6ef7;
+    --accent2: #00d4aa;
+    --gold: #f5c842;
+    --red: #f04060;
+    --green: #00d4aa;
+    --purple: #9b6dff;
+    --orange: #ff7a40;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── Login ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 30% 50%, rgba(79,110,247,.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(155,109,255,.1) 0%, transparent 50%),
+                var(--bg);
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 40px;
+    width: 380px;
+    text-align: center;
+  }
+  .login-logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .login-sub { color: var(--text2); font-size: .85rem; margin-bottom: 32px; }
+  .login-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .9rem;
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .login-input:focus { border-color: var(--accent); }
+  .login-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .login-btn:hover { opacity: .85; }
+  .login-error { color: var(--red); font-size: .82rem; margin-top: 12px; }
+
+  /* ── Layout ── */
+  #app { display: none; }
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 4px 8px;
+    margin-bottom: 8px;
+  }
+  .sidebar-subtitle { color: var(--text2); font-size: .72rem; padding: 0 8px; margin-bottom: 28px; letter-spacing: 1px; text-transform: uppercase; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--text2);
+    transition: all .18s;
+    margin-bottom: 4px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(79,110,247,.15); color: var(--accent); }
+  .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .sidebar-bottom { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
+  .refresh-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: .8rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .refresh-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ── Main ── */
+  .main { margin-left: 220px; padding: 32px; flex: 1; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -.5px;
+  }
+  .section-sub { color: var(--text2); font-size: .85rem; margin-bottom: 28px; }
+
+  /* ── Stats grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--card-accent, var(--accent));
+    border-radius: 16px 16px 0 0;
+  }
+  .stat-label { font-size: .75rem; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+  .stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+  .stat-sub { font-size: .75rem; color: var(--text2); margin-top: 4px; }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-title { font-weight: 700; font-size: .95rem; }
+  .table-controls { display: flex; gap: 10px; align-items: center; }
+  .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: .82rem;
+    outline: none;
+    width: 200px;
+    transition: border-color .2s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .filter-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: .82rem;
+    outline: none;
+    cursor: pointer;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--text2);
+    background: var(--surface2);
+    font-weight: 600;
+  }
+  td {
+    padding: 12px 16px;
+    font-size: .84rem;
+    border-top: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:hover td { background: rgba(255,255,255,.02); }
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .badge-business { background: rgba(79,110,247,.2); color: var(--accent); }
+  .badge-agent { background: rgba(0,212,170,.2); color: var(--green); }
+  .badge-blocked { background: rgba(240,64,96,.2); color: var(--red); }
+  .badge-closed { background: rgba(0,212,170,.2); color: var(--green); }
+  .badge-new { background: rgba(245,200,66,.2); color: var(--gold); }
+  .badge-in_progress { background: rgba(79,110,247,.2); color: var(--accent); }
+  .badge-rejected { background: rgba(240,64,96,.2); color: var(--red); }
+
+  .action-btn {
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: .75rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .action-btn:hover { color: var(--text); border-color: var(--text2); }
+  .action-btn.danger:hover { color: var(--red); border-color: var(--red); }
+  .action-btn.success:hover { color: var(--green); border-color: var(--green); }
+
+  /* ── Problems ── */
+  .problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .problem-card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+    font-size: .9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .problem-item {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    font-size: .83rem;
+  }
+  .problem-item:first-child { border-top: none; }
+  .problem-name { font-weight: 600; margin-bottom: 2px; }
+  .problem-meta { color: var(--text2); font-size: .76rem; }
+  .empty-state { padding: 24px; text-align: center; color: var(--text2); font-size: .84rem; }
+
+  /* ── Finance ── */
+  .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ── Loading ── */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    color: var(--text2);
+    gap: 12px;
+    font-size: .9rem;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    font-size: .82rem;
+    color: var(--text2);
+  }
+  .page-btn {
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: .8rem;
+    transition: all .15s;
+  }
+  .page-btn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+  .page-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    width: 400px;
+    max-width: 90vw;
+  }
+  .modal-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 16px; }
+  .modal-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: .9rem;
+    outline: none;
+    margin-bottom: 16px;
+  }
+  .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-btn {
+    padding: 9px 20px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .modal-btn:hover { opacity: .85; }
+  .modal-btn.primary { background: var(--red); color: #fff; }
+  .modal-btn.secondary { background: var(--surface2); color: var(--text); }
+
+  @media (max-width: 768px) {
+    .sidebar { width: 60px; }
+    .sidebar-logo, .sidebar-subtitle, .nav-item span { display: none; }
+    .main { margin-left: 60px; padding: 16px; }
+    .problems-grid, .finance-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Win-Win</div>
+    <div class="login-sub">ADMIN PANEL</div>
+    <input type="text" class="login-input" id="api-url-input" placeholder="API URL (напр. https://...)" value="">
+    <input type="password" class="login-input" id="secret-input" placeholder="Admin Secret">
+    <button class="login-btn" onclick="doLogin()">Войти</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">W²</div>
+      <div class="sidebar-subtitle">Admin</div>
+      <nav>
+        <div class="nav-item active" onclick="switchSection('overview')">
+          <span class="nav-icon">📊</span><span>Обзор</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('partners')">
+          <span class="nav-icon">👥</span><span>Партнёры</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('leads')">
+          <span class="nav-icon">📋</span><span>Сделки</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('problems')">
+          <span class="nav-icon">⚠️</span><span>Проблемы</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('finance')">
+          <span class="nav-icon">💰</span><span>Финансы</span>
+        </div>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="refresh-btn" onclick="refreshCurrent()">↻ Обновить</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Overview -->
+      <div class="section active" id="section-overview">
+        <div class="section-title">Обзор платформы</div>
+        <div class="section-sub" id="overview-updated">Загрузка...</div>
+        <div id="overview-content"><div class="loading"><div class="spinner"></div> Загрузка...</div></div>
+      </div>
+
+      <!-- Partners -->
+      <div class="section" id="section-partners">
+        <div class="section-title">Партнёры</div>
+        <div class="section-sub">Все зарегистрированные пользователи</div>
+        <div id="partners-content"><div class="loading"><div class="spinner"></div> Загрузка...</div></div>
+      </div>
+
+      <!-- Leads -->
+      <div class="section" id="section-leads">
+        <div class="section-title">Сделки</div>
+        <div class="section-sub">Все лиды и их статусы</div>
+        <div id="leads-content"><div class="loading"><div class="spinner"></div> Загрузка...</div></div>
+      </div>
+
+      <!-- Problems -->
+      <div class="section" id="section-problems">
+        <div class="section-title">Проблемы</div>
+        <div class="section-sub">Споры, долги, красные флаги</div>
+        <div id="problems-content"><div class="loading"><div class="spinner"></div> Загрузка...</div></div>
+      </div>
+
+      <!-- Finance -->
+      <div class="section" id="section-finance">
+        <div class="section-title">Финансы</div>
+        <div class="section-sub">Топ агентов, выручка, ожидающие выплаты</div>
+        <div id="finance-content"><div class="loading"><div class="spinner"></div> Загрузка...</div></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Block modal -->
+<div class="modal-overlay" id="block-modal">
+  <div class="modal">
+    <div class="modal-title">Заблокировать партнёра</div>
+    <input type="text" class="modal-input" id="block-reason-input" placeholder="Причина блокировки">
+    <div class="modal-btns">
+      <button class="modal-btn secondary" onclick="closeModal()">Отмена</button>
+      <button class="modal-btn primary" onclick="confirmBlock()">Заблокировать</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let API_URL = '';
+let SECRET = '';
+let currentSection = 'overview';
+let blockTargetId = null;
+let partnersPage = 0;
+let leadsPage = 0;
+let partnersSearch = '';
+let partnersRole = '';
+let leadsStatus = '';
+
+// ── Auth ───────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const url = document.getElementById('api-url-input').value.trim().replace(/\/$/, '');
+  const secret = document.getElementById('secret-input').value.trim();
+  if (!url || !secret) {
+    document.getElementById('login-error').textContent = 'Введите URL и секрет';
+    return;
+  }
+  try {
+    const res = await fetch(`${url}/api/admin?secret=${encodeURIComponent(secret)}&section=overview`);
+    if (res.status === 401) {
+      document.getElementById('login-error').textContent = 'Неверный секрет';
+      return;
+    }
+    if (!res.ok) throw new Error('Server error');
+    API_URL = url;
+    SECRET = secret;
+    localStorage.setItem('ww_admin_url', url);
+    localStorage.setItem('ww_admin_secret', secret);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadSection('overview');
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Ошибка подключения: ' + e.message;
+  }
+}
+
+// Restore saved credentials
+window.addEventListener('DOMContentLoaded', () => {
+  const url = localStorage.getItem('ww_admin_url');
+  const secret = localStorage.getItem('ww_admin_secret');
+  if (url) document.getElementById('api-url-input').value = url;
+  if (secret) document.getElementById('secret-input').value = secret;
+  document.getElementById('secret-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+
+// ── API ────────────────────────────────────────────────────────────────────
+async function api(section, extra = '') {
+  const res = await fetch(`${API_URL}/api/admin?secret=${encodeURIComponent(SECRET)}&section=${section}${extra}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function apiAction(body) {
+  const res = await fetch(`${API_URL}/api/admin/action`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret: SECRET, ...body })
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function switchSection(name) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById(`section-${name}`).classList.add('active');
+  currentSection = name;
+  loadSection(name);
+}
+
+function refreshCurrent() {
+  loadSection(currentSection);
+}
+
+function loadSection(name) {
+  if (name === 'overview') loadOverview();
+  else if (name === 'partners') loadPartners();
+  else if (name === 'leads') loadLeads();
+  else if (name === 'problems') loadProblems();
+  else if (name === 'finance') loadFinance();
+}
+
+// ── Overview ───────────────────────────────────────────────────────────────
+async function loadOverview() {
+  const el = document.getElementById('overview-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+  try {
+    const d = await api('overview');
+    const conv = d.leads_total > 0 ? ((d.leads_closed / d.leads_total) * 100).toFixed(1) : 0;
+    document.getElementById('overview-updated').textContent =
+      'Обновлено: ' + new Date().toLocaleString('ru');
+    el.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card" style="--card-accent:var(--accent)">
+          <div class="stat-label">Партнёры</div>
+          <div class="stat-value">${d.partners_total}</div>
+          <div class="stat-sub">${d.partners_business} бизнесов · ${d.partners_agent} агентов</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--green)">
+          <div class="stat-label">Сделки закрыты</div>
+          <div class="stat-value">${d.leads_closed}</div>
+          <div class="stat-sub">из ${d.leads_total} всего · ${conv}% конверсия</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--gold)">
+          <div class="stat-label">Оборот платформы</div>
+          <div class="stat-value">${fmt(d.amount_total)} ₪</div>
+          <div class="stat-sub">Комиссии: ${fmt(d.commissions_total)} ₪</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--purple)">
+          <div class="stat-label">Лидов за 7 дней</div>
+          <div class="stat-value">${d.leads_recent_7d}</div>
+          <div class="stat-sub">Активных за неделю</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--red)">
+          <div class="stat-label">Споры</div>
+          <div class="stat-value" style="color:${d.disputes_active > 0 ? 'var(--red)' : 'var(--text)'}">${d.disputes_active}</div>
+          <div class="stat-sub">Активных споров</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--orange)">
+          <div class="stat-label">Ожид. выплаты</div>
+          <div class="stat-value" style="color:${d.pending_payments > 0 ? 'var(--orange)' : 'var(--text)'}">${d.pending_payments}</div>
+          <div class="stat-sub">Бизнес не платит агенту</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--red)">
+          <div class="stat-label">Заблокированы</div>
+          <div class="stat-value">${d.partners_blocked}</div>
+          <div class="stat-sub">Партнёров</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--green)">
+          <div class="stat-label">Конверсия</div>
+          <div class="stat-value">${conv}%</div>
+          <div class="stat-sub">Лид → Закрытая сделка</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title">Воронка сделок</div></div>
+        <table>
+          <thead><tr><th>Статус</th><th>Количество</th></tr></thead>
+          <tbody>
+            <tr><td>Новые</td><td><span class="badge badge-new">${d.commercial_stats?.new ?? '—'}</span></td></tr>
+            <tr><td>В работе</td><td><span class="badge badge-in_progress">${d.commercial_stats?.in_progress ?? '—'}</span></td></tr>
+            <tr><td>Закрытые</td><td><span class="badge badge-closed">${d.commercial_stats?.won ?? '—'}</span></td></tr>
+            <tr><td>Отклонённые</td><td><span class="badge badge-rejected">${d.commercial_stats?.lost ?? '—'}</span></td></tr>
+          </tbody>
+        </table>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
+  }
+}
+
+// ── Partners ───────────────────────────────────────────────────────────────
+async function loadPartners(page = 0) {
+  partnersPage = page;
+  const el = document.getElementById('partners-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+  try {
+    const extra = `&page=${page}&q=${encodeURIComponent(partnersSearch)}&role=${partnersRole}`;
+    const d = await api('partners', extra);
+    const totalPages = Math.ceil(d.total / 50);
+    el.innerHTML = `
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Партнёры · ${d.total}</div>
+          <div class="table-controls">
+            <input type="text" class="search-input" placeholder="Поиск по имени/телефону"
+              value="${partnersSearch}"
+              oninput="partnersSearch=this.value" onkeydown="if(e.key==='Enter')loadPartners(0)">
+            <button class="page-btn" onclick="loadPartners(0)" style="background:var(--accent);color:#fff;border-color:var(--accent)">🔍</button>
+            <select class="filter-select" onchange="partnersRole=this.value;loadPartners(0)">
+              <option value="" ${!partnersRole?'selected':''}>Все роли</option>
+              <option value="business" ${partnersRole==='business'?'selected':''}>Бизнес</option>
+              <option value="agent" ${partnersRole==='agent'?'selected':''}>Агент</option>
+            </select>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Имя</th><th>Телефон</th><th>Роль</th><th>Ниша</th><th>Trust</th><th>Канал</th><th>Статус</th><th>Действия</th></tr></thead>
+          <tbody>
+            ${d.partners.map(p => `
+              <tr>
+                <td style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:.76rem">${p.id}</td>
+                <td><b>${esc(p.name)}</b></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem">${p.wa_phone || p.phone}</td>
+                <td><span class="badge badge-${p.role}">${p.role === 'business' ? 'Бизнес' : 'Агент'}</span></td>
+                <td style="color:var(--text2);font-size:.8rem">${esc(p.niche || '—')}</td>
+                <td style="color:var(--gold)">${p.trust_score.toFixed(0)}</td>
+                <td style="color:var(--text2);font-size:.78rem">${p.channel || '—'}</td>
+                <td>${p.is_blocked ? '<span class="badge badge-blocked">Блок</span>' : '<span style="color:var(--green);font-size:.8rem">✓</span>'}</td>
+                <td>
+                  ${p.is_blocked
+                    ? `<button class="action-btn success" onclick="unblockPartner(${p.id})">Разблок</button>`
+                    : `<button class="action-btn danger" onclick="openBlockModal(${p.id})">Блок</button>`
+                  }
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button class="page-btn" onclick="loadPartners(${page-1})" ${page===0?'disabled':''}>← Пред</button>
+          <span>Стр. ${page+1} из ${totalPages || 1}</span>
+          <button class="page-btn" onclick="loadPartners(${page+1})" ${page>=totalPages-1?'disabled':''}>След →</button>
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
+  }
+}
+
+// ── Leads ──────────────────────────────────────────────────────────────────
+async function loadLeads(page = 0) {
+  leadsPage = page;
+  const el = document.getElementById('leads-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+  try {
+    const extra = `&page=${page}&status=${leadsStatus}`;
+    const d = await api('leads', extra);
+    const totalPages = Math.ceil(d.total / 50);
+    el.innerHTML = `
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Сделки · ${d.total}</div>
+          <div class="table-controls">
+            <select class="filter-select" onchange="leadsStatus=this.value;loadLeads(0)">
+              <option value="" ${!leadsStatus?'selected':''}>Все статусы</option>
+              <option value="new" ${leadsStatus==='new'?'selected':''}>Новые</option>
+              <option value="in_progress" ${leadsStatus==='in_progress'?'selected':''}>В работе</option>
+              <option value="closed" ${leadsStatus==='closed'?'selected':''}>Закрытые</option>
+              <option value="rejected" ${leadsStatus==='rejected'?'selected':''}>Отклонённые</option>
+            </select>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Клиент</th><th>Агент</th><th>Бизнес</th><th>Статус</th><th>Сумма</th><th>Комиссия</th><th>Дата</th></tr></thead>
+          <tbody>
+            ${d.leads.map(l => `
+              <tr>
+                <td style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:.76rem">${l.id}</td>
+                <td><b>${esc(l.client_name)}</b><br><span style="color:var(--text2);font-size:.76rem;font-family:'JetBrains Mono',monospace">${l.client_phone}</span></td>
+                <td style="font-size:.83rem">${esc(l.agent)}</td>
+                <td style="font-size:.83rem">${esc(l.business)}</td>
+                <td><span class="badge badge-${l.status}">${statusLabel(l.status)}</span></td>
+                <td style="font-weight:600;color:var(--gold)">${l.amount > 0 ? fmt(l.amount) + ' ₪' : '—'}</td>
+                <td style="font-weight:600;color:var(--green)">${l.commission > 0 ? fmt(l.commission) + ' ₪' : '—'}</td>
+                <td style="color:var(--text2);font-size:.78rem">${fmtDate(l.created_at)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button class="page-btn" onclick="loadLeads(${page-1})" ${page===0?'disabled':''}>← Пред</button>
+          <span>Стр. ${page+1} из ${totalPages || 1}</span>
+          <button class="page-btn" onclick="loadLeads(${page+1})" ${page>=totalPages-1?'disabled':''}>След →</button>
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
+  }
+}
+
+// ── Problems ───────────────────────────────────────────────────────────────
+async function loadProblems() {
+  const el = document.getElementById('problems-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+  try {
+    const d = await api('problems');
+    el.innerHTML = `
+      <div class="problems-grid">
+        <div class="problem-card">
+          <div class="problem-card-header">⚡ Активные споры <span style="background:rgba(240,64,96,.2);color:var(--red);padding:2px 8px;border-radius:10px;font-size:.75rem;margin-left:auto">${d.disputes.length}</span></div>
+          ${d.disputes.length === 0 ? '<div class="empty-state">Споров нет 🎉</div>' :
+            d.disputes.map(disp => `
+              <div class="problem-item">
+                <div class="problem-name">${disp.type === 'gift' ? '🎁' : '💳'} Лид #${disp.lead_id}</div>
+                <div class="problem-meta">Агент: ${esc(disp.agent)} → Бизнес: ${esc(disp.business)}</div>
+              </div>`).join('')}
+        </div>
+        <div class="problem-card">
+          <div class="problem-card-header">🚨 Красные флаги <span style="background:rgba(240,64,96,.2);color:var(--red);padding:2px 8px;border-radius:10px;font-size:.75rem;margin-left:auto">${d.red_flags.length}</span></div>
+          ${d.red_flags.length === 0 ? '<div class="empty-state">Красных флагов нет 🎉</div>' :
+            d.red_flags.map(p => `
+              <div class="problem-item">
+                <div class="problem-name">${esc(p.name)}</div>
+                <div class="problem-meta">${p.phone} · ID ${p.id}
+                  <button class="action-btn success" style="margin-left:8px" onclick="unblockPartner(${p.id})">Восстановить</button>
+                </div>
+              </div>`).join('')}
+        </div>
+        <div class="problem-card" style="grid-column:1/-1">
+          <div class="problem-card-header">⏳ Зависшие лиды (>14 дней) <span style="background:rgba(245,200,66,.2);color:var(--gold);padding:2px 8px;border-radius:10px;font-size:.75rem;margin-left:auto">${d.stale_leads.length}</span></div>
+          ${d.stale_leads.length === 0 ? '<div class="empty-state">Зависших лидов нет 🎉</div>' :
+            `<table><thead><tr><th>ID</th><th>Клиент</th><th>Дней в работе</th></tr></thead><tbody>
+            ${d.stale_leads.map(l => `
+              <tr>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text2)">${l.id}</td>
+                <td>${esc(l.client_name)}</td>
+                <td><span style="color:var(--red);font-weight:700">${l.days} дней</span></td>
+              </tr>`).join('')}
+            </tbody></table>`}
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
+  }
+}
+
+// ── Finance ────────────────────────────────────────────────────────────────
+async function loadFinance() {
+  const el = document.getElementById('finance-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
+  try {
+    const d = await api('finance');
+    el.innerHTML = `
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card" style="--card-accent:var(--orange)">
+          <div class="stat-label">Ожид. выплат</div>
+          <div class="stat-value" style="color:var(--orange)">${d.pending_payouts_count}</div>
+          <div class="stat-sub">сделок без оплаты</div>
+        </div>
+        <div class="stat-card" style="--card-accent:var(--orange)">
+          <div class="stat-label">Сумма долгов</div>
+          <div class="stat-value" style="color:var(--orange)">${fmt(d.pending_payouts_amount)} ₪</div>
+          <div class="stat-sub">не выплачено агентам</div>
+        </div>
+      </div>
+      <div class="finance-grid">
+        <div class="table-wrap">
+          <div class="table-header"><div class="table-title">🏆 Топ агентов</div></div>
+          <table>
+            <thead><tr><th>#</th><th>Агент</th><th>Заработал</th></tr></thead>
+            <tbody>
+              ${d.top_agents.map((a, i) => `
+                <tr>
+                  <td style="color:var(--text2);font-size:.8rem">${i+1}</td>
+                  <td>${esc(a.name)}</td>
+                  <td style="color:var(--gold);font-weight:700">${fmt(a.earned)} ₪</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header"><div class="table-title">🏢 Топ бизнесов</div></div>
+          <table>
+            <thead><tr><th>#</th><th>Бизнес</th><th>Выручка</th></tr></thead>
+            <tbody>
+              ${d.top_businesses.map((b, i) => `
+                <tr>
+                  <td style="color:var(--text2);font-size:.8rem">${i+1}</td>
+                  <td>${esc(b.name)}</td>
+                  <td style="color:var(--accent);font-weight:700">${fmt(b.revenue)} ₪</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
+  }
+}
+
+// ── Block/Unblock ──────────────────────────────────────────────────────────
+function openBlockModal(id) {
+  blockTargetId = id;
+  document.getElementById('block-reason-input').value = '';
+  document.getElementById('block-modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('block-modal').classList.remove('open');
+  blockTargetId = null;
+}
+async function confirmBlock() {
+  const reason = document.getElementById('block-reason-input').value.trim() || 'Заблокирован администратором';
+  try {
+    await apiAction({ action: 'block', partner_id: blockTargetId, reason });
+    closeModal();
+    loadPartners(partnersPage);
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+async function unblockPartner(id) {
+  try {
+    await apiAction({ action: 'unblock', partner_id: id });
+    loadSection(currentSection);
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmt(n) {
+  return Number(n || 0).toLocaleString('ru', { maximumFractionDigits: 0 });
+}
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleDateString('ru', { day:'2-digit', month:'2-digit', year:'2-digit' }); }
+  catch { return '—'; }
+}
+function statusLabel(s) {
+  return { new:'Новый', in_progress:'В работе', closed:'Закрыт', rejected:'Отклонён' }[s] || s;
+}
+</script>
+</body>
+</html>
