@@ -128,6 +128,50 @@
         .home-primary-cta:hover { filter:brightness(1.03); box-shadow:0 22px 42px rgba(47,128,237,.34), inset 0 1px 0 rgba(255,255,255,.22); }
         .home-primary-cta:active { transform:translateY(1px) scale(.988); box-shadow:0 10px 22px rgba(47,128,237,.24), inset 0 1px 0 rgba(255,255,255,.18); }
         .home-primary-cta-text { display:block; white-space:pre-line; text-align:center; line-height:1.12; }
+        .block-banner {
+            display: none;
+            background: rgba(235,87,87,0.10);
+            border: 1.5px solid rgba(235,87,87,0.30);
+            border-radius: var(--radius);
+            padding: 18px 18px 16px;
+            margin-bottom: 14px;
+        }
+        .block-banner-title {
+            color: #EB5757;
+            font-weight: 800;
+            font-size: .95rem;
+            margin-bottom: 6px;
+        }
+        .block-banner-reason {
+            color: var(--text2);
+            font-size: .85rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+        .block-banner-form { display: flex; flex-direction: column; gap: 10px; }
+        .block-banner-input {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: .88rem;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+        }
+        .block-banner-btn {
+            background: linear-gradient(135deg, #EB5757, #c0392b);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 13px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+        }
 
         .sec-title { font-size:1rem; font-weight:700; margin:20px 0 12px; display:flex; justify-content:space-between; align-items:center; }
         .section-caption { font-size:.82rem; color:var(--text2); line-height:1.45; margin:-4px 0 14px; }
@@ -506,6 +550,17 @@
     <div class="views-wrapper" id="viewsWrapper">
         
         <div id="view-home" class="view active">
+            <div class="block-banner" id="blockBanner">
+                <div class="block-banner-title" id="blockBannerTitle">⛔ Ваш аккаунт заблокирован</div>
+                <div class="block-banner-reason" id="blockBannerReason"></div>
+                <div class="block-banner-form">
+                    <textarea class="block-banner-input" id="blockAppealInput" rows="3"
+                        placeholder="Укажите причину для разблокировки..."></textarea>
+                    <button class="block-banner-btn" onclick="submitBlockAppeal()">
+                        Запросить разблокировку
+                    </button>
+                </div>
+            </div>
             <div class="card balance-card">
                 <div class="balance-label" id="t_balance_label">Ваш социальный капитал</div>
                 <div class="balance-amount"><span id="v_earned">0</span> ₪</div>
@@ -1962,6 +2017,8 @@ function setLang(l) {
 
 function applyLang() {
     const L = i18n[lang] || i18n.ru;
+    window._L = L;
+    window._lang = lang;
     const map = {
         't_greeting':'greeting','t_balance_label':'balance_label','t_deals_lbl':'deals_lbl','t_pending_lbl':'pending_lbl','t_active_lbl':'active_lbl','t_home_primary_cta':'home_primary_cta',
         't_action_kicker':'action_kicker','t_action_title':'action_title','t_action_sub':'action_sub','t_events':'events','t_events_sub':'events_sub','t_catalog_title':'catalog_title','t_catalog_sub':'catalog_sub','t_catalog_guide_title':'catalog_guide_title','t_catalog_guide_text':'catalog_guide_text','t_history_title':'history_title','t_history_sub':'history_sub',
@@ -3222,7 +3279,9 @@ async function submitSettlementChoice(leadId, actionType) {
         const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!dashRes.ok) throw new Error('Refresh error');
         dashData = await dashRes.json();
+        window._botPhone = dashData.bot_phone;
         renderAll();
+        showBlockBannerIfNeeded(dashData);
         const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
         if (refreshedLead && document.getElementById('dealSheet').classList.contains('active')) {
             openWalletDealDetail(refreshedLead);
@@ -3244,7 +3303,9 @@ async function confirmReceipt(leadId) {
         const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!dashRes.ok) throw new Error('Refresh error');
         dashData = await dashRes.json();
+        window._botPhone = dashData.bot_phone;
         renderAll();
+        showBlockBannerIfNeeded(dashData);
         const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
         if (refreshedLead) openWalletDealDetail(refreshedLead);
         alert(L.confirm_receipt_success || 'Получение подтверждено.');
@@ -3286,7 +3347,9 @@ async function submitReceiptConfirmation(leadId, actionType) {
         const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!dashRes.ok) throw new Error('Refresh error');
         dashData = await dashRes.json();
+        window._botPhone = dashData.bot_phone;
         renderAll();
+        showBlockBannerIfNeeded(dashData);
         const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
         if (refreshedLead) openWalletDealDetail(refreshedLead);
         const successMap = successLabelMap[actionType];
@@ -3789,6 +3852,7 @@ function renderAll() {
     document.getElementById('v_deals').textContent = closed;
     document.getElementById('v_pending').textContent = Math.round(d.pending_payout||0) + ' ₪';
     document.getElementById('v_active').textContent = active;
+    showBlockBannerIfNeeded(d);
 
     const proProgress = Math.min((closed/50)*100, 100);
     document.getElementById('pro_progress_txt').textContent = `${closed} / 50`;
@@ -3852,6 +3916,66 @@ function renderAll() {
     feather.replace();
 }
 
+function showBlockBannerIfNeeded(data) {
+    if (!data.is_blocked) return;
+    const banner = document.getElementById('blockBanner');
+    if (!banner) return;
+    const L = window._L || {};
+    const lang = window._lang || 'ru';
+    const titles = {
+        ru: '⛔ Ваш аккаунт заблокирован',
+        he: '⛔ החשבון שלך חסום',
+        en: '⛔ Your account is blocked',
+        ar: '⛔ حسابك محظور',
+    };
+    const reasonLabels = {
+        ru: 'Причина: ',
+        he: 'סיבה: ',
+        en: 'Reason: ',
+        ar: 'السبب: ',
+    };
+    document.getElementById('blockBannerTitle').textContent =
+        titles[lang] || titles.ru;
+    const reasonEl = document.getElementById('blockBannerReason');
+    reasonEl.textContent = data.block_reason
+        ? (reasonLabels[lang] || reasonLabels.ru) + data.block_reason
+        : '';
+    // Translate placeholder and button
+    const placeholders = {
+        ru: 'Укажите причину для разблокировки...',
+        he: 'ציינו את הסיבה לביטול החסימה...',
+        en: 'State your reason for unblocking...',
+        ar: 'اذكر سبب طلب إلغاء الحظر...',
+    };
+    const btnLabels = {
+        ru: 'Запросить разблокировку',
+        he: 'בקשת ביטול חסימה',
+        en: 'Request unblock',
+        ar: 'طلب رفع الحظر',
+    };
+    const input = document.getElementById('blockAppealInput');
+    if (input) input.placeholder = placeholders[lang] || placeholders.ru;
+    const btn = banner.querySelector('.block-banner-btn');
+    if (btn) btn.textContent = btnLabels[lang] || btnLabels.ru;
+    banner.style.display = 'block';
+}
+
+function submitBlockAppeal() {
+    const input = document.getElementById('blockAppealInput');
+    const text = (input ? input.value : '').trim();
+    if (!text) return;
+    const lang = window._lang || 'ru';
+    const botPhone = window._botPhone || '972534218573';
+    const messages = {
+        ru: `Запрос на разблокировку:\n${text}`,
+        he: `בקשה לביטול חסימה:\n${text}`,
+        en: `Unblock request:\n${text}`,
+        ar: `طلب رفع الحظر:\n${text}`,
+    };
+    const msg = encodeURIComponent(messages[lang] || messages.ru);
+    window.open(`https://wa.me/${botPhone}?text=${msg}`, '_blank');
+}
+
 // ג”€ג”€ Init ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 async function init() {
     populateCategories();
@@ -3863,6 +3987,7 @@ async function init() {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
+        window._botPhone = dashData.bot_phone;
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
         // requestAnimationFrame ׀³׀°ׁ€׀°׀½ׁ‚׀¸ׁ€ׁƒ׀µׁ‚ ׁ‡ׁ‚׀¾ ׀±ׁ€׀°ׁƒ׀·׀µׁ€ ׁƒ׀¶׀µ ׀¾ׁ‚ׁ€׀µ׀½׀´׀µׁ€׀¸׀» mainShell
@@ -3871,6 +3996,7 @@ async function init() {
             applyNavOrder(document.body.classList.contains('rtl'));
         });
         renderAll();
+        showBlockBannerIfNeeded(dashData);
         loadCatalog();
     } catch(e) { showError(); }
 }
