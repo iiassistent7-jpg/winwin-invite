@@ -3319,7 +3319,7 @@ function renderRecommendDetailActionButtons(row) {
     return `<button class="btn-primary" style="background:var(--gold);color:#1A1A2E;width:100%;"
       onclick="remindOutgoingGiftClient(${safeId})">
       <i data-feather="bell" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
-      ${escapeHtml(remindLabel)}
+      ${String(remindLabel).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
     </button>`;
   }
   if (!isOutgoingRecommenderPendingChoice(row)) return '';
@@ -3384,44 +3384,37 @@ function getRecommendPayoutState(row, labels, curr) {
 }
 
 function openRecommendDetail(index) {
-  try {
-    const row = recommendationRows[index];
-    if (!row) {
-      alert('DEBUG: row is undefined, index=' + index + ' rows=' + recommendationRows.length);
-      return;
-    }
-    const L = i18n[lang] || i18n.ru;
-    const labels = getRecommendDetailLabels();
-    const curr = bizData.currency || '₪';
-    const closedMeta = ['closed', 'completed', 'done'].includes(String(row.status || '').trim().toLowerCase())
-      ? getUnifiedClosedDealMeta(row)
-      : null;
-    const statusText = closedMeta ? closedMeta.statusText : getRecommendDetailStageText(row, L);
-    const clientPhone = renderPhoneContact(row.client_phone);
-    document.getElementById('recommendDetailContent').innerHTML = `
-      <div class="sheet-card" style="margin-top:0;">
-        <div class="sheet-title">${labels.title}</div>
-        <div class="deal-inline-meta">
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || '—'}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || '—'}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${clientPhone}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : '—'}</div></div>
-        </div>
-        <div class="deal-inline-meta" style="margin-bottom:0;">
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || '—'}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.bonus}</div><div class="deal-mini-val">${formatRecommendAmount(row.reward, curr)}</div></div>
-          <div class="deal-mini-box"><div class="deal-mini-lbl">${closedMeta ? closedMeta.resultLabel : labels.settlement}</div><div class="deal-mini-val">${closedMeta ? closedMeta.resultText : formatRecommendDecisionPlain(row.decision, L)}</div></div>
-          ${closedMeta ? '' : `<div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>`}
-        </div>
-      </div>`;
-    document.getElementById('recommendDetailActions').innerHTML = renderRecommendDetailActionButtons(row);
-    document.getElementById('t_rec_detail_back_top').textContent = labels.back;
-    document.getElementById('t_rec_detail_back_bottom').textContent = labels.back;
-    openFullscreen('recommendDetailSheet');
-    try { feather.replace(); } catch(e) {}
-  } catch(err) {
-    alert('DEBUG openRecommendDetail error: ' + err.message + ' | stack: ' + (err.stack || '').substring(0, 200));
-  }
+  const row = recommendationRows[index];
+  if (!row) return;
+  const L = i18n[lang] || i18n.ru;
+  const labels = getRecommendDetailLabels();
+  const curr = bizData.currency || '₪';
+  const closedMeta = ['closed', 'completed', 'done'].includes(String(row.status || '').trim().toLowerCase())
+    ? getUnifiedClosedDealMeta(row)
+    : null;
+  const statusText = closedMeta ? closedMeta.statusText : getRecommendDetailStageText(row, L);
+  const clientPhone = renderPhoneContact(row.client_phone);
+  document.getElementById('recommendDetailContent').innerHTML = `
+    <div class="sheet-card" style="margin-top:0;">
+      <div class="sheet-title">${labels.title}</div>
+      <div class="deal-inline-meta">
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.business}</div><div class="deal-mini-val">${row.business_name || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.client}</div><div class="deal-mini-val">${row.client_name || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.phone}</div><div class="deal-mini-val">${clientPhone}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.date}</div><div class="deal-mini-val">${row.date ? formatShortDate(row.date) : '—'}</div></div>
+      </div>
+      <div class="deal-inline-meta" style="margin-bottom:0;">
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.stage}</div><div class="deal-mini-val">${statusText || '—'}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${labels.bonus}</div><div class="deal-mini-val">${formatRecommendAmount(row.reward, curr)}</div></div>
+        <div class="deal-mini-box"><div class="deal-mini-lbl">${closedMeta ? closedMeta.resultLabel : labels.settlement}</div><div class="deal-mini-val">${closedMeta ? closedMeta.resultText : formatRecommendDecisionPlain(row.decision, L)}</div></div>
+        ${closedMeta ? '' : `<div class="deal-mini-box"><div class="deal-mini-lbl">${labels.payout}</div><div class="deal-mini-val">${getRecommendPayoutState(row, labels, curr)}</div></div>`}
+      </div>
+    </div>`;
+  document.getElementById('recommendDetailActions').innerHTML = renderRecommendDetailActionButtons(row);
+  document.getElementById('t_rec_detail_back_top').textContent = labels.back;
+  document.getElementById('t_rec_detail_back_bottom').textContent = labels.back;
+  openFullscreen('recommendDetailSheet');
+  try { feather.replace(); } catch(e) {}
 }
 
 function closeRecommendDetail() {
