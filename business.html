@@ -3321,10 +3321,9 @@ function renderRecommendDetailActionButtons(row) {
   if (isOutgoingGiftClientWaitingBusiness(row)) {
     const L = i18n[lang] || i18n.ru;
     const remindLabel = L.remind_gift_client || 'Напомнить о передаче клиенту';
-    const safeId = JSON.stringify(dealId);
-    const safeBizName = JSON.stringify((row && row.business_name) || '—');
+    const safeId = Number(dealId);
     return `<button class="btn-primary" style="background:var(--gold);color:#1A1A2E;width:100%;"
-      onclick="remindOutgoingGiftClient(${safeId}, ${safeBizName})">
+      onclick="remindOutgoingGiftClient(${safeId})">
       <i data-feather="bell" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
       ${escapeHtml(remindLabel)}
     </button>`;
@@ -3441,7 +3440,7 @@ async function refreshBusinessRecommendationContext() {
   return recommendationRows;
 }
 
-async function remindOutgoingGiftClient(dealId, bizName) {
+async function remindOutgoingGiftClient(dealId) {
   const L = i18n[lang] || i18n.ru;
   const actionToken = agentDashToken || (bizData && bizData.agent_dashboard_token
     ? String(bizData.agent_dashboard_token).trim() : '');
