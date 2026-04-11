@@ -99,6 +99,7 @@
     .debt-mini-lbl { color:var(--text2); font-size:.74rem; margin-bottom:4px; }
     .debt-mini-val { color:var(--text); font-weight:700; word-break:break-word; }
     .debt-empty { color:var(--text2); line-height:1.5; }
+    .block-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:14px; box-shadow:var(--shadow); display:none; }
     @media (max-width:420px){
       .debt-banner { align-items:flex-start; }
       .debt-banner-meta { width:100%; justify-content:space-between; margin-left:0; }
@@ -409,6 +410,12 @@
 
     <!-- ── VIEW: Deals ──────────────────────────────────────────── -->
     <div id="view-deals" class="view active">
+      <div class="block-banner" id="blockBanner">
+        <div id="blockBannerTitle" style="font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;color:var(--red);margin-bottom:8px;">Business account is blocked</div>
+        <div id="blockBannerReason" style="font-size:.86rem;line-height:1.5;color:var(--text);margin-bottom:12px;"></div>
+        <textarea id="blockAppealInput" style="width:100%;min-height:88px;border:1px solid rgba(235,87,87,0.24);border-radius:14px;background:var(--surface);color:var(--text);padding:12px 14px;font:inherit;resize:vertical;margin-bottom:12px;" placeholder="Describe why the block should be reviewed"></textarea>
+        <button class="btn-primary btn-wa" type="button" onclick="submitBlockAppeal()">Send appeal</button>
+      </div>
       <div class="debt-banner" id="debtBanner" style="display:none;" role="button" tabindex="0" onclick="openDebtDealsSheet()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDebtDealsSheet();}">
         <div class="debt-banner-text" id="t_debt_label">🔴 Долг агентам:</div>
         <div class="debt-banner-meta">
@@ -1288,6 +1295,83 @@ function showNotice(msg) {
   }, 1800);
 }
 
+function showBlockBannerIfNeeded(data) {
+  const banner = document.getElementById('blockBanner');
+  const title = document.getElementById('blockBannerTitle');
+  const reason = document.getElementById('blockBannerReason');
+  const input = document.getElementById('blockAppealInput');
+  const submitBtn = banner ? banner.querySelector('button') : null;
+  if (!banner || !title || !reason || !input || !submitBtn) return;
+
+  const copy = {
+    ru: {
+      title: 'Кабинет бизнеса временно заблокирован',
+      reasonPrefix: 'Причина блокировки:',
+      noReason: 'Причина не указана.',
+      placeholder: 'Опишите, почему блокировку нужно пересмотреть',
+      button: 'Отправить апелляцию'
+    },
+    he: {
+      title: 'חשבון העסק חסום זמנית',
+      reasonPrefix: 'סיבת החסימה:',
+      noReason: 'הסיבה לא צוינה.',
+      placeholder: 'כתבו למה כדאי לבדוק מחדש את החסימה',
+      button: 'שליחת ערעור'
+    },
+    en: {
+      title: 'Business account is temporarily blocked',
+      reasonPrefix: 'Block reason:',
+      noReason: 'No reason provided.',
+      placeholder: 'Describe why the block should be reviewed',
+      button: 'Send appeal'
+    },
+    ar: {
+      title: 'تم حظر حساب النشاط مؤقتًا',
+      reasonPrefix: 'سبب الحظر:',
+      noReason: 'لم يتم توضيح السبب.',
+      placeholder: 'اكتب لماذا يجب مراجعة هذا الحظر',
+      button: 'إرسال اعتراض'
+    }
+  };
+  const text = copy[lang] || copy.ru;
+  const blockReason = (data && typeof data.block_reason === 'string' ? data.block_reason : '').trim();
+
+  title.textContent = text.title;
+  reason.textContent = `${text.reasonPrefix} ${blockReason || text.noReason}`;
+  input.placeholder = text.placeholder;
+  submitBtn.textContent = text.button;
+  banner.style.display = data && data.is_blocked ? 'block' : 'none';
+
+  if (!(data && data.is_blocked)) {
+    input.value = '';
+    reason.textContent = '';
+  }
+}
+
+function submitBlockAppeal() {
+  const input = document.getElementById('blockAppealInput');
+  if (!input) return;
+
+  const value = (input.value || '').trim();
+  const noticeMap = {
+    ru: 'Пожалуйста, опишите апелляцию.',
+    he: 'אנא כתבו טקסט לערעור.',
+    en: 'Please describe your appeal.',
+    ar: 'يرجى كتابة نص الاعتراض.'
+  };
+  if (!value) {
+    showNotice(noticeMap[lang] || noticeMap.ru);
+    input.focus();
+    return;
+  }
+
+  const phone = String(window._botPhone || (bizData && bizData.bot_phone) || '972534218573').replace(/\D/g, '');
+  const bizName = (bizData && (bizData.name || bizData.business_name)) ? (bizData.name || bizData.business_name) : 'Business';
+  const reasonText = document.getElementById('blockBannerReason') ? document.getElementById('blockBannerReason').textContent.trim() : '';
+  const message = `Block appeal\nBusiness: ${bizName}\nToken: ${token || ''}\n${reasonText ? `${reasonText}\n` : ''}Appeal: ${value}`;
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
 function openUpgradePage() {
   const target = new URL('pro_payment.html', window.location.href);
   target.searchParams.set('token', token || '');
@@ -1457,7 +1541,9 @@ async function init() {
     console.log('[Win-Win Biz] API response:', JSON.stringify(fresh).slice(0,500));
     const freshStr = JSON.stringify(fresh);
     bizData = fresh;
+    window._botPhone = fresh.bot_phone;
     await loadPreservedAgentDashboard(freshStr !== cached);
+    showBlockBannerIfNeeded(fresh);
     if (freshStr !== cached) {
       sessionStorage.setItem(cacheKey, freshStr);
       if (!cached) showApp();
@@ -3477,8 +3563,10 @@ async function refreshBusinessRecommendationContext() {
   const res = await fetch(`${API_URL}/api/business?token=${token}`);
   if (!res.ok) throw new Error('refresh_business');
   bizData = await res.json();
+  window._botPhone = bizData.bot_phone;
   sessionStorage.setItem(cacheKey, JSON.stringify(bizData));
   await loadPreservedAgentDashboard(true);
+  showBlockBannerIfNeeded(bizData);
   renderAll();
   return recommendationRows;
 }
@@ -4018,7 +4106,9 @@ async function refreshBusinessDataFromBackend() {
   if (!res.ok) throw new Error('refresh_business');
   const fresh = await res.json();
   bizData = fresh;
+  window._botPhone = fresh.bot_phone;
   sessionStorage.setItem(`biz_cache_${token}`, JSON.stringify(fresh));
+  showBlockBannerIfNeeded(fresh);
   renderAll();
   return fresh;
 }
