@@ -29,6 +29,24 @@
     --surface-soft:rgba(237,239,244,0.82);
     --ring:0 0 0 4px rgba(47,128,237,0.12);
   }
+  [data-theme="dark"] {
+    --bg:#0F1117;
+    --surface:#171B26;
+    --surface2:#1E2333;
+    --text:#E8EBF4;
+    --text2:#7B82A0;
+    --border:rgba(255,255,255,0.08);
+    --shadow:0 10px 24px rgba(0,0,0,0.3);
+    --shadow2:0 20px 40px rgba(0,0,0,0.4);
+    --nav-bg:rgba(23,27,38,0.95);
+    --accent1:#56CCF2;
+    --accent2:#2F80ED;
+    --green:#27AE60;
+    --gold:#F2C94C;
+    --red:#EB5757;
+    --purple:#9B51E0;
+    --radius:20px;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { color-scheme: light; }
   body {
@@ -921,6 +939,7 @@
       </nav>
       <div class="sidebar-bottom">
         <button class="refresh-btn" onclick="refreshCurrent()">↻ Обновить</button>
+        <button class="refresh-btn" id="theme-toggle-btn" onclick="toggleTheme()" style="margin-top:8px;">🌙 Тема</button>
       </div>
     </aside>
 
@@ -1055,6 +1074,7 @@ async function doLogin() {
 
 // Restore saved credentials
 window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   const url = localStorage.getItem('ww_admin_url');
   const secret = localStorage.getItem('ww_admin_secret');
   if (url) document.getElementById('api-url-input').value = url;
@@ -1433,6 +1453,22 @@ function fmtDate(iso) {
 }
 function statusLabel(s) {
   return { new:'Новый', in_progress:'В работе', closed:'Закрыт', rejected:'Отклонён' }[s] || s;
+}
+function initTheme() {
+  const saved = localStorage.getItem('ww_admin_theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  applyTheme(theme);
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ww_admin_theme', theme);
+  const btn = document.getElementById('theme-toggle-btn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️ Светлая' : '🌙 Тёмная';
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
 }
 </script>
 </body>
