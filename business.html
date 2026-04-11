@@ -2341,14 +2341,11 @@ function getBusinessDealSettlementInfo(deal) {
 function getBusinessDealProjection(deal) {
   const normalizedDeal = normalizeBusinessDeal(deal);
   const statusCode = getDisplayDealStatus(normalizedDeal);
-  const statusMeta = getStatusData(statusCode, normalizedDeal);
+  const statusMeta = getStatusData(statusCode);
   const settlementInfo = getBusinessDealSettlementInfo(normalizedDeal);
   const closedMeta = statusCode === 'closed' ? getUnifiedClosedDealMeta(normalizedDeal) : null;
   const isPayoutPending = statusCode === 'pending_business_payment';
-  const giftDisputePending = parseTruthBool(normalizedDeal.gift_dispute_pending) === true;
-  const tone = (statusCode === 'pending_client_confirmation' && giftDisputePending)
-    ? 'danger'
-    : getDealTone(statusCode, isPayoutPending);
+  const tone = getDealTone(statusCode, isPayoutPending);
   const waitingRecommenderDecision = statusCode === 'pending_confirmation' && !settlementInfo.decisionKey;
   const waitingAgentConfirmation = statusCode === 'pending_receipt';
   const isFinalState = ['closed','rejected'].includes(statusCode);
@@ -2357,8 +2354,6 @@ function getBusinessDealProjection(deal) {
   let actionMode = 'close_or_reject';
   if (statusCode === 'new') {
     actionMode = 'accept_or_reject';
-  } else if (statusCode === 'pending_client_confirmation') {
-    actionMode = 'waiting_client';
   } else if (waitingRecommenderDecision || waitingAgentConfirmation || isFinalState) {
     actionMode = 'view_only';
   } else if (isPayoutPending) {
@@ -2374,7 +2369,6 @@ function getBusinessDealProjection(deal) {
     settlementInfo,
     closedMeta,
     isPayoutPending,
-    giftDisputePending,
     tone,
     nextStep:settlementInfo.nextStep,
     nextStepTone:settlementInfo.nextStepTone || tone || 'warning',
@@ -3828,12 +3822,10 @@ function openManageDeal(id) {
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
   const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
-  const isGiftClientWaitingClient = projection.actionMode === 'waiting_client' && settlementInfo.decisionKey === 'gift_client';
-  const isGiftClientSettlementFlow = isGiftClientSettlementConfirmation || isGiftClientWaitingClient;
   const giftClientCopy = getGiftClientManageCopy();
   const displayDebtValue = closedMeta
     ? closedMeta.resultText
-    : (isGiftClientSettlementFlow ? formatGiftClientTransferAmount(deal, curr) : debtValue);
+    : (isGiftClientSettlementConfirmation ? formatGiftClientTransferAmount(deal, curr) : debtValue);
   const incomeValue = formatDealIncomeAmount(deal, curr);
   document.getElementById('m_val_client').innerHTML = clientPhoneHtml;
   document.getElementById('m_val_client_compact').innerHTML = clientPhoneHtml;
@@ -3849,10 +3841,10 @@ function openManageDeal(id) {
   document.getElementById('m_val_income').textContent = incomeValue;
   document.getElementById('t_m_lbl_debt').textContent = closedMeta
     ? closedMeta.resultLabel
-    : (isGiftClientSettlementFlow ? giftClientCopy.transferLabel : manageLabels.debt);
+    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
   document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta
     ? closedMeta.resultLabel
-    : (isGiftClientSettlementFlow ? giftClientCopy.transferLabel : manageLabels.debt);
+    : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
   document.getElementById('m_box_settlement_group').style.display = (!closedMeta && showSettlementGroup) ? 'grid' : 'none';
   if (!closedMeta && showSettlementGroup) {
     document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
@@ -3877,11 +3869,6 @@ function openManageDeal(id) {
   const amountLabel = document.getElementById('t_m_lbl_amount');
   const amountInput = document.getElementById('m_amount');
   const confirmCloseBtn = document.getElementById('t_m_btn_confirm_close');
-  const remindClientBtn = document.getElementById('m_btn_remind_client');
-  const remindClientSent = document.getElementById('m_remind_client_sent');
-  const remindClientAlreadySent = projection.giftDisputePending
-    ? row._giftClientDisputeReminderSent === true
-    : row._giftClientReminderSent === true;
   const closeIsPaymentAction = projection.actionMode === 'mark_paid';
   closeBtn.onclick = closeIsPaymentAction ? () => submitDealAction('biz_paid') : () => setStep('close');
   document.getElementById('t_m_btn_close').textContent = isPayoutPending
@@ -3902,15 +3889,6 @@ function openManageDeal(id) {
   acceptBtn.style.display = projection.actionMode === 'accept_or_reject' ? 'flex' : 'none';
   closeBtn.style.display = ['close_only','close_or_reject','mark_paid'].includes(projection.actionMode) ? 'flex' : 'none';
   if (rejectBtn) rejectBtn.style.display = ['accept_or_reject','close_or_reject'].includes(projection.actionMode) ? 'flex' : 'none';
-  if (remindClientBtn) {
-    remindClientBtn.disabled = false;
-    remindClientBtn.style.opacity = '1';
-    remindClientBtn.style.display = projection.actionMode === 'waiting_client' && !remindClientAlreadySent ? 'flex' : 'none';
-  }
-  if (remindClientSent) {
-    remindClientSent.textContent = (i18n[lang] || i18n.ru).remind_client_gift_sent || i18n.ru.remind_client_gift_sent;
-    remindClientSent.style.display = projection.actionMode === 'waiting_client' && remindClientAlreadySent ? 'block' : 'none';
-  }
   setStep('main');
   document.getElementById('t_m_cancel_bottom').style.display = 'flex';
   closeFullscreen('debtDealsSheet');
