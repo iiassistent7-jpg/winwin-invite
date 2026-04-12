@@ -100,6 +100,54 @@
     .debt-mini-val { color:var(--text); font-weight:700; word-break:break-word; }
     .debt-empty { color:var(--text2); line-height:1.5; }
     .block-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:14px; box-shadow:var(--shadow); display:none; }
+    .trial-counter {
+      display: none;
+      background: linear-gradient(135deg, rgba(47,128,237,.10), rgba(86,204,242,.07));
+      border: 1.5px solid rgba(47,128,237,.22);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .trial-counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .trial-counter-label {
+      font-size: .85rem;
+      color: var(--text2);
+      line-height: 1.45;
+      flex: 1;
+    }
+    .trial-counter-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent2);
+      white-space: nowrap;
+      letter-spacing: -.04em;
+    }
+    .trial-counter-bar-bg {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .trial-counter-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      transition: width .4s ease;
+    }
+    .trial-counter-note {
+      font-size: .78rem;
+      color: var(--text2);
+      margin-top: 8px;
+      line-height: 1.45;
+    }
     @media (max-width:420px){
       .debt-banner { align-items:flex-start; }
       .debt-banner-meta { width:100%; justify-content:space-between; margin-left:0; }
@@ -513,6 +561,20 @@
 
     <!-- ── VIEW: Profile ────────────────────────────────────────── -->
     <div id="view-profile" class="view">
+      <div class="trial-counter" id="trialCounter">
+        <div class="trial-counter-row">
+          <div class="trial-counter-label" id="trialCounterLabel">
+            Осталось сделок до истечения бесплатного периода
+          </div>
+          <div class="trial-counter-num" id="trialCounterNum">5</div>
+        </div>
+        <div class="trial-counter-bar-bg">
+          <div class="trial-counter-bar-fill" id="trialCounterBar" style="width:100%"></div>
+        </div>
+        <div class="trial-counter-note" id="trialCounterNote">
+          Вы платите только агентам.
+        </div>
+      </div>
       <div class="sub-card" id="subCard">
         <div class="sub-card-title">
           <span id="t_sub_title">Текущий тариф:</span>
@@ -1302,6 +1364,43 @@ function showBlockBannerIfNeeded(data) {
   const input = document.getElementById('blockAppealInput');
   const submitBtn = banner ? banner.querySelector('button') : null;
   if (!banner || !title || !reason || !input || !submitBtn) return;
+
+  // Show trial-expired banner even if not admin-blocked
+  if (data && data.subscription === 'start_expired' && !data.is_blocked) {
+    const lang = window._lang || 'ru';
+    const titles = {
+      ru: '🔒 Бесплатный период завершён',
+      he: '🔒 תקופת הניסיון הסתיימה',
+      en: '🔒 Free trial has ended',
+      ar: '🔒 انتهت الفترة المجانية',
+    };
+    const reasons = {
+      ru: 'Вы использовали все 5 бесплатных сделок. Бизнес временно скрыт из каталога агентов.',
+      he: 'השתמשתם בכל 5 העסקאות החינמיות. העסק הוסתר זמנית מהקטלוג.',
+      en: 'You have used all 5 free deals. Your business is temporarily hidden from the agent catalog.',
+      ar: 'لقد استخدمت جميع الصفقات المجانية الخمس. تم إخفاء عملك مؤقتاً من الكتالوج.',
+    };
+    const placeholders = {
+      ru: 'Напишите что-то о вашем бизнесе для активации...',
+      he: 'כתבו משהו על העסק שלכם להפעלה...',
+      en: 'Write something about your business to activate...',
+      ar: 'اكتب شيئاً عن عملك للتفعيل...',
+    };
+    const btnLabels = {
+      ru: 'Перейти на платный тариф',
+      he: 'עבור למסלול בתשלום',
+      en: 'Switch to a paid plan',
+      ar: 'الانتقال إلى خطة مدفوعة',
+    };
+    document.getElementById('blockBannerTitle').textContent = titles[lang] || titles.ru;
+    document.getElementById('blockBannerReason').textContent = reasons[lang] || reasons.ru;
+    const input = document.getElementById('blockAppealInput');
+    if (input) input.placeholder = placeholders[lang] || placeholders.ru;
+    const btn = banner.querySelector('.block-banner-btn') || banner.querySelector('button');
+    if (btn) btn.textContent = btnLabels[lang] || btnLabels.ru;
+    banner.style.display = 'block';
+    return;
+  }
 
   const copy = {
     ru: {
@@ -3835,6 +3934,44 @@ function renderProfile() {
     badge.style.color      = '#fff';
     desc.textContent      = L.sub_desc_standard;
     btnUp.style.display   = 'flex';
+  }
+
+  // Free trial counter
+  const trialEl   = document.getElementById('trialCounter');
+  const trialNum  = document.getElementById('trialCounterNum');
+  const trialBar  = document.getElementById('trialCounterBar');
+  const trialLbl  = document.getElementById('trialCounterLabel');
+  const trialNote = document.getElementById('trialCounterNote');
+
+  const sub       = bizData.subscription || 'start';
+  const used      = bizData.free_deals_used || 0;
+  const limit     = bizData.free_deals_limit || 5;
+  const remaining = Math.max(0, limit - used);
+
+  const trialLabels = {
+    ru: `Осталось ${remaining} ${remaining === 1 ? 'сделка' : remaining < 5 ? 'сделки' : 'сделок'} до истечения бесплатного периода`,
+    he: `נשארו ${remaining} עסקאות חינמיות`,
+    en: `${remaining} free deal${remaining === 1 ? '' : 's'} remaining`,
+    ar: `تبقى ${remaining} صفقة مجانية`,
+  };
+  const trialNotes = {
+    ru: 'Вы платите только агентам.',
+    he: 'אתם משלמים רק לסוכנים.',
+    en: 'You only pay agents.',
+    ar: 'أنت تدفع للوكلاء فقط.',
+  };
+
+  if (sub === 'start' && trialEl) {
+    trialEl.style.display = 'block';
+    if (trialNum)  trialNum.textContent  = remaining;
+    if (trialLbl)  trialLbl.textContent  = trialLabels[lang] || trialLabels.ru;
+    if (trialNote) trialNote.textContent = trialNotes[lang]  || trialNotes.ru;
+    // colour shifts to orange when 1 left
+    if (trialNum) trialNum.style.color = remaining <= 1 ? 'var(--orange, #F2994A)' : 'var(--accent2)';
+    const pct = limit > 0 ? (remaining / limit) * 100 : 0;
+    if (trialBar) trialBar.style.width = pct + '%';
+  } else if (trialEl) {
+    trialEl.style.display = 'none';
   }
 }
 
