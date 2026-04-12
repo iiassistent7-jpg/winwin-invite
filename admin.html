@@ -576,6 +576,12 @@
     font-weight: 600;
     outline: none;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .filter-select option {
+    background: #fff;
+    color: #171A28;
   }
   .table-scroll {
     width: 100%;
@@ -1053,6 +1059,10 @@
     border-color: rgba(255,255,255,0.10);
     color: var(--text);
   }
+  [data-theme="dark"] .filter-select option {
+    background: #1E2333;
+    color: var(--text);
+  }
   [data-theme="dark"] .badge-new { background: rgba(242,201,76,.12); color: var(--gold); border-color: rgba(242,201,76,.16); }
 
   @media (max-width: 640px) {
@@ -1455,6 +1465,7 @@ async function loadOverview() {
 
 // ── Partners ───────────────────────────────────────────────────────────────
 function subBadge(p) {
+  if (p.role !== 'business') return '—';
   const plan = p.subscription_plan || 'start';
   const exp  = p.subscription_expires_at
     ? new Date(p.subscription_expires_at).toLocaleDateString('ru',{day:'2-digit',month:'2-digit',year:'2-digit'})
