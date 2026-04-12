@@ -1072,30 +1072,16 @@
   <div class="login-card">
     <div class="login-kicker">Win-Win Network</div>
     <div class="login-logo">Admin <strong>Control</strong></div>
-    <div class="login-sub">Введите ваш номер WhatsApp для получения кода входа.</div>
-
-    <!-- Step 1: phone -->
+    <div class="login-sub" id="login-sub-text">
+      Введите ваш номер WhatsApp — мы пришлём ссылку для входа.
+    </div>
     <div class="login-form" id="login-step-phone">
       <input type="tel" class="login-input" id="phone-input"
         placeholder="+972 XX XXX XXXX" autocomplete="tel">
-      <button class="login-btn" onclick="requestOTP()">Получить код</button>
-    </div>
-
-    <!-- Step 2: code -->
-    <div class="login-form" id="login-step-code" style="display:none;">
-      <div style="color:var(--text2);font-size:.88rem;margin-bottom:4px;">
-        Код отправлен в WhatsApp. Введите 6 цифр:
-      </div>
-      <input type="text" class="login-input" id="code-input"
-        placeholder="000000" maxlength="6" inputmode="numeric"
-        autocomplete="one-time-code">
-      <button class="login-btn" onclick="verifyOTP()">Войти</button>
-      <button class="login-btn" onclick="backToPhone()"
-        style="background:transparent;color:var(--text2);box-shadow:none;font-weight:600;margin-top:-4px;">
-        ← Назад
+      <button class="login-btn" id="login-btn-send" onclick="requestMagicLink()">
+        Получить ссылку
       </button>
     </div>
-
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
@@ -1233,10 +1219,16 @@ let partnersRole = '';
 let leadsStatus = '';
 
 // ── Auth ───────────────────────────────────────────────────────────────────
-async function requestOTP() {
+async function requestMagicLink() {
   const phone = document.getElementById('phone-input').value.trim();
-  if (!phone) { document.getElementById('login-error').textContent = 'Введите номер телефона'; return; }
+  if (!phone) {
+    document.getElementById('login-error').textContent = 'Введите номер телефона';
+    return;
+  }
   document.getElementById('login-error').textContent = '';
+  const btn = document.getElementById('login-btn-send');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
   try {
     const res = await fetch(`${API_URL}/api/admin/otp/request`, {
       method: 'POST',
@@ -1244,61 +1236,46 @@ async function requestOTP() {
       body: JSON.stringify({phone})
     });
     if (!res.ok) throw new Error('Ошибка сервера');
-    document.getElementById('login-step-phone').style.display = 'none';
-    document.getElementById('login-step-code').style.display  = 'flex';
-    setTimeout(() => document.getElementById('code-input').focus(), 100);
+    document.getElementById('login-sub-text').textContent =
+      'Ссылка отправлена в WhatsApp. Откройте её для входа.';
+    btn.textContent = 'Отправить снова';
+    btn.disabled = false;
   } catch(e) {
     document.getElementById('login-error').textContent = 'Ошибка: ' + e.message;
+    btn.textContent = 'Получить ссылку';
+    btn.disabled = false;
   }
-}
-
-async function verifyOTP() {
-  const phone = document.getElementById('phone-input').value.trim();
-  const code  = document.getElementById('code-input').value.trim();
-  if (!code || code.length < 6) { document.getElementById('login-error').textContent = 'Введите 6-значный код'; return; }
-  document.getElementById('login-error').textContent = '';
-  try {
-    const res = await fetch(`${API_URL}/api/admin/otp/verify`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({phone, code})
-    });
-    if (res.status === 401) { document.getElementById('login-error').textContent = 'Неверный или истёкший код'; return; }
-    if (!res.ok) throw new Error('Ошибка сервера');
-    const data = await res.json();
-    SESSION_TOKEN = data.token;
-    localStorage.setItem('ww_admin_token', data.token);
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadSection('overview');
-  } catch(e) {
-    document.getElementById('login-error').textContent = 'Ошибка: ' + e.message;
-  }
-}
-
-function backToPhone() {
-  document.getElementById('login-step-code').style.display  = 'none';
-  document.getElementById('login-step-phone').style.display = 'flex';
-  document.getElementById('code-input').value = '';
-  document.getElementById('login-error').textContent = '';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
+
+  // Check token in URL (magic link click)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlToken = urlParams.get('token');
+  if (urlToken) {
+    SESSION_TOKEN = urlToken;
+    localStorage.setItem('ww_admin_token', urlToken);
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadSection('overview');
+    return;
+  }
+
+  // Check saved token
   const saved = localStorage.getItem('ww_admin_token');
   if (saved) {
     SESSION_TOKEN = saved;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadSection('overview');
+    return;
   }
-  document.getElementById('code-input') &&
-    document.getElementById('code-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') verifyOTP();
-    });
   document.getElementById('phone-input') &&
     document.getElementById('phone-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') requestOTP();
+      if (e.key === 'Enter') requestMagicLink();
     });
 });
 
