@@ -76,6 +76,23 @@
   </div>
   <div class="footer-bar"><a class="back-btn" id="backBtn" href="javascript:history.back()"></a></div>
 <script>
+  const API_URL = 'https://amlatsa-bot-production.up.railway.app';
+  let _bizName = '';
+  let _bizId = '';
+
+  (async function loadBizInfo() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (!token) return;
+    try {
+      const res = await fetch(`${API_URL}/api/business?token=${token}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      _bizName = data.name || '';
+      _bizId   = String(data.id || '');
+    } catch(e) {}
+  })();
+
   const TEXTS = {
     ru: {
       lang: 'ru',
@@ -260,7 +277,10 @@
 
   function payLink(planKey, period){
     const t = TEXTS[lang];
-    const text = encodeURIComponent(t.payMessage(t[planKey], period));
+    const bizSuffix = _bizId
+      ? `\nБизнес: ${_bizName} (ID: ${_bizId})`
+      : '';
+    const text = encodeURIComponent(t.payMessage(t[planKey], period) + bizSuffix);
     return `https://wa.me/972534218573?text=${text}`;
   }
 
