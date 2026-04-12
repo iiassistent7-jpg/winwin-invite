@@ -1072,17 +1072,31 @@
   <div class="login-card">
     <div class="login-kicker">Win-Win Network</div>
     <div class="login-logo">Admin <strong>Control</strong></div>
-    <div class="login-sub">Премиальный вход в контур модерации, доверия и финансового контроля без изменений в рабочей логике.</div>
-    <div class="login-form">
-      <input type="text" class="login-input" id="api-url-input" placeholder="API URL (напр. https://...)" value="">
-      <input type="password" class="login-input" id="secret-input" placeholder="Admin Secret">
-      <button class="login-btn" onclick="doLogin()">Войти</button>
+    <div class="login-sub">Введите ваш номер WhatsApp для получения кода входа.</div>
+
+    <!-- Step 1: phone -->
+    <div class="login-form" id="login-step-phone">
+      <input type="tel" class="login-input" id="phone-input"
+        placeholder="+972 XX XXX XXXX" autocomplete="tel">
+      <button class="login-btn" onclick="requestOTP()">Получить код</button>
     </div>
+
+    <!-- Step 2: code -->
+    <div class="login-form" id="login-step-code" style="display:none;">
+      <div style="color:var(--text2);font-size:.88rem;margin-bottom:4px;">
+        Код отправлен в WhatsApp. Введите 6 цифр:
+      </div>
+      <input type="text" class="login-input" id="code-input"
+        placeholder="000000" maxlength="6" inputmode="numeric"
+        autocomplete="one-time-code">
+      <button class="login-btn" onclick="verifyOTP()">Войти</button>
+      <button class="login-btn" onclick="backToPhone()"
+        style="background:transparent;color:var(--text2);box-shadow:none;font-weight:600;margin-top:-4px;">
+        ← Назад
+      </button>
+    </div>
+
     <div class="login-error" id="login-error"></div>
-    <div class="login-note">
-      <strong>Access:</strong>
-      <span>Используйте production API и текущий admin secret. Поведение входа, запросов и проверок остаётся прежним.</span>
-    </div>
   </div>
 </div>
 
@@ -1208,8 +1222,8 @@
 
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
-let API_URL = '';
-let SECRET = '';
+const API_URL = 'https://amlatsa-bot-production.up.railway.app';
+let SESSION_TOKEN = '';
 let currentSection = 'overview';
 let blockTargetId = null;
 let partnersPage = 0;
@@ -1219,47 +1233,78 @@ let partnersRole = '';
 let leadsStatus = '';
 
 // ── Auth ───────────────────────────────────────────────────────────────────
-async function doLogin() {
-  const url = document.getElementById('api-url-input').value.trim().replace(/\/$/, '');
-  const secret = document.getElementById('secret-input').value.trim();
-  if (!url || !secret) {
-    document.getElementById('login-error').textContent = 'Введите URL и секрет';
-    return;
-  }
+async function requestOTP() {
+  const phone = document.getElementById('phone-input').value.trim();
+  if (!phone) { document.getElementById('login-error').textContent = 'Введите номер телефона'; return; }
+  document.getElementById('login-error').textContent = '';
   try {
-    const res = await fetch(`${url}/api/admin?secret=${encodeURIComponent(secret)}&section=overview`);
-    if (res.status === 401) {
-      document.getElementById('login-error').textContent = 'Неверный секрет';
-      return;
-    }
-    if (!res.ok) throw new Error('Server error');
-    API_URL = url;
-    SECRET = secret;
-    localStorage.setItem('ww_admin_url', url);
-    localStorage.setItem('ww_admin_secret', secret);
+    const res = await fetch(`${API_URL}/api/admin/otp/request`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({phone})
+    });
+    if (!res.ok) throw new Error('Ошибка сервера');
+    document.getElementById('login-step-phone').style.display = 'none';
+    document.getElementById('login-step-code').style.display  = 'flex';
+    setTimeout(() => document.getElementById('code-input').focus(), 100);
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Ошибка: ' + e.message;
+  }
+}
+
+async function verifyOTP() {
+  const phone = document.getElementById('phone-input').value.trim();
+  const code  = document.getElementById('code-input').value.trim();
+  if (!code || code.length < 6) { document.getElementById('login-error').textContent = 'Введите 6-значный код'; return; }
+  document.getElementById('login-error').textContent = '';
+  try {
+    const res = await fetch(`${API_URL}/api/admin/otp/verify`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({phone, code})
+    });
+    if (res.status === 401) { document.getElementById('login-error').textContent = 'Неверный или истёкший код'; return; }
+    if (!res.ok) throw new Error('Ошибка сервера');
+    const data = await res.json();
+    SESSION_TOKEN = data.token;
+    localStorage.setItem('ww_admin_token', data.token);
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadSection('overview');
   } catch(e) {
-    document.getElementById('login-error').textContent = 'Ошибка подключения: ' + e.message;
+    document.getElementById('login-error').textContent = 'Ошибка: ' + e.message;
   }
 }
 
-// Restore saved credentials
+function backToPhone() {
+  document.getElementById('login-step-code').style.display  = 'none';
+  document.getElementById('login-step-phone').style.display = 'flex';
+  document.getElementById('code-input').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
-  const url = localStorage.getItem('ww_admin_url');
-  const secret = localStorage.getItem('ww_admin_secret');
-  if (url) document.getElementById('api-url-input').value = url;
-  if (secret) document.getElementById('secret-input').value = secret;
-  document.getElementById('secret-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLogin();
-  });
+  const saved = localStorage.getItem('ww_admin_token');
+  if (saved) {
+    SESSION_TOKEN = saved;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadSection('overview');
+  }
+  document.getElementById('code-input') &&
+    document.getElementById('code-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') verifyOTP();
+    });
+  document.getElementById('phone-input') &&
+    document.getElementById('phone-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') requestOTP();
+    });
 });
 
 // ── API ────────────────────────────────────────────────────────────────────
 async function api(section, extra = '') {
-  const res = await fetch(`${API_URL}/api/admin?secret=${encodeURIComponent(SECRET)}&section=${section}${extra}`);
+  const res = await fetch(`${API_URL}/api/admin?token=${encodeURIComponent(SESSION_TOKEN)}&section=${section}${extra}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
@@ -1268,7 +1313,7 @@ async function apiAction(body) {
   const res = await fetch(`${API_URL}/api/admin/action`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ secret: SECRET, ...body })
+    body: JSON.stringify({ token: SESSION_TOKEN, ...body })
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
