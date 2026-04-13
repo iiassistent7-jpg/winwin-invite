@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -598,6 +598,20 @@
           document.getElementById("nameLabel").textContent = role==="business" ? T.name_biz : T.name_agent;
         if (document.getElementById("paymentLabel"))
           document.getElementById("paymentLabel").textContent = role==="agent" ? T.pay_agent : T.pay_biz;
+        const _clientLabels = {
+          ru: { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' },
+          he: { nameQ: 'איך לפנות אליך?', namePh: 'הכניסו שם', socialLbl: 'קישור לרשת חברתית (לא חובה)', socialPh: 'Instagram, Facebook, אתר...' },
+          en: { nameQ: 'What is your name?', namePh: 'Enter name', socialLbl: 'Social media link (optional)', socialPh: 'Instagram, Facebook, website...' },
+          ar: { nameQ: 'كيف نناديك؟', namePh: 'أدخل الاسم', socialLbl: 'رابط التواصل الاجتماعي (اختياري)', socialPh: 'Instagram, Facebook, موقع...' },
+        }[lang] || { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' };
+        const _cnl = document.getElementById('clientNameLabel');
+        const _cni = document.getElementById('clientName');
+        const _csl = document.getElementById('clientSocialLabel');
+        const _csi = document.getElementById('clientSocial');
+        if (_cnl) _cnl.textContent = _clientLabels.nameQ;
+        if (_cni) _cni.placeholder = _clientLabels.namePh;
+        if (_csl) _csl.textContent = _clientLabels.socialLbl;
+        if (_csi) _csi.placeholder = _clientLabels.socialPh;
         document.getElementById("languageHidden").value = lang;
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang===lang));
         // Карточки выбора роли
@@ -623,9 +637,15 @@
           rewardValue.classList.remove('hidden');
           // Меняем placeholder в зависимости от типа
           const type = document.querySelector('input[name="rewardType"]:checked')?.value;
-          if (type === 'percent') rewardValue.placeholder = 'Например: 15 (будет 15% от сделки)';
-          else if (type === 'fixed') rewardValue.placeholder = 'Например: 200 (фиксированная сумма ₪)';
-          else if (type === 'gift') rewardValue.placeholder = 'Опишите подарок: Бесплатная консультация';
+          const _rwPh = {
+            ru: { percent: 'Например: 15 (будет 15% от сделки)', fixed: 'Например: 200 (фиксированная сумма ₪)', gift: 'Опишите подарок: Бесплатная консультация' },
+            he: { percent: 'לדוגמה: 15 (יהיה 15% מהעסקה)', fixed: 'לדוגמה: 200 (סכום קבוע ₪)', gift: 'תארו את המתנה: ייעוץ חינם' },
+            en: { percent: 'E.g. 15 (will be 15% of the deal)', fixed: 'E.g. 200 (fixed amount ₪)', gift: 'Describe gift: Free consultation' },
+            ar: { percent: 'مثال: 15 (ستكون 15% من الصفقة)', fixed: 'مثال: 200 (مبلغ ثابت ₪)', gift: 'صف الهدية: استشارة مجانية' },
+          }[document.getElementById("languageHidden")?.value || 'ru'] || {};
+          if (type === 'percent') rewardValue.placeholder = _rwPh.percent || '';
+          else if (type === 'fixed') rewardValue.placeholder = _rwPh.fixed || '';
+          else if (type === 'gift') rewardValue.placeholder = _rwPh.gift || '';
           validateForm();
         });
       });
@@ -875,3 +895,4 @@
   </script>
 </body>
 </html>
+

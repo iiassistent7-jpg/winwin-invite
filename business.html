@@ -2848,9 +2848,9 @@ function renderDeals() {
             <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
           </div>
           <div class="deal-receipt">
-            <div class="receipt-line"><span>💵 Чек:</span><span>${amountVal}</span></div>
-            <div class="receipt-line"><span>🎁 Бонус:</span><span>${commVal}</span></div>
-            <div class="receipt-line total"><span>✅ Доход:</span><span class="net-profit">${incomeVal}</span></div>
+            <div class="receipt-line"><span>💵 ${{ru:'Чек',he:'צ\'ק',en:'Check',ar:'شيك'}[lang]||'Чек'}:</span><span>${amountVal}</span></div>
+            <div class="receipt-line"><span>🎁 ${{ru:'Бонус',he:'בונוס',en:'Bonus',ar:'مكافأة'}[lang]||'Бонус'}:</span><span>${commVal}</span></div>
+            <div class="receipt-line total"><span>✅ ${{ru:'Доход',he:'הכנסה',en:'Income',ar:'دخل'}[lang]||'Доход'}:</span><span class="net-profit">${incomeVal}</span></div>
           </div>
           ${closedMeta ? '' : `<div class="deal-actions-row" style="margin-top:12px;">${innerAction}</div>`}
         </div>
@@ -2979,7 +2979,7 @@ function renderMyRecommenders() {
           <div class="deal-mini-box"><div class="deal-mini-lbl">${(lang==='he')?'Ждут решения':(lang==='en')?'Awaiting':(lang==='ar')?'قيد الانتظار':'Ждут решения'}</div><div class="deal-mini-val">${a.waiting || 0}</div></div>
         </div>
         <div class="deal-receipt">
-          <div class="receipt-line"><span>💼 ${lang==='ru' ? 'Доход для бизнеса' : (lang==='en' ? 'Business income' : (lang==='he' ? 'Доход для бизнеса' : 'دخل العمل'))}:</span><span>${Math.round(a.income || 0)} ${curr}</span></div>
+          <div class="receipt-line"><span>💼 ${lang==='ru' ? 'Доход для бизнеса' : (lang==='en' ? 'Business income' : (lang==='he' ? 'הכנסה לעסק' : 'دخل العمل'))}:</span><span>${Math.round(a.income || 0)} ${curr}</span></div>
           <div class="receipt-line"><span>🎁 ${L.ag_comm || 'Выплачено'}:</span><span>${Math.round(a.comm)} ${curr}</span></div>
           <div class="receipt-line"><span>${(lang==='he')?'Последняя активность':(lang==='en')?'Last activity':(lang==='ar')?'آخر نشاط':'Последняя активность'}:</span><span>${a.last ? formatShortDate(a.last) : '—'}</span></div>
         </div>

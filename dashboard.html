@@ -1255,7 +1255,9 @@ const i18n = {
     cat_search:"Поиск бизнеса или услуги...",
     cat_loading:"Загрузка...",
     cat_empty:"Ничего не найдено. Попробуйте другой поиск или пригласите доверенный бизнес в Win-Win.",
-    bonus:"Бонус:",
+    bonus:{ru:'Бонус:',he:'בונוס:',en:'Bonus:',ar:'مكافأة:'},
+    check_lbl:{ru:'Чек:',he:'צ\'ק:',en:'Check:',ar:'شيك:'},
+    income_lbl:{ru:'Доход:',he:'הכנסה:',en:'Income:',ar:'دخل:'},
     catalog_card_trust:"Рекомендуйте с уверенностью",
     catalog_card_cta:"Открыть ссылку",
     wallet_card_open:"Открыть и сделать следующий шаг",
@@ -2942,6 +2944,7 @@ function walletDealCardHtml(lead) {
     const curr = dashData?.currency || '₪';
     const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : '—';
     const L = i18n[lang] || i18n.ru;
+    const resolveDealCardLabel = value => value && typeof value === 'object' ? value[lang] || value.ru || '' : (value || '');
     return `
     <div class="card wallet-deal-card" onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'>
         <div class="wallet-card-top">
@@ -2964,7 +2967,7 @@ function walletDealCardHtml(lead) {
                 <div class="wallet-card-val">${formatDateValue(lead.start_date)}</div>
             </div>
             <div>
-                <div class="wallet-card-lbl">${({ ru:'Бонус', he:'בונוס', en:'Bonus', ar:'المكافأة' }[lang] || 'Бонус')}</div>
+                <div class="wallet-card-lbl">${resolveDealCardLabel(L.bonus)}</div>
                 <div class="wallet-card-val wallet-card-bonus">${bonus}</div>
             </div>
             <div>
@@ -3776,7 +3779,7 @@ function renderCatalog() {
                 <div class="biz-card-name">${biz.name}</div>
                 <div class="biz-card-cat">${fullCat}</div>
             </div>
-            <div class="biz-card-commission">${L.bonus} ${biz.commission||'...'}</div>
+            <div class="biz-card-commission">${typeof L.bonus === 'object' ? (L.bonus[lang] || L.bonus.ru || '') : (L.bonus || '')} ${biz.commission||'...'}</div>
             <div class="biz-card-trust-row">
                 <div class="biz-card-trust">${L.catalog_card_trust || 'Recommend with confidence'}</div>
                 <div class="biz-card-open">${L.catalog_card_cta || 'Open link'}</div>
