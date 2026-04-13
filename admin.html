@@ -1623,7 +1623,7 @@ async function loadProblems() {
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Загрузка...</div>';
   try {
     const d = await api('problems');
-    el.innerHTML = `
+    let html = `
       <div class="problems-grid">
         <div class="problem-card">
           <div class="problem-card-header">⚡ Активные споры <span style="background:rgba(240,64,96,.2);color:var(--red);padding:2px 8px;border-radius:10px;font-size:.75rem;margin-left:auto">${d.disputes.length}</span></div>
@@ -1658,6 +1658,38 @@ async function loadProblems() {
             </tbody></table></div>`}
         </div>
       </div>`;
+    if (d.appeals && d.appeals.length > 0) {
+      html += `<div class="table-header" style="margin-top:20px;">
+      <div class="table-title">📬 Апелляции · ${d.appeals.length}</div>
+    </div>
+    <div class="table-scroll"><table>
+      <thead><tr>
+        <th>ID</th><th>Имя</th><th>Телефон</th>
+        <th>Тип</th><th>Тариф</th><th>Сообщение</th><th>Действие</th>
+      </tr></thead>
+      <tbody>
+        ${d.appeals.map(a => `<tr>
+          <td style="color:var(--text2);font-size:.76rem">${a.id}</td>
+          <td><b>${esc(a.name)}</b></td>
+          <td style="font-size:.78rem">${esc(a.phone)}</td>
+          <td><span class="badge ${a.appeal_type === 'subscription' ? 'badge-in_progress' : 'badge-blocked'}">
+            ${a.appeal_type === 'subscription' ? '💳 Тариф' : '🔓 Разблок'}
+          </span></td>
+          <td><span class="badge badge-${a.subscription_plan === 'start_expired' ? 'blocked' : 'live'}">
+            ${a.subscription_plan}
+          </span></td>
+          <td style="font-size:.82rem;max-width:220px;word-break:break-word">${esc(a.appeal_text)}</td>
+          <td>
+            <button class="action-btn success" onclick="clearAppeal(${a.id})">✓ Решено</button>
+            <button class="action-btn" onclick="openActivateModal(${a.id}, '${esc(a.name)}')" style="margin-left:4px;">💳 Тариф</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+    } else if (!d.disputes?.length && !d.stale_leads?.length) {
+      html += '<div style="color:var(--text2);padding:20px;text-align:center;">Апелляций нет 🎉</div>';
+    }
+    el.innerHTML = html;
   } catch(e) {
     el.innerHTML = `<div class="loading" style="color:var(--red)">Ошибка: ${e.message}</div>`;
   }
@@ -1747,6 +1779,14 @@ async function unblockPartner(id) {
   try {
     await apiAction({ action: 'unblock', partner_id: id });
     loadSection(currentSection);
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+async function clearAppeal(partnerId) {
+  try {
+    await apiAction({ action: 'clear_appeal', partner_id: partnerId });
+    loadProblems();
   } catch(e) {
     alert('Ошибка: ' + e.message);
   }

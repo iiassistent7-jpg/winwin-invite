@@ -1289,6 +1289,18 @@ function applyNavOrder(isRTL) {
   });
 }
 
+function isBusinessLocked() {
+  return !!(bizData && (bizData.is_blocked || bizData.subscription === 'start_expired'));
+}
+
+function updateLockedNavState() {
+  const navButtons = document.querySelectorAll('.nav-item');
+  const isLocked = isBusinessLocked();
+  navButtons.forEach(btn => {
+    btn.style.opacity = isLocked && btn.dataset.tab !== 'profile' ? '0.4' : '';
+  });
+}
+
 function syncWrapperToCurrentTab() {
   const wrapper = document.getElementById('viewsWrapper');
   if (!wrapper) return;
@@ -1327,12 +1339,28 @@ document.querySelector('.app').addEventListener('touchend', e => {
 
 // ══ NAVIGATION ════════════════════════════════════════════════════════
 function switchTab(tabId, btnEl) {
+  // Block navigation when account is locked
+  const isLocked = bizData && (bizData.is_blocked ||
+    bizData.subscription === 'start_expired');
+  const allowedWhenLocked = ['profile'];
+  if (isLocked && !allowedWhenLocked.includes(tabId)) {
+    const lockMsg = {
+      ru: 'Аккаунт заблокирован. Доступен только профиль и форма запроса.',
+      he: 'החשבון חסום. זמינים רק הפרופיל וטופס הבקשה.',
+      en: 'Account is locked. Only profile and appeal form are available.',
+      ar: 'الحساب محظور. متاح فقط الملف الشخصي ونموذج الطلب.'
+    };
+    showNotice(lockMsg[lang] || lockMsg.ru);
+    return;
+  }
+
   currentTab = tabId;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   const target = document.querySelector(`.nav-item[data-tab="${tabId}"]`) || btnEl;
   if (target) target.classList.add('active');
   syncWrapperToCurrentTab();
   window.scrollTo(0, 0);
+  updateLockedNavState();
 }
 
 // ══ FULLSCREEN UTIL (agent cabinet pattern) ════════════════════════════
@@ -1450,34 +1478,52 @@ function showBlockBannerIfNeeded(data) {
   }
 }
 
-function submitBlockAppeal() {
+async function submitBlockAppeal() {
   const input = document.getElementById('blockAppealInput');
   if (!input) return;
-
   const value = (input.value || '').trim();
   const noticeMap = {
-    ru: 'Пожалуйста, опишите апелляцию.',
+    ru: 'Пожалуйста, опишите ситуацию.',
     he: 'אנא כתבו טקסט לערעור.',
-    en: 'Please describe your appeal.',
+    en: 'Please describe your situation.',
     ar: 'يرجى كتابة نص الاعتراض.'
   };
-  if (!value) {
-    showNotice(noticeMap[lang] || noticeMap.ru);
-    input.focus();
-    return;
-  }
+  if (!value) { showNotice(noticeMap[lang] || noticeMap.ru); input.focus(); return; }
 
-  const phone = String(window._botPhone || (bizData && bizData.bot_phone) || '972534218573').replace(/\D/g, '');
-  const bizName = (bizData && (bizData.name || bizData.business_name)) ? (bizData.name || bizData.business_name) : 'Business';
-  const reasonText = document.getElementById('blockBannerReason') ? document.getElementById('blockBannerReason').textContent.trim() : '';
-  const appealHeaders = {
-    ru: `🔓 Запрос на разблокировку\n\nБизнес: ${bizName}\n${reasonText ? `Причина блокировки: ${reasonText}\n` : ''}Сообщение: ${value}`,
-    he: `🔓 בקשת ביטול חסימה\n\nעסק: ${bizName}\n${reasonText ? `סיבת החסימה: ${reasonText}\n` : ''}הודעה: ${value}`,
-    en: `🔓 Unblock request\n\nBusiness: ${bizName}\n${reasonText ? `Block reason: ${reasonText}\n` : ''}Message: ${value}`,
-    ar: `🔓 طلب رفع الحظر\n\nالعمل: ${bizName}\n${reasonText ? `سبب الحظر: ${reasonText}\n` : ''}الرسالة: ${value}`,
-  };
-  const message = appealHeaders[lang] || appealHeaders.ru;
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  const btn = document.querySelector('.block-banner-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+  const appealType = (bizData && bizData.subscription === 'start_expired')
+    ? 'subscription' : 'unblock';
+
+  try {
+    const res = await fetch(`${API_URL}/api/appeal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, appeal_text: value, appeal_type: appealType })
+    });
+    if (!res.ok) throw new Error('server error');
+    const successMap = {
+      ru: '✅ Запрос отправлен. Мы рассмотрим его в ближайшее время.',
+      he: '✅ הבקשה נשלחה. נבדוק אותה בקרוב.',
+      en: '✅ Request sent. We will review it shortly.',
+      ar: '✅ تم إرسال الطلب. سنراجعه قريباً.'
+    };
+    showNotice(successMap[lang] || successMap.ru);
+    input.value = '';
+    const banner = document.getElementById('blockBanner');
+    if (banner) banner.style.display = 'none';
+  } catch(e) {
+    const errMap = {
+      ru: 'Ошибка отправки. Попробуйте позже.',
+      he: 'שגיאה. נסו שוב מאוחר יותר.',
+      en: 'Error sending. Please try again later.',
+      ar: 'خطأ في الإرسال. حاول مرة أخرى لاحقاً.'
+    };
+    showNotice(errMap[lang] || errMap.ru);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 function openUpgradePage() {
@@ -1796,6 +1842,11 @@ function renderAll() {
   try { renderProfile(); } catch(e) { console.error('[Biz] renderProfile:', e); }
   try { renderEditForm(); } catch(e) { console.error('[Biz] renderEditForm:', e); }
   try { updateReturnBtns(); } catch(e) { console.error('[Biz] updateReturnBtns:', e); }
+  updateLockedNavState();
+  if (isBusinessLocked() && currentTab !== 'profile') {
+    const profileBtn = document.querySelector('.nav-item[data-tab="profile"]');
+    switchTab('profile', profileBtn);
+  }
   try { feather.replace(); } catch(e) {}
 }
 
