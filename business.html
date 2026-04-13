@@ -1342,7 +1342,7 @@ function switchTab(tabId, btnEl) {
   // Block navigation when account is locked
   const isLocked = bizData && (bizData.is_blocked ||
     bizData.subscription === 'start_expired');
-  const allowedWhenLocked = ['profile'];
+  const allowedWhenLocked = ['deals', 'profile'];
   if (isLocked && !allowedWhenLocked.includes(tabId)) {
     const lockMsg = {
       ru: 'Аккаунт заблокирован. Доступен только профиль и форма запроса.',
