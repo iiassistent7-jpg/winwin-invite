@@ -569,7 +569,7 @@
     box-shadow: var(--ring);
   }
   .filter-select {
-    background: rgba(255,255,255,.72);
+    background: var(--surface, rgba(255,255,255,.08));
     border: 1px solid rgba(16,24,40,.08);
     border-radius: 14px;
     padding: 11px 14px;
@@ -583,7 +583,7 @@
     -webkit-appearance: none;
   }
   .filter-select option {
-    background: #fff;
+    background: #f5f7fa;
     color: #171A28;
   }
   .table-scroll {
@@ -783,7 +783,7 @@
   }
   .modal-input {
     width: 100%;
-    background: rgba(255,255,255,.74);
+    background: var(--surface);
     border: 1px solid rgba(16,24,40,.08);
     border-radius: 16px;
     padding: 14px 16px;
@@ -792,6 +792,10 @@
     font-size: .9rem;
     outline: none;
     margin-bottom: 16px;
+  }
+  .modal-input option {
+    background: #f5f7fa;
+    color: #171A28;
   }
   .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
   .modal-btn {
@@ -939,6 +943,11 @@
   }
   [data-theme="dark"] .login-input::placeholder { color: rgba(160,160,176,.55); }
   [data-theme="dark"] .search-input::placeholder { color: rgba(160,160,176,.55); }
+  [data-theme="dark"] .filter-select {
+    background: rgba(255,255,255,.07);
+    color: var(--text);
+    border-color: rgba(255,255,255,.10);
+  }
   [data-theme="dark"] .login-note {
     background: rgba(255,255,255,0.04);
     border-color: rgba(255,255,255,0.06);
@@ -1064,7 +1073,11 @@
   }
   [data-theme="dark"] .filter-select option {
     background: #1E2333;
-    color: var(--text);
+    color: #e8eaf6;
+  }
+  [data-theme="dark"] .modal-input option {
+    background: #1E2333;
+    color: #e8eaf6;
   }
   [data-theme="dark"] .badge-new { background: rgba(242,201,76,.12); color: var(--gold); border-color: rgba(242,201,76,.16); }
 
