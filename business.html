@@ -1470,7 +1470,13 @@ function submitBlockAppeal() {
   const phone = String(window._botPhone || (bizData && bizData.bot_phone) || '972534218573').replace(/\D/g, '');
   const bizName = (bizData && (bizData.name || bizData.business_name)) ? (bizData.name || bizData.business_name) : 'Business';
   const reasonText = document.getElementById('blockBannerReason') ? document.getElementById('blockBannerReason').textContent.trim() : '';
-  const message = `Block appeal\nBusiness: ${bizName}\nToken: ${token || ''}\n${reasonText ? `${reasonText}\n` : ''}Appeal: ${value}`;
+  const appealHeaders = {
+    ru: `🔓 Запрос на разблокировку\n\nБизнес: ${bizName}\n${reasonText ? `Причина блокировки: ${reasonText}\n` : ''}Сообщение: ${value}`,
+    he: `🔓 בקשת ביטול חסימה\n\nעסק: ${bizName}\n${reasonText ? `סיבת החסימה: ${reasonText}\n` : ''}הודעה: ${value}`,
+    en: `🔓 Unblock request\n\nBusiness: ${bizName}\n${reasonText ? `Block reason: ${reasonText}\n` : ''}Message: ${value}`,
+    ar: `🔓 طلب رفع الحظر\n\nالعمل: ${bizName}\n${reasonText ? `سبب الحظر: ${reasonText}\n` : ''}الرسالة: ${value}`,
+  };
+  const message = appealHeaders[lang] || appealHeaders.ru;
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
