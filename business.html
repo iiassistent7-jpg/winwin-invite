@@ -617,19 +617,6 @@
 
   </div><!-- /views-wrapper -->
 
-  <div id="fixedRecommendBtn" style="
-    position:sticky; bottom:62px; left:0; right:0;
-    padding:10px 16px 0;
-    background:linear-gradient(to top, var(--bg) 60%, transparent);
-    z-index:10;
-    display:none;
-  ">
-    <button class="btn-primary btn-accent" style="width:100%;border-radius:16px;padding:14px;"
-      onclick="openRecommendFlow()">
-      <span id="t_fixed_rec_btn">🔗 Рекомендовать бизнес</span>
-    </button>
-  </div>
-
   <!-- Bottom Nav -->
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
@@ -1384,8 +1371,6 @@ function switchTab(tabId, btnEl) {
   const target = document.querySelector(`.nav-item[data-tab="${tabId}"]`) || btnEl;
   if (target) target.classList.add('active');
   syncWrapperToCurrentTab();
-  const fixedBtn = document.getElementById('fixedRecommendBtn');
-  if (fixedBtn) fixedBtn.style.display = tabId === 'deals' ? 'block' : 'none';
   window.scrollTo(0, 0);
   updateLockedNavState();
 }
@@ -1707,8 +1692,6 @@ async function init() {
       showApp();
       renderAll();
       setDealsSegment('incoming');
-      const _fixedBtn = document.getElementById('fixedRecommendBtn');
-      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
       await loadPreservedAgentDashboard();
       renderAll();
@@ -1735,23 +1718,17 @@ async function init() {
       if (!cached) showApp();
       renderAll();
       setDealsSegment('incoming');
-      const _fixedBtn = document.getElementById('fixedRecommendBtn');
-      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else if (cached) {
       // Data unchanged — make sure app is shown
       if (document.getElementById('globalLoader').style.display !== 'none') showApp();
       renderAll();
       setDealsSegment('incoming');
-      const _fixedBtn = document.getElementById('fixedRecommendBtn');
-      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else {
       showApp();
       renderAll();
       setDealsSegment('incoming');
-      const _fixedBtn = document.getElementById('fixedRecommendBtn');
-      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     }
   } catch(e) {
@@ -1940,7 +1917,7 @@ function setDealsSegment(seg) {
     if (dealsContainer) dealsContainer.style.display = 'none';
     if (recList) recList.style.display = '';
     if (summaryMount) summaryMount.style.display = 'none';
-    if (promoMount) promoMount.style.display = 'none';
+    if (promoMount) promoMount.style.display = '';
     recommendMode = 'outgoing';
     renderRecommend();
     updateDealsStats('outgoing');
@@ -1948,15 +1925,13 @@ function setDealsSegment(seg) {
     if (dealsContainer) dealsContainer.style.display = '';
     if (recList) recList.style.display = '';
     if (summaryMount) summaryMount.style.display = 'none';
-    if (promoMount) promoMount.style.display = 'none';
+    if (promoMount) promoMount.style.display = '';
     dealFilter = 'history';
     recommendMode = 'outgoing';
     renderDeals();
     renderRecommend();
     updateDealsStats('history');
   }
-  const _fb = document.getElementById('fixedRecommendBtn');
-  if (_fb) _fb.style.display = 'block';
 }
 
 function updateDealsStats(seg) {
@@ -2058,7 +2033,6 @@ function getDealStatusCodes(deal) {
 }
 
 function getActiveDealsPromoHtml() {
-  return '';
   const promoBtn = {
     ru:'\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u043e\u0432\u0430\u0442\u044c\n\u0431\u0438\u0437\u043d\u0435\u0441',
     he:'\u05dc\u05d4\u05de\u05dc\u05d9\u05e5\n\u05e2\u05dc \u05e2\u05e1\u05e7',
@@ -2932,7 +2906,7 @@ function renderDeals() {
   if (summaryMount) summaryMount.innerHTML = '';
 
   if (promoMount) {
-    promoMount.innerHTML = dealFilter === 'active' ? getActiveDealsPromoHtml() : '';
+    promoMount.innerHTML = getActiveDealsPromoHtml();
   }
 
   if (!filtered.length) {
