@@ -479,10 +479,11 @@
         <div class="mini-stat"><div class="val" id="ds_stat2">0</div><div class="lbl" id="t_ds_stat2">—</div></div>
         <div class="mini-stat"><div class="val" id="ds_stat3">0</div><div class="lbl" id="t_ds_stat3">—</div></div>
       </div>
-      <div class="segmented-tabs" id="dealsSegmentedTabs" style="margin-bottom:14px;">
-        <button class="seg-tab active" id="segTabIncoming" onclick="setDealsSegment('incoming')"><span id="t_seg_incoming">Входящие</span></button>
-        <button class="seg-tab" id="segTabOutgoing" onclick="setDealsSegment('outgoing')"><span id="t_seg_outgoing">Исходящие</span></button>
-        <button class="seg-tab" id="segTabHistory" onclick="setDealsSegment('history')"><span id="t_seg_history">История</span></button>
+      <div class="segmented-tabs" id="dealsSegmentedTabs"
+        style="margin-bottom:14px;display:flex;width:100%;gap:6px;">
+        <button class="seg-tab active" id="segTabIncoming" onclick="setDealsSegment('incoming')" style="flex:1;min-width:0;font-size:.78rem;padding:10px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span id="t_seg_incoming">Входящие</span></button>
+        <button class="seg-tab" id="segTabOutgoing" onclick="setDealsSegment('outgoing')" style="flex:1;min-width:0;font-size:.78rem;padding:10px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span id="t_seg_outgoing">Исходящие</span></button>
+        <button class="seg-tab" id="segTabHistory" onclick="setDealsSegment('history')" style="flex:1;min-width:0;font-size:.78rem;padding:10px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span id="t_seg_history">История</span></button>
       </div>
       <div id="dealsSummaryMount"></div>
       <div class="deals-filter" style="display:none;">
@@ -1945,7 +1946,7 @@ function setDealsSegment(seg) {
     if (summaryMount) summaryMount.style.display = 'none';
     if (promoMount) promoMount.style.display = 'none';
     dealFilter = 'history';
-    recommendMode = 'outgoing';
+    recommendMode = 'incoming';
     renderDeals();
     renderRecommend();
     updateDealsStats('history');
@@ -2916,14 +2917,7 @@ function renderDeals() {
   const revenueLbl = {ru:'Оборот',he:'מחזור',en:'Revenue',ar:'الإيراد'};
   const agentsLbl = {ru:'Агенты',he:'ממליצים',en:'Agents',ar:'وكلاء'};
 
-  if (summaryMount) {
-    summaryMount.innerHTML = `
-      <div class="revenue-pill"><span class="pill-label">${revenueLbl[lang] || revenueLbl.ru}</span><span class="pill-value">${totalRevenue} ${curr}</span></div>
-      <div class="deals-empty-stats">
-        <div class="deals-empty-stat"><div class="val">${totalClosed}</div><div class="lbl">${closedLbl[lang] || closedLbl.ru}</div></div>
-        <div class="deals-empty-stat"><div class="val">${recommenders}</div><div class="lbl">${agentsLbl[lang] || agentsLbl.ru}</div></div>
-      </div>`;
-  }
+  if (summaryMount) summaryMount.innerHTML = '';
 
   if (promoMount) {
     promoMount.innerHTML = dealFilter === 'active' ? getActiveDealsPromoHtml() : '';
@@ -3726,6 +3720,7 @@ function getOutgoingRecommendReceiptChoices() {
 }
 
 function renderRecommendDetailActionButtons(row) {
+  if (dealsSegment === 'history') return '';
   const dealId = row && (row.action_deal_id ?? row.id ?? row.deal_id ?? row.lead_id ?? row.recommendation_id);
   if (dealId == null) return '';
   if (!(window.WinWinRecommenderDecisionUI && typeof window.WinWinRecommenderDecisionUI.render === 'function')) return '';
