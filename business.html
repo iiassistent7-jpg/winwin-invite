@@ -2836,6 +2836,7 @@ function toggleRecoExtra(id) {
   const el = document.getElementById('reco-extra-' + id);
   if (!el) return;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  try { feather.replace(); } catch(e) {}
 }
 function toggleRecommenderExtra(id) {
   const el = document.getElementById('reco_extra_' + id);
@@ -3601,29 +3602,48 @@ function renderRecommend() {
       ? formatRecommendMetric(detailAmountSource, curr)
       : '—';
     const recoDomId = String(recoId).replace(/[^a-zA-Z0-9_-]/g, '_');
-    const cardClick = dealsSegment === 'history'
-      ? `toggleRecoExtra('${recoDomId}')`
-      : `openRecommendDetail(${idx})`;
+    const nextStepText = closedMeta
+      ? closedMeta.resultText
+      : ({ru:'Нужно завершить или отклонить',he:'צריך לסגור או לדחות',en:'Need to complete or reject',ar:'يجب إتمامه أو رفضه'}[lang] || 'Need to complete or reject');
+    const nextStepToneOut = closedMeta ? 'success' : (statusText.cls === 'st-pending' ? 'warning' : 'default');
+    const toneClass = statusText.cls === 'st-pending' ? ' pending' : '';
+    const rewardVal = r.reward ? `${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}` : '—';
+    const nextStepLabel = {ru:'Следующий шаг',he:'הצעד הבא',en:'Next step',ar:'الخطوة التالية'}[lang] || 'Next step';
+    const bizLabel = {ru:'Бизнес',he:'עסק',en:'Business',ar:'العمل'}[lang] || 'Business';
+    const clientLabel = detailLabels.client[lang] || detailLabels.client.ru;
+    const openDetailLabel = {ru:'Управление сделкой',he:'ניהול עסקה',en:'Manage deal',ar:'إدارة الصفقة'}[lang] || 'Manage deal';
     return `
-      <div class="reco-card" onclick="${cardClick}">
-        <div class="reco-top">
+      <div class="deal-card${toneClass}" onclick="toggleRecoExtra('${recoDomId}')">
+        <div class="deal-card-header">
           <div>
-            <div class="reco-title">${r.business_name}</div>
-            <div class="reco-sub">${copy.client}: <b>${r.client_name}</b>${r.date ? ' · ' + formatShortDate(r.date) : ''}</div>
+            <div class="deal-client">${r.business_name}</div>
+            <div class="deal-date">${r.date ? formatShortDate(r.date) : ''}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;">${outDirBadge}<div class="status-badge ${statusText.cls}">${statusText.text}</div></div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            ${outDirBadge}
+            <div class="status-badge ${statusText.cls}">${statusText.text}</div>
+            <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
+          </div>
         </div>
-        <div class="reco-meta">
-          ${rewardLine}
+        ${closedMeta ? '' : `<div class="deal-pending-note ${nextStepToneOut}"><i data-feather="${nextStepToneOut === 'success' ? 'check-circle' : 'clock'}" style="width:14px;height:14px;"></i> ${nextStepText}</div>`}
+        <div class="deal-summary-pills">
+          <span class="meta-pill">🤝 ${r.client_name || '—'}</span>
+          <span class="meta-pill">💵 ${detailAmount}</span>
+          <span class="meta-pill">🎁 ${rewardVal}</span>
           ${decisionLine}
         </div>
-        <div id="reco-extra-${recoDomId}" class="deal-extra" style="display:none;">
+        <div class="deal-extra" id="reco-extra-${recoDomId}">
+          ${closedMeta ? `<div class="deal-inline-meta"><div class="deal-mini-box deal-mini-box-positive"><div class="deal-mini-lbl">${closedMeta.resultLabel}</div><div class="deal-mini-val">${closedMeta.resultText}</div></div></div>` : `
           <div class="deal-inline-meta">
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.client[lang] || detailLabels.client.ru}</div><div class="deal-mini-val">${r.client_name || '—'}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.date[lang] || detailLabels.date.ru}</div><div class="deal-mini-val">${r.date ? formatShortDate(r.date) : '—'}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.amount[lang] || detailLabels.amount.ru}</div><div class="deal-mini-val">${detailAmount}</div></div>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.status[lang] || detailLabels.status.ru}</div><div class="deal-mini-val">${statusText.text}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${clientLabel}</div><div class="deal-mini-val">${r.client_name || '—'}</div></div>
+            <div class="deal-mini-box deal-mini-box-warning"><div class="deal-mini-lbl">${nextStepLabel}</div><div class="deal-mini-val">${nextStepText}</div></div>
+          </div>`}
+          <div class="deal-receipt">
+            <div class="receipt-line"><span>💵 ${{ru:'Чек',he:"צ'ק",en:'Check',ar:'شيك'}[lang]||'Чек'}:</span><span>${detailAmount}</span></div>
+            <div class="receipt-line"><span>🎁 ${{ru:'Бонус',he:'בונוס',en:'Bonus',ar:'مكافأة'}[lang]||'Бонус'}:</span><span>${rewardVal}</span></div>
+            <div class="receipt-line total"><span>✅ ${{ru:'Доход',he:'הכנסה',en:'Income',ar:'دخل'}[lang]||'Доход'}:</span><span class="net-profit">${rewardVal}</span></div>
           </div>
+          ${dealsSegment !== 'history' ? `<div class="deal-actions-row" style="margin-top:12px;"><button class="btn-primary btn-accent" onclick="event.stopPropagation();openRecommendDetail(${idx})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${openDetailLabel}</button></div>` : ''}
         </div>
       </div>`;
   }).join('');
