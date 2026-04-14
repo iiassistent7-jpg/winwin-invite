@@ -1275,6 +1275,21 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="respond-modal">
+  <div class="modal">
+    <div class="modal-title">↩ Ответить пользователю</div>
+    <div style="margin-bottom:12px;color:var(--text2);font-size:.88rem;" id="respond-partner-name"></div>
+    <textarea class="modal-input" id="respond-text-input" rows="4"
+      placeholder="Введите ответ — он придёт пользователю в WhatsApp"
+      style="resize:vertical;min-height:80px;"></textarea>
+    <div class="modal-btns" style="margin-top:12px;">
+      <button class="modal-btn secondary" onclick="closeRespondModal()">Отмена</button>
+      <button class="modal-btn" style="background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;"
+        onclick="confirmRespond()">Отправить в WA</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
 const API_URL = 'https://amlatsa-bot-production.up.railway.app';
@@ -1317,6 +1332,45 @@ async function requestMagicLink() {
   }
 }
 
+function showSessionExpired() {
+  localStorage.removeItem('ww_admin_token');
+  SESSION_TOKEN = '';
+  const existing = document.getElementById('session-expired-overlay');
+  if (existing) existing.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'session-expired-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);';
+  overlay.innerHTML = `<div style="background:var(--surface,#1E2333);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:32px;max-width:360px;width:90%;text-align:center;"><div style="font-size:2rem;margin-bottom:12px;">🔐</div><div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px;">Сессия истекла</div><div style="color:var(--text2,#aaa);font-size:.88rem;margin-bottom:20px;">Введите номер WhatsApp — получите новую ссылку для входа</div><input id="expired-phone-input" type="tel" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:.9rem;box-sizing:border-box;margin-bottom:12px;outline:none;" placeholder="+972 XX XXX XXXX"><button id="expired-send-btn" onclick="requestNewLink()" style="width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#2F80ED,#56CCF2);color:#fff;font-family:inherit;font-weight:700;font-size:.9rem;">Получить ссылку</button><div id="expired-status" style="margin-top:10px;font-size:.82rem;color:var(--text2,#aaa);"></div></div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('expired-phone-input')?.focus(), 100);
+}
+
+async function requestNewLink() {
+  const phone = (document.getElementById('expired-phone-input')?.value || '').trim();
+  if (!phone) return;
+  const btn = document.getElementById('expired-send-btn');
+  const status = document.getElementById('expired-status');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+  try {
+    const res = await fetch(`${API_URL}/api/admin/otp/request`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({phone})
+    });
+    if (!res.ok) throw new Error('Ошибка сервера');
+    status.textContent = '✅ Ссылка отправлена в WhatsApp';
+    status.style.color = '#27ae60';
+    btn.textContent = 'Отправить снова';
+    btn.disabled = false;
+  } catch(e) {
+    status.textContent = 'Ошибка: ' + e.message;
+    status.style.color = '#EB5757';
+    btn.textContent = 'Получить ссылку';
+    btn.disabled = false;
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
 
@@ -1352,6 +1406,10 @@ window.addEventListener('DOMContentLoaded', () => {
 // ── API ────────────────────────────────────────────────────────────────────
 async function api(section, extra = '') {
   const res = await fetch(`${API_URL}/api/admin?token=${encodeURIComponent(SESSION_TOKEN)}&section=${section}${extra}`);
+  if (res.status === 401) {
+    showSessionExpired();
+    throw new Error('Session expired');
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
@@ -1661,36 +1719,60 @@ async function loadProblems() {
             </tbody></table></div>`}
         </div>
       </div>`;
-    if (d.appeals && d.appeals.length > 0) {
+    // Tickets
+    const openTickets = (d.tickets || []).filter(t => t.status === 'open');
+    const resolvedTickets = (d.tickets || []).filter(t => t.status === 'resolved');
+    const allTickets = [...openTickets, ...resolvedTickets];
+
+    if (allTickets.length > 0) {
       html += `<div class="table-header" style="margin-top:20px;">
-      <div class="table-title">📬 Апелляции · ${d.appeals.length}</div>
+      <div class="table-title">📬 Обращения · ${allTickets.length}
+        <span style="margin-left:8px;font-size:.78rem;color:var(--red);font-weight:700;">
+          ${openTickets.length > 0 ? openTickets.length + ' открытых' : ''}
+        </span>
+      </div>
     </div>
     <div class="table-scroll"><table>
       <thead><tr>
-        <th>ID</th><th>Имя</th><th>Телефон</th>
-        <th>Тип</th><th>Тариф</th><th>Сообщение</th><th>Действие</th>
+        <th>Дата</th><th>Имя</th><th>Телефон</th>
+        <th>Тип</th><th>Обращение</th><th>Статус</th><th>Действия</th>
       </tr></thead>
       <tbody>
-        ${d.appeals.map(a => `<tr>
-          <td style="color:var(--text2);font-size:.76rem">${a.id}</td>
-          <td><b>${esc(a.name)}</b></td>
-          <td style="font-size:.78rem">${esc(a.phone)}</td>
-          <td><span class="badge ${a.appeal_type === 'subscription' ? 'badge-in_progress' : 'badge-blocked'}">
-            ${a.appeal_type === 'subscription' ? '💳 Тариф' : '🔓 Разблок'}
-          </span></td>
-          <td><span class="badge badge-${a.subscription_plan === 'start_expired' ? 'blocked' : 'live'}">
-            ${a.subscription_plan}
-          </span></td>
-          <td style="font-size:.82rem;max-width:220px;word-break:break-word">${esc(a.appeal_text)}</td>
-          <td>
-            <button class="action-btn success" onclick="clearAppeal(${a.id})">✓ Решено</button>
-            <button class="action-btn" onclick="openActivateModal(${a.id}, '${esc(a.name)}')" style="margin-left:4px;">💳 Тариф</button>
-          </td>
-        </tr>`).join('')}
+        ${allTickets.map(t => {
+          const typeLabel = t.ticket_type === 'subscription' ? '💳 Тариф'
+            : t.ticket_type === 'payment' ? '💰 Оплата'
+            : '🔓 Разблок';
+          const typeBadge = t.ticket_type === 'subscription' ? 'badge-in_progress'
+            : t.ticket_type === 'payment' ? 'badge-closed'
+            : 'badge-blocked';
+          const statusBadge = t.status === 'open' ? 'badge-new' : 'badge-live';
+          const statusLabel = t.status === 'open' ? '🔴 Открыто' : '✅ Решено';
+          const dateStr = t.created_at
+            ? new Date(t.created_at).toLocaleString('ru', {day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'})
+            : '—';
+          return `<tr>
+            <td style="color:var(--text2);font-size:.75rem;white-space:nowrap">${dateStr}</td>
+            <td><b>${esc(t.name)}</b></td>
+            <td style="font-size:.78rem">${esc(t.phone)}</td>
+            <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+            <td style="font-size:.82rem;max-width:200px;word-break:break-word">
+              ${esc(t.text)}
+              ${t.admin_response ? `<div style="margin-top:6px;padding:6px 8px;background:rgba(47,128,237,.08);border-radius:8px;font-size:.75rem;color:var(--text2);">↩ ${esc(t.admin_response)}</div>` : ''}
+            </td>
+            <td><span class="badge ${statusBadge}">${statusLabel}</span></td>
+            <td style="white-space:nowrap">
+              ${t.status === 'open' ? `
+                <button class="action-btn success" onclick="openRespondModal(${t.id}, '${esc(t.name)}')" style="margin-bottom:4px;">↩ Ответить</button>
+                <button class="action-btn" onclick="resolveTicket(${t.id})">✓ Решено</button>
+              ` : `<button class="action-btn" onclick="resolveTicket(${t.id})">↺ Переоткрыть</button>`}
+              <button class="action-btn" style="margin-left:4px;" onclick="openActivateModal(${t.partner_id}, '${esc(t.name)}')">💳</button>
+            </td>
+          </tr>`;
+        }).join('')}
       </tbody>
     </table></div>`;
-    } else if (!d.disputes?.length && !d.stale_leads?.length) {
-      html += '<div style="color:var(--text2);padding:20px;text-align:center;">Апелляций нет 🎉</div>';
+    } else {
+      html += '<div style="color:var(--text2);padding:20px;text-align:center;">Обращений нет 🎉</div>';
     }
     el.innerHTML = html;
   } catch(e) {
@@ -1758,6 +1840,7 @@ async function loadFinance() {
 
 // ── Block/Unblock ──────────────────────────────────────────────────────────
 let activateTargetId = null;
+let respondTargetId = null;
 
 function openBlockModal(id) {
   blockTargetId = id;
@@ -1786,13 +1869,30 @@ async function unblockPartner(id) {
     alert('Ошибка: ' + e.message);
   }
 }
-async function clearAppeal(partnerId) {
+function openRespondModal(ticketId, name) {
+  respondTargetId = ticketId;
+  document.getElementById('respond-partner-name').textContent = name;
+  document.getElementById('respond-text-input').value = '';
+  document.getElementById('respond-modal').classList.add('open');
+}
+function closeRespondModal() {
+  document.getElementById('respond-modal').classList.remove('open');
+  respondTargetId = null;
+}
+async function confirmRespond() {
+  const text = (document.getElementById('respond-text-input').value || '').trim();
+  if (!text) return;
   try {
-    await apiAction({ action: 'clear_appeal', partner_id: partnerId });
-    loadProblems();
-  } catch(e) {
-    alert('Ошибка: ' + e.message);
-  }
+    await apiAction({ action: 'respond_ticket', ticket_id: respondTargetId, response_text: text });
+    closeRespondModal();
+    loadSection('problems');
+  } catch(e) { alert('Ошибка: ' + e.message); }
+}
+async function resolveTicket(ticketId) {
+  try {
+    await apiAction({ action: 'resolve_ticket', ticket_id: ticketId });
+    loadSection('problems');
+  } catch(e) { alert('Ошибка: ' + e.message); }
 }
 function openActivateModal(id, name) {
   activateTargetId = id;
