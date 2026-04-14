@@ -79,8 +79,8 @@
 
     /* ── Swipe Views ────────────────────────────────────────────────── */
     /* Wrapper ВСЕГДА LTR. Offset = -index * 20%. Nav зеркалится CSS в RTL. */
-    .views-wrapper { display:flex; width:500%; transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); will-change:transform; direction:ltr !important; }
-    .view { width:20%; flex-shrink:0; padding:0 16px; }
+    .views-wrapper { display:flex; width:400%; transition:transform 0.35s cubic-bezier(0.25,1,0.5,1); will-change:transform; direction:ltr !important; }
+    .view { width:25%; flex-shrink:0; padding:0 16px; }
 
     /* ── Cards & Common ─────────────────────────────────────────────── */
     .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
@@ -474,13 +474,24 @@
           <div class="debt-banner-sum"  id="debtAmount">0 ₪</div>
         </div>
       </div>
+      <div class="mini-stats" id="dealsMiniStats">
+        <div class="mini-stat"><div class="val" id="ds_stat1">0</div><div class="lbl" id="t_ds_stat1">—</div></div>
+        <div class="mini-stat"><div class="val" id="ds_stat2">0</div><div class="lbl" id="t_ds_stat2">—</div></div>
+        <div class="mini-stat"><div class="val" id="ds_stat3">0</div><div class="lbl" id="t_ds_stat3">—</div></div>
+      </div>
+      <div class="segmented-tabs" id="dealsSegmentedTabs" style="margin-bottom:14px;">
+        <button class="seg-tab active" id="segTabIncoming" onclick="setDealsSegment('incoming')"><span id="t_seg_incoming">Входящие</span></button>
+        <button class="seg-tab" id="segTabOutgoing" onclick="setDealsSegment('outgoing')"><span id="t_seg_outgoing">Исходящие</span></button>
+        <button class="seg-tab" id="segTabHistory" onclick="setDealsSegment('history')"><span id="t_seg_history">История</span></button>
+      </div>
       <div id="dealsSummaryMount"></div>
-      <div class="deals-filter">
+      <div class="deals-filter" style="display:none;">
         <button class="filter-tab active" onclick="setFilter('active')" id="t_filt_active">В работе</button>
         <button class="filter-tab"        onclick="setFilter('history')" id="t_filt_history">История</button>
       </div>
       <div id="dealsPromoMount"></div>
       <div id="dealsContainer"></div>
+      <div id="recommendList" style="display:none;"></div>
     </div>
 
     <!-- ── VIEW: Stats ──────────────────────────────────────────── -->
@@ -539,7 +550,7 @@
     </div>
 
     <!-- ── VIEW: Recommend ───────────────────────────────────────── -->
-    <div id="view-recommend" class="view">
+    <div id="recommendLegacyShell" style="display:none;">
       <div class="mini-stats">
         <div class="mini-stat"><div class="val" id="rec_stat_total">0</div><div class="lbl" id="t_rec_stat_total">Выручка</div></div>
         <div class="mini-stat"><div class="val" id="rec_stat_waiting">0</div><div class="lbl" id="t_rec_stat_waiting">Выплаты</div></div>
@@ -559,7 +570,7 @@
         </button>
       </div>
       <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Входящие клиенты</div>
-      <div id="recommendList"></div>
+      <div id="recommendListLegacy"></div>
     </div>
 
     <!-- ── VIEW: Profile ────────────────────────────────────────── -->
@@ -609,10 +620,22 @@
 
   </div><!-- /views-wrapper -->
 
+  <div id="fixedRecommendBtn" style="
+    position:sticky; bottom:62px; left:0; right:0;
+    padding:10px 16px 0;
+    background:linear-gradient(to top, var(--bg) 60%, transparent);
+    z-index:10;
+    display:none;
+  ">
+    <button class="btn-primary btn-accent" style="width:100%;border-radius:16px;padding:14px;"
+      onclick="openRecommendFlow()">
+      <span id="t_fixed_rec_btn">🔗 Рекомендовать бизнес</span>
+    </button>
+  </div>
+
   <!-- Bottom Nav -->
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="deals" onclick="switchTab('deals',this)"><i data-feather="briefcase"></i><span id="nav_deals">Сделки</span></button>
-    <button class="nav-item" data-tab="recommend" onclick="switchTab('recommend',this)"><svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 12.5 10 10a2.1 2.1 0 0 1 3 0l1.2 1.2"/><path d="M16.5 11.5 19 9a2.1 2.1 0 0 1 3 3l-4.7 4.7a2.1 2.1 0 0 1-3 0L12 14.4"/><path d="M4.7 9.3a2.1 2.1 0 0 1 3 0l4.7 4.7-1.7 1.7a2.1 2.1 0 0 1-3 0L3 11a2.1 2.1 0 0 1 1.7-1.7"/><path d="m9 13 2 2"/></svg><span id="nav_recommend">Клиенты</span></button>
     <button class="nav-item" data-tab="recommenders" onclick="switchTab('recommenders',this)"><i data-feather="users"></i><span id="nav_recommenders">Агенты</span></button>
     <button class="nav-item" data-tab="stats" onclick="switchTab('stats',this)"><i data-feather="pie-chart"></i><span id="nav_stats">Отчеты</span></button>
     <button class="nav-item" data-tab="profile" onclick="switchTab('profile',this)"><i data-feather="settings"></i><span id="nav_profile">Профиль</span></button>
@@ -912,6 +935,7 @@ const i18n = {
     save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
     empty_deals:"Здесь пока пусто.",
     nav_deals:"Сделки", nav_stats:"Отчеты", nav_recommenders:"Агенты", nav_recommend:"Клиенты", nav_profile:"Профиль",
+    seg_incoming:"Входящие", seg_outgoing:"Исходящие", seg_history:"История", fixed_rec_btn:"🔗 Рекомендовать бизнес",
     sub_standard:"Стандарт", sub_desc_standard:"Базовый функционал. Лимиты сделок учитываются платформой.",
     sub_desc_pro:"Полный доступ: безлимитные сделки и контакты лучших агентов.",
     lb_blur_alert:"Для доступа к контактам агентов перейдите на PRO. 🌟",
@@ -948,6 +972,7 @@ const i18n = {
     save_ok:"נשמר!", save_err:"שגיאה",
     empty_deals:"ריק כאן.",
     nav_deals:"עסקאות", nav_stats:"דוחות", nav_recommenders:"ממליצים", nav_recommend:"לקוחות", nav_profile:"פרופיל",
+    seg_incoming:"נכנסות", seg_outgoing:"יוצאות", seg_history:"היסטוריה", fixed_rec_btn:"🔗 להמליץ על עסק",
     sub_standard:"רגיל", sub_desc_standard:"תכונות בסיסיות. מגבלות עסקאות חלות.",
     sub_desc_pro:"גישה מלאה: עסקאות ללא הגבלה ואנשי קשר של סוכנים מובילים.",
     lb_blur_alert:"שדרג ל-PRO לפתיחת אנשי קשר. 🌟",
@@ -984,6 +1009,7 @@ const i18n = {
     save_ok:"Changes saved!", save_err:"Save error",
     empty_deals:"Nothing here yet.",
     nav_deals:"Deals", nav_stats:"Reports", nav_recommenders:"Agents", nav_recommend:"Clients", nav_profile:"Profile",
+    seg_incoming:"Incoming", seg_outgoing:"Outgoing", seg_history:"History", fixed_rec_btn:"🔗 Recommend a business",
     sub_standard:"Standard", sub_desc_standard:"Basic features. Deal limits apply.",
     sub_desc_pro:"Full access: unlimited deals and top agent contacts.",
     lb_blur_alert:"Upgrade to PRO to unlock contacts. 🌟",
@@ -1020,6 +1046,7 @@ const i18n = {
     save_ok:"تم الحفظ!", save_err:"خطأ",
     empty_deals:"فارغ هنا.",
     nav_deals:"الصفقات", nav_stats:"تقارير", nav_recommenders:"الموصون", nav_recommend:"العملاء", nav_profile:"الملف",
+    seg_incoming:"واردة", seg_outgoing:"صادرة", seg_history:"التاريخ", fixed_rec_btn:"🔗 أوصِ ببيزنس",
     sub_standard:"معيار", sub_desc_standard:"الميزات الأساسية. حدود الصفقات مطبقة.",
     sub_desc_pro:"وصول كامل: صفقات غير محدودة وجهات اتصال أفضل الوكلاء.",
     lb_blur_alert:"قم بالترقية إلى PRO لفتح جهات الاتصال. 🌟",
@@ -1238,6 +1265,7 @@ let agentDashToken = '';
 let leaderboardData = null;
 let recommendationRows = [];
 let dealFilter = 'active';
+let dealsSegment = 'incoming'; // 'incoming' | 'outgoing' | 'history'
 let activeDealId = null;
 let currentTab = 'deals';
 let preservedAgentFetchSeq = 0;
@@ -1245,8 +1273,8 @@ const ACTIVE_BIZ_CONTEXT_KEY = 'winwin_active_business_context';
 let recommendersMode = 'mine';
 let recommendMode = 'incoming';
 
-const LTR_TABS = ['deals','recommend','recommenders','stats','profile'];
-const RTL_TABS = ['profile','stats','recommenders','recommend','deals'];
+const LTR_TABS = ['deals','recommenders','stats','profile'];
+const RTL_TABS = ['profile','stats','recommenders','deals'];
 function isRTLLang(targetLang = lang) { return targetLang === 'he' || targetLang === 'ar'; }
 function getTabOrder(targetLang = lang) { return isRTLLang(targetLang) ? RTL_TABS : LTR_TABS; }
 
@@ -1306,7 +1334,7 @@ function syncWrapperToCurrentTab() {
   if (!wrapper) return;
   const order = getTabOrder();
   const idx = order.indexOf(currentTab);
-  wrapper.style.transform = `translateX(${-Math.max(idx,0) * 20}%)`;
+  wrapper.style.transform = `translateX(${-Math.max(idx,0) * (100 / Math.max(order.length, 1))}%)`;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const activeView = document.getElementById('view-' + currentTab);
   if (activeView) activeView.classList.add('active');
@@ -1359,6 +1387,8 @@ function switchTab(tabId, btnEl) {
   const target = document.querySelector(`.nav-item[data-tab="${tabId}"]`) || btnEl;
   if (target) target.classList.add('active');
   syncWrapperToCurrentTab();
+  const fixedBtn = document.getElementById('fixedRecommendBtn');
+  if (fixedBtn) fixedBtn.style.display = tabId === 'deals' ? 'block' : 'none';
   window.scrollTo(0, 0);
   updateLockedNavState();
 }
@@ -1569,6 +1599,7 @@ function applyI18n() {
   const map = {
     't_loader_sub':'loader_sub', 't_err_title':'err_title', 't_err_sub':'err_sub',
     't_debt_label':'debt_label', 't_debt_open':'debt_open', 't_debt_sheet_title':'debt_sheet_title', 't_debt_sheet_sub':'debt_sheet_sub', 't_debt_back':'m_cancel', 't_filt_active':'filt_active', 't_filt_history':'filt_history',
+    't_seg_incoming':'seg_incoming', 't_seg_outgoing':'seg_outgoing', 't_seg_history':'seg_history', 't_fixed_rec_btn':'fixed_rec_btn',
     't_st_fin_title':'st_fin_title', 't_st_revenue':'st_revenue', 't_st_commission':'st_commission',
     't_st_net':'st_net', 't_st_pending_cnt':'st_pending_cnt',
     't_st_funnel_title':'st_funnel_title', 't_st_net_big':'st_net_big', 't_st_net_big_sub':'st_net_big_sub', 't_st_total_leads':'st_total_leads',
@@ -1678,6 +1709,8 @@ async function init() {
       bizData = JSON.parse(cached);
       showApp();
       renderAll();
+      setDealsSegment('incoming');
+      switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
       await loadPreservedAgentDashboard();
       renderAll();
     } catch(e) {
@@ -1702,13 +1735,19 @@ async function init() {
       sessionStorage.setItem(cacheKey, freshStr);
       if (!cached) showApp();
       renderAll();
+      setDealsSegment('incoming');
+      switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else if (cached) {
       // Data unchanged — make sure app is shown
       if (document.getElementById('globalLoader').style.display !== 'none') showApp();
       renderAll();
+      setDealsSegment('incoming');
+      switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else {
       showApp();
       renderAll();
+      setDealsSegment('incoming');
+      switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     }
   } catch(e) {
     console.error('[Win-Win Biz] fetch error:', e);
@@ -1716,7 +1755,8 @@ async function init() {
   }
 
   // Deep link tab
-  const urlTab = new URLSearchParams(window.location.search).get('tab');
+  const requestedTab = new URLSearchParams(window.location.search).get('tab');
+  const urlTab = requestedTab === 'recommend' ? 'deals' : requestedTab;
   const allTabs = [...LTR_TABS];
   if (urlTab && allTabs.includes(urlTab)) {
     const navBtn = document.querySelector(`.nav-item[data-tab="${urlTab}"]`);
@@ -1839,6 +1879,7 @@ function renderAll() {
   try { renderStats(); } catch(e) { console.error('[Biz] renderStats:', e); }
   try { renderRecommenders(); } catch(e) { console.error('[Biz] renderRecommenders:', e); }
   try { renderRecommend(); } catch(e) { console.error('[Biz] renderRecommend:', e); }
+  try { updateDealsStats(dealsSegment); } catch(e) { console.error('[Biz] updateDealsStats:', e); }
   try { renderProfile(); } catch(e) { console.error('[Biz] renderProfile:', e); }
   try { renderEditForm(); } catch(e) { console.error('[Biz] renderEditForm:', e); }
   try { updateReturnBtns(); } catch(e) { console.error('[Biz] updateReturnBtns:', e); }
@@ -1869,6 +1910,90 @@ function setFilter(f) {
   const btn = document.querySelector(`.filter-tab[onclick="setFilter('${f}')"]`);
   if (btn) btn.classList.add('active');
   renderDeals();
+}
+
+function setDealsSegment(seg) {
+  dealsSegment = seg;
+  ['incoming','outgoing','history'].forEach(s => {
+    const btn = document.getElementById('segTab' + s.charAt(0).toUpperCase() + s.slice(1));
+    if (btn) btn.classList.toggle('active', s === seg);
+  });
+  const dealsContainer = document.getElementById('dealsContainer');
+  const recList = document.getElementById('recommendList');
+  const summaryMount = document.getElementById('dealsSummaryMount');
+  const promoMount = document.getElementById('dealsPromoMount');
+
+  if (seg === 'incoming') {
+    if (dealsContainer) dealsContainer.style.display = '';
+    if (recList) recList.style.display = 'none';
+    if (summaryMount) summaryMount.style.display = '';
+    if (promoMount) promoMount.style.display = '';
+    dealFilter = 'active';
+    renderDeals();
+    updateDealsStats('incoming');
+  } else if (seg === 'outgoing') {
+    if (dealsContainer) dealsContainer.style.display = 'none';
+    if (recList) recList.style.display = '';
+    if (summaryMount) summaryMount.style.display = 'none';
+    if (promoMount) promoMount.style.display = 'none';
+    recommendMode = 'outgoing';
+    renderRecommend();
+    updateDealsStats('outgoing');
+  } else {
+    if (dealsContainer) dealsContainer.style.display = '';
+    if (recList) recList.style.display = '';
+    if (summaryMount) summaryMount.style.display = 'none';
+    if (promoMount) promoMount.style.display = 'none';
+    dealFilter = 'history';
+    recommendMode = 'outgoing';
+    renderDeals();
+    renderRecommend();
+    updateDealsStats('history');
+  }
+}
+
+function updateDealsStats(seg) {
+  const deals = bizData.deals || [];
+  const s1 = document.getElementById('ds_stat1');
+  const s2 = document.getElementById('ds_stat2');
+  const s3 = document.getElementById('ds_stat3');
+  const l1 = document.getElementById('t_ds_stat1');
+  const l2 = document.getElementById('t_ds_stat2');
+  const l3 = document.getElementById('t_ds_stat3');
+
+  if (seg === 'incoming') {
+    const active = deals.filter(d => ['new','in_progress','pending_confirmation'].includes(d.status)).length;
+    const closed = deals.filter(d => d.status === 'closed').length;
+    const pending = deals.filter(d => d.status === 'pending_agent_receipt' || d.status === 'pending_confirmation').length;
+    if (s1) s1.textContent = active;
+    if (s2) s2.textContent = closed;
+    if (s3) s3.textContent = pending;
+    const lblIn = {ru:['В работе','Закрыто','Ждут оплаты'], he:['בטיפול','סגורות','ממתינות'], en:['Active','Closed','Pending'], ar:['نشطة','مغلقة','بانتظار']}[lang] || ['Active','Closed','Pending'];
+    if (l1) l1.textContent = lblIn[0];
+    if (l2) l2.textContent = lblIn[1];
+    if (l3) l3.textContent = lblIn[2];
+  } else if (seg === 'outgoing') {
+    const outDeals = (bizData.outgoing_recommendations || []);
+    const waiting = outDeals.filter(d => ['in_progress','pending'].includes(d.status)).length;
+    const done = outDeals.filter(d => ['closed','completed'].includes(d.status)).length;
+    if (s1) s1.textContent = outDeals.length;
+    if (s2) s2.textContent = waiting;
+    if (s3) s3.textContent = done;
+    const lblOut = {ru:['Всего','В работе','Завершено'], he:['סה\"כ','בתהליך','הושלמו'], en:['Total','Active','Done'], ar:['المجموع','نشطة','منتهية']}[lang] || ['Total','Active','Done'];
+    if (l1) l1.textContent = lblOut[0];
+    if (l2) l2.textContent = lblOut[1];
+    if (l3) l3.textContent = lblOut[2];
+  } else {
+    const histIncoming = deals.filter(d => ['closed','rejected'].includes(d.status)).length;
+    const histOutgoing = (bizData.outgoing_recommendations || []).filter(d => ['closed','completed','rejected'].includes(d.status)).length;
+    if (s1) s1.textContent = histIncoming;
+    if (s2) s2.textContent = histOutgoing;
+    if (s3) s3.textContent = histIncoming + histOutgoing;
+    const lblHist = {ru:['Входящих','Исходящих','Итого'], he:['נכנסות','יוצאות','סה\"כ'], en:['Incoming','Outgoing','Total'], ar:['واردة','صادرة','المجموع']}[lang] || ['Incoming','Outgoing','Total'];
+    if (l1) l1.textContent = lblHist[0];
+    if (l2) l2.textContent = lblHist[1];
+    if (l3) l3.textContent = lblHist[2];
+  }
 }
 
 function getStatusData(status, deal = null) {
@@ -2861,6 +2986,9 @@ function renderDeals() {
     const settlementPill = closedMeta
       ? `<span class="meta-pill">${closedMeta.resultText}</span>`
       : (projection.showSettlementGroup ? `<span class="meta-pill">${settlementInfo.decisionPill}</span>` : '');
+    const dirBadge = dealFilter === 'history'
+      ? `<span style="font-size:.7rem;padding:2px 7px;border-radius:20px;font-weight:700;background:rgba(47,128,237,.12);color:var(--accent1);margin-right:4px;">← ${{ru:'Входящая',he:'נכנסת',en:'Incoming',ar:'واردة'}[lang]||'Incoming'}</span>`
+      : '';
     const settlementDetails = projection.showSettlementGroup && !closedMeta ? `
           <div class="deal-inline-meta">
             <div class="deal-mini-box"><div class="deal-mini-lbl">${clarityCopy.decisionField}</div><div class="deal-mini-val">${settlementInfo.decisionLabel}</div></div>
@@ -2886,6 +3014,7 @@ function renderDeals() {
             <div class="deal-date">${row.date}</div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
+            ${dirBadge}
             <div class="status-badge ${st.cls}"><i data-feather="${st.icon}" style="width:12px;height:12px;"></i> ${st.text}</div>
             <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
           </div>
@@ -3464,6 +3593,9 @@ function renderRecommend() {
       ? getUnifiedClosedDealMeta(r)
       : null;
     const statusText = getRecommendStatusLabel(r.status, L);
+    const outDirBadge = dealsSegment === 'history'
+      ? `<span style="font-size:.7rem;padding:2px 7px;border-radius:20px;font-weight:700;background:rgba(86,204,242,.12);color:var(--accent2);margin-right:4px;">→ ${{ru:'Исходящая',he:'יוצאת',en:'Outgoing',ar:'صادرة'}[lang]||'Outgoing'}</span>`
+      : '';
     const rewardLine = r.reward ? `<span class="meta-pill">🎁 ${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}</span>` : '';
     const decisionLine = closedMeta
       ? `<span class="meta-pill">${closedMeta.resultText}</span>`
@@ -3475,7 +3607,7 @@ function renderRecommend() {
             <div class="reco-title">${r.business_name}</div>
             <div class="reco-sub">${copy.client}: <b>${r.client_name}</b>${r.date ? ' · ' + formatShortDate(r.date) : ''}</div>
           </div>
-          <div class="status-badge ${statusText.cls}">${statusText.text}</div>
+          <div style="display:flex;align-items:center;gap:6px;">${outDirBadge}<div class="status-badge ${statusText.cls}">${statusText.text}</div></div>
         </div>
         <div class="reco-meta">
           ${rewardLine}
