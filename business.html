@@ -1711,6 +1711,8 @@ async function init() {
       showApp();
       renderAll();
       setDealsSegment('incoming');
+      const _fixedBtn = document.getElementById('fixedRecommendBtn');
+      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
       await loadPreservedAgentDashboard();
       renderAll();
@@ -1737,17 +1739,23 @@ async function init() {
       if (!cached) showApp();
       renderAll();
       setDealsSegment('incoming');
+      const _fixedBtn = document.getElementById('fixedRecommendBtn');
+      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else if (cached) {
       // Data unchanged — make sure app is shown
       if (document.getElementById('globalLoader').style.display !== 'none') showApp();
       renderAll();
       setDealsSegment('incoming');
+      const _fixedBtn = document.getElementById('fixedRecommendBtn');
+      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     } else {
       showApp();
       renderAll();
       setDealsSegment('incoming');
+      const _fixedBtn = document.getElementById('fixedRecommendBtn');
+      if (_fixedBtn) _fixedBtn.style.display = 'block';
       switchTab(currentTab, document.querySelector(`.nav-item[data-tab="${currentTab}"]`));
     }
   } catch(e) {
@@ -3564,7 +3572,16 @@ function renderRecommend() {
     return;
   }
 
-  const rows = normalizeOutgoingRecommendations();
+  let rows = normalizeOutgoingRecommendations();
+  if (dealsSegment === 'history') {
+    rows = rows.filter(r => ['closed','completed','done','rejected'].includes(
+      String(r.status || '').toLowerCase()
+    ));
+  } else if (dealsSegment === 'outgoing') {
+    rows = rows.filter(r => !['closed','completed','done','rejected'].includes(
+      String(r.status || '').toLowerCase()
+    ));
+  }
   recommendationRows = rows;
   const metrics = getOutgoingRecommendMetrics(rows);
   document.getElementById('t_rec_mode_title').textContent = copy.outgoingHero;
