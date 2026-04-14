@@ -564,12 +564,8 @@
         <button class="seg-tab active" id="recTabIncoming" onclick="setRecommendMode('incoming')">Входящие</button>
         <button class="seg-tab" id="recTabOutgoing" onclick="setRecommendMode('outgoing')">Исходящие</button>
       </div>
-      <div class="cta-block">
-        <h3 id="t_rec_mode_title">Здесь все клиенты, которых порекомендовали вам.</h3>
-        <button class="btn-primary btn-accent" onclick="handleRecommendMainAction()">
-          <span id="t_rec_btn_label">Открыть сделки</span>
-        </button>
-      </div>
+      <div id="t_rec_mode_title" style="display:none;"></div>
+      <div id="t_rec_btn_label" style="display:none;"></div>
       <div class="sec-title" style="margin-top:4px;" id="t_rec_list_title">Входящие клиенты</div>
       <div id="recommendListLegacy"></div>
     </div>
@@ -1954,11 +1950,13 @@ function setDealsSegment(seg) {
     if (summaryMount) summaryMount.style.display = 'none';
     if (promoMount) promoMount.style.display = 'none';
     dealFilter = 'history';
-    recommendMode = 'incoming';
+    recommendMode = 'outgoing';
     renderDeals();
     renderRecommend();
     updateDealsStats('history');
   }
+  const _fb = document.getElementById('fixedRecommendBtn');
+  if (_fb) _fb.style.display = 'block';
 }
 
 function updateDealsStats(seg) {
@@ -2060,6 +2058,7 @@ function getDealStatusCodes(deal) {
 }
 
 function getActiveDealsPromoHtml() {
+  return '';
   const promoBtn = {
     ru:'\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u043e\u0432\u0430\u0442\u044c\n\u0431\u0438\u0437\u043d\u0435\u0441',
     he:'\u05dc\u05d4\u05de\u05dc\u05d9\u05e5\n\u05e2\u05dc \u05e2\u05e1\u05e7',
@@ -2859,6 +2858,11 @@ function toggleDealExtra(id) {
   el.classList.toggle('open');
   try { feather.replace(); } catch(e) {}
 }
+function toggleRecoExtra(id) {
+  const el = document.getElementById('reco-extra-' + id);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
 function toggleRecommenderExtra(id) {
   const el = document.getElementById('reco_extra_' + id);
   if (!el) return;
@@ -3599,7 +3603,14 @@ function renderRecommend() {
     return;
   }
 
+  const detailLabels = {
+    client: { ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' },
+    date: { ru:'Дата', he:'תאריך', en:'Date', ar:'التاريخ' },
+    amount: { ru:'Сумма', he:'סכום', en:'Amount', ar:'المبلغ' },
+    status: { ru:'Статус', he:'סטטוס', en:'Status', ar:'الحالة' }
+  };
   listEl.innerHTML = rows.map((r, idx) => {
+    const recoId = r.action_deal_id ?? r.id ?? r.deal_id ?? r.lead_id ?? idx;
     const closedMeta = ['closed', 'completed', 'done'].includes(String(r.status || '').trim().toLowerCase())
       ? getUnifiedClosedDealMeta(r)
       : null;
@@ -3611,8 +3622,16 @@ function renderRecommend() {
     const decisionLine = closedMeta
       ? `<span class="meta-pill">${closedMeta.resultText}</span>`
       : (r.decision ? `<span class="meta-pill">${formatDecision(r.decision, L)}</span>` : '');
+    const detailAmountSource = r.amount ?? r.deal_amount ?? r.reward;
+    const detailAmount = detailAmountSource != null && String(detailAmountSource).trim() !== ''
+      ? formatRecommendMetric(detailAmountSource, curr)
+      : '—';
+    const recoDomId = String(recoId).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const cardClick = dealsSegment === 'history'
+      ? `toggleRecoExtra('${recoDomId}')`
+      : `openRecommendDetail(${idx})`;
     return `
-      <div class="reco-card" onclick="openRecommendDetail(${idx})">
+      <div class="reco-card" onclick="${cardClick}">
         <div class="reco-top">
           <div>
             <div class="reco-title">${r.business_name}</div>
@@ -3623,6 +3642,14 @@ function renderRecommend() {
         <div class="reco-meta">
           ${rewardLine}
           ${decisionLine}
+        </div>
+        <div id="reco-extra-${recoDomId}" class="deal-extra" style="display:none;">
+          <div class="deal-inline-meta">
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.client[lang] || detailLabels.client.ru}</div><div class="deal-mini-val">${r.client_name || '—'}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.date[lang] || detailLabels.date.ru}</div><div class="deal-mini-val">${r.date ? formatShortDate(r.date) : '—'}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.amount[lang] || detailLabels.amount.ru}</div><div class="deal-mini-val">${detailAmount}</div></div>
+            <div class="deal-mini-box"><div class="deal-mini-lbl">${detailLabels.status[lang] || detailLabels.status.ru}</div><div class="deal-mini-val">${statusText.text}</div></div>
+          </div>
         </div>
       </div>`;
   }).join('');
