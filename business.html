@@ -2835,7 +2835,7 @@ function toggleDealExtra(id) {
 function toggleRecoExtra(id) {
   const el = document.getElementById('reco-extra-' + id);
   if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
   try { feather.replace(); } catch(e) {}
 }
 function toggleRecommenderExtra(id) {
@@ -3602,9 +3602,12 @@ function renderRecommend() {
       ? formatRecommendMetric(detailAmountSource, curr)
       : '—';
     const recoDomId = String(recoId).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const _st = String(r.status || '').trim().toLowerCase();
     const nextStepText = closedMeta
       ? closedMeta.resultText
-      : ({ru:'Нужно завершить или отклонить',he:'צריך לסגור או לדחות',en:'Need to complete or reject',ar:'يجب إتمامه أو رفضه'}[lang] || 'Need to complete or reject');
+      : (['pending_confirmation','awaiting_reward','pending_receipt'].includes(_st)
+        ? ({ru:'Нужно выбрать способ расчёта',he:'צריך לבחור דרך סגירה',en:'Choose settlement method',ar:'يجب اختيار طريقة التسوية'}[lang] || 'Choose settlement method')
+        : ({ru:'Ждём завершения сделки',he:'ממתינים לסיום העסקה',en:'Waiting for deal completion',ar:'في انتظار إتمام الصفقة'}[lang] || 'Waiting for deal completion'));
     const nextStepToneOut = closedMeta ? 'success' : (statusText.cls === 'st-pending' ? 'warning' : 'default');
     const toneClass = statusText.cls === 'st-pending' ? ' pending' : '';
     const rewardVal = r.reward ? `${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}` : '—';
