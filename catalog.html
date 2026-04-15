@@ -159,7 +159,6 @@
       <div class="rec-desc" id="inviteDescValue" style="border:none;padding-top:0;"></div>
     </div>
     <div class="instruction-block">
-      <div class="share-trust-note" id="t_invite_trust"><strong>Доверие:</strong> приглашайте сюда только тот бизнес, который готовы рекомендовать от своего имени.</div>
       <div class="instruction-text" id="t_copy_link_inv"></div>
       <div class="link-box">
         <input type="text" id="inviteLinkInput" class="link-input" readonly>
@@ -318,8 +317,8 @@ const CLEAN_CATALOG_I18N={
     invite_btn_1:'Если нужного бизнеса нет,',
     invite_btn_2:'и вы хотите его рекомендовать,',
     invite_btn_3:'пригласите его в Win-Win',
-    invite_title:'Пригласите их в Win-Win',
-    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить в Win-Win сильный бизнес, которому можно доверять.',
+    invite_title:'Приглашение в Win-Win',
+    invite_desc:'Поделитесь этой ссылкой, чтобы пригласить в Win-Win бизнес, которому можно доверять.',
     invite_trust:'<strong>Доверие:</strong> приглашайте сюда только тот бизнес, который готовы рекомендовать от своего имени.',
     invite_copy_link:'Скопируйте и отправьте эту ссылку:',
     invite_scan_qr:'Или дайте отсканировать QR-код:',
@@ -352,8 +351,8 @@ const CLEAN_CATALOG_I18N={
     invite_btn_1:"If the business isn't here,",
     invite_btn_2:'and you want to recommend it',
     invite_btn_3:'Invite them to Win-Win',
-    invite_title:'Invite them to Win-Win',
-    invite_desc:'Share this link to invite a strong business you trust into Win-Win.',
+    invite_title:'Invitation to Win-Win',
+    invite_desc:'Share this link to invite a business you trust into Win-Win.',
     invite_trust:'<strong>Trust:</strong> invite only the business you are willing to recommend in your own name.',
     invite_copy_link:'Copy and send this link:',
     invite_scan_qr:'Or let them scan the QR code:',
@@ -386,8 +385,8 @@ const CLEAN_CATALOG_I18N={
     invite_btn_1:'אם העסק לא כאן,',
     invite_btn_2:'ואתה רוצה להמליץ עליו',
     invite_btn_3:'הזמינו אותו ל-Win-Win',
-    invite_title:'הזמינו אותם ל-Win-Win',
-    invite_desc:'שתפו את הקישור כדי להזמין ל-Win-Win עסק חזק שאפשר לסמוך עליו.',
+    invite_title:'הזמנה ל-Win-Win',
+    invite_desc:'שתפו את הקישור כדי להזמין ל-Win-Win עסק שאפשר לסמוך עליו.',
     invite_trust:'<strong>אמון:</strong> הזמינו לכאן רק עסק שאתם מוכנים להמליץ עליו בשמכם.',
     invite_copy_link:'העתיקו ושלחו את הקישור הזה:',
     invite_scan_qr:'או תנו לסרוק את קוד ה-QR:',
@@ -420,8 +419,8 @@ const CLEAN_CATALOG_I18N={
     invite_btn_1:'إذا لم يكن العمل موجوداً بعد،',
     invite_btn_2:'وأردت أن توصي به،',
     invite_btn_3:'فادعه إلى Win-Win',
-    invite_title:'ادعهم إلى Win-Win',
-    invite_desc:'شارك هذا الرابط لدعوة عمل قوي تثق به إلى Win-Win.',
+    invite_title:'دعوة إلى Win-Win',
+    invite_desc:'شارك هذا الرابط لدعوة عمل تثق به إلى Win-Win.',
     invite_trust:'<strong>الثقة:</strong> ادعُ إلى هنا فقط العمل الذي أنت مستعد للتوصية به باسمك.',
     invite_copy_link:'انسخ وأرسل هذا الرابط:',
     invite_scan_qr:'أو دعهم يمسحون رمز QR:',
@@ -451,7 +450,6 @@ function applyI18n(){
   document.getElementById('t_invite_btn_3').textContent=t.invite_btn_3;
   document.getElementById('inviteTitleValue').textContent=t.invite_title;
   document.getElementById('inviteDescValue').textContent=t.invite_desc;
-  document.getElementById('t_invite_trust').innerHTML=t.invite_trust;
   document.getElementById('t_copy_link_inv').textContent=t.invite_copy_link;
   document.getElementById('t_scan_qr_inv').textContent=t.invite_scan_qr;
   document.getElementById('t_btn_back_invite').textContent=t.btn_back_invite;
