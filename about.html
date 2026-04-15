@@ -22,6 +22,7 @@
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+    html { overflow-x: hidden; }
     body { background: var(--bg-1); color: #fff; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
     
     [dir="rtl"] { text-align: right; }
@@ -140,7 +141,7 @@
     .steps-section h2 { text-align: center; font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 24px; color: var(--accent-1); }
     .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .step-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; }
-    .step-num { font-size: 2.5rem; font-weight: 900; color: var(--accent-1); opacity: 0.25; line-height: 1; margin-bottom: 8px; }
+    .step-num { font-size: 2.5rem; font-weight: 900; color: var(--accent-1); line-height: 1; margin-bottom: 8px; }
     .step-text { color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; }
     /* FAQ */
     .faq-section { margin-bottom: 48px; }
