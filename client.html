@@ -333,6 +333,12 @@
         transition-duration: 0.01ms !important;
       }
     }
+  @property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  @keyframes spin-border-how { to { --a: 360deg; } }
+  .btn-how-outer { display: inline-block; border-radius: 999px; padding: 1.5px; background: conic-gradient(from var(--a), rgba(108,99,255,0.08) 0%, rgba(108,99,255,0.08) 40%, #6c63ff 50%, #00d4aa 57%, rgba(108,99,255,0.08) 67%, rgba(108,99,255,0.08) 100%); animation: spin-border-how 2.5s linear infinite; }
+  .btn-how-inner { display: inline-flex; align-items: center; padding: 11px 24px; border-radius: 999px; background: #1a1a2e; color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; white-space: nowrap; text-decoration: none; cursor: pointer; border: none; transition: color 0.2s; }
+  .btn-how-inner:hover { color: rgba(255,255,255,0.85); }
+  .btn-how-wrap { text-align: center; margin: 14px 0 4px; }
   </style>
 </head>
 <body>
@@ -353,6 +359,12 @@
           via <span>Win-Win</span> Network
         </div>
       </header>
+
+      <div class="btn-how-wrap">
+        <div class="btn-how-outer">
+          <a class="btn-how-inner" id="btnHowItWorks" href="https://winwinnetwork.pro/about.html?lang=ru&back=1">Как это работает?</a>
+        </div>
+      </div>
 
       <section class="hero">
         <p class="hero-slogan" id="slogan">Здесь выигрывают все</p>
@@ -579,6 +591,13 @@
     });
 
     applyLang(lang);
+    (function() {
+      var btnHow = document.getElementById('btnHowItWorks');
+      if (!btnHow) return;
+      var howLabels = { ru: 'Как это работает?', he: 'איך זה עובד?', en: 'How does it work?', ar: 'كيف يعمل؟' };
+      btnHow.textContent = howLabels[lang] || howLabels.ru;
+      btnHow.href = 'https://winwinnetwork.pro/about.html?lang=' + lang + '&back=1';
+    })();
 
   })();
   </script>

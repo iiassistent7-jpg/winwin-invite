@@ -135,6 +135,30 @@
     .btn-main { display: inline-flex; align-items: center; justify-content: center; padding: 16px 40px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #fff; text-decoration: none; font-size: 1.1rem; font-weight: 700; border-radius: 999px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3); cursor: pointer; border: none; }
     .btn-main:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(108, 99, 255, 0.5); }
 
+    /* Steps */
+    .steps-section { margin-bottom: 48px; }
+    .steps-section h2 { text-align: center; font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 24px; color: var(--accent-1); }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .step-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; }
+    .step-num { font-size: 2.5rem; font-weight: 900; color: var(--accent-1); opacity: 0.25; line-height: 1; margin-bottom: 8px; }
+    .step-text { color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; }
+    /* FAQ */
+    .faq-section { margin-bottom: 48px; }
+    .faq-section h2 { text-align: center; font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 24px; color: var(--accent-1); }
+    .faq-list { display: flex; flex-direction: column; gap: 10px; }
+    .faq-item { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; }
+    .faq-q { width: 100%; background: none; border: none; color: #fff; font-size: 0.95rem; font-weight: 700; padding: 18px 20px; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; line-height: 1.4; }
+    [dir="rtl"] .faq-q { text-align: right; }
+    .faq-q .faq-arrow { flex-shrink: 0; transition: transform 0.25s; font-size: 0.85rem; color: var(--accent-1); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-item.open .faq-a { max-height: 500px; }
+    .faq-a-inner { padding: 0 20px 18px 20px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; }
+    /* Back button */
+    .back-btn-wrap { text-align: center; padding: 16px 0 0 0; display: flex; justify-content: center; }
+    .back-btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 40px; border-radius: 999px; border: none; cursor: pointer; background: linear-gradient(135deg, #6c63ff, #00d4aa); color: #fff; font-size: 1.1rem; font-weight: 700; box-shadow: 0 10px 30px rgba(108,99,255,0.3); text-decoration: none; transition: 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; }
+    .back-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(108,99,255,0.5); }
+
     @media (max-width: 768px) {
       .container { padding: 0 16px; }
       .glass-block, .roles-grid { padding: 24px 16px; }
@@ -181,6 +205,16 @@
 
       <div id="t_hero_sub_block" class="hero-desc-block"></div>
 
+    </section>
+
+    <section class="steps-section">
+      <h2 id="t_steps_title"></h2>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">1</div><div class="step-text" id="t_step1"></div></div>
+        <div class="step-card"><div class="step-num">2</div><div class="step-text" id="t_step2"></div></div>
+        <div class="step-card"><div class="step-num">3</div><div class="step-text" id="t_step3"></div></div>
+        <div class="step-card"><div class="step-num">4</div><div class="step-text" id="t_step4"></div></div>
+      </div>
     </section>
 
     <section id="about">
@@ -298,9 +332,17 @@
       </div>
     </section>
 
+    <section class="faq-section">
+      <h2 id="t_faq_title"></h2>
+      <div class="faq-list" id="faqList"></div>
+    </section>
+
     <section class="cta">
       <h2 id="t_cta_title">Станьте частью экосистемы</h2>
       <a href="https://winwinnetwork.pro/" class="btn-main" id="t_btn_join">Присоединиться к Win-Win</a>
+      <div class="back-btn-wrap" id="backBtnWrap" style="display:none;">
+        <a href="javascript:history.back()" class="back-btn" id="t_btn_back">← Вернуться</a>
+      </div>
     </section>
 
   </div>
@@ -371,7 +413,27 @@
         p3_li4: "Эксклюзив: Доступ к топу агентов", 
         
         cta_title: "Станьте частью экосистемы",
-        btn_join: "Присоединиться к Win-Win"
+        btn_join: "Присоединиться к Win-Win",
+        btn_back: "← Вернуться",
+        steps_title: "Как это работает",
+        step1: "Вы рекомендуете знакомому бизнес, которому сами реально доверяете.",
+        step2: "Знакомый переходит по вашей ссылке, записывается и приходит как новый клиент.",
+        step3: "Если он действительно получает услугу и оплачивает её, сделка закрывается в системе.",
+        step4: "Бизнес благодарит вас бонусом напрямую, а вы решаете: забрать его себе, подарить клиенту или поддержать бизнес.",
+        faq_title: "Частые вопросы",
+        faq: [
+          { q: "Как сделать рекомендацию?", a: "Вы выбираете бизнес, копируете свою ссылку и отправляете её человеку, которому хотите его посоветовать. Если человек приходит по вашей ссылке как новый клиент, рекомендация фиксируется в системе. Дальше вы просто следите за статусом сделки в кабинете." },
+          { q: "Когда и как я получу бонус?", a: "Бонус появляется только после того, как новый клиент реально пришёл и оплатил услугу. Бизнес переводит его вам напрямую тем способом, который указан у него в карточке. Например: сделка 1000₪, бонус 8% — вы получаете 80₪." },
+          { q: "Кто устанавливает размер и форму вознаграждения?", a: "Размер и формат вознаграждения бизнес устанавливает заранее сам. Это может быть процент от сделки, фиксированная сумма или другой понятный вариант. Вы видите эти условия до рекомендации и заранее понимаете, за что и в каком формате вас могут отблагодарить." },
+          { q: "Что можно сделать с бонусом от бизнеса?", a: "После успешной сделки вы сами решаете, что делать с благодарностью. Можно забрать бонус себе, подарить его клиенту как скидку, либо поддержать бизнес и отказаться от выплаты. Решение остаётся за вами." },
+          { q: "Клиент платит больше из-за моей рекомендации?", a: "Нет. Смысл платформы не в том, чтобы накрутить цену другу, а в том, чтобы бизнес честно отблагодарил за нового клиента после реальной сделки. Клиент платит обычную цену, если сам бизнес не решил отдельно дать ему бонус или скидку." },
+          { q: "Сколько реально можно зарабатывать?", a: "Это зависит от ниши, чека и размера бонуса. Где-то это 50–100₪ за рекомендацию, а где-то — несколько сотен шекелей. Платформа не ставит потолок: всё зависит от того, кого и как часто вы рекомендуете." },
+          { q: "Что если бизнес не выплатит бонус?", a: "Платформа не держит деньги, но фиксирует сделку и показывает, была выплата или нет. Если бизнес системно не выполняет обещания, это влияет на его репутацию внутри Win-Win. Тихо исчезнуть не получится." },
+          { q: "Платформа берёт комиссию с агента?", a: "Нет. Для рекомендателя платформа бесплатна. Вы получаете бонус напрямую от бизнеса, без удержаний со стороны Win-Win." },
+          { q: "Что если клиент в итоге не пришёл?", a: "Тогда бонуса не будет, потому что реальной сделки не произошло. Win-Win учитывает только завершённые сделки с фактической оплатой. Это честно и для бизнеса, и для рекомендателя." },
+          { q: "Как войти в свой кабинет?", a: "Обычно вход происходит по личной ссылке через WhatsApp или Telegram — без длинной регистрации и лишних паролей. Если ссылка истекла, запросите новую через мессенджер. Если что-то непонятно — ИИ-помощник Винс отвечает 24/7." },
+          { q: "Это законно в Израиле?", a: "В целом да, если всё прозрачно: есть реальный клиент, реальная сделка и понятный бонус от бизнеса. Налоги и правила конкретной сферы никто не отменял, поэтому в спорных случаях лучше уточнить у бухгалтера или юриста." }
+        ]
       },
       en: {
         tagline: "Mutual recommendation platform.<br><strong>Everyone wins here!</strong>",
@@ -427,7 +489,27 @@
         p3_li4: "Exclusive: Access to Top Referrers", 
         
         cta_title: "Join the ecosystem",
-        btn_join: "Join Win-Win"
+        btn_join: "Join Win-Win",
+        btn_back: "← Return",
+        steps_title: "How it works",
+        step1: "You recommend a business you genuinely trust to someone you know.",
+        step2: "They open your link, book, and arrive as a new client.",
+        step3: "If they actually receive the service and pay, the deal is marked as completed in the system.",
+        step4: "The business rewards you directly, and you choose: keep it, pass it to the client, or support the business.",
+        faq_title: "Frequently asked questions",
+        faq: [
+          { q: "How do I make a recommendation?", a: "Choose a business, copy your personal link, and send it to someone you want to recommend that business to. If they come through your link as a new client, the recommendation is recorded in the system. After that, you can follow the deal status in your account." },
+          { q: "When and how do I get my bonus?", a: "Your bonus is triggered only after the new client actually comes and pays. The business pays you directly using the payout method shown in its card. Example: deal is 1000₪, bonus is 8% — you receive 80₪." },
+          { q: "Who decides the reward amount and format?", a: "The business sets the reward amount and format in advance. It may be a percentage of the deal, a fixed sum, or another clear type of reward. You see these terms before making a recommendation, so you know what to expect." },
+          { q: "What can I do with the bonus from the business?", a: "After a successful deal, you decide what to do with the reward. You can keep it, turn it into a discount or gift for the client, or support the business and waive it. The choice stays in your hands." },
+          { q: "Does the client pay more because of my recommendation?", a: "No. The point is not to increase your friend's price, but to let the business fairly thank you for bringing a real new client. The client pays the regular price unless the business itself chooses to offer them a discount." },
+          { q: "How much can I realistically earn?", a: "It depends on the niche, the deal size, and the bonus amount. In some cases it may be 50–100₪ per referral, in others a few hundred shekels. The platform sets no ceiling." },
+          { q: "What if the business doesn't pay the bonus?", a: "The platform doesn't hold the money, but it records the deal and whether the payout happened. If a business repeatedly fails to pay, that affects its standing inside Win-Win. It can't quietly do this without leaving a trace." },
+          { q: "Does the platform take a commission from the agent?", a: "No. The platform is free for recommenders. You receive the reward directly from the business, with no deduction by Win-Win." },
+          { q: "What if the client never shows up?", a: "Then there is no bonus, because no real deal happened. Win-Win only counts completed deals with actual payment. That keeps the system fair for both sides." },
+          { q: "How do I log in to my account?", a: "Usually you enter through your personal link via WhatsApp or Telegram, without a long signup or extra passwords. If the link has expired, request a new one through the messenger. Vince — the AI assistant — is available 24/7." },
+          { q: "Is this legal in Israel?", a: "In general, yes — as long as everything is transparent: a real client, a real deal, and a clearly defined reward. Taxes and profession-specific rules still apply, so in sensitive cases check with an accountant or lawyer." }
+        ]
       },
       he: {
         tagline: "פלטפורמת המלצות הדדיות.<br><strong>כאן כולם מרוויחים!</strong>",
@@ -491,7 +573,27 @@
         p3_li4: "בלעדי: גישה לטופ הממליצים", 
         
         cta_title: "הפכו לחלק מהמערכת האקולוגית",
-        btn_join: "הצטרף ל-Win-Win"
+        btn_join: "הצטרף ל-Win-Win",
+        btn_back: "→ חזרה למערכת",
+        steps_title: "איך זה עובד",
+        step1: "אתם ממליצים למישהו על עסק שאתם באמת סומכים עליו.",
+        step2: "הוא נכנס דרך הקישור שלכם, קובע ומגיע כלקוח חדש.",
+        step3: "אם הוא באמת מקבל שירות ומשלם, העסקה נסגרת במערכת.",
+        step4: "העסק מתגמל אתכם ישירות, ואתם בוחרים: לקחת לעצמכם, להעביר ללקוח או לפרגן לעסק.",
+        faq_title: "שאלות נפוצות",
+        faq: [
+          { q: "איך עושים המלצה?", a: "בוחרים עסק, מעתיקים את הקישור האישי שלכם ושולחים למישהו שאתם רוצים להמליץ לו עליו. אם אותו אדם מגיע דרך הקישור כלקוח חדש, ההמלצה נרשמת במערכת. משם אפשר לעקוב אחרי הסטטוס באזור האישי." },
+          { q: "מתי ואיך אקבל את הבונוס?", a: "הבונוס נפתח רק אחרי שלקוח חדש באמת הגיע ושילם על השירות. העסק מעביר לכם את התגמול ישירות לפי דרך התשלום שמופיעה בכרטיס העסק. לדוגמה: עסקה של 1000₪ עם בונוס של 8% = קיבלתם 80₪." },
+          { q: "מי קובע את גובה ואופן התגמול?", a: "העסק עצמו קובע מראש את גובה התגמול ואת הצורה שבה הוא יינתן. זה יכול להיות אחוז מהעסקה, סכום קבוע או צורת תגמול אחרת וברורה. אתם רואים את התנאים האלה מראש, עוד לפני ההמלצה." },
+          { q: "מה אפשר לעשות עם הבונוס מהעסק?", a: "אחרי עסקה מוצלחת, אתם מחליטים מה לעשות עם התגמול. אפשר לקחת את הבונוס לעצמכם, להעביר אותו ללקוח כהטבה או הנחה, או לפרגן לעסק ולוותר עליו. הבחירה נשארת בידיים שלכם." },
+          { q: "האם הלקוח משלם יותר בגלל ההמלצה שלי?", a: "לא. הרעיון הוא לא להעלות מחיר ללקוח, אלא לאפשר לעסק להודות לכם על לקוח חדש אחרי עסקה אמיתית. הלקוח משלם את המחיר הרגיל של העסק, אלא אם העסק עצמו בחר לתת לו הטבה." },
+          { q: "כמה באמת אפשר להרוויח?", a: "זה תלוי בתחום, בגובה העסקה ובבונוס שהעסק מציע. לפעמים זה 50–100₪ על המלצה, ולפעמים כמה מאות שקלים. אין פה תקרה מצד הפלטפורמה." },
+          { q: "מה קורה אם העסק לא משלם את הבונוס?", a: "הפלטפורמה לא מחזיקה את הכסף, אבל כן מתעדת את העסקה ואת מצב התשלום. אם עסק שוב ושוב לא עומד בהתחייבויות שלו, זה פוגע באמינות שלו בתוך Win-Win." },
+          { q: "האם הפלטפורמה לוקחת עמלה מהממליץ?", a: "לא. לממליצים השימוש בפלטפורמה הוא בחינם. אתם מקבלים את הבונוס ישירות מהעסק, בלי קיזוז מצד Win-Win." },
+          { q: "מה אם הלקוח בסוף לא הגיע?", a: "במקרה כזה לא נוצר בונוס, כי לא הייתה עסקה אמיתית. Win-Win מתייחסת רק לעסקאות שנסגרו בפועל עם תשלום. זה הוגן גם לעסק וגם לממליץ." },
+          { q: "איך נכנסים לאזור האישי?", a: "בדרך כלל נכנסים דרך קישור אישי ב-WhatsApp או ב-Telegram, בלי הרשמה מסובכת ובלי סיסמאות מיותרות. אם הקישור פג, אפשר לבקש חדש דרך המסנג׳ר. ואם משהו לא ברור, וינס — עוזר ה-AI — זמין 24/7." },
+          { q: "האם זה חוקי בישראל?", a: "בדרך כלל כן, כל עוד הכול שקוף: יש לקוח אמיתי, עסקה אמיתית ותגמול ברור מהעסק. מסים וכללים מסוימים עדיין חלים, ולכן במקרים רגישים כדאי לבדוק עם רואה חשבון או עורך דין." }
+        ]
       },
       ar: {
         tagline: "منصة التوصيات المتبادلة.<br><strong>هنا الجميع يربح!</strong>",
@@ -502,13 +604,13 @@
         excl_title: "هذا المكان ليس للجميع",
         excl_text: "<p>تم إنشاء المنصة حصريًا لأصحاب المنتجات أو الخدمات العالية الجودة.</p><p>إذا كان عملك 10/10، سيرغب العملاء في التوصية بك.</p><p>علّمهم القيام بذلك هنا، وسيفعلون ذلك بكل سرور.</p><p>لا مكان للرداءة هنا.</p>",
         role_agent_t: "عميل راضٍ (موصي)",
-        role_agent_d: "<p>تعرف خبيراً؟</p><p>أرسل رابطاً أو اعرض رمز QR.</p><p>عند إتمام الصفقة، سيكافئك صاحب العمل.</p><p>يمكنك أخذ المكافأة، <span class='role-highlight'>أو إهداؤها كخصم لصديق</span>، أو التنازل <span class='role-highlight'>لدعم الشركة</span>.</p><p>إنها قصة مساعدة متبادلة.</p>",
+        role_agent_d: "<p>تعرف خبيراً؟</p><p>أرسل رابطاً أو اعرض رمز QR.</p><p>عند إتمام الصفقة، سيكافئك صاحب العمل.</p><p>يمكنك أخذ المكافأة، <span class='role-highlight'>أو إهداؤها كخصم لصديق</span>، أو التنازل <span class='role-highlight'>لدعم العمل</span>.</p><p>إنها قصة مساعدة متبادلة.</p>",
         role_biz_t: "صاحب العمل",
         role_biz_d: "<p>أكمل إعلاناتك بأقوى أداة — التسويق الشفهي الرقمي والشفاف.</p><p>يصبح عملاؤك سفراء لك في Win-Win.</p><p>تقدم مكافأة أو هدية <span class='role-highlight'>فقط عند إغلاق الصفقة بنجاح</span>، وتحدد أنت قيمتها.</p>",
         role_client_t: "العميل (الضيف)",
         role_client_d: "<p>لا مزيد من التخمين.</p><p>تدخل الشركات في كتالوجنا <span class='role-highlight'>فقط إذا أوصى بها أشخاص حقيقيون</span>.</p><p>القدوم من صديق يمنحك غالباً معاملة VIP ومكافآت.</p>",
         trust_title: "نحن لا نلمس أموالك",
-        trust_text: "<p>المنصة لا تمرر أموالك من خلالها.</p><p>تتم جميع المدفوعات والمكافآت مباشرة بين الشركة والعميل والموصي.</p><p>مهمتنا تزويدك بأداة مريحة لتتبع التوصيات. وضمانتنا هي الرقابة الصارمة.</p><p>من يخادع شريكه يفقد الوصول إلى الكتالوج للأبد.</p>",
+        trust_text: "<p>المنصة لا تمرر أموالك من خلالها.</p><p>تتم جميع المدفوعات والمكافآت مباشرة بين العمل والعميل والموصي.</p><p>مهمتنا تزويدك بأداة مريحة لتتبع التوصيات. وضمانتنا هي الرقابة الصارمة.</p><p>من يخادع شريكه يفقد الوصول إلى الكتالوج للأبد.</p>",
         f1_title: "تصنيف الأعمال الذكي",
         f1_desc: "<p>التصنيف مبني على الحقائق: الصفقات المغلقة.</p><p>توصيات أكثر = صفقات أكثر.</p><p>مما يجعل الشركة أكثر موثوقية وجاذبية لتوصيات جديدة.</p>",
         f2_title: "قاعة المشاهير",
@@ -547,7 +649,27 @@
         p3_li4: "حصري: الوصول لأفضل الموصين", 
         
         cta_title: "كن جزءاً من النظام البيئي",
-        btn_join: "الانضمام إلى Win-Win"
+        btn_join: "الانضمام إلى Win-Win",
+        btn_back: "→ رجوع للنظام",
+        steps_title: "كيف يعمل؟",
+        step1: "أنت توصي شخصًا تعرفه بعمل تثق فيه فعلاً.",
+        step2: "هو يفتح رابطك، يحجز، ويأتي كعميل جديد.",
+        step3: "إذا حصل فعلاً على الخدمة ودفع، تُغلق الصفقة في النظام.",
+        step4: "العمل يكافئك مباشرة، وأنت تقرر: تأخذها لنفسك، تعطيها للعميل، أو تدعم العمل.",
+        faq_title: "أسئلة شائعة",
+        faq: [
+          { q: "كيف أعمل توصية؟", a: "اختر عملاً، انسخ رابطك الشخصي وأرسله لشخص تريد أن توصي له به. إذا جاء من خلال رابطك كعميل جديد، يتم تسجيل التوصية في النظام. بعد ذلك يمكنك متابعة حالة الصفقة من حسابك." },
+          { q: "متى وكيف أحصل على المكافأة؟", a: "المكافأة تُفتح فقط بعد أن يأتي العميل الجديد فعلاً ويدفع. العمل يدفع لك مباشرة بالطريقة الظاهرة في بطاقة العمل. مثال: إذا كانت الصفقة 1000₪ والمكافأة 8%، فأنت تحصل على 80₪." },
+          { q: "من يحدد قيمة وشكل المكافأة؟", a: "العمل نفسه يحدد مسبقًا قيمة المكافأة وطريقتها. قد تكون نسبة من الصفقة، مبلغًا ثابتًا، أو أي شكل واضح آخر. أنت ترى هذه الشروط مسبقًا قبل أن تقوم بالتوصية." },
+          { q: "ماذا يمكنني أن أفعل بالمكافأة من العمل؟", a: "بعد صفقة ناجحة، أنت تقرر ماذا تفعل بالمكافأة. يمكنك أن تأخذها لنفسك، أو تحوّلها إلى هدية أو خصم للعميل، أو تدعم العمل وتتنازل عنها. القرار يبقى بيدك." },
+          { q: "هل يدفع العميل أكثر بسبب توصيتي؟", a: "لا. الفكرة ليست رفع السعر على صديقك، بل أن يشكرك العمل بشكل عادل على عميل جديد بعد صفقة حقيقية. العميل يدفع السعر العادي، إلا إذا قرر العمل بنفسه أن يمنحه خصمًا أو هدية." },
+          { q: "كم يمكنني أن أربح فعليًا؟", a: "هذا يعتمد على المجال، قيمة الصفقة، وحجم المكافأة. أحيانًا يكون المبلغ 50–100₪ على التوصية، وأحيانًا بضع مئات من الشواكل. المنصة لا تضع سقفًا." },
+          { q: "ماذا لو لم يدفع العمل المكافأة؟", a: "المنصة لا تحتفظ بالأموال، لكنها توثّق الصفقة وتُظهر هل تم الدفع أم لا. إذا كان العمل لا يفي بوعوده بشكل متكرر، فهذا يضر بمكانته داخل Win-Win." },
+          { q: "هل تأخذ المنصة عمولة من المُوصي؟", a: "لا. استخدام المنصة مجاني للمُوصين. أنت تحصل على المكافأة مباشرة من العمل من دون أي اقتطاع من Win-Win." },
+          { q: "ماذا لو أن العميل لم يأتِ في النهاية؟", a: "في هذه الحالة لا توجد مكافأة، لأن الصفقة لم تحدث فعليًا. Win-Win تحتسب فقط الصفقات المغلقة مع دفع حقيقي. هذا يحافظ على العدالة للعمل وللمُوصي معًا." },
+          { q: "كيف أدخل إلى حسابي؟", a: "عادةً الدخول يكون من خلال رابطك الشخصي عبر WhatsApp أو Telegram، من دون تسجيل طويل أو كلمات مرور زائدة. إذا انتهت صلاحية الرابط، يمكنك طلب رابط جديد عبر الماسنجر. وإذا كان هناك شيء غير واضح، فينس موجود 24/7." },
+          { q: "هل هذا قانوني في إسرائيل؟", a: "بشكل عام نعم، إذا كان كل شيء واضحًا وشفافًا: يوجد عميل حقيقي، وصفقة حقيقية، ومكافأة واضحة. الضرائب والقواعد الخاصة ما زالت قائمة، لذلك في الحالات الحساسة من الأفضل فحص الأمر مع محاسب أو محامٍ." }
+        ]
       }
     };
 
@@ -623,12 +745,42 @@
 
       document.getElementById('t_cta_title').textContent = L.cta_title;
       document.getElementById('t_btn_join').textContent = L.btn_join;
-      
-      // Ссылка ведет жестко на корень сайта
       document.getElementById('t_btn_join').href = "https://winwinnetwork.pro/?lang=" + lang;
+
+      document.getElementById('t_steps_title').textContent = L.steps_title;
+      document.getElementById('t_step1').textContent = L.step1;
+      document.getElementById('t_step2').textContent = L.step2;
+      document.getElementById('t_step3').textContent = L.step3;
+      document.getElementById('t_step4').textContent = L.step4;
+
+      document.getElementById('t_faq_title').textContent = L.faq_title;
+      const faqList = document.getElementById('faqList');
+      faqList.innerHTML = L.faq.map((item, i) => `
+        <div class="faq-item" id="faq_item_${i}">
+          <button class="faq-q" onclick="toggleFaq(${i})">
+            <span>${item.q}</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">${item.a}</div></div>
+        </div>`).join('');
+
+      const backWrap = document.getElementById('backBtnWrap');
+      const backBtn = document.getElementById('t_btn_back');
+      const joinBtn = document.getElementById('t_btn_join');
+      const joinTitle = document.getElementById('t_cta_title');
+      if (backBtn) backBtn.textContent = L.btn_back;
+      if (backWrap) backWrap.style.display = 'block';
+      if (joinBtn) joinBtn.style.display = 'none';
+      if (joinTitle) joinTitle.style.display = 'none';
     }
     
     // Парсим URL и устанавливаем нужный язык (по умолчанию русский)
+    function toggleFaq(i) {
+      const item = document.getElementById('faq_item_' + i);
+      if (!item) return;
+      item.classList.toggle('open');
+    }
+
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         let lang = urlParams.get('lang') || 'ru';

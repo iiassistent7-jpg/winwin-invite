@@ -358,6 +358,12 @@
     .role-card-icon { font-size:2.4rem; margin-bottom:10px; }
     .role-card-title { font-size:1rem; font-weight:800; color:var(--text-main); margin-bottom:4px; }
     .role-card-sub { font-size:0.78rem; color:var(--text-muted); line-height:1.4; }
+  @property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  @keyframes spin-border-how { to { --a: 360deg; } }
+  .btn-how-outer { display: inline-block; border-radius: 999px; padding: 1.5px; background: conic-gradient(from var(--a), rgba(108,99,255,0.08) 0%, rgba(108,99,255,0.08) 40%, #6c63ff 50%, #00d4aa 57%, rgba(108,99,255,0.08) 67%, rgba(108,99,255,0.08) 100%); animation: spin-border-how 2.5s linear infinite; }
+  .btn-how-inner { display: inline-flex; align-items: center; padding: 11px 24px; border-radius: 999px; background: #1a1a2e; color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; white-space: nowrap; text-decoration: none; cursor: pointer; border: none; transition: color 0.2s; }
+  .btn-how-inner:hover { color: rgba(255,255,255,0.85); }
+  .btn-how-wrap { text-align: center; margin: 14px 0 4px; }
   </style>
 </head>
 <body>
@@ -377,6 +383,12 @@
         <div class="page-slogan" id="pageSlogan">Здесь выигрывают все!</div>
         <div class="page-title" id="pageTitle">Регистрация</div>
       </header>
+
+      <div class="btn-how-wrap">
+        <div class="btn-how-outer">
+          <a class="btn-how-inner" id="btnHowItWorks" href="https://winwinnetwork.pro/about.html?lang=ru&back=1">Как это работает?</a>
+        </div>
+      </div>
 
       <!-- Выбор роли — только для invite-ссылок (без role= и receiver= в URL) -->
       <div class="role-selector" id="roleSelector">
@@ -614,6 +626,12 @@
         if (_csi) _csi.placeholder = _clientLabels.socialPh;
         document.getElementById("languageHidden").value = lang;
         document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang===lang));
+        var btnHow = document.getElementById("btnHowItWorks");
+        if (btnHow) {
+          var howLabels = { ru: 'Как это работает?', he: 'איך זה עובד?', en: 'How does it work?', ar: 'كيف يعمل؟' };
+          btnHow.textContent = howLabels[lang] || howLabels.ru;
+          btnHow.href = 'https://winwinnetwork.pro/about.html?lang=' + lang + '&back=1';
+        }
         // Карточки выбора роли
         const _RC = { ru:{selector:"Присоединиться как:",biz_title:"Владелец бизнеса",biz_sub:"Хочу увеличить базу клиентов",ag_title:"Довольный клиент",ag_sub:"Хочу рекомендовать"}, en:{selector:"Join as:",biz_title:"Business Owner",biz_sub:"I want more clients",ag_title:"Happy Client",ag_sub:"I want to recommend"}, he:{selector:"הצטרפו כ:",biz_title:"בעל עסק",biz_sub:"אני רוצה להגדיל את בסיס הלקוחות",ag_title:"לקוח מרוצה",ag_sub:"אני רוצה להמליץ"}, ar:{selector:"انضم كـ:",biz_title:"صاحب عمل",biz_sub:"أريد المزيد من العملاء",ag_title:"عميل سعيد",ag_sub:"أريد أن أوصي"} }[lang] || {selector:"Присоединиться как:",biz_title:"Владелец бизнеса",biz_sub:"Хочу увеличить базу клиентов",ag_title:"Довольный клиент",ag_sub:"Хочу рекомендовать"};
         const _rT=document.getElementById('roleSelectorTitle'); if(_rT) _rT.textContent=_RC.selector;
