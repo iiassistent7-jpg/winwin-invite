@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Win-Win · Визит</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #1a1a2e;
+      --border: rgba(255,255,255,0.1);
+      --text: #f0f0f0;
+      --text2: #a0a0b8;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); color: var(--text); font-family: Inter, sans-serif; min-height: 100vh; overflow-x: hidden; }
+    body { display: flex; justify-content: center; padding: 24px 16px 48px; }
+    .shell { width: 100%; max-width: 430px; }
+
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo-main { font-family: Sora, sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(90deg, var(--accent2), var(--accent)); -webkit-background-clip: text; color: transparent; line-height: 1; }
+    .logo-sub { letter-spacing: .45em; font-size: .74rem; color: var(--text2); font-weight: 800; margin-top: 4px; }
+
+    .biz-card { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 22px; margin-bottom: 14px; box-shadow: var(--shadow); }
+    .biz-name { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+    .biz-niche { display: inline-block; font-size: .75rem; color: var(--accent2); background: rgba(47,128,237,.1); padding: 4px 10px; border-radius: 7px; font-weight: 700; margin-bottom: 14px; line-height: 1.4; }
+    .biz-contact { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-contact { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 12px; font-size: .85rem; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: .2s; }
+    .btn-call { background: rgba(108,99,255,.15); color: var(--accent); border: 1px solid rgba(108,99,255,.3); }
+    .btn-wa   { background: rgba(37,211,102,.12); color: #25d366; border: 1px solid rgba(37,211,102,.3); }
+    .btn-tg   { background: rgba(41,182,246,.12); color: #29b6f6; border: 1px solid rgba(41,182,246,.3); }
+    .btn-contact:active { opacity: .75; }
+
+    .instruction-card { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 20px; margin-bottom: 14px; }
+    .link-box { display: flex; gap: 10px; align-items: center; }
+    .link-input { flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 11px; font-size: .8rem; outline: none; font-family: inherit; }
+    .btn-copy { flex-shrink: 0; background: var(--accent2); border: none; color: #fff; font-weight: 700; padding: 0 18px; height: 44px; border-radius: 11px; cursor: pointer; transition: .2s; white-space: nowrap; font-family: inherit; font-size: .85rem; }
+    .btn-copy.copied { background: #27ae60; }
+
+    .qr-section { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 20px; margin-bottom: 14px; }
+    .instruction-text { font-size: .88rem; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+    .instruction-text strong { color: var(--text); }
+    .qr-label { font-size: .82rem; color: var(--text2); text-align: center; margin-bottom: 14px; }
+    .qr-container { background: #fff; border-radius: 16px; display: block; text-align: center; padding: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+    .qr-container canvas { display: block; margin: 0 auto; }
+    .qr-validity { margin-top: 14px; font-size: .75rem; color: var(--text2); text-align: center; }
+
+    .loading { text-align: center; padding: 60px 20px; color: var(--text2); font-size: 1rem; }
+    .error-block { background: rgba(235,87,87,.1); border: 1px solid rgba(235,87,87,.3); border-radius: 16px; padding: 20px; text-align: center; color: #eb5757; font-size: .95rem; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="logo">
+    <div class="logo-main">Win-Win</div>
+    <div class="logo-sub">NETWORK</div>
+  </div>
+
+  <div id="loadingBlock" class="loading">⏳</div>
+  <div id="errorBlock" class="error-block" style="display:none;"></div>
+
+  <div id="mainBlock" style="display:none;">
+
+    <div class="biz-card">
+      <div class="biz-name" id="bizName">—</div>
+      <div class="biz-niche" id="bizNiche" style="display:none;"></div>
+      <div class="biz-contact" id="bizContact"></div>
+    </div>
+
+    <div class="instruction-card">
+      <div class="link-box">
+        <input type="text" id="visitLinkInput" class="link-input" readonly>
+        <button class="btn-copy" id="copyBtn" onclick="copyLink()">
+          <span id="copyBtnLabel"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="qr-section">
+      <div class="instruction-text" id="instructionText"></div>
+      <div class="qr-label" id="qrLabel"></div>
+      <div class="qr-container">
+        <canvas id="qrCanvas"></canvas>
+      </div>
+      <div class="qr-validity" id="qrValidity"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API_URL = 'https://amlatsa-bot-production.up.railway.app';
+const token = new URLSearchParams(location.search).get('token') || '';
+let lang = new URLSearchParams(location.search).get('lang') || 'ru';
+let visitData = null;
+
+const i18n = {
+  ru: {
+    title: 'Win-Win · Визит',
+    instruction: (biz) => `Когда придёт время воспользоваться услугами <strong>${biz}</strong> — покажите им этот QR-код или отправьте ссылку, чтобы бизнес увидел подробности вашей сделки.`,
+    qr_label: 'QR-код для бизнеса',
+    qr_validity: '⏱ Ссылка и QR-код действительны 90 дней',
+    copy: 'Скопировать',
+    copied: 'Скопировано ✓',
+    btn_call: '📞 Позвонить',
+    btn_wa: '💬 WhatsApp',
+    btn_tg: '✈️ Telegram',
+    error_expired: 'Ссылка недействительна или истекла.',
+    error_general: 'Не удалось загрузить данные. Попробуйте позже.',
+  },
+  he: {
+    title: 'Win-Win · ביקור',
+    instruction: (biz) => `כשיגיע הזמן להשתמש בשירותי <strong>${biz}</strong> — הראו להם את קוד ה-QR או שלחו את הקישור, כדי שהעסק יוכל לראות את פרטי העסקה שלכם.`,
+    qr_label: 'קוד QR לעסק',
+    qr_validity: '⏱ הקישור וקוד ה-QR בתוקף למשך 90 יום',
+    copy: 'העתק',
+    copied: 'הועתק ✓',
+    btn_call: '📞 התקשר',
+    btn_wa: '💬 WhatsApp',
+    btn_tg: '✈️ Telegram',
+    error_expired: 'הקישור אינו תקף או פג תוקפו.',
+    error_general: 'לא ניתן לטעון את הנתונים. נסה שוב מאוחר יותר.',
+  },
+  en: {
+    title: 'Win-Win · Visit',
+    instruction: (biz) => `When it's time to visit <strong>${biz}</strong> — show them this QR code or send the link so they can see your deal details.`,
+    qr_label: 'QR code for the business',
+    qr_validity: '⏱ Link and QR code are valid for 90 days',
+    copy: 'Copy',
+    copied: 'Copied ✓',
+    btn_call: '📞 Call',
+    btn_wa: '💬 WhatsApp',
+    btn_tg: '✈️ Telegram',
+    error_expired: 'This link is invalid or has expired.',
+    error_general: 'Failed to load data. Please try again later.',
+  },
+  ar: {
+    title: 'Win-Win · الزيارة',
+    instruction: (biz) => `عندما يحين وقت الاستفادة من خدمات <strong>${biz}</strong> — أظهر لهم رمز QR أو أرسل الرابط حتى يتمكن العمل من رؤية تفاصيل صفقتك.`,
+    qr_label: 'رمز QR للعمل',
+    qr_validity: '⏱ الرابط ورمز QR صالحان لمدة 90 يوماً',
+    copy: 'نسخ',
+    copied: 'تم النسخ ✓',
+    btn_call: '📞 اتصل',
+    btn_wa: '💬 واتساب',
+    btn_tg: '✈️ تيليغرام',
+    error_expired: 'الرابط غير صالح أو انتهت صلاحيته.',
+    error_general: 'فشل تحميل البيانات. حاول مرة أخرى لاحقاً.',
+  },
+};
+
+function L() { return i18n[lang] || i18n.ru; }
+
+function applyRTL() {
+  const rtl = (lang === 'he' || lang === 'ar');
+  document.documentElement.dir = rtl ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+}
+
+async function loadData() {
+  if (!token) { showError(L().error_expired); return; }
+  try {
+    const res = await fetch(`${API_URL}/api/client-visit?token=${encodeURIComponent(token)}`);
+    if (!res.ok) { showError(res.status === 401 ? L().error_expired : L().error_general); return; }
+    visitData = await res.json();
+    if (visitData.client_lang) { lang = visitData.client_lang; applyRTL(); }
+    render();
+  } catch(e) {
+    showError(L().error_general);
+  }
+}
+
+function render() {
+  const d = visitData;
+  const t = L();
+  document.title = t.title;
+
+  document.getElementById('bizName').textContent = d.biz_name || '—';
+
+  const nicheEl = document.getElementById('bizNiche');
+  if (d.biz_niche) { nicheEl.textContent = d.biz_niche; nicheEl.style.display = 'inline-block'; }
+
+  const contactEl = document.getElementById('bizContact');
+  contactEl.innerHTML = '';
+  if (d.biz_phone) {
+    const digits = d.biz_phone.replace(/\D/g, '');
+    const callBtn = document.createElement('a');
+    callBtn.href = `tel:+${digits}`;
+    callBtn.className = 'btn-contact btn-call';
+    callBtn.textContent = t.btn_call;
+    contactEl.appendChild(callBtn);
+
+    if (d.biz_channel === 'telegram') {
+      const tgBtn = document.createElement('a');
+      tgBtn.href = 'https://t.me/winwin_lead_bot';
+      tgBtn.target = '_blank';
+      tgBtn.rel = 'noopener noreferrer';
+      tgBtn.className = 'btn-contact btn-tg';
+      tgBtn.textContent = t.btn_tg;
+      contactEl.appendChild(tgBtn);
+    } else {
+      const waBtn = document.createElement('a');
+      waBtn.href = `https://wa.me/${digits}`;
+      waBtn.target = '_blank';
+      waBtn.rel = 'noopener noreferrer';
+      waBtn.className = 'btn-contact btn-wa';
+      waBtn.textContent = t.btn_wa;
+      contactEl.appendChild(waBtn);
+    }
+  }
+
+  const deepLink = d.biz_deep_link || d.visit_url || location.href;
+  document.getElementById('visitLinkInput').value = deepLink;
+  document.getElementById('copyBtnLabel').textContent = t.copy;
+  document.getElementById('instructionText').innerHTML = t.instruction(d.biz_name || '—');
+  document.getElementById('qrLabel').textContent = t.qr_label;
+  document.getElementById('qrValidity').textContent = t.qr_validity;
+
+  new QRious({
+    element: document.getElementById('qrCanvas'),
+    value: deepLink,
+    size: 220,
+    background: '#ffffff',
+    foreground: '#0d0d1a',
+    padding: 0,
+    level: 'M',
+  });
+
+  document.getElementById('loadingBlock').style.display = 'none';
+  document.getElementById('mainBlock').style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('loadingBlock').style.display = 'none';
+  const eb = document.getElementById('errorBlock');
+  eb.textContent = msg;
+  eb.style.display = 'block';
+}
+
+function copyLink() {
+  const input = document.getElementById('visitLinkInput');
+  const btn = document.getElementById('copyBtn');
+  const label = document.getElementById('copyBtnLabel');
+  const t = L();
+  navigator.clipboard.writeText(input.value).catch(() => {
+    input.select();
+    document.execCommand('copy');
+  });
+  btn.classList.add('copied');
+  label.textContent = t.copied;
+  setTimeout(() => { btn.classList.remove('copied'); label.textContent = t.copy; }, 2500);
+}
+
+applyRTL();
+loadData();
+</script>
+</body>
+</html>
