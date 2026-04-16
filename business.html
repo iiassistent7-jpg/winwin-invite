@@ -1955,10 +1955,10 @@ function updateDealsStats(seg) {
     if (l2) l2.textContent = lblIn[1];
     if (l3) l3.textContent = lblIn[2];
   } else if (seg === 'outgoing') {
-    const outDeals = (bizData.outgoing_recommendations || []);
-    const waiting = outDeals.filter(d => ['in_progress','pending'].includes(d.status)).length;
-    const done = outDeals.filter(d => ['closed','completed'].includes(d.status)).length;
-    if (s1) s1.textContent = outDeals.length;
+    const allOutgoing = normalizeOutgoingRecommendations();
+    const waiting = allOutgoing.filter(d => !['closed','completed','done','rejected'].includes(String(d.status||'').toLowerCase())).length;
+    const done = allOutgoing.filter(d => ['closed','completed','done','confirmed'].includes(String(d.status||'').toLowerCase())).length;
+    if (s1) s1.textContent = allOutgoing.length;
     if (s2) s2.textContent = waiting;
     if (s3) s3.textContent = done;
     const lblOut = {ru:['Всего','В работе','Завершено'], he:['סה\"כ','בתהליך','הושלמו'], en:['Total','Active','Done'], ar:['المجموع','نشطة','منتهية']}[lang] || ['Total','Active','Done'];
@@ -1967,7 +1967,7 @@ function updateDealsStats(seg) {
     if (l3) l3.textContent = lblOut[2];
   } else {
     const histIncoming = deals.filter(d => ['closed','rejected'].includes(d.status)).length;
-    const histOutgoing = (bizData.outgoing_recommendations || []).filter(d => ['closed','completed','rejected'].includes(d.status)).length;
+    const histOutgoing = normalizeOutgoingRecommendations().filter(d => ['closed','completed','done','rejected'].includes(String(d.status||'').toLowerCase())).length;
     if (s1) s1.textContent = histIncoming;
     if (s2) s2.textContent = histOutgoing;
     if (s3) s3.textContent = histIncoming + histOutgoing;
