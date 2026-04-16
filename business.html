@@ -3586,7 +3586,8 @@ function renderRecommend() {
   };
   listEl.innerHTML = rows.map((r, idx) => {
     const recoId = r.action_deal_id ?? r.id ?? r.deal_id ?? r.lead_id ?? idx;
-    const closedMeta = ['closed', 'completed', 'done'].includes(String(r.status || '').trim().toLowerCase())
+    const _closedStatuses = new Set(['closed', 'completed', 'done', 'confirmed', 'gift_closed', 'support_business_completed']);
+    const closedMeta = _closedStatuses.has(String(r.status || '').trim().toLowerCase())
       ? getUnifiedClosedDealMeta(r)
       : null;
     const statusText = getRecommendStatusLabel(r.status, L);
@@ -3603,12 +3604,27 @@ function renderRecommend() {
       : '—';
     const recoDomId = String(recoId).replace(/[^a-zA-Z0-9_-]/g, '_');
     const _st = String(r.status || '').trim().toLowerCase();
+    const _dec = String(r.decision || r.settlement_mode || '').trim().toLowerCase();
+    const _hasDecision = ['take', 'gift_client', 'support_business'].includes(_dec);
+    const _decisionLabels = {
+      take:             {ru:'Забрать себе',           he:'לקחת לעצמי',          en:'Keep for myself',         ar:'أحتفظ به'},
+      gift_client:      {ru:'Подарить клиенту',       he:'לתת ללקוח',           en:'Gift to client',          ar:'منحه للعميل'},
+      support_business: {ru:'Поддержать бизнес',      he:'לתמוך בעסק',          en:'Support the business',    ar:'دعم العمل'},
+    };
+    const _waitingPayment = ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward','pending_agent_receipt','awaiting_receipt','pending_agent_confirmation'].includes(_st);
+    const _needsChoice = !_hasDecision && ['pending_confirmation','awaiting_reward','pending_receipt'].includes(_st);
     const nextStepText = closedMeta
       ? closedMeta.resultText
-      : (['pending_confirmation','awaiting_reward','pending_receipt'].includes(_st)
-        ? ({ru:'Нужно выбрать способ расчёта',he:'צריך לבחור דרך סגירה',en:'Choose settlement method',ar:'يجب اختيار طريقة التسوية'}[lang] || 'Choose settlement method')
-        : ({ru:'Ждём завершения сделки',he:'ממתינים לסיום העסקה',en:'Waiting for deal completion',ar:'في انتظار إتمام الصفقة'}[lang] || 'Waiting for deal completion'));
-    const nextStepToneOut = closedMeta ? 'success' : (statusText.cls === 'st-pending' ? 'warning' : 'default');
+      : _hasDecision
+        ? ((_decisionLabels[_dec] && (_decisionLabels[_dec][lang] || _decisionLabels[_dec].ru)) || _dec)
+        : _needsChoice
+          ? ({ru:'Нужно выбрать способ расчёта',he:'צריך לבחור דרך סגירה',en:'Choose settlement method',ar:'يجب اختيار طريقة التسوية'}[lang] || 'Choose settlement method')
+          : ({ru:'Ждём завершения сделки',he:'ממתינים לסיום העסקה',en:'Waiting for deal completion',ar:'في انتظار إتمام الصفقة'}[lang] || 'Waiting for deal completion');
+    const nextStepToneOut = closedMeta
+      ? 'success'
+      : _hasDecision
+        ? 'success'
+        : (statusText.cls === 'st-pending' ? 'warning' : 'default');
     const toneClass = statusText.cls === 'st-pending' ? ' pending' : '';
     const rewardVal = r.reward ? `${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}` : '—';
     const nextStepLabel = {ru:'Следующий шаг',he:'הצעד הבא',en:'Next step',ar:'الخطوة التالية'}[lang] || 'Next step';
