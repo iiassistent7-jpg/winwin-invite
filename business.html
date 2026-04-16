@@ -3973,11 +3973,16 @@ async function remindOutgoingGiftClient(dealId) {
       ar: 'تم إرسال التذكير.'
     };
 
-    if (data.blocked === true) {
+    if (data.blocked === true || data.status === 'blocked' || (data.status !== 'ok' && !data.result)) {
       const reason = data.reason || '';
-      const msg = reason === 'cooldown_24h'
-        ? (blockedMsgs[lang] || blockedMsgs.ru)
-        : (L.remind_error || 'Ошибка отправки.');
+      let msg;
+      if (reason === 'cooldown_24h') {
+        msg = blockedMsgs[lang] || blockedMsgs.ru;
+      } else if (reason === 'balance_not_found' || reason === 'deal_not_found') {
+        msg = {ru:'Не удалось найти сделку. Попробуйте обновить страницу.',he:'לא נמצאה עסקה. נסו לרענן את הדף.',en:'Deal not found. Try refreshing the page.',ar:'لم يُعثر على الصفقة. جرب تحديث الصفحة.'}[lang] || 'Deal not found.';
+      } else {
+        msg = L.remind_error || 'Ошибка отправки.';
+      }
       showNotice(msg);
       if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
       return;
