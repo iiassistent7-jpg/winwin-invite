@@ -53,6 +53,10 @@
 
     .loading { text-align: center; padding: 60px 20px; color: var(--text2); font-size: 1rem; }
     .error-block { background: rgba(235,87,87,.1); border: 1px solid rgba(235,87,87,.3); border-radius: 16px; padding: 20px; text-align: center; color: #eb5757; font-size: .95rem; }
+    .lang-bar { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
+    .lang-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; color: rgba(255,255,255,0.4); font-family: inherit; font-size: 0.75rem; font-weight: 700; padding: 5px 13px; cursor: pointer; transition: all 0.18s; }
+    .lang-btn.active { background: linear-gradient(135deg, rgba(108,99,255,0.25), rgba(0,212,170,0.12)); border-color: rgba(108,99,255,0.6); color: #fff; }
+    .lang-btn:hover:not(.active) { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
   </style>
 </head>
 <body>
@@ -60,6 +64,13 @@
   <div class="logo">
     <div class="logo-main">Win-Win</div>
     <div class="logo-sub">NETWORK</div>
+  </div>
+
+  <div class="lang-bar" id="langBar">
+    <button class="lang-btn active" data-lang="en" onclick="switchLang('en')">EN</button>
+    <button class="lang-btn" data-lang="he" onclick="switchLang('he')">עב</button>
+    <button class="lang-btn" data-lang="ar" onclick="switchLang('ar')">عر</button>
+    <button class="lang-btn" data-lang="ru" onclick="switchLang('ru')">РУ</button>
   </div>
 
   <div id="loadingBlock" class="loading">⏳</div>
@@ -157,6 +168,13 @@ const i18n = {
 
 function L() { return i18n[lang] || i18n.ru; }
 
+function switchLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  applyRTL();
+  if (visitData) render();
+}
+
 function applyRTL() {
   const rtl = (lang === 'he' || lang === 'ar');
   document.documentElement.dir = rtl ? 'rtl' : 'ltr';
@@ -169,7 +187,7 @@ async function loadData() {
     const res = await fetch(`${API_URL}/api/client-visit?token=${encodeURIComponent(token)}`);
     if (!res.ok) { showError(res.status === 401 ? L().error_expired : L().error_general); return; }
     visitData = await res.json();
-    if (visitData.client_lang) { lang = visitData.client_lang; applyRTL(); }
+    if (visitData.client_lang) { lang = visitData.client_lang; applyRTL(); document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang)); }
     render();
   } catch(e) {
     showError(L().error_general);
@@ -258,6 +276,7 @@ function copyLink() {
 }
 
 applyRTL();
+document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 loadData();
 </script>
 </body>
