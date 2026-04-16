@@ -3606,25 +3606,28 @@ function renderRecommend() {
     const _st = String(r.status || '').trim().toLowerCase();
     const _dec = String(r.decision || r.settlement_mode || '').trim().toLowerCase();
     const _hasDecision = ['take', 'gift_client', 'support_business'].includes(_dec);
-    const _decisionLabels = {
-      take:             {ru:'Забрать себе',           he:'לקחת לעצמי',          en:'Keep for myself',         ar:'أحتفظ به'},
-      gift_client:      {ru:'Подарить клиенту',       he:'לתת ללקוח',           en:'Gift to client',          ar:'منحه للعميل'},
-      support_business: {ru:'Поддержать бизнес',      he:'לתמוך בעסק',          en:'Support the business',    ar:'دعم العمل'},
-    };
-    const _waitingPayment = ['pending_business_payment','awaiting_business_payment','pending_reward_payment','awaiting_reward','pending_agent_receipt','awaiting_receipt','pending_agent_confirmation'].includes(_st);
+    const _awaitingPaymentLabel = {ru:'Ожидаем оплату',he:'ממתינים לתשלום',en:'Awaiting payment',ar:'بانتظار الدفع'};
+    const _awaitingGiftLabel    = {ru:'Ожидаем передачи клиенту',he:'ממתינים להעברה ללקוח',en:'Awaiting gift to client',ar:'بانتظار التحويل للعميل'};
+    const _supportDoneLabel     = {ru:'Поддержка бизнеса',he:'תמיכה בעסק',en:'Supporting the business',ar:'دعم العمل'};
     const _needsChoice = !_hasDecision && ['pending_confirmation','awaiting_reward','pending_receipt'].includes(_st);
     const nextStepText = closedMeta
       ? closedMeta.resultText
       : _hasDecision
-        ? ((_decisionLabels[_dec] && (_decisionLabels[_dec][lang] || _decisionLabels[_dec].ru)) || _dec)
+        ? (_dec === 'take'
+            ? (_awaitingPaymentLabel[lang] || _awaitingPaymentLabel.ru)
+            : _dec === 'gift_client'
+              ? (_awaitingGiftLabel[lang] || _awaitingGiftLabel.ru)
+              : (_supportDoneLabel[lang] || _supportDoneLabel.ru))
         : _needsChoice
           ? ({ru:'Нужно выбрать способ расчёта',he:'צריך לבחור דרך סגירה',en:'Choose settlement method',ar:'يجب اختيار طريقة التسوية'}[lang] || 'Choose settlement method')
           : ({ru:'Ждём завершения сделки',he:'ממתינים לסיום העסקה',en:'Waiting for deal completion',ar:'في انتظار إتمام الصفقة'}[lang] || 'Waiting for deal completion');
     const nextStepToneOut = closedMeta
       ? 'success'
-      : _hasDecision
-        ? 'success'
-        : (statusText.cls === 'st-pending' ? 'warning' : 'default');
+      : (_hasDecision && _dec === 'take')
+        ? 'warning'
+        : (_hasDecision
+            ? 'success'
+            : (statusText.cls === 'st-pending' ? 'warning' : 'default'));
     const toneClass = statusText.cls === 'st-pending' ? ' pending' : '';
     const rewardVal = r.reward ? `${r.reward}${typeof r.reward === 'number' ? ' ' + curr : ''}` : '—';
     const nextStepLabel = {ru:'Следующий шаг',he:'הצעד הבא',en:'Next step',ar:'الخطوة التالية'}[lang] || 'Next step';
@@ -3744,6 +3747,16 @@ function isOutgoingRecommenderAwaitingReceipt(row) {
     || ['pending_receipt','awaiting_receipt','pending_agent_confirmation','pending_agent_receipt'].includes(settlementStatus);
 }
 
+function isOutgoingTakeAwaitingPayment(row) {
+  const dec = String(row.decision || row.settlement_mode || '').trim().toLowerCase();
+  if (dec !== 'take') return false;
+  const st = String(row.status || '').trim().toLowerCase();
+  const finalStatuses = new Set(['closed','completed','done','confirmed','gift_closed','support_business_completed']);
+  if (finalStatuses.has(st)) return false;
+  if (row.agent_confirmed_receipt === true) return false;
+  return true;
+}
+
 function isOutgoingGiftClientWaitingBusiness(row) {
   const truth = getDealTruth(row || {});
   const settlementMode = String(truth.settlementMode || (row && row.decision) || '').trim().toLowerCase();
@@ -3789,6 +3802,16 @@ function renderRecommendDetailActionButtons(row) {
       wrapClass: 'settlement-choice-grid',
       onAction: 'submitOutgoingReceiptConfirmation'
     });
+  }
+  if (isOutgoingTakeAwaitingPayment(row)) {
+    const L = i18n[lang] || i18n.ru;
+    const remindLabel = {ru:'Напомнить об оплате',he:'להזכיר על התשלום',en:'Remind about payment',ar:'تذكير بالدفع'}[lang] || 'Remind about payment';
+    const safeId = Number(dealId);
+    return `<button class="btn-primary" style="background:var(--accent);color:#fff;width:100%;"
+      onclick="remindOutgoingGiftClient(${safeId})">
+      <i data-feather="bell" style="width:16px;height:16px;margin-right:6px;vertical-align:text-bottom;"></i>
+      ${String(remindLabel).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    </button>`;
   }
   if (isOutgoingGiftClientWaitingBusiness(row)) {
     const L = i18n[lang] || i18n.ru;
