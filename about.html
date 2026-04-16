@@ -170,6 +170,31 @@
       .feature-list li { gap: 8px; font-size: 0.8rem; }
       .check-icon, .lock-icon { width: 16px; height: 16px; }
     }
+    /* Role switcher */
+    .role-switcher { margin-bottom: 48px; }
+    .role-tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .role-tab {
+      padding: 12px 28px; border-radius: 999px; border: 1px solid var(--card-border);
+      background: var(--card); color: var(--text-muted); font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: 0.2s; font-family: inherit;
+    }
+    .role-tab.active {
+      background: linear-gradient(135deg, rgba(108,99,255,0.25), rgba(0,212,170,0.12));
+      border-color: rgba(108,99,255,0.6); color: #fff;
+      box-shadow: 0 4px 20px rgba(108,99,255,0.25);
+    }
+    .role-tab:hover:not(.active) { border-color: rgba(255,255,255,0.2); color: #fff; }
+    .role-panel { display: none; }
+    .role-panel.active { display: block; }
+    .role-panel-title { text-align: center; font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 900;
+      letter-spacing: -0.5px; margin-bottom: 20px; color: var(--accent-1); }
+    .role-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .role-step { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 22px; }
+    .role-step-num { font-size: 2rem; font-weight: 900; color: var(--accent-1); line-height: 1; margin-bottom: 8px; }
+    .role-step-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .role-step-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+    .role-panel-note { text-align: center; margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);
+      font-style: italic; padding: 0 16px; }
   </style>
 </head>
 <body>
@@ -208,13 +233,34 @@
 
     </section>
 
-    <section class="steps-section">
-      <h2 id="t_steps_title"></h2>
-      <div class="steps-grid">
-        <div class="step-card"><div class="step-num">1</div><div class="step-text" id="t_step1"></div></div>
-        <div class="step-card"><div class="step-num">2</div><div class="step-text" id="t_step2"></div></div>
-        <div class="step-card"><div class="step-num">3</div><div class="step-text" id="t_step3"></div></div>
-        <div class="step-card"><div class="step-num">4</div><div class="step-text" id="t_step4"></div></div>
+    <section class="role-switcher" id="roleSwitcher">
+      <div class="role-tabs">
+        <button class="role-tab active" id="tabBiz" onclick="switchRoleTab('biz')"></button>
+        <button class="role-tab" id="tabAgent" onclick="switchRoleTab('agent')"></button>
+      </div>
+
+      <div class="role-panel active" id="panelBiz">
+        <div class="role-panel-title" id="t_biz_panel_title"></div>
+        <div class="role-steps-grid">
+          <div class="role-step"><div class="role-step-num">1</div><div class="role-step-title" id="t_biz_s1_title"></div><div class="role-step-desc" id="t_biz_s1_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">2</div><div class="role-step-title" id="t_biz_s2_title"></div><div class="role-step-desc" id="t_biz_s2_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">3</div><div class="role-step-title" id="t_biz_s3_title"></div><div class="role-step-desc" id="t_biz_s3_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">4</div><div class="role-step-title" id="t_biz_s4_title"></div><div class="role-step-desc" id="t_biz_s4_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">5</div><div class="role-step-title" id="t_biz_s5_title"></div><div class="role-step-desc" id="t_biz_s5_desc"></div></div>
+        </div>
+        <div class="role-panel-note" id="t_biz_note"></div>
+      </div>
+
+      <div class="role-panel" id="panelAgent">
+        <div class="role-panel-title" id="t_agent_panel_title"></div>
+        <div class="role-steps-grid">
+          <div class="role-step"><div class="role-step-num">1</div><div class="role-step-title" id="t_agent_s1_title"></div><div class="role-step-desc" id="t_agent_s1_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">2</div><div class="role-step-title" id="t_agent_s2_title"></div><div class="role-step-desc" id="t_agent_s2_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">3</div><div class="role-step-title" id="t_agent_s3_title"></div><div class="role-step-desc" id="t_agent_s3_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">4</div><div class="role-step-title" id="t_agent_s4_title"></div><div class="role-step-desc" id="t_agent_s4_desc"></div></div>
+          <div class="role-step"><div class="role-step-num">5</div><div class="role-step-title" id="t_agent_s5_title"></div><div class="role-step-desc" id="t_agent_s5_desc"></div></div>
+        </div>
+        <div class="role-panel-note" id="t_agent_note"></div>
       </div>
     </section>
 
@@ -416,11 +462,32 @@
         cta_title: "Станьте частью экосистемы",
         btn_join: "Присоединиться к Win-Win",
         btn_back: "← Вернуться",
-        steps_title: "Как это работает",
-        step1: "Вы рекомендуете знакомому бизнес, которому сами реально доверяете.",
-        step2: "Знакомый переходит по вашей ссылке, записывается и приходит как новый клиент.",
-        step3: "Если он действительно получает услугу и оплачивает её, сделка закрывается в системе.",
-        step4: "Бизнес благодарит вас бонусом напрямую, а вы решаете: забрать его себе, подарить клиенту или поддержать бизнес.",
+        tab_biz: "🏢 Я — бизнес",
+        tab_agent: "🤝 Хочу рекомендовать",
+        biz_panel_title: "Как это работает для бизнеса",
+        biz_s1_title: "Создайте карточку бизнеса",
+        biz_s1_desc: "Зарегистрируйтесь и заполните карточку своего бизнеса, чтобы вас могли находить и рекомендовать.",
+        biz_s2_title: "Укажите условия благодарности",
+        biz_s2_desc: "Сразу выберите, как вы готовы благодарить за нового клиента: процент, фиксированную сумму или подарок.",
+        biz_s3_title: "Получайте тёплых клиентов",
+        biz_s3_desc: "Люди рекомендуют ваш бизнес знакомым, которым готовы доверить свою репутацию.",
+        biz_s4_title: "Платите только за результат",
+        biz_s4_desc: "Когда новый клиент действительно пришёл и оплатил услугу — вы благодарите рекомендателя напрямую.",
+        biz_s5_title: "Держите всё прозрачно",
+        biz_s5_desc: "Платформа показывает, кто привёл клиента, что происходит со сделкой и чем она закончилась.",
+        biz_note: "Вы платите не за показы и клики, а только за реальный оплаченный результат.",
+        agent_panel_title: "Как это работает для рекомендателя",
+        agent_s1_title: "Откройте каталог",
+        agent_s1_desc: "Выберите бизнес, который готовы рекомендовать с уверенностью.",
+        agent_s2_title: "Нет нужного бизнеса?",
+        agent_s2_desc: "В каталоге есть кнопка «Пригласить» — пригласите бизнес в Win-Win прямо оттуда.",
+        agent_s3_title: "Отправьте ссылку или QR",
+        agent_s3_desc: "Поделитесь ссылкой или покажите QR-код человеку, которому хотите порекомендовать этот бизнес.",
+        agent_s4_title: "Клиент пришёл и оплатил",
+        agent_s4_desc: "Когда человек реально приходит и оплачивает услугу, ваша рекомендация превращается в закрытую сделку.",
+        agent_s5_title: "Вы решаете, что делать с бонусом",
+        agent_s5_desc: "Забрать себе, подарить клиенту или поддержать бизнес — выбор остаётся за вами.",
+        agent_note: "Рекомендация остаётся вашей, а благодарность — под вашим контролем.",
         faq_title: "Частые вопросы",
         faq: [
           { q: "Как сделать рекомендацию?", a: "Вы выбираете бизнес, копируете свою ссылку и отправляете её человеку, которому хотите его посоветовать. Если человек приходит по вашей ссылке как новый клиент, рекомендация фиксируется в системе. Дальше вы просто следите за статусом сделки в кабинете." },
@@ -492,11 +559,32 @@
         cta_title: "Join the ecosystem",
         btn_join: "Join Win-Win",
         btn_back: "← Return",
-        steps_title: "How it works",
-        step1: "You recommend a business you genuinely trust to someone you know.",
-        step2: "They open your link, book, and arrive as a new client.",
-        step3: "If they actually receive the service and pay, the deal is marked as completed in the system.",
-        step4: "The business rewards you directly, and you choose: keep it, pass it to the client, or support the business.",
+        tab_biz: "🏢 I'm a Business",
+        tab_agent: "🤝 I want to Recommend",
+        biz_panel_title: "How it works for businesses",
+        biz_s1_title: "Create your business profile",
+        biz_s1_desc: "Register and fill in your business card so people can find and recommend you.",
+        biz_s2_title: "Set your reward conditions",
+        biz_s2_desc: "Choose upfront how you'll reward referrals: a percentage, a fixed amount, or a gift.",
+        biz_s3_title: "Receive warm clients",
+        biz_s3_desc: "People recommend your business to friends they trust with their own reputation.",
+        biz_s4_title: "Pay only for real results",
+        biz_s4_desc: "When a new client actually comes and pays — you reward the referrer directly.",
+        biz_s5_title: "Keep everything transparent",
+        biz_s5_desc: "The platform shows who brought the client, what's happening with the deal, and how it ended.",
+        biz_note: "You pay not for impressions or clicks, but only for a real paid result.",
+        agent_panel_title: "How it works for referrers",
+        agent_s1_title: "Open the catalog",
+        agent_s1_desc: "Choose a business you're confident recommending.",
+        agent_s2_title: "Business not in the catalog?",
+        agent_s2_desc: "Use the 'Invite' button in the catalog to invite that business to Win-Win.",
+        agent_s3_title: "Send a link or QR code",
+        agent_s3_desc: "Share the link or show the QR code to the person you want to recommend this business to.",
+        agent_s4_title: "Client came and paid",
+        agent_s4_desc: "When the person actually comes and pays for the service, your recommendation becomes a closed deal.",
+        agent_s5_title: "You decide what to do with the bonus",
+        agent_s5_desc: "Keep it, give it to the client as a discount, or support the business — the choice is yours.",
+        agent_note: "The recommendation is yours, and the gratitude is under your control.",
         faq_title: "Frequently asked questions",
         faq: [
           { q: "How do I make a recommendation?", a: "Choose a business, copy your personal link, and send it to someone you want to recommend that business to. If they come through your link as a new client, the recommendation is recorded in the system. After that, you can follow the deal status in your account." },
@@ -576,11 +664,32 @@
         cta_title: "הפכו לחלק מהמערכת האקולוגית",
         btn_join: "הצטרף ל-Win-Win",
         btn_back: "→ חזרה למערכת",
-        steps_title: "איך זה עובד",
-        step1: "אתם ממליצים למישהו על עסק שאתם באמת סומכים עליו.",
-        step2: "הוא נכנס דרך הקישור שלכם, קובע ומגיע כלקוח חדש.",
-        step3: "אם הוא באמת מקבל שירות ומשלם, העסקה נסגרת במערכת.",
-        step4: "העסק מתגמל אתכם ישירות, ואתם בוחרים: לקחת לעצמכם, להעביר ללקוח או לפרגן לעסק.",
+        tab_biz: "🏢 אני עסק",
+        tab_agent: "🤝 אני רוצה להמליץ",
+        biz_panel_title: "איך זה עובד לעסקים",
+        biz_s1_title: "צרו כרטיס עסק",
+        biz_s1_desc: "הירשמו ומלאו את פרטי העסק שלכם כדי שאנשים יוכלו למצוא ולהמליץ עליכם.",
+        biz_s2_title: "קבעו מראש את תנאי התגמול",
+        biz_s2_desc: "בחרו איך תרצו להודות על לקוח חדש: אחוזים, סכום קבוע או מתנה.",
+        biz_s3_title: "קבלו לקוחות חמים",
+        biz_s3_desc: "אנשים ממליצים על העסק שלכם לחברים שהם מוכנים לתת בהם אמון.",
+        biz_s4_title: "שלמו רק על תוצאה אמיתית",
+        biz_s4_desc: "כשלקוח חדש באמת הגיע ושילם — אתם מתגמלים את הממליץ ישירות.",
+        biz_s5_title: "שמרו על שקיפות מלאה",
+        biz_s5_desc: "הפלטפורמה מראה מי הביא את הלקוח, מה קורה עם העסקה וכיצד היא הסתיימה.",
+        biz_note: "אתם משלמים לא על חשיפות וקליקים, אלא רק על תוצאה אמיתית ומשולמת.",
+        agent_panel_title: "איך זה עובד לממליצים",
+        agent_s1_title: "פתחו את הקטלוג",
+        agent_s1_desc: "בחרו עסק שאתם מוכנים להמליץ עליו בביטחון.",
+        agent_s2_title: "העסק לא בקטלוג?",
+        agent_s2_desc: "בקטלוג יש כפתור 'להזמין' — הזמינו את העסק ל-Win-Win ישירות משם.",
+        agent_s3_title: "שלחו קישור או QR",
+        agent_s3_desc: "שתפו את הקישור או הראו את קוד ה-QR לאדם שאתם רוצים להמליץ לו על העסק.",
+        agent_s4_title: "הלקוח הגיע ושילם",
+        agent_s4_desc: "כשהאדם באמת מגיע ומשלם על השירות, ההמלצה שלכם הופכת לעסקה סגורה.",
+        agent_s5_title: "אתם מחליטים מה לעשות עם הבונוס",
+        agent_s5_desc: "לקחת לעצמכם, לתת ללקוח כהנחה, או לתמוך בעסק — הבחירה בידיכם.",
+        agent_note: "ההמלצה נשארת שלכם, וההכרת התודה — בשליטתכם.",
         faq_title: "שאלות נפוצות",
         faq: [
           { q: "איך עושים המלצה?", a: "בוחרים עסק, מעתיקים את הקישור האישי שלכם ושולחים למישהו שאתם רוצים להמליץ לו עליו. אם אותו אדם מגיע דרך הקישור כלקוח חדש, ההמלצה נרשמת במערכת. משם אפשר לעקוב אחרי הסטטוס באזור האישי." },
@@ -652,11 +761,32 @@
         cta_title: "كن جزءاً من النظام البيئي",
         btn_join: "الانضمام إلى Win-Win",
         btn_back: "→ رجوع للنظام",
-        steps_title: "كيف يعمل؟",
-        step1: "أنت توصي شخصًا تعرفه بعمل تثق فيه فعلاً.",
-        step2: "هو يفتح رابطك، يحجز، ويأتي كعميل جديد.",
-        step3: "إذا حصل فعلاً على الخدمة ودفع، تُغلق الصفقة في النظام.",
-        step4: "العمل يكافئك مباشرة، وأنت تقرر: تأخذها لنفسك، تعطيها للعميل، أو تدعم العمل.",
+        tab_biz: "🏢 أنا صاحب عمل",
+        tab_agent: "🤝 أريد التوصية",
+        biz_panel_title: "كيف يعمل النظام للأعمال",
+        biz_s1_title: "أنشئ بطاقة عملك",
+        biz_s1_desc: "سجّل واملأ تفاصيل عملك حتى يتمكن الناس من العثور عليك والتوصية بك.",
+        biz_s2_title: "حدّد شروط المكافأة مسبقاً",
+        biz_s2_desc: "اختر مسبقاً كيف ستشكر على العميل الجديد: نسبة أو مبلغ ثابت أو هدية.",
+        biz_s3_title: "استقبل عملاء دافئين",
+        biz_s3_desc: "يوصي الناس بعملك لأصدقائهم الذين يثقون بسمعتهم معهم.",
+        biz_s4_title: "ادفع فقط مقابل نتيجة حقيقية",
+        biz_s4_desc: "عندما يأتي العميل الجديد فعلاً ويدفع — تكافئ الموصي مباشرةً.",
+        biz_s5_title: "حافظ على الشفافية الكاملة",
+        biz_s5_desc: "تُظهر المنصة من أحضر العميل وما يجري مع الصفقة وكيف انتهت.",
+        biz_note: "أنت لا تدفع مقابل المشاهدات والنقرات، بل فقط مقابل نتيجة حقيقية ومدفوعة.",
+        agent_panel_title: "كيف يعمل النظام للموصين",
+        agent_s1_title: "افتح الكتالوج",
+        agent_s1_desc: "اختر عملاً تثق بالتوصية به بكل ثقة.",
+        agent_s2_title: "العمل غير موجود في الكتالوج؟",
+        agent_s2_desc: "في الكتالوج زر 'دعوة' — ادعُ العمل إلى Win-Win مباشرةً من هناك.",
+        agent_s3_title: "أرسل رابطاً أو رمز QR",
+        agent_s3_desc: "شارك الرابط أو أظهر رمز QR للشخص الذي تريد التوصية له بهذا العمل.",
+        agent_s4_title: "جاء العميل ودفع",
+        agent_s4_desc: "عندما يأتي الشخص فعلاً ويدفع مقابل الخدمة، تتحول توصيتك إلى صفقة مغلقة.",
+        agent_s5_title: "أنت تقرر ماذا تفعل بالمكافأة",
+        agent_s5_desc: "احتفظ بها، أعطها للعميل كخصم، أو ادعم العمل — الاختيار لك.",
+        agent_note: "التوصية تبقى لك، والامتنان تحت سيطرتك.",
         faq_title: "أسئلة شائعة",
         faq: [
           { q: "كيف أعمل توصية؟", a: "اختر عملاً، انسخ رابطك الشخصي وأرسله لشخص تريد أن توصي له به. إذا جاء من خلال رابطك كعميل جديد، يتم تسجيل التوصية في النظام. بعد ذلك يمكنك متابعة حالة الصفقة من حسابك." },
@@ -673,6 +803,13 @@
         ]
       }
     };
+
+    function switchRoleTab(role) {
+      document.getElementById('panelBiz').classList.toggle('active', role === 'biz');
+      document.getElementById('panelAgent').classList.toggle('active', role === 'agent');
+      document.getElementById('tabBiz').classList.toggle('active', role === 'biz');
+      document.getElementById('tabAgent').classList.toggle('active', role === 'agent');
+    }
 
     function setLang(lang) {
       document.documentElement.lang = lang;
@@ -748,11 +885,32 @@
       document.getElementById('t_btn_join').textContent = L.btn_join;
       document.getElementById('t_btn_join').href = "https://winwinnetwork.pro/?lang=" + lang;
 
-      document.getElementById('t_steps_title').textContent = L.steps_title;
-      document.getElementById('t_step1').textContent = L.step1;
-      document.getElementById('t_step2').textContent = L.step2;
-      document.getElementById('t_step3').textContent = L.step3;
-      document.getElementById('t_step4').textContent = L.step4;
+      document.getElementById('tabBiz').textContent   = L.tab_biz;
+      document.getElementById('tabAgent').textContent = L.tab_agent;
+      document.getElementById('t_biz_panel_title').textContent  = L.biz_panel_title;
+      document.getElementById('t_biz_s1_title').textContent = L.biz_s1_title;
+      document.getElementById('t_biz_s1_desc').textContent  = L.biz_s1_desc;
+      document.getElementById('t_biz_s2_title').textContent = L.biz_s2_title;
+      document.getElementById('t_biz_s2_desc').textContent  = L.biz_s2_desc;
+      document.getElementById('t_biz_s3_title').textContent = L.biz_s3_title;
+      document.getElementById('t_biz_s3_desc').textContent  = L.biz_s3_desc;
+      document.getElementById('t_biz_s4_title').textContent = L.biz_s4_title;
+      document.getElementById('t_biz_s4_desc').textContent  = L.biz_s4_desc;
+      document.getElementById('t_biz_s5_title').textContent = L.biz_s5_title;
+      document.getElementById('t_biz_s5_desc').textContent  = L.biz_s5_desc;
+      document.getElementById('t_biz_note').textContent     = L.biz_note;
+      document.getElementById('t_agent_panel_title').textContent  = L.agent_panel_title;
+      document.getElementById('t_agent_s1_title').textContent = L.agent_s1_title;
+      document.getElementById('t_agent_s1_desc').textContent  = L.agent_s1_desc;
+      document.getElementById('t_agent_s2_title').textContent = L.agent_s2_title;
+      document.getElementById('t_agent_s2_desc').textContent  = L.agent_s2_desc;
+      document.getElementById('t_agent_s3_title').textContent = L.agent_s3_title;
+      document.getElementById('t_agent_s3_desc').textContent  = L.agent_s3_desc;
+      document.getElementById('t_agent_s4_title').textContent = L.agent_s4_title;
+      document.getElementById('t_agent_s4_desc').textContent  = L.agent_s4_desc;
+      document.getElementById('t_agent_s5_title').textContent = L.agent_s5_title;
+      document.getElementById('t_agent_s5_desc').textContent  = L.agent_s5_desc;
+      document.getElementById('t_agent_note').textContent     = L.agent_note;
 
       document.getElementById('t_faq_title').textContent = L.faq_title;
       const faqList = document.getElementById('faqList');
