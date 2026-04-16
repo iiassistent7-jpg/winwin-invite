@@ -647,7 +647,8 @@
 
       // ── НАСТРОЙКА ПОД РОЛЬ ────────────────────────────────────────────
       document.querySelectorAll(`.role-${role}`).forEach(el => el.classList.remove('hidden'));
-      applyLang("ru");
+      const _urlLang = new URLSearchParams(window.location.search).get("lang");
+      applyLang((_urlLang && LANG_TEXTS[_urlLang]) ? _urlLang : "ru");
 
       // Показ поля ввода значения вознаграждения
       rewardRadios.forEach(radio => {
