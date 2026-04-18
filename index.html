@@ -743,6 +743,26 @@
     document.getElementById("roleAgentDesc").textContent = t.roleAgentDesc;
     document.getElementById("nicheLabel").textContent = t.nicheLabel;
     document.getElementById("nicheDefault").textContent = t.nicheDefault;
+    const _nicheSelEl = document.getElementById('nicheSelect');
+    if (_nicheSelEl) {
+      try {
+        if (TAXONOMY_LABELS && TAXONOMY_LABELS.categories) {
+          const _savedVal = _nicheSelEl.value;
+          const _placeholder = '<option value="" disabled selected id="nicheDefault">' + t.nicheDefault + '</option>';
+          const _options = Object.entries(TAXONOMY_LABELS.categories).map(function(entry) {
+            const ru = entry[0];
+            const trans = entry[1];
+            const label = (lang === 'ru') ? ru : (trans[lang] || ru);
+            return '<option value="' + ru + '">' + label + '</option>';
+          }).join('');
+          _nicheSelEl.innerHTML = _placeholder + _options;
+          if (_savedVal) _nicheSelEl.value = _savedVal;
+        }
+      } catch (_tdzErr) { /* TAXONOMY_LABELS not initialized yet on first call */ }
+    }
+    if (typeof updateIndexSubcategories === 'function' && _nicheSelEl && _nicheSelEl.value) {
+      updateIndexSubcategories();
+    }
     document.getElementById("rewardLabel").textContent = t.rewardLabel;
     document.getElementById("rPct").textContent = t.rPct;
     document.getElementById("rFix").textContent = t.rFix;
