@@ -858,7 +858,7 @@
               he: "ברוכים הבאים ל-Win-Win Network!\nאתם משלימים את ההרשמה. לחצו שלח 👈",
               ar: "مرحباً بك في Win-Win Network!\nأنت تكمل تسجيلك. اضغط إرسال 👈"
             };
-            const _ui_lang = document.documentElement.lang || "ru";
+            const _ui_lang = document.getElementById("languageHidden")?.value || "ru";
             const waTextHinted = waText + "\n" + (_wa_hints[_ui_lang] || _wa_hints.ru);
 
             if (role === 'client') {
