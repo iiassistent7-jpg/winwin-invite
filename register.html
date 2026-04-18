@@ -467,11 +467,11 @@
         </div>
 
         <div class="form-group role-business hidden">
-          <label>Вознаграждение агенту</label>
+          <label id="rewardLabelForm">Вознаграждение агенту</label>
           <div class="segment-group" id="rewardTypeGroup">
-            <label class="segment-label"><input type="radio" name="rewardType" value="percent" data-req="business"> % от сделки</label>
-            <label class="segment-label"><input type="radio" name="rewardType" value="fixed" data-req="business"> Фикс ₪</label>
-            <label class="segment-label"><input type="radio" name="rewardType" value="gift" data-req="business"> Подарок/услуга</label>
+            <label class="segment-label" id="lblPct"><input type="radio" name="rewardType" value="percent" data-req="business"> % от сделки</label>
+            <label class="segment-label" id="lblFix"><input type="radio" name="rewardType" value="fixed" data-req="business"> Фикс ₪</label>
+            <label class="segment-label" id="lblGift"><input type="radio" name="rewardType" value="gift" data-req="business"> Подарок/услуга</label>
           </div>
           <input type="text" id="rewardValue" name="rewardValue" placeholder="Например: 15 (для %) или 200 (для ₪) или описание подарка" style="margin-top: 8px;" class="hidden" data-req="business" required>
         </div>
@@ -481,13 +481,13 @@
           <div class="segment-group" id="paymentMethodGroup">
             <label class="segment-label"><input type="radio" name="paymentMethod" value="bit" data-req="agent,business"> Bit</label>
             <label class="segment-label"><input type="radio" name="paymentMethod" value="paypal" data-req="agent,business"> PayPal</label>
-            <label class="segment-label"><input type="radio" name="paymentMethod" value="transfer" data-req="agent,business"> Перевод</label>
-            <label class="segment-label"><input type="radio" name="paymentMethod" value="cash" data-req="agent,business"> Наличные</label>
+            <label class="segment-label" id="lblTrans"><input type="radio" name="paymentMethod" value="transfer" data-req="agent,business"> Перевод</label>
+            <label class="segment-label" id="lblCash"><input type="radio" name="paymentMethod" value="cash" data-req="agent,business"> Наличные</label>
           </div>
         </div>
 
         <div class="form-group role-agent role-business hidden">
-          <label>Ссылка на сайт/соцсеть (необязательно)</label>
+          <label id="socialLabelForm">Ссылка на сайт/соцсеть (необязательно)</label>
           <input type="text" id="socialLink" name="socialLink" placeholder="Instagram, Facebook, сайт...">
         </div>
 
@@ -581,22 +581,58 @@
               btn_client:"Отправить контакт", btn_reg:"Зарегистрироваться",
               pre_title:"Выберите удобный мессенджер",
               name_agent:"Имя и фамилия", name_biz:"Название бизнеса",
-              pay_agent:"Способ получения бонуса", pay_biz:"Способ выплаты агентам" },
+              pay_agent:"Способ получения бонуса", pay_biz:"Способ выплаты агентам",
+              niche_label:"Категория бизнеса", cat_placeholder:"Выберите категорию...",
+              niche_sub_label:"Специализация", niche_sub_hint:"(можно выбрать несколько)",
+              subcat_confirm:"✅ Подтвердить выбор", subcat_edit:"✏️ Изменить",
+              reward_label:"Вознаграждение агенту",
+              r_pct:"% от сделки", r_fix:"Фикс ₪", r_gift:"Подарок/услуга",
+              trans:"Перевод", cash:"Наличные",
+              social_label:"Ссылка на сайт/соцсеть (необязательно)",
+              name_ph:"Введите данные", social_ph:"Instagram, Facebook, сайт...",
+              reward_ph:"Например: 15 (для %) или 200 (для ₪) или описание подарка" },
         en: { slogan:"Here everyone wins!", title_client:"Leave contact", title_other:"Registration",
               btn_client:"Send contact", btn_reg:"Register",
               pre_title:"Choose your messenger",
               name_agent:"First and last name", name_biz:"Business name",
-              pay_agent:"How to receive bonus", pay_biz:"How to pay agents" },
+              pay_agent:"How to receive bonus", pay_biz:"How to pay agents",
+              niche_label:"Business Category", cat_placeholder:"Select a category...",
+              niche_sub_label:"Specialization", niche_sub_hint:"(multi-select)",
+              subcat_confirm:"✅ Confirm selection", subcat_edit:"✏️ Edit",
+              reward_label:"Agent reward",
+              r_pct:"% of deal", r_fix:"Fixed ₪", r_gift:"Gift/service",
+              trans:"Transfer", cash:"Cash",
+              social_label:"Website/social link (optional)",
+              name_ph:"Enter details", social_ph:"Instagram, Facebook, website...",
+              reward_ph:"e.g. 15 (for %) or 200 (for ₪) or describe the gift" },
         he: { slogan:"כאן כולם מרוויחים!", title_client:"השאר פרטים", title_other:"הרשמה",
               btn_client:"שלח פרטים", btn_reg:"להירשם",
               pre_title:"בחר מסנג'ר נוח",
               name_agent:"שם פרטי ומשפחה", name_biz:"שם העסק",
-              pay_agent:"איך לקבל בונוס", pay_biz:"איך לשלם לסוכנים" },
+              pay_agent:"איך לקבל בונוס", pay_biz:"איך לשלם לסוכנים",
+              niche_label:"קטגוריית עסק", cat_placeholder:"בחרו קטגוריה...",
+              niche_sub_label:"התמחות", niche_sub_hint:"(אפשר לבחור כמה)",
+              subcat_confirm:"✅ אישור בחירה", subcat_edit:"✏️ עריכה",
+              reward_label:"תגמול לסוכן",
+              r_pct:"% מהעסקה", r_fix:"סכום קבוע ₪", r_gift:"מתנה/שירות",
+              trans:"העברה בנקאית", cash:"מזומן",
+              social_label:"קישור לאתר/רשת חברתית (לא חובה)",
+              name_ph:"הכניסו נתונים", social_ph:"Instagram, Facebook, אתר...",
+              reward_ph:"לדוגמה: 15 (עבור %) או 200 (עבור ₪) או תיאור מתנה" },
         ar: { slogan:"هنا الجميع يربح!", title_client:"اترك بيانات", title_other:"تسجيل",
               btn_client:"إرسال البيانات", btn_reg:"تسجيل",
               pre_title:"اختر تطبيق المراسلة",
               name_agent:"الاسم الأول والأخير", name_biz:"اسم الشركة",
-              pay_agent:"كيف تستلم المكافأة", pay_biz:"كيف تدفع للوكلاء" },
+              pay_agent:"كيف تستلم المكافأة", pay_biz:"كيف تدفع للوكلاء",
+              niche_label:"فئة العمل", cat_placeholder:"اختر فئة...",
+              niche_sub_label:"التخصص", niche_sub_hint:"(يمكن اختيار عدة)",
+              subcat_confirm:"✅ تأكيد الاختيار", subcat_edit:"✏️ تعديل",
+              reward_label:"مكافأة الوكيل",
+              r_pct:"% من الصفقة", r_fix:"مبلغ ثابت ₪", r_gift:"هدية/خدمة",
+              trans:"تحويل", cash:"نقداً",
+              social_label:"رابط الموقع/الشبكة الاجتماعية (اختياري)",
+              name_ph:"أدخل البيانات", social_ph:"Instagram, Facebook, موقع...",
+              reward_ph:"مثال: 15 (للنسبة) أو 200 (للمبلغ الثابت) أو وصف الهدية" },
       };
 
       function applyLang(lang) {
@@ -639,6 +675,40 @@
         const _rbS=document.getElementById('roleCardBizSub');   if(_rbS) _rbS.textContent=_RC.biz_sub;
         const _raT=document.getElementById('roleCardAgTitle');  if(_raT) _raT.textContent=_RC.ag_title;
         const _raS=document.getElementById('roleCardAgSub');    if(_raS) _raS.textContent=_RC.ag_sub;
+        // Категория/подкатегория/вознаграждение/соцсеть — перевод
+        const _nlf=document.getElementById('nicheLabelForm'); if(_nlf) _nlf.textContent=T.niche_label;
+        const _cph=document.getElementById('categoryPlaceholder'); if(_cph) _cph.textContent=T.cat_placeholder;
+        const _nls=document.getElementById('nicheLabelSub');
+        if(_nls) _nls.innerHTML = T.niche_sub_label + ' <span style="font-size:0.75rem;opacity:0.6;">' + T.niche_sub_hint + '</span>';
+        const _rlf=document.getElementById('rewardLabelForm'); if(_rlf) _rlf.textContent=T.reward_label;
+        const _slf=document.getElementById('socialLabelForm'); if(_slf) _slf.textContent=T.social_label;
+        const _lp=document.getElementById('lblPct');  if(_lp) _lp.innerHTML='<input type="radio" name="rewardType" value="percent" data-req="business"> '+T.r_pct;
+        const _lx=document.getElementById('lblFix');  if(_lx) _lx.innerHTML='<input type="radio" name="rewardType" value="fixed" data-req="business"> '+T.r_fix;
+        const _lg=document.getElementById('lblGift'); if(_lg) _lg.innerHTML='<input type="radio" name="rewardType" value="gift" data-req="business"> '+T.r_gift;
+        const _lt=document.getElementById('lblTrans');if(_lt) _lt.innerHTML='<input type="radio" name="paymentMethod" value="transfer" data-req="agent,business"> '+T.trans;
+        const _lc=document.getElementById('lblCash'); if(_lc) _lc.innerHTML='<input type="radio" name="paymentMethod" value="cash" data-req="agent,business"> '+T.cash;
+        // Placeholders
+        const _fn=document.getElementById('fullName'); if(_fn) _fn.placeholder=T.name_ph;
+        const _sl=document.getElementById('socialLink'); if(_sl) _sl.placeholder=T.social_ph;
+        const _rv=document.getElementById('rewardValue'); if(_rv) _rv.placeholder=T.reward_ph;
+        // Категории в <select> — обновляем textContent через TAXONOMY_LABELS, value оставляем RU-канон
+        const _catSel=document.getElementById('category');
+        if(_catSel && typeof TAXONOMY_LABELS !== 'undefined'){
+          Array.from(_catSel.options).forEach(opt=>{
+            if(!opt.value) return;
+            const tr=TAXONOMY_LABELS.categories[opt.value];
+            if(tr) opt.textContent = (lang==='ru') ? opt.value : (tr[lang]||opt.value);
+          });
+        }
+        // Кнопки подкатегорий
+        const _btnConfirm=document.querySelector('#subcategoryGroup button[onclick="confirmInviteSubcat()"]');
+        if(_btnConfirm) _btnConfirm.textContent=T.subcat_confirm;
+        const _btnEdit=document.getElementById('inviteSubcatEdit');
+        if(_btnEdit) _btnEdit.textContent=T.subcat_edit;
+        // Перерендер подкатегорий на новом языке
+        if (typeof updateSubcategories === 'function' && _catSel && _catSel.value) {
+          updateSubcategories();
+        }
       }
 
       document.querySelectorAll(".lang-btn").forEach(btn => {
@@ -828,21 +898,135 @@
       });
     });
 
-    const SUBCATEGORIES = {
-      "Красота и эстетика": ["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж"],
-      "Еда и рестораны": ["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
-      "Магазины и товары": ["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
-      "Здоровье и медицина": ["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
-      "Юриспруденция": ["Коммерческое право (для бизнеса)","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
-      "Недвижимость и финансы": ["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
-      "Дом и ремонт": ["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
-      "Автомобили": ["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
-      "Праздники и мероприятия": ["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
-      "Обучение и спорт": ["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
-      "Домашние питомцы": ["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
-      "Туризм и отдых": ["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
-      "Бизнес и B2B услуги": ["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка"]
-    };
+    const TAXONOMY_SOURCE = {
+  "Красота и эстетика":["Косметология","Инъекционная косметология","Лазерная эпиляция","Эпиляция","Перманентный макияж","Удаление тату и татуажа","Стилисты по волосам и барберы","Ногтевой сервис","Брови и ресницы","Макияж","SPA и релакс-массаж","Коррекция фигуры"],
+  "Еда и рестораны":["Рестораны и кафе","Доставка еды и рационы","Авторская выпечка и десерты","Бары и пабы","Кейтеринг и банкеты"],
+  "Магазины и товары":["Одежда, обувь и аксессуары","Мебель и товары для дома","Ювелирные изделия","Цветы и подарки","Косметика и парфюмерия"],
+  "Здоровье и медицина":["Стоматология","Психология и психотерапия","Физиотерапия и остеопатия","Диетология и нутрициология","Альтернативная медицина","Лечебный массаж","Оптика и зрение"],
+  "Юриспруденция":["Коммерческое право","Недвижимость","Семейное право","Иммиграция и визы","Уголовное право","Травмы и Битуах Леуми","Нотариусы и переводы"],
+  "Недвижимость и финансы":["Недвижимость (купля/продажа/аренда)","Ипотека и рефинансирование","Бухгалтерия и налоги","Страхование (все виды)"],
+  "Дом и ремонт":["Ремонт под ключ","Электрика","Сантехника","Кондиционеры","Клининг и химчистка","Дизайн интерьера","Сборка и ремонт мебели"],
+  "Автомобили":["Ремонт и СТО","Детейлинг и мойка","Автоподбор и продажа","Аренда авто"],
+  "Праздники и мероприятия":["Фото и видеосъемка","Ведущие и музыканты","Организация мероприятий","Декораторы"],
+  "Обучение и спорт":["Фитнес и тренеры","Репетиторы и курсы","Языковые школы","Детские кружки и секции"],
+  "Домашние питомцы":["Ветеринария","Груминг","Зоомагазины","Передержка и выгул"],
+  "Туризм и отдых":["Турагентства","Отели и апартаменты","Гиды и экскурсии"],
+  "Бизнес и B2B услуги":["Маркетинг и SMM","Разработка сайтов и ПО","Дизайн и брендинг","Консалтинг и коучинг","Логистика и доставка","Типография"]
+};
+
+    const TAXONOMY_LABELS = {
+  categories:{
+    "Красота и эстетика":{en:"Beauty & Aesthetics",he:"יופי ואסתטיקה",ar:"الجمال والجماليات"},
+    "Еда и рестораны":{en:"Food & Restaurants",he:"אוכל ומסעדות",ar:"الطعام والمطاعم"},
+    "Магазины и товары":{en:"Shops & Goods",he:"חנויות ומוצרים",ar:"المتاجر والسلع"},
+    "Здоровье и медицина":{en:"Health & Medicine",he:"בריאות ורפואה",ar:"الصحة والطب"},
+    "Юриспруденция":{en:"Legal Services",he:"שירותים משפטיים",ar:"الخدمات القانونية"},
+    "Недвижимость и финансы":{en:"Real Estate & Finance",he:"נדל\"ן ופיננסים",ar:"العقارات والتمويل"},
+    "Дом и ремонт":{en:"Home & Repair",he:"בית ושיפוץ",ar:"المنزل والإصلاح"},
+    "Автомобили":{en:"Automotive",he:"רכב",ar:"السيارات"},
+    "Праздники и мероприятия":{en:"Events & Parties",he:"אירועים וחגיגות",ar:"الفعاليات والمناسبات"},
+    "Обучение и спорт":{en:"Education & Sports",he:"חינוך וספורט",ar:"التعليم والرياضة"},
+    "Домашние питомцы":{en:"Pets",he:"חיות מחמד",ar:"الحيوانات الأليفة"},
+    "Туризм и отдых":{en:"Tourism & Leisure",he:"תיירות ופנאי",ar:"السياحة والترفيه"},
+    "Бизнес и B2B услуги":{en:"Business & B2B Services",he:"עסקים ושירותי B2B",ar:"الأعمال وخدمات B2B"}
+  },
+  subcategories:{
+    "Косметология":{en:"Cosmetology",he:"קוסמטולוגיה",ar:"التجميل"},
+    "Инъекционная косметология":{en:"Injectable cosmetology",he:"קוסמטולוגיה בהזרקות",ar:"التجميل بالحقن"},
+    "Лазерная эпиляция":{en:"Laser hair removal",he:"הסרת שיער בלייזר",ar:"إزالة الشعر بالليزر"},
+    "Эпиляция":{en:"Hair removal",he:"הסרת שיער",ar:"إزالة الشعر"},
+    "Перманентный макияж":{en:"Permanent makeup",he:"איפור קבוע",ar:"المكياج الدائم"},
+    "Удаление тату и татуажа":{en:"Tattoo & PMU removal",he:"הסרת קעקועים ואיפור קבוע",ar:"إزالة الوشم والتاتو التجميلي"},
+    "Стилисты по волосам и барберы":{en:"Hair stylists & barbers",he:"מעצבי שיער וברברים",ar:"مصففو الشعر والحلاقون"},
+    "Ногтевой сервис":{en:"Nail services",he:"שירותי ציפורניים",ar:"خدمات الأظافر"},
+    "Брови и ресницы":{en:"Brows & lashes",he:"גבות וריסים",ar:"الحواجب والرموش"},
+    "Макияж":{en:"Makeup",he:"איפור",ar:"المكياج"},
+    "SPA и релакс-массаж":{en:"SPA & relaxation massage",he:"ספא ועיסוי מרגיע",ar:"السبا والمساج الاسترخائي"},
+    "Рестораны и кафе":{en:"Restaurants & cafes",he:"מסעדות ובתי קפה",ar:"المطاعم والمقاهي"},
+    "Доставка еды и рационы":{en:"Food delivery & meal plans",he:"משלוחי אוכל ותפריטים",ar:"توصيل الطعام والوجبات"},
+    "Авторская выпечка и десерты":{en:"Artisan pastries & desserts",he:"מאפים וקינוחים בעבודת יד",ar:"المخبوزات والحلويات الحرفية"},
+    "Бары и пабы":{en:"Bars & pubs",he:"ברים ופאבים",ar:"البارات والحانات"},
+    "Кейтеринг и банкеты":{en:"Catering & banquets",he:"קייטרינג ואירועים",ar:"التموين والولائم"},
+    "Одежда, обувь и аксессуары":{en:"Clothing, shoes & accessories",he:"ביגוד, נעליים ואקססוריז",ar:"الملابس والأحذية والإكسسوارات"},
+    "Мебель и товары для дома":{en:"Furniture & home goods",he:"ריהוט ומוצרי בית",ar:"الأثاث ومنتجات المنزل"},
+    "Ювелирные изделия":{en:"Jewelry",he:"תכשיטים",ar:"المجوهرات"},
+    "Цветы и подарки":{en:"Flowers & gifts",he:"פרחים ומתנות",ar:"الزهور والهدايا"},
+    "Косметика и парфюмерия":{en:"Cosmetics & perfumes",he:"קוסמטיקה ובשמים",ar:"مستحضرات التجميل والعطور"},
+    "Стоматология":{en:"Dentistry",he:"רפואת שיניים",ar:"طب الأسنان"},
+    "Психология и психотерапия":{en:"Psychology & psychotherapy",he:"פסיכולוגיה ופסיכותרפיה",ar:"علم النفس والعلاج النفسي"},
+    "Физиотерапия и остеопатия":{en:"Physiotherapy & osteopathy",he:"פיזיותרפיה ואוסטאופתיה",ar:"العلاج الطبيعي وتقويم العظام"},
+    "Диетология и нутрициология":{en:"Dietetics & nutrition",he:"דיאטולוגיה ותזונה",ar:"التغذية والحمية"},
+    "Альтернативная медицина":{en:"Alternative medicine",he:"רפואה אלטרנטיבית",ar:"الطب البديل"},
+    "Лечебный массаж":{en:"Therapeutic massage",he:"עיסוי טיפולי",ar:"المساج العلاجي"},
+    "Оптика и зрение":{en:"Optics & vision",he:"אופטיקה וראייה",ar:"البصريات والنظر"},
+    "Коммерческое право":{en:"Commercial law",he:"משפט מסחרי",ar:"القانون التجاري"},
+    "Недвижимость":{en:"Real estate law",he:"נדל\"ן",ar:"العقارات"},
+    "Семейное право":{en:"Family law",he:"דיני משפחה",ar:"قانون الأسرة"},
+    "Иммиграция и визы":{en:"Immigration & visas",he:"הגירה ואשרות",ar:"الهجرة والتأشيرات"},
+    "Уголовное право":{en:"Criminal law",he:"משפט פלילי",ar:"القانون الجنائي"},
+    "Травмы и Битуах Леуми":{en:"Injuries & Bituach Leumi",he:"פציעות וביטוח לאומי",ar:"الإصابات والتأمين الوطني"},
+    "Нотариусы и переводы":{en:"Notary & translations",he:"נוטריונים ותרגומים",ar:"التوثيق والترجمة"},
+    "Недвижимость (купля/продажа/аренда)":{en:"Real estate (buy/sell/rent)",he:"נדל\"ן (קנייה/מכירה/השכרה)",ar:"العقارات (شراء/بيع/إيجار)"},
+    "Ипотека и рефинансирование":{en:"Mortgages & refinancing",he:"משכנתאות ומיחזור",ar:"الرهن العقاري وإعادة التمويل"},
+    "Бухгалтерия и налоги":{en:"Accounting & taxes",he:"הנהלת חשבונות ומסים",ar:"المحاسبة والضرائب"},
+    "Страхование (все виды)":{en:"Insurance (all types)",he:"ביטוח (כל הסוגים)",ar:"التأمين (جميع الأنواع)"},
+    "Ремонт под ключ":{en:"Turnkey renovation",he:"שיפוץ מלא",ar:"التجديد الكامل"},
+    "Электрика":{en:"Electrical work",he:"חשמל",ar:"الأعمال الكهربائية"},
+    "Сантехника":{en:"Plumbing",he:"אינסטלציה",ar:"السباكة"},
+    "Кондиционеры":{en:"Air conditioning",he:"מיזוג אוויר",ar:"التكييف"},
+    "Клининг и химчистка":{en:"Cleaning & dry cleaning",he:"ניקיון וניקוי יבש",ar:"التنظيف والتنظيف الجاف"},
+    "Дизайн интерьера":{en:"Interior design",he:"עיצוב פנים",ar:"التصميم الداخلي"},
+    "Сборка и ремонт мебели":{en:"Furniture assembly & repair",he:"הרכבה ותיקון רהיטים",ar:"تركيب الأثاث وإصلاحه"},
+    "Ремонт и СТО":{en:"Repair & service station",he:"מוסך ותיקון",ar:"الإصلاح ومراكز الخدمة"},
+    "Детейлинг и мойка":{en:"Detailing & car wash",he:"דיטיילינג ושטיפת רכב",ar:"العناية بالسيارات والغسيل"},
+    "Автоподбор и продажа":{en:"Car selection & sales",he:"איתור רכבים ומכירה",ar:"اختيار السيارات وبيعها"},
+    "Аренда авто":{en:"Car rental",he:"השכרת רכב",ar:"تأجير السيارات"},
+    "Фото и видеосъемка":{en:"Photo & video",he:"צילום וידאו וסטילס",ar:"التصوير الفوتوغرافي والفيديو"},
+    "Ведущие и музыканты":{en:"Hosts & musicians",he:"מנחים ומוזיקאים",ar:"مقدمو الحفلات والموسيقيون"},
+    "Организация мероприятий":{en:"Event planning",he:"הפקת אירועים",ar:"تنظيم الفعاليات"},
+    "Декораторы":{en:"Decorators",he:"מעצבים ודקורטורים",ar:"الديكور"},
+    "Фитнес и тренеры":{en:"Fitness & trainers",he:"כושר ומאמנים",ar:"اللياقة والمدربون"},
+    "Репетиторы и курсы":{en:"Tutors & courses",he:"מורים פרטיים וקורסים",ar:"الدروس الخاصة والدورات"},
+    "Языковые школы":{en:"Language schools",he:"בתי ספר לשפות",ar:"مدارس اللغات"},
+    "Детские кружки и секции":{en:"Children's clubs & activities",he:"חוגים ופעילויות לילדים",ar:"أنشطة الأطفال والنوادي"},
+    "Ветеринария":{en:"Veterinary care",he:"וטרינריה",ar:"الطب البيطري"},
+    "Груминг":{en:"Grooming",he:"טיפוח חיות",ar:"العناية بالحيوانات"},
+    "Зоомагазины":{en:"Pet stores",he:"חנויות חיות",ar:"متاجر الحيوانات"},
+    "Передержка и выгул":{en:"Pet boarding & walking",he:"פנסיון והליכה",ar:"الإيواء وتمشية الحيوانات"},
+    "Турагентства":{en:"Travel agencies",he:"סוכנויות נסיעות",ar:"وكالات السفر"},
+    "Отели и апартаменты":{en:"Hotels & apartments",he:"מלונות ודירות",ar:"الفنادق والشقق"},
+    "Гиды и экскурсии":{en:"Guides & tours",he:"מדריכים וסיורים",ar:"المرشدون والجولات"},
+    "Маркетинг и SMM":{en:"Marketing & SMM",he:"שיווק ו-SMM",ar:"التسويق ووسائل التواصل"},
+    "Разработка сайтов и ПО":{en:"Websites & software development",he:"פיתוח אתרים ותוכנה",ar:"تطوير المواقع والبرمجيات"},
+    "Дизайн и брендинг":{en:"Design & branding",he:"עיצוב ומיתוג",ar:"التصميم والعلامة التجارية"},
+    "Консалтинг и коучинг":{en:"Consulting & coaching",he:"ייעוץ וקואצ'ינג",ar:"الاستشارات والتدريب"},
+    "Логистика и доставка":{en:"Logistics & delivery",he:"לוגיסטיקה ומשלוחים",ar:"اللوجستيات والتوصيل"},
+    "Коррекция фигуры":{en:"Body contouring",he:"עיצוב הגוף",ar:"نحت الجسم"},
+    "Типография":{en:"Printing & press",he:"בית דפוס",ar:"مطبعة"}
+  }
+};
+
+    function getCurrentLang() {
+      const activeBtn = document.querySelector('.lang-btn.active');
+      return activeBtn ? activeBtn.dataset.lang : 'ru';
+    }
+
+    function resolveCategoryRu(label) {
+      if (!label) return '';
+      if (TAXONOMY_SOURCE[label]) return label;
+      const target = String(label).trim().toLowerCase();
+      for (const [ru, trans] of Object.entries(TAXONOMY_LABELS.categories)) {
+        const vals = [trans.en, trans.he, trans.ar];
+        if (vals.some(v => v && v.toLowerCase() === target)) return ru;
+      }
+      return '';
+    }
+
+    function translateSubcategory(subRu, lang) {
+      const entry = TAXONOMY_LABELS.subcategories[subRu];
+      if (!entry) return subRu;
+      return (lang === 'ru') ? subRu : (entry[lang] || subRu);
+    }
 
     // Надёжный триггер для Android нативного пикера
     document.addEventListener('DOMContentLoaded', function() {
@@ -854,35 +1038,58 @@
     });
 
     function updateSubcategories() {
-      const cat = document.getElementById('category').value;
+      const selectedRaw = document.getElementById('category').value;
+      const catRu = resolveCategoryRu(selectedRaw);
       const subGroup = document.getElementById('subcategoryGroup');
       const list = document.getElementById('nicheCheckboxList');
       const nicheInput = document.getElementById('niche');
-      const subs = SUBCATEGORIES[cat] || [];
+      const tags = document.getElementById('inviteSubcatTags');
+      const editBtn = document.getElementById('inviteSubcatEdit');
+      const confirmBtn = document.querySelector('#subcategoryGroup button[onclick="confirmInviteSubcat()"]');
+      const subs = TAXONOMY_SOURCE[catRu] || [];
+      const lang = getCurrentLang();
+      const prevChecked = new Set(Array.from(list.querySelectorAll('input:checked')).map(c => c.dataset.canonical));
       list.innerHTML = '';
       nicheInput.value = '';
-      subs.forEach(s => {
+      if (tags) {
+        tags.innerHTML = '';
+        tags.style.display = 'none';
+      }
+      if (editBtn) editBtn.style.display = 'none';
+      if (confirmBtn) confirmBtn.style.display = 'block';
+      if (!subs.length) {
+        subGroup.classList.add('hidden');
+        subGroup.style.display = 'none';
+        return;
+      }
+      subs.forEach(sRu => {
+        const translated = translateSubcategory(sRu, lang);
         const item = document.createElement('label');
         item.className = 'niche-cb-item';
         const cb = document.createElement('input');
         cb.type = 'checkbox';
-        cb.value = s;
+        cb.value = translated;
+        cb.dataset.canonical = sRu;
+        if (prevChecked.has(sRu)) {
+          cb.checked = true;
+          item.classList.add('checked');
+        }
         cb.addEventListener('change', () => {
           item.classList.toggle('checked', cb.checked);
-          // Обновляем скрытое поле
           const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
           nicheInput.value = checked.join(', ');
         });
         const span = document.createElement('span');
-        span.textContent = s;
+        span.textContent = translated;
         item.appendChild(cb);
         item.appendChild(span);
         list.appendChild(item);
       });
-      if (subs.length > 0) {
-        subGroup.classList.remove('hidden');
-        subGroup.style.display = 'block';
-      }
+      const checkedNow = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+      nicheInput.value = checkedNow.join(', ');
+      list.style.display = 'flex';
+      subGroup.classList.remove('hidden');
+      subGroup.style.display = 'block';
     }
 
     function confirmInviteSubcat() {
@@ -914,4 +1121,3 @@
   </script>
 </body>
 </html>
-
