@@ -32,32 +32,36 @@
   };
 
   function updateIndexSubcategories() {
-    const cat = document.getElementById('nicheSelect').value;
+    const rawCat = document.getElementById('nicheSelect').value;
+    const catRu = (typeof resolveCategoryRu === 'function') ? resolveCategoryRu(rawCat) : rawCat;
     const field = document.getElementById('indexSubcatField');
     const list = document.getElementById('indexSubcatList');
     const hidden = document.getElementById('nicheSubSelect');
     const tags = document.getElementById('indexSubcatTags');
     const doneBtn = document.getElementById('indexSubcatDone');
     const editBtn = document.getElementById('indexSubcatEdit');
-    const subs = INDEX_SUBCATEGORIES[cat] || [];
+    const subs = (typeof TAXONOMY_SOURCE !== 'undefined' ? (TAXONOMY_SOURCE[catRu] || []) : []);
+    const lang = (typeof getCurrentIndexLang === 'function') ? getCurrentIndexLang() : 'ru';
     list.innerHTML = '';
     hidden.value = '';
     tags.innerHTML = '';
     tags.style.display = 'none';
     if (doneBtn) doneBtn.style.display = 'block';
     if (editBtn) editBtn.style.display = 'none';
-    subs.forEach(s => {
+    subs.forEach(sRu => {
+      const translated = (typeof translateSubcategory === 'function') ? translateSubcategory(sRu, lang) : sRu;
       const item = document.createElement('label');
       item.className = 'idx-cb-item';
       const cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.value = s;
+      cb.type = 'checkbox'; cb.value = translated;
+      cb.dataset.canonical = sRu;
       cb.addEventListener('change', () => {
         item.classList.toggle('checked', cb.checked);
-        const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
+        const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.dataset.canonical || c.value);
         hidden.value = checked.join(', ');
       });
       const span = document.createElement('span');
-      span.textContent = s;
+      span.textContent = translated;
       item.appendChild(cb); item.appendChild(span);
       list.appendChild(item);
     });
@@ -71,10 +75,12 @@
     const doneBtn = document.getElementById('indexSubcatDone');
     const editBtn = document.getElementById('indexSubcatEdit');
     const hidden = document.getElementById('nicheSubSelect');
-    const checked = Array.from(list.querySelectorAll('input:checked')).map(c => c.value);
-    if (checked.length === 0) return;
-    hidden.value = checked.join(', ');
-    tags.innerHTML = checked.map(s =>
+    const checkedItems = Array.from(list.querySelectorAll('input:checked'));
+    if (checkedItems.length === 0) return;
+    const checkedCanon = checkedItems.map(c => c.dataset.canonical || c.value);
+    const checkedLabels = checkedItems.map(c => c.value);
+    hidden.value = checkedCanon.join(', ');
+    tags.innerHTML = checkedLabels.map(s =>
       `<span style="display:inline-block;background:rgba(86,204,242,0.15);border:1px solid rgba(86,204,242,0.4);color:#56CCF2;border-radius:20px;padding:4px 12px;font-size:0.85rem;font-weight:600;">${s}</span>`
     ).join('');
     tags.style.display = 'flex';
