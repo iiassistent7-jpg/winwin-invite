@@ -482,6 +482,7 @@ async function loadCatalog(){
 function cleanCatalogText(value){
   if(value==null) return '';
   const text=String(value).trim();
+  if(text==='—') return '';
   if(!text || text==='ג€”' || text==='-') return '';
   return text;
 }
@@ -561,7 +562,29 @@ function getBusinessCategory(b){
     ...normalizeList(b.niche_categories),
     ...normalizeList(b.categories)
   ]).map(v=>getCanonicalTaxonomyValue(v,'category'));
-  return values.find(Boolean)||'';
+  const direct=values.find(Boolean);
+  if(direct) return direct;
+  const subValues=uniqueTexts([
+    ...normalizeList(b.subcategories),
+    ...normalizeList(b.subcategory),
+    ...normalizeList(b.subcategory_name),
+    ...normalizeList(b.specialization),
+    ...normalizeList(b.specializations),
+    ...normalizeList(b.speciality),
+    ...normalizeList(b.specialities),
+    ...normalizeList(b.subniche),
+    ...normalizeList(b.subniches),
+    ...normalizeList(b.niche),
+    ...normalizeList(b.niches)
+  ]).map(v=>getCanonicalTaxonomyValue(v,'subcategory'));
+  for(const sub of subValues){
+    if(!sub) continue;
+    const subKey=normalizeAliasKey(sub);
+    for(const cat of Object.keys(TAXONOMY_SOURCE)){
+      if((TAXONOMY_SOURCE[cat]||[]).some(s=>normalizeAliasKey(s)===subKey)) return cat;
+    }
+  }
+  return '';
 }
 function getBusinessSubcategories(b){
   const categoryKey=normalizeAliasKey(getBusinessCategory(b));
