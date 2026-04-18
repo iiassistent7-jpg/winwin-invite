@@ -517,7 +517,7 @@
         </select>
       </div>
       <div class="field" id="indexSubcatField" style="display:none;">
-        <label>Специализация <span style="font-size:0.75rem;opacity:0.6;">(можно выбрать несколько)</span></label>
+        <label><span id="indexSubcatTitle">Специализация</span> <span id="indexSubcatHint" style="font-size:0.75rem;opacity:0.6;">(можно выбрать несколько)</span></label>
         <div id="indexSubcatTags" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
         <div id="indexSubcatList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;"></div>
         <button type="button" id="indexSubcatDone" onclick="confirmIndexSubcat()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#56CCF2,#2F80ED);border:none;color:#fff;font-weight:800;font-size:1rem;border-radius:14px;cursor:pointer;box-shadow:0 4px 16px rgba(86,204,242,0.3);">✅ Подтвердить выбор</button>
@@ -616,6 +616,10 @@
       roleBizName: "Владелец бизнеса", roleBizDesc: "Хочу увеличить базу клиентов",
       roleAgentName: "Довольный клиент", roleAgentDesc: "Хочу рекомендовать",
       nicheLabel: "Категория бизнеса", nicheDefault: "Выберите категорию...",
+      niche_sub_label: "Специализация",
+      subcat_hint: "(можно выбрать несколько)",
+      subcat_confirm: "✅ Подтвердить выбор",
+      subcat_edit: "✏️ Изменить",
       rewardLabel: "Бонус за рекомендацию",
       rPct: "% от сделки", rFix: "Фикс ₪", rGift: "Подарок/Услуга",
       rewardPh: "Укажите размер...",
@@ -641,6 +645,10 @@
       roleBizName: "Business Owner", roleBizDesc: "I want to grow my client base",
       roleAgentName: "Happy Client", roleAgentDesc: "I want to recommend",
       nicheLabel: "Business Category", nicheDefault: "Select category...",
+      niche_sub_label: "Specialization",
+      subcat_hint: "(multiple choice)",
+      subcat_confirm: "✅ Confirm selection",
+      subcat_edit: "✏️ Edit",
       rewardLabel: "Recommendation Bonus",
       rPct: "% of deal", rFix: "Fixed ₪", rGift: "Gift/Service",
       rewardPh: "Enter amount...",
@@ -666,6 +674,10 @@
       roleBizName: "בעל עסק", roleBizDesc: "רוצה להגדיל את מאגר הלקוחות",
       roleAgentName: "לקוח מרוצה", roleAgentDesc: "רוצה להמליץ",
       nicheLabel: "קטגוריית עסק", nicheDefault: "בחרו קטגוריה...",
+      niche_sub_label: "התמחות",
+      subcat_hint: "(אפשר לבחור כמה)",
+      subcat_confirm: "✅ אישור בחירה",
+      subcat_edit: "✏️ עריכה",
       rewardLabel: "הטבה על המלצה",
       rPct: "% מהעסקה", rFix: "סכום קבוע ₪", rGift: "מתנה/שירות",
       rewardPh: "הכניסו גודל...",
@@ -691,6 +703,10 @@
       roleBizName: "صاحب العمل", roleBizDesc: "أريد زيادة قاعدة العملاء",
       roleAgentName: "عميل راضٍ", roleAgentDesc: "أريد التوصية",
       nicheLabel: "فئة العمل", nicheDefault: "اختر فئة...",
+      niche_sub_label: "التخصص",
+      subcat_hint: "(يمكن اختيار أكثر من واحد)",
+      subcat_confirm: "✅ تأكيد الاختيار",
+      subcat_edit: "✏️ تعديل",
       rewardLabel: "مكافأة التوصية",
       rPct: "% من الصفقة", rFix: "مبلغ ثابت ₪", rGift: "هدية/خدمة",
       rewardPh: "أدخل المبلغ...",
@@ -763,6 +779,14 @@
     if (typeof updateIndexSubcategories === 'function' && _nicheSelEl && _nicheSelEl.value) {
       updateIndexSubcategories();
     }
+    const _subTitle = document.getElementById("indexSubcatTitle");
+    if (_subTitle) _subTitle.textContent = t.niche_sub_label;
+    const _subHint = document.getElementById("indexSubcatHint");
+    if (_subHint) _subHint.textContent = t.subcat_hint;
+    const _subDone = document.getElementById("indexSubcatDone");
+    if (_subDone) _subDone.textContent = t.subcat_confirm;
+    const _subEdit = document.getElementById("indexSubcatEdit");
+    if (_subEdit) _subEdit.textContent = t.subcat_edit;
     document.getElementById("rewardLabel").textContent = t.rewardLabel;
     document.getElementById("rPct").textContent = t.rPct;
     document.getElementById("rFix").textContent = t.rFix;
