@@ -608,19 +608,22 @@ function getCategoryTreeFromBackend(){
 }
 function getAvailableCategories(){
   const explicit=getCategoryTreeFromBackend();
-  if(explicit) return explicit.map(item=>item.name);
+  const explicitNames=explicit?explicit.map(item=>item.name).filter(Boolean):[];
   const derived=uniqueTexts(allBusinesses.map(getBusinessCategory));
-  return derived.length?derived:Object.keys(TAXONOMY_SOURCE);
+  const merged=uniqueTexts([...explicitNames,...derived]);
+  return merged.length?merged:Object.keys(TAXONOMY_SOURCE);
 }
 function getAvailableSubcategories(category){
   if(!category||category==='__all__') return [];
   const explicit=getCategoryTreeFromBackend();
+  let explicitSubs=[];
   if(explicit){
     const match=explicit.find(item=>item.name===category);
-    if(match&&match.subcategories.length) return match.subcategories;
+    if(match&&Array.isArray(match.subcategories)) explicitSubs=match.subcategories.filter(Boolean);
   }
   const derived=uniqueTexts(allBusinesses.filter(b=>getBusinessCategory(b)===category).flatMap(getBusinessSubcategories));
-  return derived.length?derived:(TAXONOMY_SOURCE[category]||[]);
+  const merged=uniqueTexts([...explicitSubs,...derived]);
+  return merged.length?merged:(TAXONOMY_SOURCE[category]||[]);
 }
 function getBusinessTaxonomyLine(b){
   const categoryLabel=getCategoryLabel(getBusinessCategory(b));
