@@ -720,12 +720,14 @@
       const _urlLang = new URLSearchParams(window.location.search).get("lang");
       applyLang((_urlLang && LANG_TEXTS[_urlLang]) ? _urlLang : "ru");
 
-      // Показ поля ввода значения вознаграждения
-      rewardRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
+      // Показ поля ввода значения вознаграждения — делегирование на контейнере,
+      // чтобы не ломалось после applyLang() (которая пересоздаёт радио через innerHTML).
+      const _rewardGroup = document.getElementById('rewardTypeGroup');
+      if (_rewardGroup) {
+        _rewardGroup.addEventListener('change', (e) => {
+          if (!e.target || e.target.name !== 'rewardType') return;
           rewardValue.classList.remove('hidden');
-          // Меняем placeholder в зависимости от типа
-          const type = document.querySelector('input[name="rewardType"]:checked')?.value;
+          const type = e.target.value;
           const _rwPh = {
             ru: { percent: 'Например: 15 (будет 15% от сделки)', fixed: 'Например: 200 (фиксированная сумма ₪)', gift: 'Опишите подарок: Бесплатная консультация' },
             he: { percent: 'לדוגמה: 15 (יהיה 15% מהעסקה)', fixed: 'לדוגמה: 200 (סכום קבוע ₪)', gift: 'תארו את המתנה: ייעוץ חינם' },
@@ -737,7 +739,7 @@
           else if (type === 'gift') rewardValue.placeholder = _rwPh.gift || '';
           validateForm();
         });
-      });
+      }
 
       // ── ВАЛИДАЦИЯ ─────────────────────────────────────────────────────
       const getRequiredElements = () => {
