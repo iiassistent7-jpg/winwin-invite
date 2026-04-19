@@ -9,6 +9,8 @@
   <title>Win-Win · Бизнес Кабинет</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="referral-share.js"></script>
   <script src="recommender-decision-ui.js"></script>
   <style>
     /* ── CSS Variables ──────────────────────────────────────────────── */
@@ -412,6 +414,18 @@
     .sticky-footer { position:sticky; bottom:0; padding:10px 0 24px; background:linear-gradient(to top,var(--bg) 75%,transparent); display:flex; flex-direction:column; gap:10px; z-index:10; }
     .niche-tags { display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
     .niche-tag  { display:inline-block; background:rgba(86,204,242,.1); border:1px solid rgba(86,204,242,.3); color:var(--accent1); border-radius:20px; padding:4px 12px; font-size:.85rem; font-weight:600; }
+    .biz-fullscreen{position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:24px 16px 40px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,1,.5,1);display:none}
+    .biz-fullscreen.active{display:block;transform:translateX(0)}
+    .biz-rec-header-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:22px;margin-bottom:18px}
+    .biz-rec-title{font-family:Sora,sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:10px;line-height:1.2;text-align:center}
+    .biz-rec-desc{font-size:.88rem;color:var(--text2);line-height:1.55;padding-top:10px;word-break:break-word;text-align:center}
+    .biz-instruction-block{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:20px;margin-bottom:14px}
+    .biz-instruction-text{font-size:.85rem;color:var(--text2);margin-bottom:12px;font-weight:500;line-height:1.4}
+    .biz-link-box{display:flex;gap:8px}
+    .biz-link-input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:11px;font-size:.82rem;outline:none;font-family:inherit}
+    .biz-btn-copy{flex-shrink:0;background:var(--accent2);border:none;color:#fff;font-weight:700;padding:0 18px;border-radius:11px;cursor:pointer;transition:.2s;white-space:nowrap;font-family:inherit}
+    .biz-btn-copy.copied{background:var(--green)}
+    .biz-qr-container{text-align:center;padding:16px;background:#fff;border-radius:16px;display:inline-block;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.1)}
   </style>
 </head>
 <body class="brand-theme">
@@ -893,7 +907,7 @@ function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name]
 // ══ I18N ══════════════════════════════════════════════════════════════
 const i18n = {
   ru:{
-    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендуйте проверенные бизнесы", rec_sub:"Выберите бизнес, который готовы рекомендовать.", rec_btn_label:"Выбрать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_payout_pending:"Ожидаем выплату", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_invite_btn:"🔗 Пригласить клиента в Win-Win", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
+    rec_chip:"Ваш социальный капитал", rec_title:"Рекомендуйте проверенные бизнесы", rec_sub:"Выберите бизнес, который готовы рекомендовать.", rec_btn_label:"Выбрать бизнес", rec_note:"Одна рекомендация = один приглашённый клиент. Дальше система сама проведёт сделку по сценарию благодарности.", rec_stat_total:"Рекомендаций", rec_stat_waiting:"Ждут благодарности", rec_stat_done:"Завершено", rec_list_title:"Мои рекомендации", rec_list_sub:"Активные и завершённые исходящие рекомендации.", rec_empty:"Вы пока никого не рекомендовали.", rec_prefill:"Хочу порекомендовать бизнес", rec_waiting:"В работе", rec_payout_pending:"Ожидаем выплату", rec_done:"Завершено", rec_client:"Клиент", dec_take:"Забрать себе", dec_gift:"Подарить клиенту", dec_support:"Поддержать бизнес", ag_invite_btn:"Пригласить\nрекомендателя\nв Win-Win", invite_title:"Приглашение в Win-Win", invite_desc:"Поделитесь ссылкой, чтобы пригласить нового рекомендателя в Win-Win.", invite_copy_link:"Скопируйте и отправьте эту ссылку:", invite_scan_qr:"Или дайте отсканировать QR-код:", invite_copy_btn:"Скопировать", invite_copied:"Скопировано ✅", invite_back:"Закрыть", ag_tab_mine:"Мои", ag_tab_leaders:"Лидеры в моей нише", ag_mine_caption:"Люди, которые уже рекомендуют ваш бизнес и приводят клиентов.", ag_leaders_caption:"Сильные рекомендатели в вашей нише — ориентир для сотрудничества.", ag_cta_partner:"Предложить сотрудничество",
 
     loader_sub:"Загрузка данных...", err_title:"Сессия истекла", err_sub:"Вернитесь в мессенджер и получите новую ссылку.", err_preview:"Ваше сообщение:",
     err_prefill:"Снова войти в личный кабинет\nНажмите кнопку отправить и получите новую ссылку на вход {pointer}",
@@ -930,7 +944,7 @@ const i18n = {
     lb_deals:"Сделок:", filt_all:"Все", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   he:{
-    rec_chip:"ההון החברתי שלך", rec_title:"המליצו על עסקים בדוקים", rec_sub:"בחרו עסק שאתם מוכנים להמליץ עליו.", rec_btn_label:"בחירת עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_payout_pending:"ממתינים לתשלום", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_invite_btn:"🔗 להזמין לקוח ל-Win-Win", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
+    rec_chip:"ההון החברתי שלך", rec_title:"המליצו על עסקים בדוקים", rec_sub:"בחרו עסק שאתם מוכנים להמליץ עליו.", rec_btn_label:"בחירת עסק", rec_note:"המלצה אחת = לקוח מוזמן אחד. משם המערכת ממשיכה לבד.", rec_stat_total:"המלצות", rec_stat_waiting:"ממתינות לתגמול", rec_stat_done:"הושלמו", rec_list_title:"ההמלצות שלי", rec_list_sub:"המלצות יוצאות פעילות והיסטוריה.", rec_empty:"עדיין לא המלצתם על עסק.", rec_prefill:"אני רוצה להמליץ על עסק", rec_waiting:"בתהליך", rec_payout_pending:"ממתינים לתשלום", rec_done:"הושלם", rec_client:"לקוח", dec_take:"לקחת לעצמי", dec_gift:"להעניק ללקוח", dec_support:"לתמוך בעסק", ag_invite_btn:"להזמין\nממליץ\nל-Win-Win", invite_title:"הזמנה ל-Win-Win", invite_desc:"שתפו את הקישור כדי להזמין ממליץ חדש ל-Win-Win.", invite_copy_link:"העתיקו ושלחו את הקישור:", invite_scan_qr:"או תנו לסרוק את קוד ה-QR:", invite_copy_btn:"העתק", invite_copied:"הועתק ✅", invite_back:"סגור", ag_tab_mine:"שלי", ag_tab_leaders:"מובילים בנישה שלי", ag_mine_caption:"אנשים שכבר ממליצים על העסק שלכם ומביאים לקוחות.", ag_leaders_caption:"ממליצים חזקים בנישה שלכם — כיוון לשיתוף פעולה.", ag_cta_partner:"להציע שיתוף פעולה",
 
     loader_sub:"טוען נתונים...", err_title:"פג תוקפו של המושב", err_sub:"חזור למסנג'ר וקבל קישור כניסה חדש.", err_preview:"ההודעה שלך:",
     err_prefill:"להיכנס שוב לאזור האישי\nלחץ על שלח וקבל קישור חדש {pointer}",
@@ -967,7 +981,7 @@ const i18n = {
     lb_deals:"עסקאות:", filt_all:"הכל", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   en:{
-    rec_chip:"Your social capital", rec_title:"Recommend trusted businesses", rec_sub:"Choose a business you are ready to recommend.", rec_btn_label:"Choose a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_payout_pending:"Awaiting payout", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_invite_btn:"🔗 Invite a client to Win-Win", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
+    rec_chip:"Your social capital", rec_title:"Recommend trusted businesses", rec_sub:"Choose a business you are ready to recommend.", rec_btn_label:"Choose a business", rec_note:"One recommendation = one invited client. Then the system handles the gratitude flow.", rec_stat_total:"Recommendations", rec_stat_waiting:"Awaiting gratitude", rec_stat_done:"Completed", rec_list_title:"My recommendations", rec_list_sub:"Active and completed outgoing recommendations.", rec_empty:"You have not recommended anyone yet.", rec_prefill:"I want to recommend a business", rec_waiting:"In progress", rec_payout_pending:"Awaiting payout", rec_done:"Completed", rec_client:"Client", dec_take:"Keep for myself", dec_gift:"Gift to client", dec_support:"Support business", ag_invite_btn:"Invite a\nrecommender\nto Win-Win", invite_title:"Invitation to Win-Win", invite_desc:"Share this link to invite a new recommender to Win-Win.", invite_copy_link:"Copy and send this link:", invite_scan_qr:"Or let them scan the QR code:", invite_copy_btn:"Copy", invite_copied:"Copied ✅", invite_back:"Close", ag_tab_mine:"Mine", ag_tab_leaders:"Leaders in my niche", ag_mine_caption:"People who already recommend your business and bring clients.", ag_leaders_caption:"Strong recommenders in your niche — a benchmark for collaboration.", ag_cta_partner:"Offer collaboration",
 
     loader_sub:"Loading data...", err_title:"Session Expired", err_sub:"Return to the messenger and get a new login link.", err_preview:"Your message:",
     err_prefill:"Log in again to my dashboard\nTap Send to get a new login link {pointer}",
@@ -1004,7 +1018,7 @@ const i18n = {
     lb_deals:"Deals:", filt_all:"All", err_btn_wa:"WhatsApp", err_btn_tg:"Telegram"
   },
   ar:{
-    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصِ بأعمال موثوقة", rec_sub:"اختر النشاط الذي أنت مستعد للتوصية به.", rec_btn_label:"اختر نشاطاً", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_payout_pending:"بانتظار الدفع", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_invite_btn:"🔗 دعوة عميل إلى Win-Win", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
+    rec_chip:"رأسمالك الاجتماعي", rec_title:"أوصِ بأعمال موثوقة", rec_sub:"اختر النشاط الذي أنت مستعد للتوصية به.", rec_btn_label:"اختر نشاطاً", rec_note:"توصية واحدة = عميل مدعو واحد. وبعدها تكمل المنظومة المسار تلقائياً.", rec_stat_total:"التوصيات", rec_stat_waiting:"بانتظار الشكر", rec_stat_done:"مكتملة", rec_list_title:"توصياتي", rec_list_sub:"التوصيات الصادرة النشطة والمكتملة.", rec_empty:"لم توصِ بأي عمل بعد.", rec_prefill:"أريد التوصية بعمل", rec_waiting:"قيد التنفيذ", rec_payout_pending:"بانتظار الدفع", rec_done:"مكتمل", rec_client:"العميل", dec_take:"أحتفظ به", dec_gift:"هدية للعميل", dec_support:"دعم العمل", ag_invite_btn:"دعوة\nمُوصٍ\nإلى Win-Win", invite_title:"دعوة إلى Win-Win", invite_desc:"شارك الرابط لدعوة مُوصٍ جديد إلى Win-Win.", invite_copy_link:"انسخ وأرسل هذا الرابط:", invite_scan_qr:"أو دعهم يمسحون رمز QR:", invite_copy_btn:"نسخ", invite_copied:"تم النسخ ✅", invite_back:"إغلاق", ag_tab_mine:"خاصتي", ag_tab_leaders:"قادة مجالي", ag_mine_caption:"الأشخاص الذين يوصون بعملك بالفعل ويجلبون العملاء.", ag_leaders_caption:"مُوصون أقوياء في مجالك — مؤشر للتعاون.", ag_cta_partner:"اقتراح تعاون",
 
     loader_sub:"جاري التحميل...", err_title:"انتهت الجلسة", err_sub:"عد إلى المراسل واحصل على رابط دخول جديد.", err_preview:"رسالتك:",
     err_prefill:"تسجيل الدخول مرة أخرى\nاضغط إرسال للحصول على رابط جديد {pointer}",
@@ -4150,33 +4164,44 @@ async function openRecommendFlow() {
   }
 }
 
-async function openInviteFlow() {
+function openInviteFlow() {
   const L = i18n[lang] || i18n.ru;
   const bizId = bizData && bizData.id;
   if (!bizId) { showNotice(L.catalog_err || 'Ошибка'); return; }
   const inviteUrl = 'https://winwinnetwork.pro/?ref=' + encodeURIComponent(bizId) + '&lang=' + encodeURIComponent(lang);
-  const shareTitle = 'Win-Win Network';
-  const shareText = {
-    ru: 'Присоединяйтесь к Win-Win Network — платформе взаимовыгодных рекомендаций!',
-    he: 'הצטרפו ל-Win-Win Network — פלטפורמת ההמלצות ההדדיות!',
-    en: 'Join Win-Win Network — the mutual recommendation platform!',
-    ar: 'انضم إلى Win-Win Network — منصة التوصيات المتبادلة!'
-  };
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: shareTitle, text: shareText[lang] || shareText.ru, url: inviteUrl });
-      return;
-    } catch (e) {
-      if (e.name === 'AbortError') return;
-    }
-  }
+  document.getElementById('bizInviteTitleValue').textContent = L.invite_title || 'Приглашение в Win-Win';
+  document.getElementById('bizInviteDescValue').textContent = L.invite_desc || '';
+  document.getElementById('t_biz_copy_link_inv').textContent = L.invite_copy_link || 'Скопируйте и отправьте эту ссылку:';
+  document.getElementById('t_biz_scan_qr_inv').textContent = L.invite_scan_qr || 'Или дайте отсканировать QR-код:';
+  document.getElementById('bizInviteCopyBtn').textContent = L.invite_copy_btn || 'Скопировать';
+  document.getElementById('t_biz_btn_back_invite').textContent = L.invite_back || 'Закрыть';
+  const input = document.getElementById('bizInviteLinkInput');
+  input.value = inviteUrl;
+  const screen = document.getElementById('bizInviteScreen');
+  screen.style.display = 'block';
+  requestAnimationFrame(() => screen.classList.add('active'));
   try {
-    await navigator.clipboard.writeText(inviteUrl);
-    const copied = { ru: '✅ Ссылка скопирована', he: '✅ הקישור הועתק', en: '✅ Link copied', ar: '✅ تم نسخ الرابط' };
-    showNotice(copied[lang] || copied.ru);
-  } catch (e) {
-    showNotice(inviteUrl);
-  }
+    new QRious({ element: document.getElementById('bizInviteQrCanvas'), value: inviteUrl, size: 200, backgroundAlpha: 1, background: '#ffffff', foreground: '#0F0F1A' });
+  } catch(e) {}
+}
+
+function closeBizInviteScreen() {
+  const screen = document.getElementById('bizInviteScreen');
+  screen.classList.remove('active');
+  setTimeout(() => { screen.style.display = 'none'; }, 380);
+}
+
+function copyBizInviteLink() {
+  const L = i18n[lang] || i18n.ru;
+  const input = document.getElementById('bizInviteLinkInput');
+  const btn = document.getElementById('bizInviteCopyBtn');
+  input.select();
+  try {
+    navigator.clipboard.writeText(input.value).catch(() => document.execCommand('copy'));
+  } catch(e) { document.execCommand('copy'); }
+  btn.textContent = L.invite_copied || 'Скопировано ✅';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = L.invite_copy_btn || 'Скопировать'; btn.classList.remove('copied'); }, 2200);
 }
 
 function formatShortDate(dateStr) {
@@ -4905,6 +4930,28 @@ window.onerror = function(msg, src, line, col, err) {
 
 window.onload = init;
 </script>
+
+  <div class="biz-fullscreen" id="bizInviteScreen">
+    <div style="max-width:430px;margin:0 auto;padding-bottom:30px;">
+      <div class="biz-rec-header-card" style="text-align:center;margin-top:20px;">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🤝</div>
+        <div class="biz-rec-title" id="bizInviteTitleValue"></div>
+        <div class="biz-rec-desc" id="bizInviteDescValue"></div>
+      </div>
+      <div class="biz-instruction-block">
+        <div class="biz-instruction-text" id="t_biz_copy_link_inv"></div>
+        <div class="biz-link-box">
+          <input type="text" id="bizInviteLinkInput" class="biz-link-input" readonly>
+          <button class="biz-btn-copy" id="bizInviteCopyBtn" onclick="copyBizInviteLink()"></button>
+        </div>
+      </div>
+      <div class="biz-instruction-block" style="text-align:center;">
+        <div class="biz-instruction-text" id="t_biz_scan_qr_inv"></div>
+        <div class="biz-qr-container"><canvas id="bizInviteQrCanvas"></canvas></div>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:16px;border-radius:16px;font-size:1rem;font-weight:800;border:none;cursor:pointer;background:var(--accent2);color:#fff;" onclick="closeBizInviteScreen()" id="t_biz_btn_back_invite"></button>
+    </div>
+  </div>
 
   <div id="uiNotice" style="position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:1200;max-width:88vw;min-width:220px;background:rgba(22,27,38,.96);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.35);padding:14px 16px;color:#fff;font-weight:700;text-align:center;transition:all .22s ease;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);"></div>
 
