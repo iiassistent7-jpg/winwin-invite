@@ -536,6 +536,13 @@
       document.getElementById("tgText").textContent        = t.tg;
       document.getElementById("footerNote").textContent    = t.footer;
 
+      const _btnHow = document.getElementById("btnHowItWorks");
+      if (_btnHow) {
+        const _howLabels = { ru: "Как это работает?", he: "איך זה עובד?", en: "How does it work?", ar: "كيف يعمل؟" };
+        _btnHow.textContent = _howLabels[lang] || _howLabels.ru;
+        _btnHow.href = "https://winwinnetwork.pro/about.html?lang=" + lang + "&back=1";
+      }
+
       document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.lang === lang);
       });
@@ -591,13 +598,6 @@
     });
 
     applyLang(lang);
-    (function() {
-      var btnHow = document.getElementById('btnHowItWorks');
-      if (!btnHow) return;
-      var howLabels = { ru: 'Как это работает?', he: 'איך זה עובד?', en: 'How does it work?', ar: 'كيف يعمل؟' };
-      btnHow.textContent = howLabels[lang] || howLabels.ru;
-      btnHow.href = 'https://winwinnetwork.pro/about.html?lang=' + lang + '&back=1';
-    })();
 
   })();
   </script>
