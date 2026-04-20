@@ -1,4 +1,4 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -426,9 +426,7 @@
         
         <div class="form-group role-client hidden">
           <label id="clientNameLabel" style="display: block; text-align: center; font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.02em;">Как к Вам обращаться?</label>
-          <input type="text" id="clientName" name="clientName" placeholder="Введите имя" data-req="client" style="text-align: center; font-size: 1.1rem; padding: 16px; margin-bottom: 16px;">
-          <label id="clientPhoneLabel" style="display: block; text-align: center; font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Ваш номер телефона</label>
-          <input type="tel" id="clientPhone" name="clientPhone" placeholder="+972..." data-req="client" style="text-align: center; font-size: 1.1rem; padding: 16px; margin-bottom: 24px;">
+          <input type="text" id="clientName" name="clientName" placeholder="Введите имя" data-req="client" style="text-align: center; font-size: 1.1rem; padding: 16px; margin-bottom: 24px;">
           <div style="text-align: center;">
             <label id="clientSocialLabel" style="display: block; text-align: center; font-weight: 700; font-size: 1rem; color: #ffffff; margin-bottom: 8px;">Ссылка на соцсеть (необязательно)</label>
             <input type="text" id="clientSocial" name="clientSocial" placeholder="Instagram, Facebook, сайт..." style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); box-shadow: none;">
@@ -649,21 +647,17 @@
         if (document.getElementById("paymentLabel"))
           document.getElementById("paymentLabel").textContent = role==="agent" ? T.pay_agent : T.pay_biz;
         const _clientLabels = {
-          ru: { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', phoneLbl: 'Ваш номер телефона', phonePh: '+972...', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' },
-          he: { nameQ: 'איך לפנות אליך?', namePh: 'הכניסו שם', phoneLbl: 'מספר הטלפון שלך', phonePh: '+972...', socialLbl: 'קישור לרשת חברתית (לא חובה)', socialPh: 'Instagram, Facebook, אתר...' },
-          en: { nameQ: 'What is your name?', namePh: 'Enter name', phoneLbl: 'Your phone number', phonePh: '+972...', socialLbl: 'Social media link (optional)', socialPh: 'Instagram, Facebook, website...' },
-          ar: { nameQ: 'كيف نناديك؟', namePh: 'أدخل الاسم', phoneLbl: 'رقم هاتفك', phonePh: '+972...', socialLbl: 'رابط التواصل الاجتماعي (اختياري)', socialPh: 'Instagram, Facebook, موقع...' },
-        }[lang] || { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', phoneLbl: 'Ваш номер телефона', phonePh: '+972...', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' };
+          ru: { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' },
+          he: { nameQ: 'איך לפנות אליך?', namePh: 'הכניסו שם', socialLbl: 'קישור לרשת חברתית (לא חובה)', socialPh: 'Instagram, Facebook, אתר...' },
+          en: { nameQ: 'What is your name?', namePh: 'Enter name', socialLbl: 'Social media link (optional)', socialPh: 'Instagram, Facebook, website...' },
+          ar: { nameQ: 'كيف نناديك؟', namePh: 'أدخل الاسم', socialLbl: 'رابط التواصل الاجتماعي (اختياري)', socialPh: 'Instagram, Facebook, موقع...' },
+        }[lang] || { nameQ: 'Как к Вам обращаться?', namePh: 'Введите имя', socialLbl: 'Ссылка на соцсеть (необязательно)', socialPh: 'Instagram, Facebook, сайт...' };
         const _cnl = document.getElementById('clientNameLabel');
         const _cni = document.getElementById('clientName');
-        const _cpl = document.getElementById('clientPhoneLabel');
-        const _cpi = document.getElementById('clientPhone');
         const _csl = document.getElementById('clientSocialLabel');
         const _csi = document.getElementById('clientSocial');
         if (_cnl) _cnl.textContent = _clientLabels.nameQ;
         if (_cni) _cni.placeholder = _clientLabels.namePh;
-        if (_cpl) _cpl.textContent = _clientLabels.phoneLbl;
-        if (_cpi) _cpi.placeholder = _clientLabels.phonePh;
         if (_csl) _csl.textContent = _clientLabels.socialLbl;
         if (_csi) _csi.placeholder = _clientLabels.socialPh;
         document.getElementById("languageHidden").value = lang;
