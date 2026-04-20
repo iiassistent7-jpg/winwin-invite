@@ -194,6 +194,44 @@ async function loadData() {
   }
 }
 
+const NICHE_TRANSLATIONS = {
+  "Косметология": {"he": "קוסמטיקה", "en": "Cosmetology", "ar": "التجميل"},
+  "Инъекционная косметология": {"he": "קוסמטיקה הזרקתית", "en": "Injectable cosmetology", "ar": "التجميل الحقني"},
+  "Лазерная эпиляция": {"he": "הסרת שיער בלייזר", "en": "Laser hair removal", "ar": "إزالة الشعر بالليزر"},
+  "Перманентный макияж": {"he": "איפור קבוע", "en": "Permanent makeup", "ar": "مكياج دائم"},
+  "Удаление тату и татуажа": {"he": "הסרת קעקועים", "en": "Tattoo removal", "ar": "إزالة الوشم"},
+  "Коррекция фигуры": {"he": "עיצוב גוף", "en": "Body sculpting", "ar": "تصحيح القوام"},
+  "Маникюр и педикюр": {"he": "מניקור ופדיקור", "en": "Manicure & pedicure", "ar": "مانيكير وباديكير"},
+  "Парикмахерские услуги": {"he": "שירותי ספרות", "en": "Hair salon", "ar": "خدمات الحلاقة"},
+  "Брови и ресницы": {"he": "גבות וריסים", "en": "Brows & lashes", "ar": "الحواجب والرموش"},
+  "Массаж": {"he": "עיסוי", "en": "Massage", "ar": "التدليك"},
+  "Стоматология": {"he": "רפואת שיניים", "en": "Dentistry", "ar": "طب الأسنان"},
+  "Репетиторы и курсы": {"he": "מורים פרטיים וקורסים", "en": "Tutors & courses", "ar": "مدرسون ودورات"},
+  "Юридические услуги": {"he": "שירותים משפטיים", "en": "Legal services", "ar": "الخدمات القانونية"},
+  "Бухгалтерия и налоги": {"he": "חשבונאות ומיסים", "en": "Accounting & taxes", "ar": "المحاسبة والضرائب"},
+  "Маркетинг и SMM": {"he": "שיווק ו-SMM", "en": "Marketing & SMM", "ar": "التسويق والسوشيال ميديا"},
+  "Разработка сайтов и приложений": {"he": "פיתוח אתרים ואפליקציות", "en": "Web & app development", "ar": "تطوير المواقع والتطبيقات"},
+  "Дизайн и брендинг": {"he": "עיצוב ומיתוג", "en": "Design & branding", "ar": "التصميم والعلامة التجارية"},
+  "Типография": {"he": "בית דפוס", "en": "Print shop", "ar": "المطبعة"},
+  "Фотография": {"he": "צילום", "en": "Photography", "ar": "التصوير"},
+  "Видеосъёмка": {"he": "צילום וידאו", "en": "Videography", "ar": "تصوير الفيديو"},
+  "Ремонт квартир": {"he": "שיפוץ דירות", "en": "Apartment renovation", "ar": "تجديد الشقق"},
+  "Клининг": {"he": "ניקיון", "en": "Cleaning", "ar": "التنظيف"},
+  "Грузоперевозки": {"he": "הובלות", "en": "Moving & freight", "ar": "نقل البضائع"},
+  "Голос и Речь": {"he": "קול ודיבור", "en": "Voice & speech", "ar": "الصوت والكلام"},
+  "Фитнес и спорт": {"he": "כושר וספורט", "en": "Fitness & sports", "ar": "اللياقة والرياضة"},
+  "Психология": {"he": "פסיכולוגיה", "en": "Psychology", "ar": "علم النفس"},
+  "Консалтинг и коучинг": {"he": "ייעוץ וקואצ'ינג", "en": "Consulting & coaching", "ar": "الاستشارات والتدريب"},
+};
+
+function translateNiche(niche, l) {
+  if (!niche) return "";
+  return niche.split(",").map(n => {
+    const t = n.trim();
+    return (NICHE_TRANSLATIONS[t] && NICHE_TRANSLATIONS[t][l]) ? NICHE_TRANSLATIONS[t][l] : t;
+  }).join(", ");
+}
+
 function render() {
   const d = visitData;
   const t = L();
@@ -202,7 +240,7 @@ function render() {
   document.getElementById('bizName').textContent = d.biz_name || '—';
 
   const nicheEl = document.getElementById('bizNiche');
-  if (d.biz_niche) { nicheEl.textContent = d.biz_niche; nicheEl.style.display = 'inline-block'; }
+  if (d.biz_niche) { nicheEl.textContent = translateNiche(d.biz_niche, lang); nicheEl.style.display = 'inline-block'; }
 
   const contactEl = document.getElementById('bizContact');
   contactEl.innerHTML = '';
