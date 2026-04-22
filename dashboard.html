@@ -231,23 +231,23 @@
             transform: translateX(-50%) translateY(18px);
             width: calc(100% - 32px);
             max-width: 398px;
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: #1a1a2e;
+            border: 1.5px solid rgba(255,255,255,0.15);
             border-radius: 18px;
-            box-shadow: 0 14px 40px rgba(0,0,0,.18);
-            padding: 16px 18px;
+            box-shadow: 0 14px 40px rgba(0,0,0,.45);
+            padding: 18px 20px;
             z-index: 1200;
             opacity: 0;
             pointer-events: none;
-            transition: opacity .22s ease, transform .22s ease;
+            transition: opacity .25s ease, transform .25s ease;
         }
         .reminder-toast.active {
             opacity: 1;
             pointer-events: auto;
             transform: translateX(-50%) translateY(0);
         }
-        .reminder-toast-title { font-size:.92rem; font-weight:800; margin-bottom:6px; }
-        .reminder-toast-text { font-size:.84rem; color:var(--text2); line-height:1.5; white-space:pre-line; }
+        .reminder-toast-title { font-size:1rem; font-weight:800; margin-bottom:6px; color:#ffffff; }
+        .reminder-toast-text { font-size:.92rem; color:rgba(255,255,255,0.88); line-height:1.6; white-space:pre-line; }
 
         .pill { display:inline-flex; align-items:center; padding:3px 9px; border-radius:999px; font-size:.7rem; font-weight:700; }
         .pill-blue  { background:rgba(47,128,237,.12);  color:var(--accent2); }
@@ -3159,7 +3159,7 @@ function showReminderToast(message) {
     text.textContent = message || '';
     toast.classList.add('active');
     clearTimeout(reminderToastTimer);
-    reminderToastTimer = setTimeout(() => toast.classList.remove('active'), 4200);
+    reminderToastTimer = setTimeout(() => toast.classList.remove('active'), 4500);
 }
 
 function detectReminderOutcome(res, payloadText) {
