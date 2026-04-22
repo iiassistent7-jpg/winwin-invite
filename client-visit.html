@@ -271,8 +271,8 @@ function render() {
     }
   }
 
-  const deepLink = d.biz_deep_link || d.visit_url || location.href;
-  document.getElementById('visitLinkInput').value = deepLink;
+  const scanUrl = `${API_URL}/api/biz-scan?token=${encodeURIComponent(token)}`;
+  document.getElementById('visitLinkInput').value = d.visit_url || location.href;
   document.getElementById('copyBtnLabel').textContent = t.copy;
   document.getElementById('instructionText').innerHTML = t.instruction(d.biz_name || '—');
   document.getElementById('qrLabel').textContent = t.qr_label;
@@ -280,13 +280,27 @@ function render() {
 
   new QRious({
     element: document.getElementById('qrCanvas'),
-    value: deepLink,
+    value: scanUrl,
     size: 220,
     background: '#ffffff',
     foreground: '#0d0d1a',
     padding: 0,
     level: 'M',
   });
+
+  // If page opened via biz-scan redirect (business scanned QR)
+  if (window.location.search.includes('scanned=1')) {
+    const scanMsg = {
+      ru: '✅ Ссылка отправлена в мессенджер бизнеса!',
+      he: '✅ הקישור נשלח למסנג\'ר של העסק!',
+      en: '✅ Link sent to business messenger!',
+      ar: '✅ تم إرسال الرابط إلى مسنجر العمل!',
+    };
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:#1a7a4a;color:#fff;padding:14px 18px;border-radius:12px;text-align:center;font-weight:600;margin-bottom:16px;';
+    banner.textContent = scanMsg[lang] || scanMsg.en;
+    document.getElementById('mainBlock').prepend(banner);
+  }
 
   document.getElementById('loadingBlock').style.display = 'none';
   document.getElementById('mainBlock').style.display = 'block';
