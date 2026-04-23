@@ -80,17 +80,19 @@
   <div class="footer-bar"><a class="back-btn" id="backBtn" href="javascript:history.back()"></a></div>
 <script>
   const API_URL = 'https://amlatsa-bot-production.up.railway.app';
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token') || '';
   let _bizName = '';
   let _bizId = '';
+  let bizData = null;
 
   (async function loadBizInfo() {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
     if (!token) return;
     try {
       const res = await fetch(`${API_URL}/api/business?token=${token}`);
       if (!res.ok) return;
       const data = await res.json();
+      bizData = data;
       _bizName = data.name || '';
       _bizId   = String(data.id || '');
     } catch(e) {}
@@ -278,13 +280,44 @@
     ];
   }
 
-  function payLink(planKey, period){
+  function buildWaLink(planKey, period){
     const t = TEXTS[lang];
     const bizSuffix = _bizId
       ? `\nБизнес: ${_bizName} (ID: ${_bizId})`
       : '';
     const text = encodeURIComponent(t.payMessage(t[planKey], period) + bizSuffix);
+    if (bizData && bizData.channel && bizData.channel !== 'whatsapp') {
+      return null; // TG business — handled separately
+    }
     return `https://wa.me/972534218573?text=${text}`;
+  }
+
+  async function handlePayment(plan, period) {
+    const link = buildWaLink(plan, period);
+    if (!link) {
+      // TG business — send upgrade request via API
+      try {
+        const res = await fetch(`${API_URL}/api/upgrade-request`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, plan }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          const msg = {
+            ru: '✅ Запрос отправлен! Мы свяжемся с вами в Telegram.',
+            he: '✅ הבקשה נשלחה! ניצור עמכם קשר בטלגרם.',
+            en: '✅ Request sent! We will contact you via Telegram.',
+            ar: '✅ تم إرسال الطلب! سنتواصل معك عبر تيليغرام.',
+          };
+          alert(msg[lang] || msg.ru);
+        }
+      } catch(e) {
+        console.error('upgrade request error', e);
+      }
+      return;
+    }
+    window.open(link, '_blank');
   }
 
   function renderPlanOptions(containerId, items, planKey, pro=false){
@@ -293,7 +326,7 @@
       <div class="option">
         <div class="option-top"><div class="option-period">${item.period}</div><div class="option-price">${item.price}</div></div>
         ${item.note ? `<div class="option-note">${item.note}</div>` : ''}
-        <a class="btn ${pro?'btn-gold':'btn-primary'}" href="${payLink(planKey, item.period)}" target="_blank">${t.pay}</a>
+        <a class="btn ${pro?'btn-gold':'btn-primary'}" href="javascript:void(0)" data-plan="${planKey}" data-period="${item.period}" onclick="handlePayment(this.dataset.plan, this.dataset.period)">${t.pay}</a>
       </div>`).join('');
   }
 
