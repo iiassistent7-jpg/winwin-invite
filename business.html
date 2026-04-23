@@ -590,24 +590,21 @@
 
     <!-- ── VIEW: Profile ────────────────────────────────────────── -->
     <div id="view-profile" class="view">
-      <div class="trial-counter" id="trialCounter">
-        <div class="trial-counter-row">
-          <div class="trial-counter-label" id="trialCounterLabel">
-            Осталось сделок до истечения бесплатного периода
-          </div>
-          <div class="trial-counter-num" id="trialCounterNum">5</div>
-        </div>
-        <div class="trial-counter-bar-bg">
-          <div class="trial-counter-bar-fill" id="trialCounterBar" style="width:100%"></div>
-        </div>
-        <div class="trial-counter-note" id="trialCounterNote">
-          Вы платите только агентам.
-        </div>
-      </div>
+      <div id="expiredBanner" style="display:none;background:#c0392b;color:#fff;padding:12px 16px;border-radius:12px;text-align:center;font-weight:700;font-size:.95rem;margin-bottom:12px;" id="expiredBanner"></div>
       <div class="sub-card" id="subCard">
         <div class="sub-card-title">
           <span id="t_sub_title">Текущий тариф:</span>
           <span class="sub-badge" id="subBadge">Стандарт</span>
+        </div>
+        <div id="trialCounter" style="display:none;margin:10px 0 4px;">
+          <div class="trial-counter-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div class="trial-counter-label" id="trialCounterLabel" style="font-size:.85rem;opacity:.8;"></div>
+            <div class="trial-counter-num" id="trialCounterNum" style="font-size:1.5rem;font-weight:800;"></div>
+          </div>
+          <div class="trial-counter-bar-bg" style="height:6px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden;">
+            <div class="trial-counter-bar-fill" id="trialCounterBar" style="width:100%;height:100%;border-radius:3px;background:var(--accent2);transition:width .4s;"></div>
+          </div>
+          <div class="trial-counter-note" id="trialCounterNote" style="font-size:.8rem;opacity:.65;margin-top:4px;"></div>
         </div>
         <div class="sub-desc" id="subDesc">Базовый функционал. Лимиты сделок учитываются платформой.</div>
         <button class="btn-primary btn-gold" id="btnUpgrade" style="display:none;" onclick="openUpgradePage()">
@@ -1372,7 +1369,7 @@ function switchTab(tabId, btnEl) {
   // Block navigation when account is locked
   const isLocked = bizData && (bizData.is_blocked ||
     bizData.subscription === 'start_expired');
-  const allowedWhenLocked = ['deals', 'profile'];
+  const allowedWhenLocked = ['profile'];
   if (isLocked && !allowedWhenLocked.includes(tabId)) {
     const lockMsg = {
       ru: 'Аккаунт заблокирован. Доступен только профиль и форма запроса.',
@@ -4273,33 +4270,56 @@ function renderProfile() {
   const trialLbl  = document.getElementById('trialCounterLabel');
   const trialNote = document.getElementById('trialCounterNote');
 
-  const sub       = bizData.subscription || 'start';
-  const used      = bizData.free_deals_used || 0;
-  const limit     = bizData.free_deals_limit || 5;
-  const remaining = Math.max(0, limit - used);
+  const sub   = bizData.subscription || 'start';
+  const used  = bizData.free_deals_used || 0;
+  const limit = bizData.free_deals_limit || 5;
+  // counter displayed as negative: starts at -limit, goes to 0
+  const score = used - limit; // e.g. 0 used → -5, 3 used → -2, 5 used → 0
 
-  const trialLabels = {
-    ru: `Осталось ${remaining} ${remaining === 1 ? 'сделка' : remaining < 5 ? 'сделки' : 'сделок'} до истечения бесплатного периода`,
-    he: `נשארו ${remaining} עסקאות חינמיות`,
-    en: `${remaining} free deal${remaining === 1 ? '' : 's'} remaining`,
-    ar: `تبقى ${remaining} صفقة مجانية`,
-  };
-  const trialNotes = {
-    ru: 'Вы платите только агентам.',
-    he: 'אתם משלמים רק לסוכנים.',
-    en: 'You only pay agents.',
-    ar: 'أنت تدفع للوكلاء فقط.',
-  };
+  const expiredBanner = document.getElementById('expiredBanner');
+  const isExpired = sub === 'start_expired';
 
-  if (sub === 'start' && trialEl) {
+  // Expired banner
+  if (expiredBanner) {
+    if (isExpired) {
+      const bannerText = {
+        ru: '🔴 Ваш бизнес скрыт из каталога — оплатите тариф Стандарт',
+        he: '🔴 העסק שלכם מוסתר מהקטלוג — שלמו עבור מנוי סטנדרטי',
+        en: '🔴 Your business is hidden from catalog — pay for Standard plan',
+        ar: '🔴 عملك مخفي من الكتالوج — ادفع مقابل الباقة القياسية',
+      };
+      expiredBanner.textContent = bannerText[lang] || bannerText.ru;
+      expiredBanner.style.display = 'block';
+    } else {
+      expiredBanner.style.display = 'none';
+    }
+  }
+
+  // Trial counter (only for start and start_expired plans)
+  if ((sub === 'start' || sub === 'start_expired') && trialEl) {
     trialEl.style.display = 'block';
-    if (trialNum)  trialNum.textContent  = remaining;
+    const trialLabels = {
+      ru: 'Закрытые сделки (бесплатный период)',
+      he: 'עסקאות שנסגרו (תקופת ניסיון)',
+      en: 'Closed deals (free period)',
+      ar: 'الصفقات المغلقة (الفترة المجانية)',
+    };
+    const trialNotes = {
+      ru: 'Вы платите только агентам.',
+      he: 'אתם משלמים רק לסוכנים.',
+      en: 'You only pay agents.',
+      ar: 'أنت تدفع للوكلاء فقط.',
+    };
+    if (trialNum) {
+      trialNum.textContent = score; // shows -5, -4, ... 0
+      trialNum.style.color = score >= 0 ? '#c0392b' : score >= -1 ? 'var(--orange, #F2994A)' : 'var(--accent2)';
+    }
     if (trialLbl)  trialLbl.textContent  = trialLabels[lang] || trialLabels.ru;
     if (trialNote) trialNote.textContent = trialNotes[lang]  || trialNotes.ru;
-    // colour shifts to orange when 1 left
-    if (trialNum) trialNum.style.color = remaining <= 1 ? 'var(--orange, #F2994A)' : 'var(--accent2)';
-    const pct = limit > 0 ? (remaining / limit) * 100 : 0;
+    // bar fills as deals are used
+    const pct = limit > 0 ? Math.min((used / limit) * 100, 100) : 0;
     if (trialBar) trialBar.style.width = pct + '%';
+    if (trialBar) trialBar.style.background = score >= 0 ? '#c0392b' : score >= -1 ? 'var(--orange, #F2994A)' : 'var(--accent2)';
   } else if (trialEl) {
     trialEl.style.display = 'none';
   }
