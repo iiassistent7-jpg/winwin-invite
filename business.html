@@ -426,18 +426,24 @@
     .contact-block-name { font-size:1rem; font-weight:700; color:var(--text); line-height:1.25; }
     .contact-block-phone { font-size:.86rem; font-weight:600; color:var(--text2); margin-top:2px; margin-bottom:10px; }
     .contact-btn-row { display:flex; gap:8px; flex-wrap:wrap; }
-    .contact-btn { flex:1 1 0; min-width:88px; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 10px; border-radius:10px; font-size:.84rem; font-weight:700; text-decoration:none; transition:transform .12s ease, opacity .15s ease; border:1px solid var(--border); background:transparent; color:var(--text); }
-    .contact-btn:hover { opacity:.92; }
-    .contact-btn:active { transform:scale(.97); }
-    .contact-btn .cb-icon { font-size:1rem; line-height:1; }
-    /* Default outlined state */
-    .contact-btn.cb-call,
-    .contact-btn.cb-wa,
-    .contact-btn.cb-tg { color:var(--text); }
-    /* Highlighted (native channel) — full brand color */
-    .contact-btn.cb-highlighted.cb-call { background:#2F80ED; border-color:#2F80ED; color:#fff; }
-    .contact-btn.cb-highlighted.cb-wa   { background:#27AE60; border-color:#27AE60; color:#fff; }
-    .contact-btn.cb-highlighted.cb-tg   { background:#229ED9; border-color:#229ED9; color:#fff; }
+    .contact-btn { flex:1 1 0; min-width:88px; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 12px; border-radius:12px; font-size:.85rem; font-weight:800; text-decoration:none; transition:transform .14s ease, box-shadow .18s ease, background .18s ease, opacity .15s ease; border:1.5px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); color:var(--text); box-shadow:0 2px 6px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.05); }
+    body:not(.brand-theme) .contact-btn { background:linear-gradient(180deg, #ffffff, #f4f6fa); box-shadow:0 2px 6px rgba(19,25,44,.07), inset 0 1px 0 rgba(255,255,255,.6); }
+    .contact-btn:hover { transform:translateY(-1px); opacity:.96; }
+    .contact-btn:active { transform:translateY(0) scale(.97); box-shadow:0 1px 2px rgba(0,0,0,.18); }
+    .contact-btn .cb-icon { font-size:1.05rem; line-height:1; }
+    /* Highlighted (native channel) — soft brand glow + colored border + tinted bg */
+    .contact-btn.cb-highlighted.cb-wa   { background:linear-gradient(180deg, rgba(39,174,96,.22), rgba(39,174,96,.08)); border-color:#27AE60; color:#27AE60; box-shadow:0 2px 10px rgba(39,174,96,.28), inset 0 1px 0 rgba(255,255,255,.08); }
+    .contact-btn.cb-highlighted.cb-tg   { background:linear-gradient(180deg, rgba(34,158,217,.22), rgba(34,158,217,.08)); border-color:#229ED9; color:#56CCF2; box-shadow:0 2px 10px rgba(34,158,217,.28), inset 0 1px 0 rgba(255,255,255,.08); }
+    .contact-btn.cb-highlighted.cb-call { background:linear-gradient(180deg, rgba(47,128,237,.22), rgba(47,128,237,.08)); border-color:#2F80ED; color:#56CCF2; box-shadow:0 2px 10px rgba(47,128,237,.28), inset 0 1px 0 rgba(255,255,255,.08); }
+    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-wa   { color:#1a8a4d; }
+    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-tg   { color:#1976B5; }
+    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-call { color:#1f5dbf; }
+
+    /* Channel indicator badge next to name (when native channel has no actionable button) */
+    .contact-block-name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .channel-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:999px; font-size:.7rem; font-weight:700; line-height:1.2; }
+    .channel-badge.cb-tg { background:rgba(34,158,217,.18); color:#56CCF2; border:1px solid rgba(34,158,217,.4); }
+    body:not(.brand-theme) .channel-badge.cb-tg { color:#1976B5; }
 
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
@@ -2711,7 +2717,9 @@ function renderNamedPhoneContact(name, phone, opts = {}) {
 }
 
 // Render 3 contact buttons (Call / WhatsApp / Telegram) with the user's
-// native channel highlighted. Hides TG button if tg_username is missing.
+// native channel highlighted with a soft glow. If native is Telegram but
+// tg_username is missing (TG button hidden), WhatsApp is highlighted as a
+// fallback so the user always sees one preferred channel.
 function renderContactButtons(contact, opts = {}) {
   const c = contact || {};
   const phone = String(c.phone || '').trim();
@@ -2720,32 +2728,52 @@ function renderContactButtons(contact, opts = {}) {
   const channel = String(c.channel || '').trim();
   const labels = getPhoneActionLabels();
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  const tgClickable = !!tgUsername;
+  // Decide which button gets the native-channel glow
+  let highlightTg = false, highlightWa = false;
+  if (channel === 'telegram' && tgClickable) highlightTg = true;
+  else if (channel === 'whatsapp' && digits) highlightWa = true;
+  else if (channel === 'telegram' && !tgClickable && digits) highlightWa = true;
   const buttons = [];
   if (digits) {
-    const isCallNative = false; // phone is universal — never highlighted alone
-    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call${isCallNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">📞</span><span>${labels.call}</span></a>`);
-    const isWaNative = (channel === 'whatsapp');
-    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${isWaNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">💬</span><span>WhatsApp</span></a>`);
+    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call"${attrs}><span class="cb-icon">📞</span><span>${labels.call}</span></a>`);
+    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${highlightWa ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">💬</span><span>WhatsApp</span></a>`);
   }
-  if (tgUsername) {
-    const isTgNative = (channel === 'telegram');
+  if (tgClickable) {
     const u = tgUsername.replace(/^@+/, '');
-    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${isTgNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
+    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
   }
   if (!buttons.length) return '';
   return `<div class="contact-btn-row">${buttons.join('')}</div>`;
 }
 
-// Render a full contact block with role label + name + phone + buttons.
+// Channel-source badge for the name row (shown when native channel
+// has no actionable button — e.g. Telegram user without username).
+function renderChannelSourceBadge(contact) {
+  const c = contact || {};
+  const channel = String(c.channel || '').trim();
+  const tgUsername = String(c.tg_username || '').trim();
+  if (channel === 'telegram' && !tgUsername) {
+    const lbl = ({ru:'через Telegram', he:'דרך Telegram', en:'via Telegram', ar:'عبر Telegram'}[lang]) || 'via Telegram';
+    return `<span class="channel-badge cb-tg" title="${lbl}">✈️ ${lbl}</span>`;
+  }
+  return '';
+}
+
+// Render a full contact block with role label + name + channel-source badge + phone + buttons.
 function renderContactBlock(roleLabel, name, contact, opts = {}) {
   const c = contact || {};
   const rawName = String(name || '').trim() || '—';
   const phone = String(c.phone || '').trim();
   const buttonsHtml = renderContactButtons(c, opts);
+  const sourceBadge = renderChannelSourceBadge(c);
   return `
     <div class="contact-block">
       <div class="contact-block-role">${roleLabel}</div>
-      <div class="contact-block-name">${rawName}</div>
+      <div class="contact-block-name-row">
+        <div class="contact-block-name">${rawName}</div>
+        ${sourceBadge}
+      </div>
       ${phone ? `<div class="contact-block-phone">${phone}</div>` : ''}
       ${buttonsHtml}
     </div>`;
@@ -3263,15 +3291,16 @@ function renderDeals() {
           ${settlementPill}
         </div>
         <div class="deal-extra" id="deal_extra_${row.id}">
+          ${renderTimelineSteps(d.timeline)}
           ${renderContactBlock(({ru:'Клиент',he:'לקוח',en:'Client',ar:'العميل'}[lang]||'Клиент'), d.client_name, d.client_contact, { stopPropagation:true })}
           ${renderContactBlock(({ru:'Агент',he:'סוכן',en:'Agent',ar:'الوكيل'}[lang]||'Агент'), d.agent_name, d.agent_contact, { stopPropagation:true })}
-          ${renderTimelineSteps(d.timeline)}
           ${settlementDetails}
           ${closedMeta ? `<div class="deal-inline-meta"><div class="deal-mini-box deal-mini-box-positive"><div class="deal-mini-lbl">${closedMeta.resultLabel}</div><div class="deal-mini-val">${nextStep}</div></div></div>` : ''}
-          <div class="deal-inline-meta"${closedMeta ? ' style="display:none;"' : ''}>
-            <div class="deal-mini-box"><div class="deal-mini-lbl">${L.card_agent || 'Рекомендатель'}</div><div class="deal-mini-val">${d.agent_name || '—'}</div></div>
-            <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}"><div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div><div class="deal-mini-val">${nextStep}</div></div>
-          </div>
+          ${closedMeta ? '' : `
+          <div class="deal-mini-box ${tone === 'danger' ? 'deal-mini-box-danger' : (tone === 'warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive')}" style="margin-bottom:14px;text-align:center;">
+            <div class="deal-mini-lbl">${L.card_next_step || 'Следующий шаг'}</div>
+            <div class="deal-mini-val">${nextStep}</div>
+          </div>`}
           <div class="deal-receipt">
             <div class="receipt-line"><span>💵 ${{ru:'Чек',he:'צ\'ק',en:'Check',ar:'شيك'}[lang]||'Чек'}:</span><span>${amountVal}</span></div>
             <div class="receipt-line"><span>🎁 ${{ru:'Бонус',he:'בונוס',en:'Bonus',ar:'مكافأة'}[lang]||'Бонус'}:</span><span>${commVal}</span></div>
