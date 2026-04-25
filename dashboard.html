@@ -564,6 +564,56 @@
     body:not(.brand-theme) .ww-toast { background:rgba(28,36,58,.96); }
 
     .contact-block-name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+    /* ── Deal card (Stage 5.7-B) ─────────────────────────────────────── */
+    .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:18px; margin-bottom:12px; box-shadow:0 4px 14px rgba(0,0,0,.16); position:relative; cursor:pointer; transition:transform .12s ease; }
+    .deal-card:active { transform:scale(.992); }
+    .deal-card.pending { border-color:rgba(242,153,74,.42); background:rgba(242,153,74,.05); box-shadow:0 0 15px rgba(242,153,74,.08); }
+    .deal-card.unpaid  { border-color:rgba(235,87,87,.4); background:rgba(235,87,87,.04); box-shadow:0 0 15px rgba(235,87,87,.08); }
+    .deal-card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+    body.rtl .deal-card-header { flex-direction:row-reverse; }
+    .deal-client { font-size:1.05rem; font-weight:800; color:var(--text); line-height:1.25; }
+    .deal-date { font-size:.78rem; color:var(--text2); margin-top:2px; }
+    .deal-card-status-row { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .deal-status-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.72rem; font-weight:700; line-height:1.2; }
+    .deal-status-badge.st-new      { background:rgba(86,204,242,.15); color:#56CCF2; border:1px solid rgba(86,204,242,.35); }
+    .deal-status-badge.st-progress { background:rgba(242,153,74,.15); color:#F2994A; border:1px solid rgba(242,153,74,.35); }
+    .deal-status-badge.st-closed   { background:rgba(39,174,96,.15);  color:#27AE60; border:1px solid rgba(39,174,96,.35); }
+    .deal-status-badge.st-debt     { background:rgba(235,87,87,.15);  color:#EB5757; border:1px solid rgba(235,87,87,.35); }
+    .deal-status-badge.st-done     { background:rgba(155,155,155,.15); color:var(--text2); border:1px solid var(--border); }
+    .card-toggle-hint { color:var(--text2); transition:transform .25s ease; display:flex; align-items:center; }
+    .deal-card.is-open .card-toggle-hint { transform:rotate(180deg); }
+
+    .deal-pending-note { display:flex; align-items:center; gap:6px; font-size:.78rem; font-weight:700; padding:8px 12px; border-radius:10px; margin-top:8px; }
+    .deal-pending-note.tone-warning { background:rgba(242,153,74,.12); color:#F2994A; }
+    .deal-pending-note.tone-danger  { background:rgba(235,87,87,.12);  color:#EB5757; }
+    .deal-pending-note.tone-success { background:rgba(39,174,96,.12);  color:#27AE60; }
+    .deal-pending-note.tone-info    { background:rgba(86,204,242,.12); color:#56CCF2; }
+
+    .deal-summary-pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .deal-meta-pill { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; background:var(--surface2); border:1px solid var(--border); color:var(--text); font-size:.74rem; font-weight:600; }
+
+    .deal-extra { display:none; margin-top:14px; }
+    .deal-extra.open { display:block; }
+
+    .deal-mini-box { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:10px 14px; }
+    .deal-mini-box-positive { border-color:rgba(39,174,96,.35); background:rgba(39,174,96,.07); }
+    .deal-mini-box-warning  { border-color:rgba(242,153,74,.4); background:rgba(242,153,74,.07); }
+    .deal-mini-box-danger   { border-color:rgba(235,87,87,.4);  background:rgba(235,87,87,.06); }
+    .deal-mini-lbl { font-size:.7rem; color:var(--text2); font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .deal-mini-val { font-size:.95rem; color:var(--text); font-weight:800; margin-top:3px; line-height:1.3; }
+    .deal-mini-box-warning .deal-mini-val { color:#F2994A; }
+    .deal-mini-box-danger  .deal-mini-val { color:#EB5757; }
+    .deal-mini-box-positive .deal-mini-val { color:#27AE60; }
+
+    .deal-receipt { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-top:12px; }
+    .deal-receipt .receipt-line { display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:.84rem; color:var(--text2); font-weight:600; }
+    .deal-receipt .receipt-line.total { border-top:1px dashed var(--border); margin-top:6px; padding-top:8px; color:var(--text); font-weight:800; font-size:.92rem; }
+    .deal-receipt .net-profit { color:var(--green); }
+
+    .deal-manage-btn { width:100%; margin-top:14px; padding:14px; border-radius:14px; border:none; background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%); color:#fff; font-size:.92rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(47,128,237,.32); transition:transform .12s ease, box-shadow .18s ease; }
+    .deal-manage-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(47,128,237,.42); }
+    .deal-manage-btn:active { transform:translateY(0) scale(.98); }
     </style>
 </head>
 <body class="brand-theme">
@@ -1950,54 +2000,54 @@ function getPhoneActionLabels() {
 
 const TIMELINE_STEP_LABELS = {
   ru: {
-    recommendation_sent: 'Рекомендация отправлена',
+    recommendation_sent: 'Я отправил рекомендацию',
     business_accepted:   'Бизнес принял клиента',
     business_rejected:   'Бизнес отклонил клиента',
     deal_closed:         'Сделка закрыта',
-    agent_decision:      'Агент выбрал действие',
-    execution_take:      'Бизнес перевёл бонус агенту',
-    execution_gift:      'Бизнес передал бонус клиенту',
-    execution_support:   'Агент поддержал бизнес',
-    confirmation_take:   'Агент подтвердил получение',
+    agent_decision:      'Я выбрал способ расчёта',
+    execution_take:      'Бизнес перевёл мой бонус',
+    execution_gift:      'Я подарил бонус клиенту',
+    execution_support:   'Я поддержал бизнес',
+    confirmation_take:   'Я подтвердил получение',
     confirmation_gift:   'Клиент подтвердил получение',
     confirmation_support:'Сделка завершена'
   },
   he: {
-    recommendation_sent: 'ההמלצה נשלחה',
+    recommendation_sent: 'שלחתי המלצה',
     business_accepted:   'העסק קיבל את הלקוח',
     business_rejected:   'העסק דחה את הלקוח',
     deal_closed:         'העסקה נסגרה',
-    agent_decision:      'הסוכן בחר פעולה',
-    execution_take:      'העסק העביר בונוס לסוכן',
-    execution_gift:      'העסק העביר בונוס ללקוח',
-    execution_support:   'הסוכן תמך בעסק',
-    confirmation_take:   'הסוכן אישר קבלה',
+    agent_decision:      'בחרתי שיטת חישוב',
+    execution_take:      'העסק העביר את הבונוס שלי',
+    execution_gift:      'הענקתי בונוס ללקוח',
+    execution_support:   'תמכתי בעסק',
+    confirmation_take:   'אישרתי קבלה',
     confirmation_gift:   'הלקוח אישר קבלה',
     confirmation_support:'העסקה הושלמה'
   },
   en: {
-    recommendation_sent: 'Recommendation sent',
+    recommendation_sent: 'I sent a recommendation',
     business_accepted:   'Business accepted client',
     business_rejected:   'Business rejected client',
     deal_closed:         'Deal closed',
-    agent_decision:      'Agent chose action',
-    execution_take:      'Business paid agent bonus',
-    execution_gift:      'Business sent bonus to client',
-    execution_support:   'Agent supported the business',
-    confirmation_take:   'Agent confirmed receipt',
+    agent_decision:      'I chose settlement method',
+    execution_take:      'Business paid my bonus',
+    execution_gift:      'I gifted bonus to client',
+    execution_support:   'I supported the business',
+    confirmation_take:   'I confirmed receipt',
     confirmation_gift:   'Client confirmed receipt',
     confirmation_support:'Deal completed'
   },
   ar: {
-    recommendation_sent: 'تم إرسال التوصية',
+    recommendation_sent: 'أرسلت التوصية',
     business_accepted:   'قبل النشاط العميل',
     business_rejected:   'رفض النشاط العميل',
     deal_closed:         'تم إغلاق الصفقة',
-    agent_decision:      'اختار الوكيل الإجراء',
-    execution_take:      'دفع النشاط مكافأة الوكيل',
-    execution_gift:      'سلّم النشاط المكافأة للعميل',
-    execution_support:   'دعم الوكيل النشاط',
-    confirmation_take:   'أكّد الوكيل الاستلام',
+    agent_decision:      'اخترت طريقة التسوية',
+    execution_take:      'دفع النشاط مكافأتي',
+    execution_gift:      'أهديت المكافأة للعميل',
+    execution_support:   'دعمت النشاط',
+    confirmation_take:   'أكّدت الاستلام',
     confirmation_gift:   'أكّد العميل الاستلام',
     confirmation_support:'اكتملت الصفقة'
   }
@@ -2183,6 +2233,19 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
     </div>`;
 }
 // ══ END TIMELINE + CONTACT HELPERS ════════════════════════════════════
+
+// Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
+function toggleDealExtra(id) {
+  const el = document.getElementById('deal_extra_' + id);
+  if (!el) return;
+  const card = el.closest('.deal-card');
+  const willOpen = !el.classList.contains('open');
+  el.classList.toggle('open', willOpen);
+  if (card) card.classList.toggle('is-open', willOpen);
+  if (willOpen && typeof feather !== 'undefined' && feather.replace) {
+    try { feather.replace(); } catch(e) {}
+  }
+}
 let chartInst  = null;
 let allBusinesses = [];
 let catalogAgentId = null;
