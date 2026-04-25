@@ -439,11 +439,12 @@
     body:not(.brand-theme) .contact-btn.cb-highlighted.cb-tg   { color:#1976B5; }
     body:not(.brand-theme) .contact-btn.cb-highlighted.cb-call { color:#1f5dbf; }
 
-    /* Channel indicator badge next to name (when native channel has no actionable button) */
+    /* Toast for "phone copied — open Telegram and search" hint */
+    .ww-toast { position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(20px); background:rgba(20,26,44,.96); color:#fff; padding:12px 18px; border-radius:14px; font-size:.86rem; font-weight:600; box-shadow:0 6px 24px rgba(0,0,0,.35); z-index:9999; opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; max-width:88vw; text-align:center; line-height:1.4; }
+    .ww-toast.ww-toast-show { opacity:1; transform:translateX(-50%) translateY(0); }
+    body:not(.brand-theme) .ww-toast { background:rgba(28,36,58,.96); }
+
     .contact-block-name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .channel-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:999px; font-size:.7rem; font-weight:700; line-height:1.2; }
-    .channel-badge.cb-tg { background:rgba(34,158,217,.18); color:#56CCF2; border:1px solid rgba(34,158,217,.4); }
-    body:not(.brand-theme) .channel-badge.cb-tg { color:#1976B5; }
 
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
@@ -2716,10 +2717,74 @@ function renderNamedPhoneContact(name, phone, opts = {}) {
     </div>`;
 }
 
+// Tiny toast helper (shows a centered bottom toast for ~2.6s).
+function wwShowToast(message) {
+  try {
+    const existing = document.getElementById('ww-toast-active');
+    if (existing) existing.remove();
+    const t = document.createElement('div');
+    t.id = 'ww-toast-active';
+    t.className = 'ww-toast';
+    t.textContent = String(message || '');
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('ww-toast-show'));
+    setTimeout(() => { t.classList.remove('ww-toast-show'); }, 2400);
+    setTimeout(() => { try { t.remove(); } catch(e) {} }, 2700);
+  } catch(e) {}
+}
+
+// Copy phone to clipboard and open Telegram so the user can paste it
+// into TG search. Used when the client's native channel is Telegram but
+// we don't have their public @username on file.
+function wwOpenTelegramByPhone(phoneRaw) {
+  const phone = String(phoneRaw || '').trim();
+  const toastMsg = ({
+    ru: 'Номер скопирован. Откройте Telegram → Поиск → вставьте',
+    he: 'המספר הועתק. פתח Telegram → חיפוש → הדבק',
+    en: 'Number copied. Open Telegram → Search → paste',
+    ar: 'تم نسخ الرقم. افتح Telegram ← بحث ← الصق'
+  }[lang]) || 'Number copied. Open Telegram → Search → paste';
+  // 1) copy to clipboard
+  try {
+    if (phone && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(phone).catch(() => {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = phone;
+          ta.style.position = 'fixed'; ta.style.left = '-9999px';
+          document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        } catch(e) {}
+      });
+    } else if (phone) {
+      const ta = document.createElement('textarea');
+      ta.value = phone;
+      ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+  } catch(e) {}
+  // 2) show toast
+  wwShowToast(toastMsg);
+  // 3) open Telegram (mobile → app via tg://, desktop → web fallback)
+  setTimeout(() => {
+    const ua = navigator.userAgent || '';
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+    if (isMobile) {
+      window.location.href = 'tg://resolve';
+    } else {
+      window.open('https://web.telegram.org/a/', '_blank', 'noopener');
+    }
+  }, 350);
+  return false;
+}
+
 // Render 3 contact buttons (Call / WhatsApp / Telegram) with the user's
-// native channel highlighted with a soft glow. If native is Telegram but
-// tg_username is missing (TG button hidden), WhatsApp is highlighted as a
-// fallback so the user always sees one preferred channel.
+// native channel highlighted. The native channel is what the user actually
+// uses — we never substitute another channel for it. If the native channel
+// is Telegram but we don't have a public @username, the TG button still
+// appears: clicking it copies the phone and opens Telegram so the user can
+// search by that number.
 function renderContactButtons(contact, opts = {}) {
   const c = contact || {};
   const phone = String(c.phone || '').trim();
@@ -2728,51 +2793,38 @@ function renderContactButtons(contact, opts = {}) {
   const channel = String(c.channel || '').trim();
   const labels = getPhoneActionLabels();
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
-  const tgClickable = !!tgUsername;
-  // Decide which button gets the native-channel glow
-  let highlightTg = false, highlightWa = false;
-  if (channel === 'telegram' && tgClickable) highlightTg = true;
-  else if (channel === 'whatsapp' && digits) highlightWa = true;
-  else if (channel === 'telegram' && !tgClickable && digits) highlightWa = true;
+  const highlightTg = (channel === 'telegram');
+  const highlightWa = (channel === 'whatsapp');
   const buttons = [];
   if (digits) {
     buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call"${attrs}><span class="cb-icon">📞</span><span>${labels.call}</span></a>`);
     buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${highlightWa ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">💬</span><span>WhatsApp</span></a>`);
   }
-  if (tgClickable) {
+  // Show TG button if we have a username (direct link) OR channel is telegram (fallback flow)
+  if (tgUsername) {
     const u = tgUsername.replace(/^@+/, '');
-    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
+    const stopAttr = opts.stopPropagation ? `onclick="event.stopPropagation()"` : '';
+    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}" ${stopAttr}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
+  } else if (channel === 'telegram' && phone) {
+    const phoneEsc = phone.replace(/'/g, "\\'");
+    const stopExtra = opts.stopPropagation ? 'event.stopPropagation();' : '';
+    buttons.push(`<button type="button" class="contact-btn cb-tg cb-highlighted" onclick="${stopExtra}wwOpenTelegramByPhone('${phoneEsc}');return false;"><span class="cb-icon">✈️</span><span>Telegram</span></button>`);
   }
   if (!buttons.length) return '';
   return `<div class="contact-btn-row">${buttons.join('')}</div>`;
 }
 
-// Channel-source badge for the name row (shown when native channel
-// has no actionable button — e.g. Telegram user without username).
-function renderChannelSourceBadge(contact) {
-  const c = contact || {};
-  const channel = String(c.channel || '').trim();
-  const tgUsername = String(c.tg_username || '').trim();
-  if (channel === 'telegram' && !tgUsername) {
-    const lbl = ({ru:'через Telegram', he:'דרך Telegram', en:'via Telegram', ar:'عبر Telegram'}[lang]) || 'via Telegram';
-    return `<span class="channel-badge cb-tg" title="${lbl}">✈️ ${lbl}</span>`;
-  }
-  return '';
-}
-
-// Render a full contact block with role label + name + channel-source badge + phone + buttons.
+// Render a full contact block with role label + name + phone + buttons.
 function renderContactBlock(roleLabel, name, contact, opts = {}) {
   const c = contact || {};
   const rawName = String(name || '').trim() || '—';
   const phone = String(c.phone || '').trim();
   const buttonsHtml = renderContactButtons(c, opts);
-  const sourceBadge = renderChannelSourceBadge(c);
   return `
     <div class="contact-block">
       <div class="contact-block-role">${roleLabel}</div>
       <div class="contact-block-name-row">
         <div class="contact-block-name">${rawName}</div>
-        ${sourceBadge}
       </div>
       ${phone ? `<div class="contact-block-phone">${phone}</div>` : ''}
       ${buttonsHtml}
