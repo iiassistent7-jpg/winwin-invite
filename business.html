@@ -731,6 +731,7 @@
             </button>
           </div>
         </div>
+        <div id="m_timeline_mount"></div>
         <div class="manage-summary-grid" id="m_box_settlement_group">
           <div class="manage-info-box" id="m_box_decision">
             <div class="manage-info-label" id="t_m_lbl_decision">Решение рекомендателя</div>
@@ -3194,6 +3195,7 @@ function renderDeals() {
             <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
           </div>
         </div>
+        ${renderTimelineProgressBar(d.timeline)}
         ${closedMeta ? '' : `<div class="deal-pending-note ${nextStepTone}"><i data-feather="${nextStepTone === 'danger' ? 'alert-circle' : (nextStepTone === 'success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${nextStep}</div>`}
         <div class="deal-summary-pills">
           <span class="meta-pill">🤝 ${d.agent_name || '—'}</span>
@@ -4692,6 +4694,9 @@ function openManageDeal(id) {
   document.getElementById('t_m_lbl_debt_compact').textContent = closedMeta
     ? closedMeta.resultLabel
     : (isGiftClientSettlementConfirmation ? giftClientCopy.transferLabel : manageLabels.debt);
+  // Render timeline of the deal in expanded card (above settlement group)
+  const _timelineMount = document.getElementById('m_timeline_mount');
+  if (_timelineMount) _timelineMount.innerHTML = renderTimelineSteps(deal.timeline);
   document.getElementById('m_box_settlement_group').style.display = (!closedMeta && showSettlementGroup) ? 'grid' : 'none';
   if (!closedMeta && showSettlementGroup) {
     document.getElementById('t_m_lbl_decision').textContent = clarityCopy.decisionField;
