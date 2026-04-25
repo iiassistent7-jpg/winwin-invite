@@ -3278,24 +3278,24 @@ function renderWalletActionButton(lead, context = 'card') {
 
 function renderDetailActionButtons(lead) {
     lead = normalizeDashboardLead(lead);
-    const projection = getDealProjection(lead);
     const action = getWalletActionConfig(lead);
     const decision = String(lead.decision || lead.settlement_mode || '').toLowerCase();
     const hasDecision = ['take', 'gift_client', 'support_business'].includes(decision);
-    const hasClosureEvidence = [
-        lead.amount,
-        lead.commission,
-        lead.business_close_date,
-        lead.closed_at,
-        lead.business_closed_at
-    ].some(value => String(value ?? '').trim() !== '');
 
-    if (
-        !hasDecision &&
-        projection.bucket === 'active' &&
-        !projection.debt &&
-        (isPendingAgentChoiceLead(lead) || hasClosureEvidence)
-    ) {
+    // Source of truth = timeline. Buttons appear ONLY when the deal-stage logically
+    // requires them. No loose heuristics on amount/start_date.
+    const tl = Array.isArray(lead.timeline) ? lead.timeline : [];
+    const stepBy = {};
+    tl.forEach(s => { if (s && s.step) stepBy[s.step] = s; });
+    const dealClosedDone = stepBy.deal_closed && stepBy.deal_closed.status === 'done';
+    const agentDecisionPending = stepBy.agent_decision &&
+        (stepBy.agent_decision.status === 'current' || stepBy.agent_decision.status === 'pending');
+
+    // Settlement choice buttons appear ONLY when:
+    //   - timeline says deal_closed is done (business actually closed the deal)
+    //   - AND agent_decision is still pending/current
+    //   - AND the agent hasn't already made a decision
+    if (dealClosedDone && agentDecisionPending && !hasDecision) {
         return renderSettlementChoiceButtons(lead, 'sheet', true);
     }
 
