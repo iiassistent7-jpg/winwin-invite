@@ -3820,6 +3820,96 @@ function getIncomingClientRows() {
   });
 }
 
+// ══ NEXT-STEP RESOLVER (timeline-driven, business perspective) ══════════
+// Single source of truth for "where the ball is right now" — drives the
+// next-step text shown in cards/modal AND gates which action buttons appear.
+
+const NEXT_STEP_TEXT = {
+  ru: {
+    awaiting_business_accept:  'Примите или отклоните клиента',
+    business_rejected:         'Клиент отклонён',
+    awaiting_deal_close:       'Закройте сделку с клиентом',
+    awaiting_agent_decision:   'Ждём решение агента',
+    awaiting_payout:           'Переведите бонус агенту',
+    awaiting_gift_to_client:   'Передайте бонус клиенту',
+    awaiting_agent_confirm:    'Ждём подтверждение от агента',
+    deal_completed:            'Сделка завершена'
+  },
+  he: {
+    awaiting_business_accept:  'קבלו או דחו את הלקוח',
+    business_rejected:         'הלקוח נדחה',
+    awaiting_deal_close:       'סגרו את העסקה עם הלקוח',
+    awaiting_agent_decision:   'ממתינים להחלטת הסוכן',
+    awaiting_payout:           'העבירו את הבונוס לסוכן',
+    awaiting_gift_to_client:   'העבירו את הבונוס ללקוח',
+    awaiting_agent_confirm:    'ממתינים לאישור הסוכן',
+    deal_completed:            'העסקה הושלמה'
+  },
+  en: {
+    awaiting_business_accept:  'Accept or reject the client',
+    business_rejected:         'Client rejected',
+    awaiting_deal_close:       'Close the deal with the client',
+    awaiting_agent_decision:   'Waiting for agent decision',
+    awaiting_payout:           'Transfer the bonus to the agent',
+    awaiting_gift_to_client:   'Transfer the bonus to the client',
+    awaiting_agent_confirm:    'Waiting for agent confirmation',
+    deal_completed:            'Deal completed'
+  },
+  ar: {
+    awaiting_business_accept:  'اقبل أو ارفض العميل',
+    business_rejected:         'تم رفض العميل',
+    awaiting_deal_close:       'أغلق الصفقة مع العميل',
+    awaiting_agent_decision:   'بانتظار قرار الوكيل',
+    awaiting_payout:           'حوّل المكافأة إلى الوكيل',
+    awaiting_gift_to_client:   'حوّل المكافأة إلى العميل',
+    awaiting_agent_confirm:    'بانتظار تأكيد الوكيل',
+    deal_completed:            'اكتملت الصفقة'
+  }
+};
+
+function getNextStepKey(reco) {
+  const tl = Array.isArray(reco && reco.timeline) ? reco.timeline : [];
+  if (!tl.length) return 'deal_completed';
+  const failed = tl.find(s => s && s.status === 'failed');
+  if (failed) return 'business_rejected';
+  const allDone = tl.every(s => s && s.status === 'done');
+  if (allDone) return 'deal_completed';
+  const current = tl.find(s => s && s.status === 'current');
+  if (!current) return 'deal_completed';
+  switch (current.step) {
+    case 'recommendation_sent':  return 'awaiting_business_accept';
+    case 'business_accepted':    return 'awaiting_deal_close';
+    case 'deal_closed':          return 'awaiting_agent_decision';
+    case 'agent_decision':       return 'awaiting_agent_decision';
+    case 'execution': {
+      if (current.branch === 'gift_client')      return 'awaiting_gift_to_client';
+      if (current.branch === 'support_business') return 'deal_completed';
+      return 'awaiting_payout';
+    }
+    case 'confirmation': {
+      if (current.branch === 'take') return 'awaiting_agent_confirm';
+      return 'deal_completed';
+    }
+    default: return 'deal_completed';
+  }
+}
+
+function getNextStepLabel(reco) {
+  const key = getNextStepKey(reco);
+  const dict = NEXT_STEP_TEXT[lang] || NEXT_STEP_TEXT.ru;
+  return dict[key] || dict.deal_completed;
+}
+
+function getNextStepTone(key) {
+  if (key === 'business_rejected')        return 'tone-danger';
+  if (key === 'awaiting_payout')          return 'tone-danger';
+  if (key === 'awaiting_business_accept') return 'tone-warning';
+  if (key === 'awaiting_deal_close')      return 'tone-warning';
+  if (key === 'awaiting_gift_to_client')  return 'tone-warning';
+  if (key === 'deal_completed')           return 'tone-success';
+  return 'tone-info';
+}
+
 function renderRecommend() {
   const listEl = document.getElementById('recommendList');
   const totalEl = document.getElementById('rec_stat_total');
