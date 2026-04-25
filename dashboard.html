@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -3390,6 +3389,12 @@ function renderDetailActionButtons(lead) {
 
     if (action && action.kind === 'confirm_receipt') {
         return renderReceiptConfirmationButtons(lead, 'sheet');
+    }
+
+    // Block legacy "choose_settlement" path when timeline says it's not yet time:
+    // wallet stage logic falsely returns choose_settlement when business hasn't closed the deal.
+    if (action && action.kind === 'choose_settlement' && !dealClosedDone) {
+        return '';
     }
 
     return renderWalletActionButton(lead, 'sheet');
