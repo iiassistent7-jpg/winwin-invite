@@ -420,6 +420,25 @@
     .timeline-v-sub { font-size:.72rem; color:var(--text2); margin-top:2px; line-height:1.4; }
     .timeline-v-step.tv-failed .timeline-v-sub { color:var(--red); }
 
+    /* ── Channel-aware contact buttons ──────────────────────────────── */
+    .contact-block { background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+    .contact-block-role { font-family:'Sora',sans-serif; font-size:.68rem; font-weight:700; color:var(--text2); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
+    .contact-block-name { font-size:1rem; font-weight:700; color:var(--text); line-height:1.25; }
+    .contact-block-phone { font-size:.86rem; font-weight:600; color:var(--text2); margin-top:2px; margin-bottom:10px; }
+    .contact-btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+    .contact-btn { flex:1 1 0; min-width:88px; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 10px; border-radius:10px; font-size:.84rem; font-weight:700; text-decoration:none; transition:transform .12s ease, opacity .15s ease; border:1px solid var(--border); background:transparent; color:var(--text); }
+    .contact-btn:hover { opacity:.92; }
+    .contact-btn:active { transform:scale(.97); }
+    .contact-btn .cb-icon { font-size:1rem; line-height:1; }
+    /* Default outlined state */
+    .contact-btn.cb-call,
+    .contact-btn.cb-wa,
+    .contact-btn.cb-tg { color:var(--text); }
+    /* Highlighted (native channel) — full brand color */
+    .contact-btn.cb-highlighted.cb-call { background:#2F80ED; border-color:#2F80ED; color:#fff; }
+    .contact-btn.cb-highlighted.cb-wa   { background:#27AE60; border-color:#27AE60; color:#fff; }
+    .contact-btn.cb-highlighted.cb-tg   { background:#229ED9; border-color:#229ED9; color:#fff; }
+
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
 
@@ -2691,6 +2710,47 @@ function renderNamedPhoneContact(name, phone, opts = {}) {
     </div>`;
 }
 
+// Render 3 contact buttons (Call / WhatsApp / Telegram) with the user's
+// native channel highlighted. Hides TG button if tg_username is missing.
+function renderContactButtons(contact, opts = {}) {
+  const c = contact || {};
+  const phone = String(c.phone || '').trim();
+  const digits = getPhoneDigits(phone);
+  const tgUsername = String(c.tg_username || '').trim();
+  const channel = String(c.channel || '').trim();
+  const labels = getPhoneActionLabels();
+  const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  const buttons = [];
+  if (digits) {
+    const isCallNative = false; // phone is universal — never highlighted alone
+    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call${isCallNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">📞</span><span>${labels.call}</span></a>`);
+    const isWaNative = (channel === 'whatsapp');
+    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${isWaNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">💬</span><span>WhatsApp</span></a>`);
+  }
+  if (tgUsername) {
+    const isTgNative = (channel === 'telegram');
+    const u = tgUsername.replace(/^@+/, '');
+    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${isTgNative ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
+  }
+  if (!buttons.length) return '';
+  return `<div class="contact-btn-row">${buttons.join('')}</div>`;
+}
+
+// Render a full contact block with role label + name + phone + buttons.
+function renderContactBlock(roleLabel, name, contact, opts = {}) {
+  const c = contact || {};
+  const rawName = String(name || '').trim() || '—';
+  const phone = String(c.phone || '').trim();
+  const buttonsHtml = renderContactButtons(c, opts);
+  return `
+    <div class="contact-block">
+      <div class="contact-block-role">${roleLabel}</div>
+      <div class="contact-block-name">${rawName}</div>
+      ${phone ? `<div class="contact-block-phone">${phone}</div>` : ''}
+      ${buttonsHtml}
+    </div>`;
+}
+
 function getDealAgentPhone(deal) {
   return deal.agent_phone || deal.sender_phone || deal.recommender_phone || deal.agent_whatsapp || deal.agent_wa_phone || deal.wa_phone || '';
 }
@@ -3203,6 +3263,8 @@ function renderDeals() {
           ${settlementPill}
         </div>
         <div class="deal-extra" id="deal_extra_${row.id}">
+          ${renderContactBlock(({ru:'Клиент',he:'לקוח',en:'Client',ar:'العميل'}[lang]||'Клиент'), d.client_name, d.client_contact, { stopPropagation:true })}
+          ${renderContactBlock(({ru:'Агент',he:'סוכן',en:'Agent',ar:'الوكيل'}[lang]||'Агент'), d.agent_name, d.agent_contact, { stopPropagation:true })}
           ${renderTimelineSteps(d.timeline)}
           ${settlementDetails}
           ${closedMeta ? `<div class="deal-inline-meta"><div class="deal-mini-box deal-mini-box-positive"><div class="deal-mini-lbl">${closedMeta.resultLabel}</div><div class="deal-mini-val">${nextStep}</div></div></div>` : ''}
@@ -4647,11 +4709,13 @@ function openManageDeal(id) {
   const clarityCopy = getBusinessDealClarityCopy();
   const settlementInfo = projection.settlementInfo;
   const manageLabels = getManageDealLabels();
-  const clientPhoneHtml = renderNamedPhoneContact(deal.client_name || '—', deal.client_phone);
+  const clientLabel = ({ru:'Клиент',he:'לקוח',en:'Client',ar:'العميل'}[lang]||'Клиент');
+  const agentLabel  = ({ru:'Агент',he:'סוכן',en:'Agent',ar:'الوكيل'}[lang]||'Агент');
+  const clientPhoneHtml = renderContactBlock(clientLabel, deal.client_name || '—', deal.client_contact);
   const isPayoutPending = projection.isPayoutPending;
   const tone = projection.tone;
   const agentName = deal.agent_name || deal.sender_name || '—';
-  const agentPhoneHtml = renderNamedPhoneContact(agentName, getDealAgentPhone(deal));
+  const agentPhoneHtml = renderContactBlock(agentLabel, agentName, deal.agent_contact);
   const dealDate = deal.date || (deal.created_at ? String(deal.created_at).slice(0,10) : '—');
   const debtValue = projection.isPayoutPending ? formatOutstandingDealDebtAmount(deal, curr) : '—';
   const isGiftClientSettlementConfirmation = projection.actionMode === 'close_only' && settlementInfo.decisionKey === 'gift_client';
