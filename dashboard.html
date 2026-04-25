@@ -3384,7 +3384,7 @@ function dealItemHtml(lead) {
     };
 
     return `
-    <div class="deal-card${cardToneCls}" onclick="toggleDealExtra(${lead.id})">
+    <div class="deal-card${cardToneCls}" onclick="event.stopPropagation();toggleDealExtra(${lead.id})">
       <div class="deal-card-header">
         <div>
           <div class="deal-client">${escapeHtml(lead.biz_name || '—')}</div>
