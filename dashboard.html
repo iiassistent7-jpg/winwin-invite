@@ -3345,25 +3345,81 @@ function dealItemHtml(lead) {
     const projection = getDealProjection(lead);
     const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
-    const hasComm = lead.commission != null;
-    const commColor = projection.debt ? 'var(--gold)' : 'var(--green)';
-    const inlineActions = closedMeta ? '' : renderSettlementChoiceButtons(lead, 'inline');
+    const L = i18n[lang] || i18n.ru;
+
+    let badgeCls = 'st-new';
+    if (projection.bucket === 'history') {
+        badgeCls = projection.counter === 'rejected' ? 'st-done' : 'st-closed';
+    } else if (projection.bucket === 'active') {
+        badgeCls = projection.debt ? 'st-debt' : 'st-progress';
+    }
+
+    let cardToneCls = '';
+    if (projection.debt) cardToneCls = ' unpaid';
+    else if (projection.bucket === 'active' && projection.cls === 'pill-gold') cardToneCls = ' pending';
+
+    let stepTone = 'tone-info';
+    if (projection.debt) stepTone = 'tone-danger';
+    else if (projection.bucket === 'history') stepTone = 'tone-success';
+    else if (projection.bucket === 'active') stepTone = 'tone-warning';
+    const miniBoxCls = stepTone === 'tone-danger' ? 'deal-mini-box-danger' :
+                       stepTone === 'tone-warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive';
+
+    const statusText = projection.label;
+    const amountVal = lead.amount != null && String(lead.amount).trim() !== '' ? `${escapeHtml(lead.amount)} ${curr}` : '—';
+    const commVal = lead.commission != null && String(lead.commission).trim() !== '' ? `${escapeHtml(lead.commission)} ${curr}` : '—';
+    let incomeVal = '—';
+    if (lead.commission != null && String(lead.commission).trim() !== '') {
+        incomeVal = `+${escapeHtml(lead.commission)} ${curr}`;
+    }
+
+    const lbl = {
+        client: ({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент'),
+        biz: ({ ru:'Бизнес', he:'עסק', en:'Business', ar:'عمل تجاري' }[lang] || 'Бизнес'),
+        next_step: ({ ru:'Следующий шаг', he:'הצעד הבא', en:'Next step', ar:'الخطوة التالية' }[lang] || 'Следующий шаг'),
+        check: ({ ru:'Чек', he:"צ'ק", en:'Check', ar:'شيك' }[lang] || 'Чек'),
+        bonus: ({ ru:'Бонус', he:'בונוס', en:'Bonus', ar:'مكافأة' }[lang] || 'Бонус'),
+        income: ({ ru:'Доход', he:'הכנסה', en:'Income', ar:'دخل' }[lang] || 'Доход'),
+        manage: ({ ru:'Управление сделкой', he:'ניהול עסקה', en:'Manage deal', ar:'إدارة الصفقة' }[lang] || 'Управление сделкой'),
+    };
+
     return `
-    <div class="activity-block">
-        <div class="activity-item" onclick='openDealDetail(${serializeLeadForAttr(lead)})'>
-            <div class="act-icon">${iconForStatus(lead)}</div>
-            <div style="flex:1;min-width:0;">
-                <div class="act-title">${lead.biz_name}</div>
-                <div class="act-sub">${({ ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' }[lang] || 'Клиент')}: ${lead.client_name}</div>
-            </div>
-            <div class="act-right">
-                ${statusPill(lead)}
-                <div class="act-date">${lead.date}</div>
-                ${hasComm ? `<div class="act-amount" style="color:${commColor};margin-top:2px;">+${lead.commission} ${curr}</div>` : ''}
-            </div>
+    <div class="deal-card${cardToneCls}" onclick="toggleDealExtra(${lead.id})">
+      <div class="deal-card-header">
+        <div>
+          <div class="deal-client">${escapeHtml(lead.biz_name || '—')}</div>
+          <div class="deal-date">${escapeHtml(lead.date || '')}</div>
         </div>
-        ${closedMeta ? `<div class="deal-chip-row"><span class="deal-chip">${escapeHtml(closedMeta.resultText)}</span>${hasComm ? `<span class="deal-chip">+${escapeHtml(lead.commission)} ${curr}</span>` : ''}</div>` : ''}
-        ${inlineActions ? `<div class="activity-actions">${inlineActions}</div>` : ''}
+        <div class="deal-card-status-row">
+          <span class="deal-status-badge ${badgeCls}">${escapeHtml(statusText)}</span>
+          <div class="card-toggle-hint"><i data-feather="chevron-down"></i></div>
+        </div>
+      </div>
+      ${renderTimelineProgressBar(lead.timeline)}
+      ${closedMeta ? '' : `<div class="deal-pending-note ${stepTone}"><i data-feather="${stepTone === 'tone-danger' ? 'alert-circle' : (stepTone === 'tone-success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${escapeHtml(statusText)}</div>`}
+      <div class="deal-summary-pills">
+        <span class="deal-meta-pill">👤 ${escapeHtml(lead.client_name || '—')}</span>
+        <span class="deal-meta-pill">💵 ${amountVal}</span>
+        <span class="deal-meta-pill">🎁 ${commVal}</span>
+      </div>
+      <div class="deal-extra" id="deal_extra_${lead.id}">
+        ${renderTimelineSteps(lead.timeline)}
+        ${renderContactBlock(lbl.client, lead.client_name, lead.client_contact, { stopPropagation:true })}
+        ${renderContactBlock(lbl.biz, lead.biz_name, lead.biz_contact, { stopPropagation:true })}
+        ${closedMeta ? '' : `
+        <div class="deal-mini-box ${miniBoxCls}" style="margin-bottom:14px;text-align:center;">
+          <div class="deal-mini-lbl">${lbl.next_step}</div>
+          <div class="deal-mini-val">${escapeHtml(statusText)}</div>
+        </div>`}
+        <div class="deal-receipt">
+          <div class="receipt-line"><span>💵 ${lbl.check}:</span><span>${amountVal}</span></div>
+          <div class="receipt-line"><span>🎁 ${lbl.bonus}:</span><span>${commVal}</span></div>
+          <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
+        </div>
+        <button type="button" class="deal-manage-btn" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>
+          <i data-feather="sliders" style="width:16px;height:16px;"></i> ${lbl.manage}
+        </button>
+      </div>
     </div>`;
 }
 
