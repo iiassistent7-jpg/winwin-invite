@@ -545,34 +545,35 @@
     .contact-block-role { font-family:'Sora',sans-serif; font-size:.68rem; font-weight:700; color:var(--text2); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
     .contact-block-name { font-size:1rem; font-weight:700; color:var(--text); line-height:1.25; }
     .contact-block-phone { font-size:.86rem; font-weight:600; color:var(--text2); margin-top:2px; margin-bottom:10px; }
-    .contact-btn-row { display:flex; gap:14px; flex-wrap:nowrap; align-items:center; justify-content:flex-start; margin-top:4px; }
-    body.rtl .contact-btn-row { justify-content:flex-end; }
-    .contact-btn { width:48px; height:48px; flex:0 0 48px; display:flex; align-items:center; justify-content:center; border-radius:50%; text-decoration:none; cursor:pointer; transition:transform .14s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease; border:2px solid var(--border); background:var(--surface2); color:var(--text); padding:0; box-shadow:0 2px 6px rgba(0,0,0,.18); }
-    body:not(.brand-theme) .contact-btn { background:#f4f6fa; box-shadow:0 2px 6px rgba(19,25,44,.06); }
-    .contact-btn:hover { transform:translateY(-1px); }
-    .contact-btn:active { transform:translateY(0) scale(.94); }
-    .contact-btn .cb-icon { font-size:1.35rem; line-height:1; }
+    /* Tappable phone link above the buttons */
+    .contact-block-phone-link { color:var(--text); text-decoration:none; border-bottom:1px dashed transparent; transition:color .18s ease, border-color .18s ease; }
+    .contact-block-phone-link:hover { color:var(--accent2); border-bottom-color:rgba(47,128,237,.4); }
 
-    /* Channel-tinted icon colors for the non-highlighted state */
-    .contact-btn.cb-call .cb-icon { filter:none; }
-    .contact-btn.cb-wa   { color:#27AE60; }
-    .contact-btn.cb-tg   { color:#229ED9; }
-    .contact-btn.cb-call { color:#2F80ED; }
+    /* Two big channel buttons stretched across the contact block */
+    .contact-btn-row { display:flex; gap:10px; align-items:stretch; margin-top:4px; }
+    .contact-btn { flex:1 1 0; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:14px; text-decoration:none; cursor:pointer; transition:transform .14s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease; border:2px solid transparent; padding:10px 14px; font-size:.95rem; font-weight:800; letter-spacing:.01em; box-shadow:0 4px 12px rgba(0,0,0,.18); }
+    .contact-btn:hover { transform:translateY(-1px); filter:brightness(1.05); }
+    .contact-btn:active { transform:translateY(0) scale(.98); }
+    .contact-btn .cb-icon { width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; }
+    .contact-btn .cb-icon svg { width:22px; height:22px; display:block; }
+    .contact-btn .cb-label { line-height:1; }
 
-    /* Highlighted (native channel) — tinted background + glowing ring */
-    .contact-btn.cb-highlighted { border-width:2.5px; }
-    .contact-btn.cb-highlighted.cb-wa   { background:rgba(39,174,96,.16);  border-color:#27AE60; box-shadow:0 0 0 2px rgba(39,174,96,.18), 0 0 14px rgba(39,174,96,.55); }
-    .contact-btn.cb-highlighted.cb-tg   { background:rgba(34,158,217,.16); border-color:#229ED9; box-shadow:0 0 0 2px rgba(34,158,217,.18), 0 0 14px rgba(34,158,217,.55); }
-    .contact-btn.cb-highlighted.cb-call { background:rgba(47,128,237,.16); border-color:#2F80ED; box-shadow:0 0 0 2px rgba(47,128,237,.18), 0 0 14px rgba(47,128,237,.55); }
+    /* Brand colours — WhatsApp green & Telegram blue */
+    .contact-btn.cb-wa { background:#25D366; color:#fff; }
+    .contact-btn.cb-tg { background:#229ED9; color:#fff; }
 
-    /* Pulse animation for the highlighted ring (subtle attention pull) */
+    /* Dimmed (non-native channel) — still tappable, just muted */
+    .contact-btn.cb-dimmed { opacity:.55; filter:saturate(.7); box-shadow:0 2px 6px rgba(0,0,0,.12); }
+    .contact-btn.cb-dimmed:hover { opacity:.85; filter:saturate(1) brightness(1.04); }
+
+    /* Highlighted (native channel) — glowing ring + subtle pulse */
     @keyframes ww-channel-pulse {
-      0%, 100% { box-shadow:0 0 0 2px var(--ww-pulse-tint), 0 0 14px var(--ww-pulse-glow); }
-      50%      { box-shadow:0 0 0 3px var(--ww-pulse-tint), 0 0 20px var(--ww-pulse-glow); }
+      0%, 100% { box-shadow:0 0 0 2px var(--ww-pulse-tint), 0 0 16px var(--ww-pulse-glow); }
+      50%      { box-shadow:0 0 0 3px var(--ww-pulse-tint), 0 0 22px var(--ww-pulse-glow); }
     }
-    .contact-btn.cb-highlighted.cb-wa   { --ww-pulse-tint:rgba(39,174,96,.22);  --ww-pulse-glow:rgba(39,174,96,.6);  animation:ww-channel-pulse 2.6s ease-in-out infinite; }
-    .contact-btn.cb-highlighted.cb-tg   { --ww-pulse-tint:rgba(34,158,217,.22); --ww-pulse-glow:rgba(34,158,217,.6); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
-    .contact-btn.cb-highlighted.cb-call { --ww-pulse-tint:rgba(47,128,237,.22); --ww-pulse-glow:rgba(47,128,237,.6); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
+    .contact-btn.cb-highlighted { position:relative; z-index:1; }
+    .contact-btn.cb-highlighted.cb-wa { --ww-pulse-tint:rgba(37,211,102,.28); --ww-pulse-glow:rgba(37,211,102,.55); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
+    .contact-btn.cb-highlighted.cb-tg { --ww-pulse-tint:rgba(34,158,217,.28); --ww-pulse-glow:rgba(34,158,217,.55); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
 
     /* Toast for "phone copied — open Telegram and search" hint */
     .ww-toast { position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(20px); background:rgba(20,26,44,.96); color:#fff; padding:12px 18px; border-radius:14px; font-size:.86rem; font-weight:600; box-shadow:0 6px 24px rgba(0,0,0,.35); z-index:9999; opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; max-width:88vw; text-align:center; line-height:1.4; }
@@ -2205,30 +2206,33 @@ function wwOpenTelegramByPhone(phoneRaw) {
   return false;
 }
 
+// Official-style brand SVGs (white silhouette on coloured button background).
+const WW_WA_SVG  = '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M16.001 3.2C8.927 3.2 3.2 8.927 3.2 16c0 2.27.6 4.476 1.736 6.43L3.2 28.8l6.51-1.71A12.74 12.74 0 0 0 16 28.8c7.073 0 12.8-5.727 12.8-12.8S23.074 3.2 16.001 3.2zm0 23.36a10.5 10.5 0 0 1-5.376-1.474l-.385-.232-3.872 1.018 1.04-3.776-.252-.4A10.55 10.55 0 0 1 5.44 16c0-5.825 4.736-10.56 10.56-10.56S26.56 10.175 26.56 16s-4.735 10.56-10.56 10.56zm5.81-7.91c-.317-.16-1.876-.927-2.166-1.034-.29-.106-.502-.16-.713.16-.21.317-.818 1.033-1.003 1.245-.185.21-.37.238-.687.08-.317-.16-1.34-.494-2.553-1.575-.943-.84-1.58-1.88-1.766-2.197-.184-.317-.02-.488.139-.646.143-.143.318-.371.476-.557.16-.184.21-.317.317-.528.106-.21.053-.397-.027-.557-.08-.16-.713-1.722-.977-2.357-.257-.617-.518-.534-.713-.544l-.608-.011c-.21 0-.554.08-.844.397-.29.318-1.108 1.083-1.108 2.642 0 1.56 1.135 3.066 1.293 3.276.16.21 2.235 3.41 5.41 4.781.756.327 1.345.522 1.804.668.758.241 1.448.207 1.993.126.608-.09 1.876-.766 2.14-1.506.265-.74.265-1.374.185-1.506-.08-.132-.29-.21-.608-.371z"/></svg>';
+const WW_TG_SVG  = '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M27.706 4.93 3.91 14.114c-1.624.654-1.615 1.563-.297 1.967l6.103 1.905 14.123-8.913c.668-.407 1.279-.188.778.258l-11.44 10.331-.44 6.611c.642 0 .925-.295 1.286-.643l3.092-3.005 6.435 4.752c1.187.654 2.04.317 2.336-1.1l4.226-19.9c.434-1.74-.658-2.527-1.806-2.046z"/></svg>';
+
 function renderContactButtons(contact, opts = {}) {
   const c = contact || {};
   const phone = String(c.phone || '').trim();
   const digits = getPhoneDigits(phone);
   const tgUsername = String(c.tg_username || '').trim();
   const channel = String(c.channel || '').trim();
-  const labels = getPhoneActionLabels();
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
   const highlightTg = (channel === 'telegram');
   const highlightWa = (channel === 'whatsapp');
-  const tgLabel = ({ru:'Telegram', he:'Telegram', en:'Telegram', ar:'Telegram'}[lang]) || 'Telegram';
   const buttons = [];
   if (digits) {
-    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call" aria-label="${labels.call}" title="${labels.call}"${attrs}><span class="cb-icon">📞</span></a>`);
-    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${highlightWa ? ' cb-highlighted' : ''}" aria-label="WhatsApp" title="WhatsApp"${attrs}><span class="cb-icon">💬</span></a>`);
+    const waCls = 'contact-btn cb-wa' + (highlightWa ? ' cb-highlighted' : ' cb-dimmed');
+    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="${waCls}" aria-label="WhatsApp"${attrs}><span class="cb-icon">${WW_WA_SVG}</span><span class="cb-label">WhatsApp</span></a>`);
   }
   if (tgUsername) {
     const u = tgUsername.replace(/^@+/, '');
     const stopAttr = opts.stopPropagation ? `onclick="event.stopPropagation()"` : '';
-    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}" aria-label="${tgLabel}" title="${tgLabel}" ${stopAttr}><span class="cb-icon">✈️</span></a>`);
+    const tgCls = 'contact-btn cb-tg' + (highlightTg ? ' cb-highlighted' : ' cb-dimmed');
+    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="${tgCls}" aria-label="Telegram" ${stopAttr}><span class="cb-icon">${WW_TG_SVG}</span><span class="cb-label">Telegram</span></a>`);
   } else if (channel === 'telegram' && phone) {
     const phoneEsc = phone.replace(/'/g, "\\'");
     const stopExtra = opts.stopPropagation ? 'event.stopPropagation();' : '';
-    buttons.push(`<button type="button" class="contact-btn cb-tg cb-highlighted" aria-label="${tgLabel}" title="${tgLabel}" onclick="${stopExtra}wwOpenTelegramByPhone('${phoneEsc}');return false;"><span class="cb-icon">✈️</span></button>`);
+    buttons.push(`<button type="button" class="contact-btn cb-tg cb-highlighted" aria-label="Telegram" onclick="${stopExtra}wwOpenTelegramByPhone('${phoneEsc}');return false;"><span class="cb-icon">${WW_TG_SVG}</span><span class="cb-label">Telegram</span></button>`);
   }
   if (!buttons.length) return '';
   return `<div class="contact-btn-row">${buttons.join('')}</div>`;
@@ -2238,6 +2242,13 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
   const c = contact || {};
   const rawName = String(name || '').trim() || '—';
   const phone = String(c.phone || '').trim();
+  const digits = getPhoneDigits(phone);
+  const stopAttr = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
+  const phoneHtml = phone
+    ? (digits
+        ? `<div class="contact-block-phone"><a href="tel:${digits}" class="contact-block-phone-link"${stopAttr}>${phone}</a></div>`
+        : `<div class="contact-block-phone">${phone}</div>`)
+    : '';
   const buttonsHtml = renderContactButtons(c, opts);
   return `
     <div class="contact-block">
@@ -2245,7 +2256,7 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
       <div class="contact-block-name-row">
         <div class="contact-block-name">${rawName}</div>
       </div>
-      ${phone ? `<div class="contact-block-phone">${phone}</div>` : ''}
+      ${phoneHtml}
       ${buttonsHtml}
     </div>`;
 }
@@ -2253,6 +2264,7 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
 // Debounce store: per-id timestamps to filter duplicate clicks (Mobile Safari + RTL fires both synthetic + real click).
+// Per-id debounce: Mobile Safari + RTL fires duplicate clicks. 350ms window absorbs the second one.
 const _lastDealToggle = {};
 let _toggleCallCount = 0;
 function toggleDealExtra(id) {
@@ -2261,23 +2273,27 @@ function toggleDealExtra(id) {
   const now = Date.now();
   const sinceLast = _lastDealToggle[id] ? (now - _lastDealToggle[id]) : -1;
   const blocked = !!(_lastDealToggle[id] && sinceLast < 350);
+  // Determine which view is active (home / history / wallet / profile)
+  const activeView = (document.querySelector('.view.active') || {}).id || '?';
   if (blocked) {
-    wwShowToast('CALL #' + callNum + ' BLOCKED by debounce | id=' + id + ' | sinceLast=' + sinceLast + 'ms | lang=' + lang);
+    wwShowToast('#' + callNum + ' BLOCKED | id=' + id + ' | dt=' + sinceLast + ' | view=' + activeView + ' | lang=' + lang);
     return;
   }
   _lastDealToggle[id] = now;
   const el = document.getElementById('deal_extra_' + id);
   if (!el) {
-    wwShowToast('CALL #' + callNum + ' element NOT FOUND | id=' + id);
+    wwShowToast('#' + callNum + ' NOT_FOUND | id=' + id + ' | view=' + activeView + ' | lang=' + lang);
     return;
   }
+  // Count how many .deal-extra elements exist with the same id (DOM duplicate detection)
+  const allWithSameId = document.querySelectorAll('#deal_extra_' + id).length;
   const card = el.closest('.deal-card');
   const before = el.classList.contains('open') ? 'OPEN' : 'closed';
   const willOpen = !el.classList.contains('open');
   el.classList.toggle('open', willOpen);
   if (card) card.classList.toggle('is-open', willOpen);
   const after = el.classList.contains('open') ? 'OPEN' : 'closed';
-  wwShowToast('CALL #' + callNum + ' EXEC | id=' + id + ' | before=' + before + ' | after=' + after + ' | sinceLast=' + sinceLast + 'ms | lang=' + lang);
+  wwShowToast('#' + callNum + ' EXEC | id=' + id + ' | ' + before + '→' + after + ' | dt=' + sinceLast + ' | dups=' + allWithSameId + ' | view=' + activeView + ' | lang=' + lang);
   if (willOpen && typeof feather !== 'undefined' && feather.replace) {
     try { feather.replace(); } catch(e) {}
   }
@@ -4496,5 +4512,3 @@ window.onload = init;
 </script>
 </body>
 </html>
-
-
