@@ -3449,8 +3449,12 @@ function walletDealCardHtml(lead) {
     const bonus = lead.commission != null && String(lead.commission).trim() !== '' ? `+${escapeHtml(lead.commission)} ${curr}` : '—';
     const L = i18n[lang] || i18n.ru;
     const resolveDealCardLabel = value => value && typeof value === 'object' ? value[lang] || value.ru || '' : (value || '');
+    // Open modal only when the agent has something to do
+    const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
+    const isActionable = actionableKeys.includes(getNextStepKey(lead));
+    const cardOnclick = isActionable ? `onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'` : '';
     return `
-    <div class="card wallet-deal-card" onclick='openWalletDealDetail(${serializeLeadForAttr(lead)})'>
+    <div class="card wallet-deal-card" ${cardOnclick}>
         <div class="wallet-card-top">
             <div class="wallet-card-main">
                 <div class="act-title">${escapeHtml(lead.biz_name || '—')}</div>
@@ -3480,7 +3484,7 @@ function walletDealCardHtml(lead) {
             </div>
         </div>
         ${closedMeta ? `<div class="wallet-chip-row"><span class="deal-chip">${escapeHtml(closedMeta.resultText)}</span><span class="deal-chip">${escapeHtml(formatDateValue(lead.business_close_date || lead.last_update_date))}</span></div>` : `<div class="wallet-card-next">${escapeHtml(L.wallet_card_note || '')}</div>`}
-        <div class="wallet-card-actions">${closedMeta ? '' : (renderWalletActionButton(lead, 'card') || `<button class="btn-primary wallet-card-btn btn-outline" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>${escapeHtml(L.wallet_card_open || 'Open and take the next step')}</button>`)}</div>
+        <div class="wallet-card-actions">${(closedMeta || !isActionable) ? '' : (renderWalletActionButton(lead, 'card') || `<button class="btn-primary wallet-card-btn btn-outline" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>${escapeHtml(L.wallet_card_open || 'Open and take the next step')}</button>`)}</div>
     </div>`;
 }
 
@@ -3560,9 +3564,16 @@ function dealItemHtml(lead) {
           <div class="receipt-line"><span>🎁 ${lbl.bonus}:</span><span>${commVal}</span></div>
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
-        <button type="button" class="deal-manage-btn" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>
+        ${(() => {
+          // Show "Manage deal" button ONLY when the agent actually has something to do.
+          // Hide for waiting/info-only stages.
+          const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
+          const nsKey = getNextStepKey(lead);
+          if (!actionableKeys.includes(nsKey)) return '';
+          return `<button type="button" class="deal-manage-btn" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>
           <i data-feather="sliders" style="width:16px;height:16px;"></i> ${lbl.manage}
-        </button>
+        </button>`;
+        })()}
       </div>
     </div>`;
 }
