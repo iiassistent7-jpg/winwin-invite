@@ -2235,27 +2235,20 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 // ══ END TIMELINE + CONTACT HELPERS ════════════════════════════════════
 
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
+// Debounce store: per-id timestamps to filter duplicate clicks (Mobile Safari + RTL fires both synthetic + real click).
+const _lastDealToggle = {};
 function toggleDealExtra(id) {
-  // DEBUG: visible diagnostic toast
-  try {
-    const el = document.getElementById('deal_extra_' + id);
-    if (!el) {
-      wwShowToast('DEBUG: id=' + id + ' element NOT FOUND in DOM');
-      return;
-    }
-    const card = el.closest('.deal-card');
-    const willOpen = !el.classList.contains('open');
-    const beforeClass = el.className;
-    el.classList.toggle('open', willOpen);
-    if (card) card.classList.toggle('is-open', willOpen);
-    const afterClass = el.className;
-    const computedDisplay = window.getComputedStyle(el).display;
-    wwShowToast('DEBUG: id=' + id + ' | willOpen=' + willOpen + ' | card=' + (card ? 'YES' : 'NO') + ' | classBefore="' + beforeClass + '" | classAfter="' + afterClass + '" | display=' + computedDisplay + ' | lang=' + lang);
-    if (willOpen && typeof feather !== 'undefined' && feather.replace) {
-      try { feather.replace(); } catch(e) {}
-    }
-  } catch(err) {
-    wwShowToast('DEBUG ERROR: ' + (err && err.message ? err.message : String(err)));
+  const now = Date.now();
+  if (_lastDealToggle[id] && (now - _lastDealToggle[id]) < 350) return;
+  _lastDealToggle[id] = now;
+  const el = document.getElementById('deal_extra_' + id);
+  if (!el) return;
+  const card = el.closest('.deal-card');
+  const willOpen = !el.classList.contains('open');
+  el.classList.toggle('open', willOpen);
+  if (card) card.classList.toggle('is-open', willOpen);
+  if (willOpen && typeof feather !== 'undefined' && feather.replace) {
+    try { feather.replace(); } catch(e) {}
   }
 }
 let chartInst  = null;
