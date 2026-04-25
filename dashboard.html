@@ -2236,14 +2236,26 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
 function toggleDealExtra(id) {
-  const el = document.getElementById('deal_extra_' + id);
-  if (!el) return;
-  const card = el.closest('.deal-card');
-  const willOpen = !el.classList.contains('open');
-  el.classList.toggle('open', willOpen);
-  if (card) card.classList.toggle('is-open', willOpen);
-  if (willOpen && typeof feather !== 'undefined' && feather.replace) {
-    try { feather.replace(); } catch(e) {}
+  // DEBUG: visible diagnostic toast
+  try {
+    const el = document.getElementById('deal_extra_' + id);
+    if (!el) {
+      wwShowToast('DEBUG: id=' + id + ' element NOT FOUND in DOM');
+      return;
+    }
+    const card = el.closest('.deal-card');
+    const willOpen = !el.classList.contains('open');
+    const beforeClass = el.className;
+    el.classList.toggle('open', willOpen);
+    if (card) card.classList.toggle('is-open', willOpen);
+    const afterClass = el.className;
+    const computedDisplay = window.getComputedStyle(el).display;
+    wwShowToast('DEBUG: id=' + id + ' | willOpen=' + willOpen + ' | card=' + (card ? 'YES' : 'NO') + ' | classBefore="' + beforeClass + '" | classAfter="' + afterClass + '" | display=' + computedDisplay + ' | lang=' + lang);
+    if (willOpen && typeof feather !== 'undefined' && feather.replace) {
+      try { feather.replace(); } catch(e) {}
+    }
+  } catch(err) {
+    wwShowToast('DEBUG ERROR: ' + (err && err.message ? err.message : String(err)));
   }
 }
 let chartInst  = null;
