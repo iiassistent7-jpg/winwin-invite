@@ -550,13 +550,13 @@
     .contact-block-phone-link:hover { color:var(--accent2); border-bottom-color:rgba(47,128,237,.4); }
 
     /* Two big channel buttons stretched across the contact block */
-    .contact-btn-row { display:flex; gap:10px; align-items:stretch; margin-top:4px; }
-    .contact-btn { flex:1 1 0; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:14px; text-decoration:none; cursor:pointer; transition:transform .14s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease; border:2px solid transparent; padding:10px 14px; font-size:.95rem; font-weight:800; letter-spacing:.01em; box-shadow:0 4px 12px rgba(0,0,0,.18); }
+    .contact-btn-row { display:flex; gap:8px; align-items:stretch; margin-top:4px; width:100%; min-width:0; }
+    .contact-btn { flex:1 1 0; min-width:0; min-height:46px; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:12px; text-decoration:none; cursor:pointer; transition:transform .14s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease; border:2px solid transparent; padding:9px 10px; font-size:.86rem; font-weight:800; letter-spacing:0; box-shadow:0 4px 12px rgba(0,0,0,.18); white-space:nowrap; overflow:hidden; }
     .contact-btn:hover { transform:translateY(-1px); filter:brightness(1.05); }
     .contact-btn:active { transform:translateY(0) scale(.98); }
-    .contact-btn .cb-icon { width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; }
-    .contact-btn .cb-icon svg { width:22px; height:22px; display:block; }
-    .contact-btn .cb-label { line-height:1; }
+    .contact-btn .cb-icon { width:20px; height:20px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+    .contact-btn .cb-icon svg { width:20px; height:20px; display:block; }
+    .contact-btn .cb-label { line-height:1; overflow:hidden; text-overflow:ellipsis; }
 
     /* Brand colours — WhatsApp green & Telegram blue */
     .contact-btn.cb-wa { background:#25D366; color:#fff; }
@@ -2198,7 +2198,8 @@ function wwOpenTelegramByPhone(phoneRaw) {
     const ua = navigator.userAgent || '';
     const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
     if (isMobile) {
-      window.location.href = 'tg://resolve';
+      // Open Telegram app via universal link — works on Android & iOS, opens the search screen.
+      window.location.href = 'https://t.me/';
     } else {
       window.open('https://web.telegram.org/a/', '_blank', 'noopener');
     }
