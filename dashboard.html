@@ -2264,36 +2264,33 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
 // Debounce store: per-id timestamps to filter duplicate clicks (Mobile Safari + RTL fires both synthetic + real click).
-// Per-id debounce: Mobile Safari + RTL fires duplicate clicks. 350ms window absorbs the second one.
-const _lastDealToggle = {};
-let _toggleCallCount = 0;
-function toggleDealExtra(id) {
-  _toggleCallCount += 1;
-  const callNum = _toggleCallCount;
+// Per-card debounce: Mobile Safari + RTL fires duplicate clicks. 350ms window absorbs the second one.
+// We use the tapped card itself (event.currentTarget) as the lookup root — avoids id collisions
+// caused by the same lead being rendered on multiple tabs simultaneously (Home + History).
+const _lastDealToggle = new WeakMap();
+function toggleDealExtra(id, ev) {
+  // Resolve the actual tapped card from the event (preferred) or fall back to a uniqueness-safe scan.
+  let card = null;
+  if (ev && ev.currentTarget && ev.currentTarget.classList && ev.currentTarget.classList.contains('deal-card')) {
+    card = ev.currentTarget;
+  } else if (ev && ev.target && typeof ev.target.closest === 'function') {
+    card = ev.target.closest('.deal-card');
+  }
+  // Fallback: pick the first .deal-card inside the currently active view that contains a matching deal_extra
+  if (!card) {
+    const activeView = document.querySelector('.view.active');
+    if (activeView) card = activeView.querySelector('#deal_extra_' + id + '')?.closest('.deal-card') || null;
+  }
+  if (!card) return;
+  const el = card.querySelector('.deal-extra');
+  if (!el) return;
   const now = Date.now();
-  const sinceLast = _lastDealToggle[id] ? (now - _lastDealToggle[id]) : -1;
-  const blocked = !!(_lastDealToggle[id] && sinceLast < 350);
-  // Determine which view is active (home / history / wallet / profile)
-  const activeView = (document.querySelector('.view.active') || {}).id || '?';
-  if (blocked) {
-    wwShowToast('#' + callNum + ' BLOCKED | id=' + id + ' | dt=' + sinceLast + ' | view=' + activeView + ' | lang=' + lang);
-    return;
-  }
-  _lastDealToggle[id] = now;
-  const el = document.getElementById('deal_extra_' + id);
-  if (!el) {
-    wwShowToast('#' + callNum + ' NOT_FOUND | id=' + id + ' | view=' + activeView + ' | lang=' + lang);
-    return;
-  }
-  // Count how many .deal-extra elements exist with the same id (DOM duplicate detection)
-  const allWithSameId = document.querySelectorAll('#deal_extra_' + id).length;
-  const card = el.closest('.deal-card');
-  const before = el.classList.contains('open') ? 'OPEN' : 'closed';
+  const last = _lastDealToggle.get(card) || 0;
+  if (now - last < 350) return;
+  _lastDealToggle.set(card, now);
   const willOpen = !el.classList.contains('open');
   el.classList.toggle('open', willOpen);
-  if (card) card.classList.toggle('is-open', willOpen);
-  const after = el.classList.contains('open') ? 'OPEN' : 'closed';
-  wwShowToast('#' + callNum + ' EXEC | id=' + id + ' | ' + before + '→' + after + ' | dt=' + sinceLast + ' | dups=' + allWithSameId + ' | view=' + activeView + ' | lang=' + lang);
+  card.classList.toggle('is-open', willOpen);
   if (willOpen && typeof feather !== 'undefined' && feather.replace) {
     try { feather.replace(); } catch(e) {}
   }
@@ -3436,7 +3433,7 @@ function dealItemHtml(lead) {
     };
 
     return `
-    <div class="deal-card${cardToneCls}" onclick="event.stopPropagation();toggleDealExtra(${lead.id})">
+    <div class="deal-card${cardToneCls}" onclick="event.stopPropagation();toggleDealExtra(${lead.id}, event)">
       <div class="deal-card-header">
         <div>
           <div class="deal-client">${escapeHtml(lead.biz_name || '—')}</div>
