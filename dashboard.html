@@ -545,18 +545,34 @@
     .contact-block-role { font-family:'Sora',sans-serif; font-size:.68rem; font-weight:700; color:var(--text2); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
     .contact-block-name { font-size:1rem; font-weight:700; color:var(--text); line-height:1.25; }
     .contact-block-phone { font-size:.86rem; font-weight:600; color:var(--text2); margin-top:2px; margin-bottom:10px; }
-    .contact-btn-row { display:flex; gap:8px; flex-wrap:wrap; }
-    .contact-btn { flex:1 1 0; min-width:88px; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 12px; border-radius:12px; font-size:.85rem; font-weight:800; text-decoration:none; transition:transform .14s ease, box-shadow .18s ease, background .18s ease, opacity .15s ease; border:1.5px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); color:var(--text); box-shadow:0 2px 6px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.05); }
-    body:not(.brand-theme) .contact-btn { background:linear-gradient(180deg, #ffffff, #f4f6fa); box-shadow:0 2px 6px rgba(19,25,44,.07), inset 0 1px 0 rgba(255,255,255,.6); }
-    .contact-btn:hover { transform:translateY(-1px); opacity:.96; }
-    .contact-btn:active { transform:translateY(0) scale(.97); box-shadow:0 1px 2px rgba(0,0,0,.18); }
-    .contact-btn .cb-icon { font-size:1.05rem; line-height:1; }
-    .contact-btn.cb-highlighted.cb-wa   { background:linear-gradient(180deg, rgba(39,174,96,.22), rgba(39,174,96,.08)); border-color:#27AE60; color:#27AE60; box-shadow:0 2px 10px rgba(39,174,96,.28), inset 0 1px 0 rgba(255,255,255,.08); }
-    .contact-btn.cb-highlighted.cb-tg   { background:linear-gradient(180deg, rgba(34,158,217,.22), rgba(34,158,217,.08)); border-color:#229ED9; color:#56CCF2; box-shadow:0 2px 10px rgba(34,158,217,.28), inset 0 1px 0 rgba(255,255,255,.08); }
-    .contact-btn.cb-highlighted.cb-call { background:linear-gradient(180deg, rgba(47,128,237,.22), rgba(47,128,237,.08)); border-color:#2F80ED; color:#56CCF2; box-shadow:0 2px 10px rgba(47,128,237,.28), inset 0 1px 0 rgba(255,255,255,.08); }
-    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-wa   { color:#1a8a4d; }
-    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-tg   { color:#1976B5; }
-    body:not(.brand-theme) .contact-btn.cb-highlighted.cb-call { color:#1f5dbf; }
+    .contact-btn-row { display:flex; gap:14px; flex-wrap:nowrap; align-items:center; justify-content:flex-start; margin-top:4px; }
+    body.rtl .contact-btn-row { justify-content:flex-end; }
+    .contact-btn { width:48px; height:48px; flex:0 0 48px; display:flex; align-items:center; justify-content:center; border-radius:50%; text-decoration:none; cursor:pointer; transition:transform .14s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease; border:2px solid var(--border); background:var(--surface2); color:var(--text); padding:0; box-shadow:0 2px 6px rgba(0,0,0,.18); }
+    body:not(.brand-theme) .contact-btn { background:#f4f6fa; box-shadow:0 2px 6px rgba(19,25,44,.06); }
+    .contact-btn:hover { transform:translateY(-1px); }
+    .contact-btn:active { transform:translateY(0) scale(.94); }
+    .contact-btn .cb-icon { font-size:1.35rem; line-height:1; }
+
+    /* Channel-tinted icon colors for the non-highlighted state */
+    .contact-btn.cb-call .cb-icon { filter:none; }
+    .contact-btn.cb-wa   { color:#27AE60; }
+    .contact-btn.cb-tg   { color:#229ED9; }
+    .contact-btn.cb-call { color:#2F80ED; }
+
+    /* Highlighted (native channel) — tinted background + glowing ring */
+    .contact-btn.cb-highlighted { border-width:2.5px; }
+    .contact-btn.cb-highlighted.cb-wa   { background:rgba(39,174,96,.16);  border-color:#27AE60; box-shadow:0 0 0 2px rgba(39,174,96,.18), 0 0 14px rgba(39,174,96,.55); }
+    .contact-btn.cb-highlighted.cb-tg   { background:rgba(34,158,217,.16); border-color:#229ED9; box-shadow:0 0 0 2px rgba(34,158,217,.18), 0 0 14px rgba(34,158,217,.55); }
+    .contact-btn.cb-highlighted.cb-call { background:rgba(47,128,237,.16); border-color:#2F80ED; box-shadow:0 0 0 2px rgba(47,128,237,.18), 0 0 14px rgba(47,128,237,.55); }
+
+    /* Pulse animation for the highlighted ring (subtle attention pull) */
+    @keyframes ww-channel-pulse {
+      0%, 100% { box-shadow:0 0 0 2px var(--ww-pulse-tint), 0 0 14px var(--ww-pulse-glow); }
+      50%      { box-shadow:0 0 0 3px var(--ww-pulse-tint), 0 0 20px var(--ww-pulse-glow); }
+    }
+    .contact-btn.cb-highlighted.cb-wa   { --ww-pulse-tint:rgba(39,174,96,.22);  --ww-pulse-glow:rgba(39,174,96,.6);  animation:ww-channel-pulse 2.6s ease-in-out infinite; }
+    .contact-btn.cb-highlighted.cb-tg   { --ww-pulse-tint:rgba(34,158,217,.22); --ww-pulse-glow:rgba(34,158,217,.6); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
+    .contact-btn.cb-highlighted.cb-call { --ww-pulse-tint:rgba(47,128,237,.22); --ww-pulse-glow:rgba(47,128,237,.6); animation:ww-channel-pulse 2.6s ease-in-out infinite; }
 
     /* Toast for "phone copied — open Telegram and search" hint */
     .ww-toast { position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(20px); background:rgba(20,26,44,.96); color:#fff; padding:12px 18px; border-radius:14px; font-size:.86rem; font-weight:600; box-shadow:0 6px 24px rgba(0,0,0,.35); z-index:9999; opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; max-width:88vw; text-align:center; line-height:1.4; }
@@ -2199,19 +2215,20 @@ function renderContactButtons(contact, opts = {}) {
   const attrs = opts.stopPropagation ? ` onclick="event.stopPropagation()"` : '';
   const highlightTg = (channel === 'telegram');
   const highlightWa = (channel === 'whatsapp');
+  const tgLabel = ({ru:'Telegram', he:'Telegram', en:'Telegram', ar:'Telegram'}[lang]) || 'Telegram';
   const buttons = [];
   if (digits) {
-    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call"${attrs}><span class="cb-icon">📞</span><span>${labels.call}</span></a>`);
-    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${highlightWa ? ' cb-highlighted' : ''}"${attrs}><span class="cb-icon">💬</span><span>WhatsApp</span></a>`);
+    buttons.push(`<a href="tel:${digits}" class="contact-btn cb-call" aria-label="${labels.call}" title="${labels.call}"${attrs}><span class="cb-icon">📞</span></a>`);
+    buttons.push(`<a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="contact-btn cb-wa${highlightWa ? ' cb-highlighted' : ''}" aria-label="WhatsApp" title="WhatsApp"${attrs}><span class="cb-icon">💬</span></a>`);
   }
   if (tgUsername) {
     const u = tgUsername.replace(/^@+/, '');
     const stopAttr = opts.stopPropagation ? `onclick="event.stopPropagation()"` : '';
-    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}" ${stopAttr}><span class="cb-icon">✈️</span><span>Telegram</span></a>`);
+    buttons.push(`<a href="https://t.me/${u}" target="_blank" rel="noopener" class="contact-btn cb-tg${highlightTg ? ' cb-highlighted' : ''}" aria-label="${tgLabel}" title="${tgLabel}" ${stopAttr}><span class="cb-icon">✈️</span></a>`);
   } else if (channel === 'telegram' && phone) {
     const phoneEsc = phone.replace(/'/g, "\\'");
     const stopExtra = opts.stopPropagation ? 'event.stopPropagation();' : '';
-    buttons.push(`<button type="button" class="contact-btn cb-tg cb-highlighted" onclick="${stopExtra}wwOpenTelegramByPhone('${phoneEsc}');return false;"><span class="cb-icon">✈️</span><span>Telegram</span></button>`);
+    buttons.push(`<button type="button" class="contact-btn cb-tg cb-highlighted" aria-label="${tgLabel}" title="${tgLabel}" onclick="${stopExtra}wwOpenTelegramByPhone('${phoneEsc}');return false;"><span class="cb-icon">✈️</span></button>`);
   }
   if (!buttons.length) return '';
   return `<div class="contact-btn-row">${buttons.join('')}</div>`;
