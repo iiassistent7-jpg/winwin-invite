@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -2265,6 +2266,94 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
 // Debounce store: per-id timestamps to filter duplicate clicks (Mobile Safari + RTL fires both synthetic + real click).
+// ══ NEXT-STEP RESOLVER (timeline-driven) ════════════════════════════════
+// Source of truth for "where is the ball right now" — drives the next-step
+// label shown in card + modal, AND gates which action buttons appear.
+
+const NEXT_STEP_TEXT = {
+  ru: {
+    awaiting_business_accept:  'Ждём решения бизнеса',
+    business_rejected:         'Бизнес отклонил клиента',
+    awaiting_deal_close:       'Ждём закрытие сделки',
+    choose_settlement:         'Выберите способ расчёта',
+    awaiting_payout:           'Ждём выплату от бизнеса',
+    confirm_receipt:           'Подтвердите получение бонуса',
+    awaiting_gift_to_client:   'Ждём передачу бонуса клиенту',
+    deal_completed:            'Сделка завершена'
+  },
+  he: {
+    awaiting_business_accept:  'ממתינים להחלטת העסק',
+    business_rejected:         'העסק דחה את הלקוח',
+    awaiting_deal_close:       'ממתינים לסגירת העסקה',
+    choose_settlement:         'בחרו שיטת חישוב',
+    awaiting_payout:           'ממתינים לתשלום מהעסק',
+    confirm_receipt:           'אשרו את קבלת הבונוס',
+    awaiting_gift_to_client:   'ממתינים להעברת הבונוס ללקוח',
+    deal_completed:            'העסקה הושלמה'
+  },
+  en: {
+    awaiting_business_accept:  'Waiting for business decision',
+    business_rejected:         'Business rejected the client',
+    awaiting_deal_close:       'Waiting for deal closure',
+    choose_settlement:         'Choose settlement method',
+    awaiting_payout:           'Waiting for payout from business',
+    confirm_receipt:           'Confirm bonus receipt',
+    awaiting_gift_to_client:   'Waiting for bonus transfer to client',
+    deal_completed:            'Deal completed'
+  },
+  ar: {
+    awaiting_business_accept:  'بانتظار قرار العمل',
+    business_rejected:         'رفض العمل العميل',
+    awaiting_deal_close:       'بانتظار إغلاق الصفقة',
+    choose_settlement:         'اختر طريقة التسوية',
+    awaiting_payout:           'بانتظار الدفع من العمل',
+    confirm_receipt:           'أكّد استلام المكافأة',
+    awaiting_gift_to_client:   'بانتظار تحويل المكافأة للعميل',
+    deal_completed:            'اكتملت الصفقة'
+  }
+};
+
+function getNextStepKey(lead) {
+  const tl = Array.isArray(lead && lead.timeline) ? lead.timeline : [];
+  if (!tl.length) return 'deal_completed';
+  const failed = tl.find(s => s && s.status === 'failed');
+  if (failed) return 'business_rejected';
+  const allDone = tl.every(s => s && s.status === 'done');
+  if (allDone) return 'deal_completed';
+  const current = tl.find(s => s && s.status === 'current');
+  if (!current) return 'deal_completed';
+  switch (current.step) {
+    case 'recommendation_sent':  return 'awaiting_business_accept';
+    case 'business_accepted':    return 'awaiting_deal_close';
+    case 'deal_closed':          return 'choose_settlement';
+    case 'agent_decision':       return 'choose_settlement';
+    case 'execution': {
+      if (current.branch === 'gift_client')      return 'awaiting_gift_to_client';
+      if (current.branch === 'support_business') return 'deal_completed';
+      return 'awaiting_payout';
+    }
+    case 'confirmation': {
+      if (current.branch === 'gift_client')      return 'deal_completed';
+      if (current.branch === 'support_business') return 'deal_completed';
+      return 'confirm_receipt';
+    }
+    default: return 'deal_completed';
+  }
+}
+
+function getNextStepLabel(lead) {
+  const key = getNextStepKey(lead);
+  const dict = NEXT_STEP_TEXT[lang] || NEXT_STEP_TEXT.ru;
+  return dict[key] || dict.deal_completed;
+}
+
+function getNextStepTone(key) {
+  if (key === 'business_rejected')  return 'tone-danger';
+  if (key === 'awaiting_payout')    return 'tone-danger';
+  if (key === 'deal_completed')     return 'tone-success';
+  return 'tone-warning';
+}
+
 // Per-card debounce: Mobile Safari + RTL fires duplicate clicks. 350ms window absorbs the second one.
 // We use the tapped card itself (event.currentTarget) as the lookup root — avoids id collisions
 // caused by the same lead being rendered on multiple tabs simultaneously (Home + History).
@@ -3446,7 +3535,7 @@ function dealItemHtml(lead) {
         </div>
       </div>
       ${renderTimelineProgressBar(lead.timeline)}
-      ${closedMeta ? '' : `<div class="deal-pending-note ${stepTone}"><i data-feather="${stepTone === 'tone-danger' ? 'alert-circle' : (stepTone === 'tone-success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${escapeHtml(statusText)}</div>`}
+      ${closedMeta ? '' : `<div class="deal-pending-note ${stepTone}"><i data-feather="${stepTone === 'tone-danger' ? 'alert-circle' : (stepTone === 'tone-success' ? 'check-circle' : 'clock')}" style="width:14px;height:14px;"></i> ${escapeHtml(getNextStepLabel(lead))}</div>`}
       <div class="deal-summary-pills">
         <span class="deal-meta-pill">👤 ${escapeHtml(lead.client_name || '—')}</span>
         <span class="deal-meta-pill">💵 ${amountVal}</span>
@@ -3459,7 +3548,7 @@ function dealItemHtml(lead) {
         ${closedMeta ? '' : `
         <div class="deal-mini-box ${miniBoxCls}" style="margin-bottom:14px;text-align:center;">
           <div class="deal-mini-lbl">${lbl.next_step}</div>
-          <div class="deal-mini-val">${escapeHtml(statusText)}</div>
+          <div class="deal-mini-val">${escapeHtml(getNextStepLabel(lead))}</div>
         </div>`}
         <div class="deal-receipt">
           <div class="receipt-line"><span>💵 ${lbl.check}:</span><span>${amountVal}</span></div>
@@ -3542,38 +3631,71 @@ function openWalletDealDetail(lead) {
     const projection = getDealProjection(lead);
     const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
-    const LABELS = {
-        biz: { ru:'Бизнес', he:'עסק', en:'Business', ar:'العمل' },
-        biz_phone: { ru:'Телефон бизнеса', he:'טלפון העסק', en:'Business phone', ar:'هاتف العمل' },
-        client: { ru:'Клиент', he:'לקוח', en:'Client', ar:'العميل' },
-        client_phone: { ru:'Телефон клиента', he:'טלפון הלקוח', en:'Client phone', ar:'هاتف العميل' },
-        start_date: { ru:'Дата старта', he:'תאריך התחלה', en:'Start date', ar:'تاريخ البداية' },
-        business_close_date: { ru:'Дата закрытия бизнесом', he:'תאריך סגירה על ידי העסק', en:'Business close date', ar:'تاريخ إغلاق العمل' },
-        agent_decision_date: { ru:'Дата решения агента', he:'תאריך החלטת הסוכן', en:'Agent decision date', ar:'تاريخ قرار الوكيل' },
-        last_reminder_date: { ru:'Последнее напоминание', he:'תזכורת אחרונה', en:'Last reminder date', ar:'آخر تذكير' },
-        amount: { ru:'Сумма / чек', he:'סכום / חשבונית', en:'Deal amount / check', ar:'المبلغ / الشيك' },
-        bonus: { ru:'Бонус агента', he:'בונוס הסוכן', en:'Agent bonus', ar:'مكافأة الوكيل' },
-        settlement_method: { ru:'Способ расчёта', he:'שיטת סגירה', en:'Settlement method', ar:'طريقة التسوية' },
-        current_stage: { ru:'Текущий этап', he:'שלב נוכחי', en:'Current stage', ar:'المرحلة الحالية' }
+
+    const lbl = {
+        client:        ({ru:'Клиент',  he:'לקוח',  en:'Client',   ar:'العميل'}[lang]    || 'Клиент'),
+        biz:           ({ru:'Бизнес',  he:'עסק',   en:'Business', ar:'العمل'}[lang]     || 'Бизнес'),
+        next_step:     ({ru:'Следующий шаг', he:'הצעד הבא', en:'Next step', ar:'الخطوة التالية'}[lang] || 'Следующий шаг'),
+        bonus:         ({ru:'Бонус',   he:'בונוס', en:'Bonus',    ar:'مكافأة'}[lang]    || 'Бонус'),
+        income:        ({ru:'Доход',   he:'הכנסה', en:'Income',   ar:'دخل'}[lang]       || 'Доход'),
+        amount:        ({ru:'Сумма сделки', he:'סכום עסקה', en:'Deal amount', ar:'مبلغ الصفقة'}[lang] || 'Сумма сделки'),
+        start_date:    ({ru:'Дата старта',  he:'תאריך התחלה',  en:'Start date',  ar:'تاريخ البداية'}[lang] || 'Дата старта'),
+        close_date:    ({ru:'Дата закрытия', he:'תאריך סגירה', en:'Close date',  ar:'تاريخ الإغلاق'}[lang] || 'Дата закрытия'),
+        settlement:    ({ru:'Способ расчёта', he:'שיטת סגירה', en:'Settlement', ar:'طريقة التسوية'}[lang] || 'Способ расчёта'),
     };
-    const lbl = k => (LABELS[k] || {})[lang] || LABELS[k].ru;
-    const row = (label, valueHtml) => `<div class="deal-detail-row"><div class="deal-detail-lbl">${label}</div><div class="deal-detail-val">${valueHtml}</div></div>`;
 
-    let rows = '';
-    rows += row(lbl('biz'), escapeHtml(lead.biz_name || '—'));
-    rows += row(lbl('biz_phone'), formatPhoneLink(lead.biz_phone));
-    rows += row(lbl('client'), escapeHtml(lead.client_name || '—'));
-    rows += row(lbl('client_phone'), formatPhoneLink(lead.client_phone));
-    rows += row(lbl('start_date'), formatDateValue(lead.start_date));
-    rows += row(lbl('business_close_date'), formatDateValue(lead.business_close_date));
-    rows += row(lbl('agent_decision_date'), formatDateValue(lead.agent_decision_date));
-    if (lead.last_reminder_date) rows += row(lbl('last_reminder_date'), formatDateValue(lead.last_reminder_date));
-    rows += row(lbl('amount'), lead.amount != null && String(lead.amount).trim() !== '' ? `${escapeHtml(lead.amount)} ${curr}` : '—');
-    rows += row(lbl('bonus'), lead.commission != null && String(lead.commission).trim() !== '' ? `<span style="color:var(--green)">+${escapeHtml(lead.commission)} ${curr}</span>` : '—');
-    rows += row(closedMeta ? escapeHtml(closedMeta.resultLabel) : lbl('settlement_method'), closedMeta ? escapeHtml(closedMeta.resultText) : escapeHtml(getSettlementMethodLabel(lead.decision)));
-    rows += row(lbl('current_stage'), walletStatusPill(lead));
+    const fmtMoney = v => v != null && String(v).trim() !== '' ? `${escapeHtml(v)} ${curr}` : '—';
+    const fmtIncome = v => v != null && String(v).trim() !== '' ? `+${escapeHtml(v)} ${curr}` : '—';
 
-    document.getElementById('dealDetailContent').innerHTML = rows;
+    const nextStepKey = getNextStepKey(lead);
+    const nextStepText = closedMeta ? closedMeta.resultText : getNextStepLabel(lead);
+    const nextStepTone = closedMeta ? 'tone-success' : getNextStepTone(nextStepKey);
+    const miniBoxCls = nextStepTone === 'tone-danger' ? 'deal-mini-box-danger' :
+                       nextStepTone === 'tone-warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive';
+
+    const settlementMethodText = closedMeta
+        ? escapeHtml(closedMeta.resultText)
+        : (lead.decision ? escapeHtml(getSettlementMethodLabel(lead.decision)) : '—');
+
+    const summaryHtml = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="deal-mini-box ${miniBoxCls}">
+          <div class="deal-mini-lbl">${closedMeta ? escapeHtml(closedMeta.resultLabel) : lbl.settlement}</div>
+          <div class="deal-mini-val">${settlementMethodText}</div>
+        </div>
+        <div class="deal-mini-box deal-mini-box-positive">
+          <div class="deal-mini-lbl">${lbl.income}</div>
+          <div class="deal-mini-val">${fmtIncome(lead.commission)}</div>
+        </div>
+        <div class="deal-mini-box">
+          <div class="deal-mini-lbl">${lbl.amount}</div>
+          <div class="deal-mini-val">${fmtMoney(lead.amount)}</div>
+        </div>
+        <div class="deal-mini-box">
+          <div class="deal-mini-lbl">${lbl.bonus}</div>
+          <div class="deal-mini-val">${fmtMoney(lead.commission)}</div>
+        </div>
+        <div class="deal-mini-box">
+          <div class="deal-mini-lbl">${lbl.start_date}</div>
+          <div class="deal-mini-val">${escapeHtml(formatDateValue(lead.start_date))}</div>
+        </div>
+        <div class="deal-mini-box">
+          <div class="deal-mini-lbl">${lbl.close_date}</div>
+          <div class="deal-mini-val">${escapeHtml(formatDateValue(lead.business_close_date))}</div>
+        </div>
+      </div>`;
+
+    const timelineHtml = renderTimelineSteps(lead.timeline);
+    const clientBlockHtml = renderContactBlock(lbl.client, lead.client_name, lead.client_contact);
+    const bizBlockHtml = renderContactBlock(lbl.biz, lead.biz_name, lead.biz_contact);
+
+    const nextStepBoxHtml = `
+      <div class="deal-mini-box ${miniBoxCls}" style="text-align:center;margin-top:14px;margin-bottom:14px;">
+        <div class="deal-mini-lbl">${lbl.next_step}</div>
+        <div class="deal-mini-val">${escapeHtml(nextStepText)}</div>
+      </div>`;
+
+    document.getElementById('dealDetailContent').innerHTML = summaryHtml + timelineHtml + clientBlockHtml + bizBlockHtml + nextStepBoxHtml;
     document.getElementById('dealActionButtons').innerHTML = closedMeta ? '' : renderDetailActionButtons(lead);
 
     document.getElementById('dealSheet').classList.add('active');
