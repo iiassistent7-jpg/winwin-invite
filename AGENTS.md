@@ -1,220 +1,173 @@
 # AGENTS.md
 
-## Repository role
+## 1. Repository role
 
-This repository is a core product surface of **Win-Win / Win-Win Network**.
+This repository is **winwin-invite** — the user-facing web cabinets of Win-Win Network.
 
-It is not “just HTML”.
-It is a live user-facing web product connected to the backend.
+It hosts static HTML pages served from `invite.winwinnetwork.pro`, consumed by businesses, agents, clients, and admins. Every page is a vanilla HTML/CSS/JS surface that talks to the **amlatsa-bot** backend over the public HTTP API.
 
-This repository contains multiple user surfaces in one place:
-- business-facing dashboard and business pages
-- agent / social connector-facing dashboard and catalog pages
-- registration / onboarding pages
-- supporting product pages
+This repo contains **no business logic**. State, identity, deals, and trust live in `amlatsa-bot`. This repo only renders, collects input, and calls the API.
 
-The main goal of this repository is to make users understand, trust, and love the product.
+### Pages
 
----
-
-## Product meaning
-
-Win-Win is not just a referral tracker.
-
-It is a system for:
-- recommendations
-- deal tracking
-- payouts and balances
-- trust
-- social capital
-
-The product should help strong businesses become visible through real trust,
-and help agents / social connectors build reputation through high-quality recommendations.
+| File | Audience | Purpose |
+|------|----------|---------|
+| `index.html` | new users | Landing for joining the network |
+| `register.html` | new business | Registration form, posts to `/register` |
+| `dashboard.html` | agent | Personal cabinet — deals, balance, QR, profile |
+| `business.html` | business | Business cabinet — leads, deals, profile, tariff |
+| `deals.html` | business | Deals tracker (focused view) |
+| `catalog.html` | agent / public | Catalog of businesses |
+| `client-visit.html` | client | Visit confirmation page with QR for the business to scan |
+| `client.html` | client | Invitation landing |
+| `leaderboard.html` | agents | Hall of Fame |
+| `pro_payment.html` | business | Tariff page (also see `winwin-plans` consolidation note in §5) |
+| `about.html` | public | About / philosophy |
+| `admin.html` | admin | Admin panel (token-gated) |
 
 ---
 
-## Current business priorities
+## 2. Product mission & philosophy
 
-Historical context:
-- the project started with Telegram-first logic
+Win-Win Network turns chaotic word-of-mouth recommendations into a transparent, trackable, and fair system.
 
-Current rule:
-- WhatsApp is the main production channel
-- Telegram is frozen
-- do not propose Telegram-focused product decisions here unless explicitly asked
+The product makes four core promises to users:
+- A recommendation is never lost
+- A deal has a visible owner and status
+- A reward is trackable, payable, and closable
+- Trust grows when people behave well, and decays when they don't
 
-This repository should be treated as a web product layer connected to the current backend and production flow.
+### Trust and the Social Connector role
 
----
+**Trust Index** is a central product concept, not decoration. Both businesses and agents accumulate trust separately. A future role — the **Social Connector** — is a trusted navigator built on top of agent trust. Architectural and UX decisions must preserve room for it.
 
-## What this repository contains
-
-Treat the pages by product role, not just by filename.
-
-### Business-facing experience
-Likely includes pages such as:
-- business.html
-- deals / business operations pages
-- business-oriented dashboard sections
-
-The business-facing experience must help a business quickly understand:
-- active deals
-- history
-- debt / balance
-- recommenders
-- funnel / progress
-- what requires attention now
-
-### Agent / Social Connector-facing experience
-Likely includes pages such as:
-- dashboard.html
-- catalog.html
-- leaderboard.html
-- profile / rewards / wallet style screens
-
-The agent-facing experience must help an agent:
-- browse businesses
-- make recommendations
-- track recommendation history
-- understand rewards and balances
-- feel progress, trust, and momentum
-
-### Supporting pages
-Likely includes:
-- register.html
-- index.html
-- about.html
-- other onboarding or informational pages
-
-These pages should reduce friction and support conversion into product use.
+The selection principle: people don't recommend weak services because they won't risk their own reputation. The product uses this to make quality rise naturally.
 
 ---
 
-## UX principles
+## 3. Channel strategy
 
-The UI must be:
-- mobile-first
-- visually strong
-- modern
-- emotionally trustworthy
-- easy to understand at a glance
-- not overloaded
+**Telegram and WhatsApp are equal, first-class channels.** Both are in production. Both are actively developed.
 
-Avoid:
-- cluttered main screens
-- too much explanatory text on first view
-- noisy dashboards
-- too many equally loud blocks
-- “DIY admin panel” feeling
-- confusing navigation
+In this repo, the channel split shows up as:
+- **Deep links to TG** — `t.me/winwin_lead_bot?start=...` (with magic tokens)
+- **Deep links to WA** — `wa.me/<phone>?text=...` (when the partner is on WA)
 
-The interface should quickly answer:
-- what is happening now
-- what needs attention
-- what action matters most
-- whether there is debt / balance / progress
-- whether the user is moving forward
+The same page often shows both options ("Open in Telegram" / "Open in WhatsApp"). When implementing share/open buttons, do not collapse them — a user picks the channel they actually use.
 
-Secondary text or explanations should often be collapsible or hidden behind explicit user action.
-
-Beauty matters.
-But clarity matters more.
+Final outcomes are identical across channels; the surface and the deep-link target differ.
 
 ---
 
-## Product philosophy to preserve
+## 4. Product principles (in priority order)
 
-The platform has a social-capital philosophy.
+1. **Simplicity** — don't add complexity unless necessary. Prefer the smallest safe change.
+2. **Understanding** — a user should know what's happening without reading instructions.
+3. **Stability** — fail-safe beats elegant. A broken cabinet destroys trust faster than a missing feature.
+4. **Truth in statuses** — every user must see the correct status from their own side. The business sees what they owe, the agent sees who owes them, the client knows whether to expect a bonus. Status desync = platform death. **"Only the correct truth."**
+5. **Motivation and support** — the product is about people. Texts and UX are warm, not cold.
 
-People do not want to recommend weak businesses to friends because they do not want to risk their own reputation.
+**"Wow" is not a goal.** A beautiful UI is a consequence of simplicity and understanding — never pursued on its own.
 
-Because of this, the product should support:
-- trust visibility
-- recommendation quality
-- long-term reputation
-- the rise of strong businesses
-- the rise of strong social connectors
-
-Do not flatten the product into “just leads and money”.
-Trust and reputation are core product concepts.
-
-### Trust Index
-
-Trust Index is central to product differentiation.
-
-It is more important than generic 5-star thinking.
-
-Future or current UI decisions should preserve room for:
-- trust representation
-- ranking logic
-- quality signals
-- agent reputation
-- business reputation
+In this repo specifically, "wow" temptation is highest because HTML is where animation, color, and polish live. Resist it. A confusing fancy chart is worse than an honest list.
 
 ---
 
-## Working rules
+## 5. Repo-specific map (winwin-invite)
 
-Always follow this order:
-1. understand the current screens
-2. explain the screen hierarchy
-3. identify clutter and confusion
-4. identify weak empty states
-5. identify risky UX assumptions
-6. propose small safe improvements
-7. wait for explicit approval before changing code
+### Tech stack
+- Vanilla HTML / CSS / JavaScript — no React, no build step, no framework
+- All pages are served as static files
+- API calls go to `amlatsa-bot` HTTP endpoints (production: `https://amlatsa-bot-production.up.railway.app`)
+- Internationalization: ru / he / en / ar; RTL handled via `dir="rtl"` and `body.rtl` selectors
+- Mobile-first; users open these pages from phones (TG WebView, WA browser, Safari, Chrome)
 
-Do not redesign everything at once.
+### Token-based access
 
-Do not change behavior unless explicitly asked.
+Most cabinets are not logged in via password. They open with a **magic token** issued by the backend:
+- `dashboard.html?token=...` — purpose `dashboard` (agent)
+- `business.html?token=...` — purpose `business`
+- `deals.html?token=...` — purpose `deals`
+- `catalog.html?token=...` — purpose `catalog`
+- `client-visit.html?token=...` — purpose `client_visit`
+- `admin.html?token=...` — purpose `admin_session`
 
-Prefer:
-- small safe improvements
-- layout clarity
-- stronger hierarchy
-- simpler wording
-- clearer action focus
+Default TTL: 7 days. Tokens are generated by the bot and inserted into messages or buttons.
+
+### Critical contracts with the backend
+
+These are not implementation details — they are contracts. Breaking them breaks production.
+
+- **API response shapes** — keep field names stable across releases. Coordinate any change with `amlatsa-bot` first.
+- **`/api/client-visit` must NOT receive `biz_deep_link`** — it was removed for security. Do not add UI that expects it.
+- **QR on client-visit page** points to `/api/biz-scan?token=VISIT_TOKEN`. The backend resolves the business and sends them a fresh deep link in their own messenger. The page itself must not contain the business deep link.
+- **Tariff plans** — `start`, `standard`, `pro`, `start_expired`. The `start_expired` state means the business is hidden from the catalog and most tabs are locked except profile.
+- **Free deal counter** — displayed as `−5, −4, −3, −2, −1, 0`. At `0`, show the red "hidden from catalog" banner. The `FREE_DEALS_LIMIT = 5` lives in the backend; UI mirrors it but doesn't decide it.
+
+### Frontend conventions
+
+- All four languages (ru / he / en / ar) must be present for any new user-visible string
+- HTML in messages from the backend uses `<b>`, `<i>`, `<a>` (Telegram HTML mode) — escape on render where the page displays raw bot text
+- Toasts: dark background, white text, ~4.5 second visibility (existing convention from `dashboard.html`)
+- RTL is real, not decorative — flexbox direction, margin sides, icon mirroring all need handling
+
+### Known fragile / messy areas
+
+- Some pages are large single files (`business.html` ~294 KB, `dashboard.html` ~274 KB). Splitting them is **not** a current priority — stability first, refactoring later, only when there's a concrete reason.
+- `referral-share.js`, `recommender-decision-ui.js`, `business_patch.js`, `about_patch.js` — small JS helpers attached ad-hoc. Treat as legacy until reviewed; don't expand the pattern.
+- `pro_payment.html` (here) and `winwin-plans` / `winwin-plans-world` repos contain related but separate payment pages. Consolidation is planned but not started — when touching payment UI, first check what the user actually sees in production (`plans.winwinnetwork.pro` vs `invite.winwinnetwork.pro/pro_payment.html`) and avoid creating a third source of truth.
 
 ---
 
-## Analysis priorities
+## 6. Working rules
 
-When analyzing this repository, focus on:
+1. Understand first — open the page, find the section, trace the API call.
+2. Explain what you see and what you'd change.
+3. Identify risks — does this affect the backend contract? RTL? Other pages with shared patterns?
+4. Propose the smallest safe change.
+5. Wait for explicit approval before modifying code.
+6. Preserve existing behavior unless the task explicitly changes it.
+7. Do not "while we're here" — single concern per change.
+8. When the change touches an API field, propose the backend change first and only then the UI.
 
-1. Which pages are truly primary vs secondary
-2. Which pages are business-facing vs agent-facing
-3. Where the visual hierarchy is weak
-4. Where text overload hurts clarity
-5. Where the home/dashboard screens become noisy
-6. Which pages depend on backend endpoints
-7. Which pages are likely obsolete, duplicate, or low-priority
-8. Where token / API / state assumptions are fragile
+### Codex prompt discipline (used by this team)
+
+- One file per prompt
+- 2–3 find/replace blocks maximum per prompt
+- `Find` strings must be unique (add a line of context if needed)
+- `Find` must be copied from the file byte-for-byte
+- After Codex returns a file:
+  - Open the file in browser to verify visually if UI changed
+  - `grep` confirms the new content is present in the intended block
+  - Verify no broken HTML / unclosed tags / orphaned `</script>`
+  - Verify the change works in both LTR and RTL
 
 ---
 
-## Constraints
+## 7. Constraints
 
 Do not:
-- invent new product directions without request
-- overcomplicate the front-end architecture
-- suggest framework migrations unless clearly justified
-- redesign multiple pages at once without a plan
-- touch unrelated files in the repo
-- make Telegram a design center
-- optimize for technical elegance at the cost of product clarity
+- Introduce a build step, bundler, framework, or NPM dependency
+- Convert pages to React or Vue
+- Break or rename API response fields without coordinated backend change
+- Reintroduce `biz_deep_link` in the client-visit page (security)
+- Ship strings in fewer than four languages
+- Add new payment surfaces — consolidate first
+- Treat `dashboard.html` and `business.html` as places to "test cool ideas" — they are production cabinets used daily
 
 ---
 
-## Output style
+## 8. Output style
 
 Prefer:
-- plain language
-- concrete recommendations
-- prioritization
-- “safe / risky / low priority” framing
+- Plain language, concrete recommendations
+- Naming specific files (and line numbers when discussing code)
+- Calling out backend impact (does any API change?) for every UI proposal
+- Calling out cross-page impact (does this pattern repeat in dashboard/business/deals?)
+- Sketching the change before writing it
 
 Avoid:
-- generic praise
-- abstract design lectures
-- unnecessary complexity
-- vague best-practices without relevance
+- Generic web-best-practice lectures
+- "Refactor for readability" without a concrete bug to fix
+- Empty praise or reflexive apology
+- Suggesting "consult a specialist" — you are the specialist for this project
