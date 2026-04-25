@@ -387,6 +387,39 @@
     }
     body.rtl .agent-comm, body.rtl .reco-top > div:last-child { text-align:left; }
 
+    /* ── Deal Timeline (compact progress bar + vertical timeline) ───── */
+    .timeline-progress { display:flex; gap:4px; margin:10px 0 8px; }
+    .timeline-progress-seg { flex:1; height:4px; background:rgba(255,255,255,.08); border-radius:2px; transition:background .25s ease; }
+    body:not(.brand-theme) .timeline-progress-seg { background:rgba(16,24,40,.10); }
+    .timeline-progress-seg.tp-done    { background:var(--green); }
+    .timeline-progress-seg.tp-current { background:var(--gold); }
+    .timeline-progress-seg.tp-failed  { background:var(--red); }
+    .timeline-progress-seg.tp-pending { background:rgba(255,255,255,.08); }
+    body:not(.brand-theme) .timeline-progress-seg.tp-pending { background:rgba(16,24,40,.10); }
+
+    .timeline-vertical { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:16px 16px 8px; margin:14px 0; }
+    .timeline-v-title { font-family:'Sora',sans-serif; font-size:.78rem; font-weight:700; color:var(--text2); letter-spacing:.05em; text-transform:uppercase; margin-bottom:14px; }
+    .timeline-v-list { position:relative; }
+    .timeline-v-list::before { content:''; position:absolute; left:11px; top:14px; bottom:14px; width:2px; background:var(--border); }
+    body.rtl .timeline-v-list::before { left:auto; right:11px; }
+    .timeline-v-step { display:flex; gap:12px; margin-bottom:14px; position:relative; }
+    .timeline-v-step:last-child { margin-bottom:4px; }
+    .timeline-v-icon { width:24px; height:24px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; z-index:1; background:var(--surface); border:2px solid var(--border); }
+    .timeline-v-icon svg { width:12px; height:12px; }
+    .timeline-v-step.tv-done .timeline-v-icon    { background:var(--green); border-color:var(--green); color:#fff; }
+    .timeline-v-step.tv-current .timeline-v-icon { background:var(--gold);  border-color:var(--gold);  color:#1A1A2E; }
+    .timeline-v-step.tv-failed .timeline-v-icon  { background:var(--red);   border-color:var(--red);   color:#fff; }
+    .timeline-v-body { flex:1; min-width:0; }
+    .timeline-v-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+    .timeline-v-label { font-size:.82rem; font-weight:700; color:var(--text); line-height:1.3; }
+    .timeline-v-step.tv-current .timeline-v-label { color:var(--gold); }
+    .timeline-v-step.tv-failed .timeline-v-label  { color:var(--red); }
+    .timeline-v-step.tv-pending .timeline-v-label { color:var(--text2); font-weight:600; }
+    .timeline-v-date { font-size:.7rem; color:var(--text2); white-space:nowrap; flex-shrink:0; }
+    .timeline-v-step.tv-current .timeline-v-date { color:var(--gold); font-weight:700; }
+    .timeline-v-sub { font-size:.72rem; color:var(--text2); margin-top:2px; line-height:1.4; }
+    .timeline-v-step.tv-failed .timeline-v-sub { color:var(--red); }
+
     /* ── Misc ───────────────────────────────────────────────────────── */
     .empty-state { text-align:center; padding:40px 20px; color:var(--text2); font-weight:500; font-size:.9rem; }
 
