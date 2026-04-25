@@ -2254,16 +2254,30 @@ function renderContactBlock(roleLabel, name, contact, opts = {}) {
 // Toggle deal-card expansion. Adds .open to .deal-extra and rotates chevron via .is-open on parent .deal-card.
 // Debounce store: per-id timestamps to filter duplicate clicks (Mobile Safari + RTL fires both synthetic + real click).
 const _lastDealToggle = {};
+let _toggleCallCount = 0;
 function toggleDealExtra(id) {
+  _toggleCallCount += 1;
+  const callNum = _toggleCallCount;
   const now = Date.now();
-  if (_lastDealToggle[id] && (now - _lastDealToggle[id]) < 350) return;
+  const sinceLast = _lastDealToggle[id] ? (now - _lastDealToggle[id]) : -1;
+  const blocked = !!(_lastDealToggle[id] && sinceLast < 350);
+  if (blocked) {
+    wwShowToast('CALL #' + callNum + ' BLOCKED by debounce | id=' + id + ' | sinceLast=' + sinceLast + 'ms | lang=' + lang);
+    return;
+  }
   _lastDealToggle[id] = now;
   const el = document.getElementById('deal_extra_' + id);
-  if (!el) return;
+  if (!el) {
+    wwShowToast('CALL #' + callNum + ' element NOT FOUND | id=' + id);
+    return;
+  }
   const card = el.closest('.deal-card');
+  const before = el.classList.contains('open') ? 'OPEN' : 'closed';
   const willOpen = !el.classList.contains('open');
   el.classList.toggle('open', willOpen);
   if (card) card.classList.toggle('is-open', willOpen);
+  const after = el.classList.contains('open') ? 'OPEN' : 'closed';
+  wwShowToast('CALL #' + callNum + ' EXEC | id=' + id + ' | before=' + before + ' | after=' + after + ' | sinceLast=' + sinceLast + 'ms | lang=' + lang);
   if (willOpen && typeof feather !== 'undefined' && feather.replace) {
     try { feather.replace(); } catch(e) {}
   }
