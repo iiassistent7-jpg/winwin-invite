@@ -3387,7 +3387,7 @@ function renderDeals() {
       if (projection.listActionMode === 'remind_decision') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${row.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
-      } else if (projection.actionMode === 'mark_paid' || projection.actionMode === 'view_only') {
+      } else if (projection.actionMode === 'mark_paid' || projection.actionMode === 'view_only' || projection.actionMode === 'accept_or_reject') {
         // Прямая кнопка "Я перевёл бонус агенту" вынесена на верхний уровень карточки.
         // Кнопку "Управление сделкой" внутри deal-extra не дублируем.
         innerAction = '';
@@ -3419,20 +3419,44 @@ function renderDeals() {
           ${settlementPill}
         </div>
         ${(() => {
-          // Прямая HTML-кнопка "Я перевёл бонус агенту" — на верхнем уровне.
-          // Видна сразу без раскрытия карточки. Аналог confirm_receipt у агента.
-          if (projection.actionMode !== 'mark_paid') return '';
-          const labelPaid = ({
-            ru:'Я перевёл бонус агенту',
-            he:'העברתי את הבונוס לסוכן',
-            en:"I've paid the agent",
-            ar:'حوّلت المكافأة إلى الوكيل'
-          }[lang] || 'Я перевёл бонус агенту');
-          return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitBizPaidDirect(${row.id})">
-              💸 ${labelPaid}
-            </button>
-          </div>`;
+          // Прямые HTML-кнопки бизнес-действий на верхнем уровне карточки.
+          // Видны сразу без раскрытия. Аналог confirm_receipt/choose_settlement у агента.
+          if (projection.actionMode === 'mark_paid') {
+            const labelPaid = ({
+              ru:'Я перевёл бонус агенту',
+              he:'העברתי את הבונוס לסוכן',
+              en:"I've paid the agent",
+              ar:'حوّلت المكافأة إلى الوكيل'
+            }[lang] || 'Я перевёл бонус агенту');
+            return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+              <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitBizPaidDirect(${row.id})">
+                💸 ${labelPaid}
+              </button>
+            </div>`;
+          }
+          if (projection.actionMode === 'accept_or_reject') {
+            const labelAccept = ({
+              ru:'Принять сделку',
+              he:'לקבל את העסקה',
+              en:'Accept the deal',
+              ar:'قبول الصفقة'
+            }[lang] || 'Принять сделку');
+            const labelReject = ({
+              ru:'Отклонить',
+              he:'לדחות',
+              en:'Reject',
+              ar:'رفض'
+            }[lang] || 'Отклонить');
+            return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+              <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitAcceptDirect(${row.id})">
+                ✅ ${labelAccept}
+              </button>
+              <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#F2994A 0%,#EB5757 100%);color:#fff;box-shadow:0 4px 14px rgba(235,87,87,.32);border:none;" onclick="event.stopPropagation();openManageDeal(${row.id})">
+                ❌ ${labelReject}
+              </button>
+            </div>`;
+          }
+          return '';
         })()}
         <div class="deal-extra" id="deal_extra_${row.id}">
           ${renderTimelineSteps(d.timeline)}
@@ -5162,6 +5186,32 @@ async function submitBizPaidDirect(dealId) {
       body: JSON.stringify({ token, deal_id: dealId, action: 'biz_paid' })
     });
     if (!res.ok) throw new Error('biz_paid failed');
+    await refreshBusinessDataFromBackend();
+    showNotice(L.action_success || 'Готово');
+    renderDeals();
+    renderStats();
+  } catch(e) {
+    showNotice(errorMap[lang] || errorMap.ru);
+  }
+}
+
+// Прямой вызов accept с карточки (без модалки). Параллельный с
+// submitDealAction, но не зависит от activeDealId/m_amount/m_spinner.
+async function submitAcceptDirect(dealId) {
+  const L = i18n[lang] || i18n.ru;
+  const errorMap = {
+    ru:'Не удалось отправить. Попробуйте ещё раз.',
+    he:'לא ניתן לשלוח. נסו שוב.',
+    en:'Could not send. Try again.',
+    ar:'تعذر الإرسال. حاول مرة أخرى.'
+  };
+  try {
+    const res = await fetch(`${API_URL}/api/deals/action`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, deal_id: dealId, action: 'accept' })
+    });
+    if (!res.ok) throw new Error('accept failed');
     await refreshBusinessDataFromBackend();
     showNotice(L.action_success || 'Готово');
     renderDeals();
