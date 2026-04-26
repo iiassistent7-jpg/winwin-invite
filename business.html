@@ -1322,54 +1322,82 @@ function getPhoneActionLabels() {
 const TIMELINE_STEP_LABELS = {
   ru: {
     recommendation_sent: 'Рекомендация отправлена',
-    business_accepted:   'Бизнес принял клиента',
+    business_accepted:   'Клиент принят',
+    business_accepted_pending: 'Решите по клиенту',
     business_rejected:   'Бизнес отклонил клиента',
     deal_closed:         'Сделка закрыта',
+    deal_closed_pending: 'Сделка в работе',
     agent_decision:      'Агент выбрал действие',
+    agent_decision_pending: 'Ждём решение агента',
     execution_take:      'Бизнес перевёл бонус агенту',
+    execution_take_pending: 'Переведите бонус агенту',
     execution_gift:      'Бизнес передал бонус клиенту',
+    execution_gift_pending: 'Передайте бонус клиенту',
     execution_support:   'Агент поддержал бизнес',
     confirmation_take:   'Агент подтвердил получение',
+    confirmation_take_pending: 'Ждём подтверждение от агента',
     confirmation_gift:   'Клиент подтвердил получение',
+    confirmation_gift_pending: 'Ждём подтверждение от клиента',
     confirmation_support:'Сделка завершена'
   },
   he: {
     recommendation_sent: 'ההמלצה נשלחה',
-    business_accepted:   'העסק קיבל את הלקוח',
+    business_accepted:   'הלקוח התקבל',
+    business_accepted_pending: 'החליטו לגבי הלקוח',
     business_rejected:   'העסק דחה את הלקוח',
     deal_closed:         'העסקה נסגרה',
+    deal_closed_pending: 'העסקה בתהליך',
     agent_decision:      'הסוכן בחר פעולה',
+    agent_decision_pending: 'ממתינים להחלטת הסוכן',
     execution_take:      'העסק העביר בונוס לסוכן',
+    execution_take_pending: 'העבירו בונוס לסוכן',
     execution_gift:      'העסק העביר בונוס ללקוח',
+    execution_gift_pending: 'העבירו בונוס ללקוח',
     execution_support:   'הסוכן תמך בעסק',
     confirmation_take:   'הסוכן אישר קבלה',
+    confirmation_take_pending: 'ממתינים לאישור מהסוכן',
     confirmation_gift:   'הלקוח אישר קבלה',
+    confirmation_gift_pending: 'ממתינים לאישור מהלקוח',
     confirmation_support:'העסקה הושלמה'
   },
   en: {
     recommendation_sent: 'Recommendation sent',
-    business_accepted:   'Business accepted client',
+    business_accepted:   'Client accepted',
+    business_accepted_pending: 'Decide on the client',
     business_rejected:   'Business rejected client',
     deal_closed:         'Deal closed',
+    deal_closed_pending: 'Deal in progress',
     agent_decision:      'Agent chose action',
+    agent_decision_pending: 'Waiting for agent decision',
     execution_take:      'Business paid agent bonus',
+    execution_take_pending: 'Transfer the bonus to the agent',
     execution_gift:      'Business sent bonus to client',
+    execution_gift_pending: 'Transfer the bonus to the client',
     execution_support:   'Agent supported the business',
     confirmation_take:   'Agent confirmed receipt',
+    confirmation_take_pending: 'Waiting for agent confirmation',
     confirmation_gift:   'Client confirmed receipt',
+    confirmation_gift_pending: 'Waiting for client confirmation',
     confirmation_support:'Deal completed'
   },
   ar: {
     recommendation_sent: 'تم إرسال التوصية',
-    business_accepted:   'قبل النشاط العميل',
+    business_accepted:   'تم قبول العميل',
+    business_accepted_pending: 'اتخذ قراراً بشأن العميل',
     business_rejected:   'رفض النشاط العميل',
     deal_closed:         'تم إغلاق الصفقة',
+    deal_closed_pending: 'الصفقة قيد التنفيذ',
     agent_decision:      'اختار الوكيل الإجراء',
+    agent_decision_pending: 'بانتظار قرار الوكيل',
     execution_take:      'دفع النشاط مكافأة الوكيل',
+    execution_take_pending: 'حوّل المكافأة إلى الوكيل',
     execution_gift:      'سلّم النشاط المكافأة للعميل',
+    execution_gift_pending: 'حوّل المكافأة إلى العميل',
     execution_support:   'دعم الوكيل النشاط',
     confirmation_take:   'أكّد الوكيل الاستلام',
+    confirmation_take_pending: 'بانتظار تأكيد الوكيل',
     confirmation_gift:   'أكّد العميل الاستلام',
+    confirmation_gift_pending: 'بانتظار تأكيد العميل',
     confirmation_support:'اكتملت الصفقة'
   }
 };
@@ -1384,18 +1412,24 @@ const TIMELINE_UI = {
 function _timelineStepLabel(stepObj) {
   const labels = TIMELINE_STEP_LABELS[lang] || TIMELINE_STEP_LABELS.ru;
   const code = stepObj.step;
+  const status = stepObj.status || 'pending';
   const branch = stepObj.branch || '';
-  if (code === 'business_accepted' && stepObj.status === 'failed') return labels.business_rejected;
+  if (code === 'business_accepted' && status === 'failed') return labels.business_rejected;
+  const isPending = (status === 'current' || status === 'pending');
+  const pick = (doneKey, pendingKey) => isPending && labels[pendingKey] ? labels[pendingKey] : labels[doneKey];
   if (code === 'execution') {
-    if (branch === 'gift_client')      return labels.execution_gift;
+    if (branch === 'gift_client')      return pick('execution_gift', 'execution_gift_pending');
     if (branch === 'support_business') return labels.execution_support;
-    return labels.execution_take;
+    return pick('execution_take', 'execution_take_pending');
   }
   if (code === 'confirmation') {
-    if (branch === 'gift_client')      return labels.confirmation_gift;
+    if (branch === 'gift_client')      return pick('confirmation_gift', 'confirmation_gift_pending');
     if (branch === 'support_business') return labels.confirmation_support;
-    return labels.confirmation_take;
+    return pick('confirmation_take', 'confirmation_take_pending');
   }
+  if (code === 'business_accepted') return pick('business_accepted', 'business_accepted_pending');
+  if (code === 'deal_closed')       return pick('deal_closed', 'deal_closed_pending');
+  if (code === 'agent_decision')    return pick('agent_decision', 'agent_decision_pending');
   return labels[code] || code;
 }
 
@@ -3876,10 +3910,11 @@ function getNextStepKey(reco) {
   if (allDone) return 'deal_completed';
   const current = tl.find(s => s && s.status === 'current');
   if (!current) return 'deal_completed';
+  // current.step describes what IS BEING WAITED FOR (not yet done).
   switch (current.step) {
     case 'recommendation_sent':  return 'awaiting_business_accept';
-    case 'business_accepted':    return 'awaiting_deal_close';
-    case 'deal_closed':          return 'awaiting_agent_decision';
+    case 'business_accepted':    return 'awaiting_business_accept';   // waiting for business to accept
+    case 'deal_closed':          return 'awaiting_deal_close';        // accepted, biz must close
     case 'agent_decision':       return 'awaiting_agent_decision';
     case 'execution': {
       if (current.branch === 'gift_client')      return 'awaiting_gift_to_client';

@@ -2357,11 +2357,13 @@ function getNextStepKey(lead) {
   if (allDone) return 'deal_completed';
   const current = tl.find(s => s && s.status === 'current');
   if (!current) return 'deal_completed';
+  // current.step describes what IS BEING WAITED FOR (i.e. not done yet).
+  // recommendation_sent is always done — would never be current.
   switch (current.step) {
     case 'recommendation_sent':  return 'awaiting_business_accept';
-    case 'business_accepted':    return 'awaiting_deal_close';
-    case 'deal_closed':          return 'choose_settlement';
-    case 'agent_decision':       return 'choose_settlement';
+    case 'business_accepted':    return 'awaiting_business_accept';   // waiting for business to accept
+    case 'deal_closed':          return 'awaiting_deal_close';        // accepted, waiting for closure
+    case 'agent_decision':       return 'choose_settlement';          // closed, agent must choose
     case 'execution': {
       if (current.branch === 'gift_client')      return 'awaiting_gift_to_client';
       if (current.branch === 'support_business') return 'deal_completed';
