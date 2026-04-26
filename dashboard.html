@@ -3603,13 +3603,20 @@ function dealItemHtml(lead) {
         <span class="deal-meta-pill">🎁 ${commVal}</span>
       </div>
       ${(() => {
-        // КНОПКИ confirm_receipt НА ВЕРХНЕМ УРОВНЕ карточки — сразу видны без раскрытия.
-        // Это критическое действие, агент не должен искать его в скрытых секциях.
-        if (lead.can_confirm_receipt === true) {
-          const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
-          if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
-        }
-        return '';
+        // Прямые HTML-кнопки confirm_receipt на верхнем уровне карточки.
+        // НЕ зависят от WinWinRecommenderDecisionUI — рендерятся всегда когда
+        // backend выставил can_confirm_receipt=true.
+        if (lead.can_confirm_receipt !== true) return '';
+        const labelGot = ({ ru:'Получил благодарность', he:'קיבלתי את התגמול', en:'Received gratitude', ar:'استلمت الامتنان' }[lang] || 'Получил благодарность');
+        const labelNotGot = ({ ru:'Не получил благодарность', he:'לא קיבלתי את התגמול', en:'Did not receive gratitude', ar:'لم أستلم الامتنان' }[lang] || 'Не получил благодарность');
+        return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+          <button type="button" class="btn-primary" style="background:#27AE60;color:#fff;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'confirm_receipt')">
+            ✅ ${escapeHtml(labelGot)}
+          </button>
+          <button type="button" class="btn-primary" style="background:#EB5757;color:#fff;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'agent_not_got')">
+            ❌ ${escapeHtml(labelNotGot)}
+          </button>
+        </div>`;
       })()}
       <div class="deal-extra" id="deal_extra_${lead.id}">
         ${renderTimelineSteps(lead.timeline)}
@@ -3626,8 +3633,11 @@ function dealItemHtml(lead) {
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
         ${(() => {
-          // Если can_confirm_receipt=true — кнопки уже отрендерены сверху, в модалке не дублируем
-          if (lead.can_confirm_receipt === true) return '';
+          // На этапе подтверждения получения — кнопки 'Получил/Не получил' напрямую на карточке (приоритет)
+          if (lead.can_confirm_receipt === true) {
+            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
+            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
+          }
           // Show actionable buttons ONLY when the agent actually has something to do.
           const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
           const nsKey = getNextStepKey(lead);
