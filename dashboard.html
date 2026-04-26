@@ -3603,20 +3603,40 @@ function dealItemHtml(lead) {
         <span class="deal-meta-pill">🎁 ${commVal}</span>
       </div>
       ${(() => {
-        // Прямые HTML-кнопки confirm_receipt на верхнем уровне карточки.
-        // НЕ зависят от WinWinRecommenderDecisionUI — рендерятся всегда когда
-        // backend выставил can_confirm_receipt=true.
-        if (lead.can_confirm_receipt !== true) return '';
-        const labelGot = ({ ru:'Получил благодарность', he:'קיבלתי את התגמול', en:'Received gratitude', ar:'استلمت الامتنان' }[lang] || 'Получил благодарность');
-        const labelNotGot = ({ ru:'Не получил благодарность', he:'לא קיבלתי את התגמול', en:'Did not receive gratitude', ar:'لم أستلم الامتنان' }[lang] || 'Не получил благодарность');
-        return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-          <button type="button" class="btn-primary" style="background:#27AE60;color:#fff;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'confirm_receipt')">
-            ✅ ${escapeHtml(labelGot)}
-          </button>
-          <button type="button" class="btn-primary" style="background:#EB5757;color:#fff;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'agent_not_got')">
-            ❌ ${escapeHtml(labelNotGot)}
-          </button>
-        </div>`;
+        // ─── Кнопки агентских действий на верхнем уровне карточки ───
+        // НЕ зависят от внешних UI-библиотек (WinWinRecommenderDecisionUI).
+        // Backend выставляет ровно один из флагов в каждый момент:
+        //   can_confirm_receipt   → 2 кнопки (Получил/Не получил)
+        //   can_choose_settlement → 3 кнопки (Себе/Клиенту/Бизнесу)
+        if (lead.can_confirm_receipt === true) {
+          const labelGot = ({ ru:'Получил благодарность', he:'קיבלתי את התגמול', en:'Received gratitude', ar:'استلمت الامتنان' }[lang] || 'Получил благодарность');
+          const labelNotGot = ({ ru:'Не получил благодарность', he:'לא קיבלתי את התגמול', en:'Did not receive gratitude', ar:'لم أستلم الامتنان' }[lang] || 'Не получил благодарность');
+          return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'confirm_receipt')">
+              ✅ ${escapeHtml(labelGot)}
+            </button>
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#F2994A 0%,#EB5757 100%);color:#fff;box-shadow:0 4px 14px rgba(235,87,87,.32);border:none;" onclick="event.stopPropagation();submitReceiptConfirmation(${lead.id}, 'agent_not_got')">
+              ❌ ${escapeHtml(labelNotGot)}
+            </button>
+          </div>`;
+        }
+        if (lead.can_choose_settlement === true) {
+          const labelTake    = ({ ru:'Забрать благодарность',  he:'לקבל את התודה',     en:'Take the thanks',  ar:'استلام الشكر' }[lang]    || 'Take');
+          const labelGift    = ({ ru:'Подарить клиенту',       he:'להעניק ללקוח',      en:'Gift to client',   ar:'هدية للعميل' }[lang]      || 'Gift client');
+          const labelSupport = ({ ru:'Поддержать бизнес',      he:'לתמוך בעסק',        en:'Support business', ar:'دعم العمل' }[lang]        || 'Support business');
+          return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'take')">
+              💰 ${escapeHtml(labelTake)}
+            </button>
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#BB6BD9 0%,#9B51E0 100%);color:#fff;box-shadow:0 4px 14px rgba(155,81,224,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'gift_client')">
+              🎁 ${escapeHtml(labelGift)}
+            </button>
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'support_business')">
+              🤝 ${escapeHtml(labelSupport)}
+            </button>
+          </div>`;
+        }
+        return '';
       })()}
       <div class="deal-extra" id="deal_extra_${lead.id}">
         ${renderTimelineSteps(lead.timeline)}
