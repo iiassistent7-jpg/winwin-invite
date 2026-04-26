@@ -3268,7 +3268,13 @@ function getWalletStageMeta(lead) {
     if (projection.bucket === 'history' && projection.counter === 'closed') {
         return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
     }
-    if (projection.debt || status === 'pending_business_payment') {
+    if (status === 'pending_business_payment') {
+        return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
+    }
+    if (status === 'pending_agent_receipt') {
+        return { key:'awaiting_receipt', label:getLabel('awaiting_receipt'), cls:'pill-gold', icon:'clock', color:'var(--gold)', action: lead.id != null ? 'confirm_receipt' : null };
+    }
+    if (projection.debt) {
         return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
     }
     if (pendingAgentChoice || !hasDecision) {
