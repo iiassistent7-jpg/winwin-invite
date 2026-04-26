@@ -3625,13 +3625,13 @@ function dealItemHtml(lead) {
           const labelGift    = ({ ru:'Подарить клиенту',       he:'להעניק ללקוח',      en:'Gift to client',   ar:'هدية للعميل' }[lang]      || 'Gift client');
           const labelSupport = ({ ru:'Поддержать бизнес',      he:'לתמוך בעסק',        en:'Support business', ar:'دعم العمل' }[lang]        || 'Support business');
           return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'take')">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'take')">
               💰 ${escapeHtml(labelTake)}
             </button>
             <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#BB6BD9 0%,#9B51E0 100%);color:#fff;box-shadow:0 4px 14px rgba(155,81,224,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'gift_client')">
               🎁 ${escapeHtml(labelGift)}
             </button>
-            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'support_business')">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitSettlementChoice(${lead.id}, 'support_business')">
               🤝 ${escapeHtml(labelSupport)}
             </button>
           </div>`;
@@ -3652,24 +3652,6 @@ function dealItemHtml(lead) {
           <div class="receipt-line"><span>🎁 ${lbl.bonus}:</span><span>${commVal}</span></div>
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
-        ${(() => {
-          // На этапе подтверждения получения — кнопки 'Получил/Не получил' напрямую на карточке (приоритет)
-          if (lead.can_confirm_receipt === true) {
-            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
-            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
-          }
-          // Show actionable buttons ONLY when the agent actually has something to do.
-          const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
-          const nsKey = getNextStepKey(lead);
-          if (!actionableKeys.includes(nsKey)) return '';
-          if (nsKey === 'confirm_receipt') {
-            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
-            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
-          }
-          return `<button type="button" class="deal-manage-btn" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>
-          <i data-feather="sliders" style="width:16px;height:16px;"></i> ${lbl.manage}
-        </button>`;
-        })()}
       </div>
     </div>`;
 }
