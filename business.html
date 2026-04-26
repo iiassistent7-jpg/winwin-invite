@@ -2259,10 +2259,10 @@ function getStatusData(status, deal = null) {
     ar:'بانتظار دفع الوكيل'
   };
   const receiptPendingText = {
-    ru:'Ждём подтверждение оплаты агентом',
-    he:'ממתינים לאישור קבלה',
-    en:'Awaiting receipt confirmation',
-    ar:'بانتظار تأكيد الاستلام'
+    ru:'Подтверждение от агента',
+    he:'אישור מהסוכן',
+    en:'Awaiting agent receipt',
+    ar:'تأكيد من الوكيل'
   };
   const giftClientPendingText = L.waiting_client_confirmation || i18n.ru.waiting_client_confirmation;
   const giftClientDisputeText = L.client_gift_dispute || i18n.ru.client_gift_dispute;
@@ -2956,6 +2956,7 @@ function getBusinessDealClarityCopy() {
       nextCloseWithoutPayout:'Закрыть сделку без выплаты агенту',
       nextSupportDone:'Выплата не нужна, бизнес поддержан',
       targetPayAgent:'Оплатить агенту',
+      targetWaitingAgent:'Ждём подтверждение от',
       targetSendClient:'Отправить клиенту',
       targetNoPayout:'Выплата не нужна'
     },
@@ -2976,6 +2977,7 @@ function getBusinessDealClarityCopy() {
       nextCloseWithoutPayout:'לסגור את העסקה בלי תשלום לסוכן',
       nextSupportDone:'לא נדרש תשלום, העסק נתמך',
       targetPayAgent:'לשלם לסוכן',
+      targetWaitingAgent:'ממתינים לאישור מ',
       targetSendClient:'לשלוח ללקוח',
       targetNoPayout:'לא נדרש תשלום'
     },
@@ -2996,6 +2998,7 @@ function getBusinessDealClarityCopy() {
       nextCloseWithoutPayout:'Close the deal without agent payout',
       nextSupportDone:'No payout needed, business supported',
       targetPayAgent:'Pay agent',
+      targetWaitingAgent:'Awaiting confirmation from',
       targetSendClient:'Send to client',
       targetNoPayout:'No payout needed'
     },
@@ -3016,6 +3019,7 @@ function getBusinessDealClarityCopy() {
       nextCloseWithoutPayout:'أغلق الصفقة بدون دفع للوكيل',
       nextSupportDone:'لا حاجة إلى دفع، تم دعم النشاط',
       targetPayAgent:'ادفع للوكيل',
+      targetWaitingAgent:'بانتظار تأكيد من',
       targetSendClient:'أرسل للعميل',
       targetNoPayout:'لا حاجة إلى دفع'
     }
@@ -3092,9 +3096,11 @@ function getBusinessDealSettlementInfo(deal) {
       decisionLabel:formatRecommendDecisionPlain('take', L),
       decisionPill:formatDecision('take', L),
       nextStep: takeSettlementFinalized ? copy.nextTakeDone : (paymentPending ? copy.nextPayAgent : (waitingAgentReceipt ? copy.nextWaitAgentReceipt : copy.nextTakeDone)),
-      targetDetail: takeSettlementFinalized ? agentName : `${copy.targetPayAgent}: ${agentName}`,
+      targetDetail: takeSettlementFinalized
+        ? agentName
+        : (waitingAgentReceipt ? `${copy.targetWaitingAgent}: ${agentName}` : `${copy.targetPayAgent}: ${agentName}`),
       nextStepTone: takeSettlementFinalized ? 'success' : (paymentPending ? 'danger' : (waitingAgentReceipt ? 'warning' : 'success')),
-      targetTone: takeSettlementFinalized ? 'success' : 'danger'
+      targetTone: takeSettlementFinalized ? 'success' : (waitingAgentReceipt ? 'warning' : 'danger')
     };
   }
 
