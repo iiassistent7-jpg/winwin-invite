@@ -3387,6 +3387,10 @@ function renderDeals() {
       if (projection.listActionMode === 'remind_decision') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${row.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
+      } else if (projection.actionMode === 'mark_paid') {
+        // Прямая кнопка "Я перевёл бонус агенту" вынесена на верхний уровень карточки.
+        // Кнопку "Управление сделкой" внутри deal-extra не дублируем.
+        innerAction = '';
       } else {
         const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
         innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${row.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
@@ -3414,6 +3418,22 @@ function renderDeals() {
           <span class="meta-pill">🎁 ${commVal}</span>
           ${settlementPill}
         </div>
+        ${(() => {
+          // Прямая HTML-кнопка "Я перевёл бонус агенту" — на верхнем уровне.
+          // Видна сразу без раскрытия карточки. Аналог confirm_receipt у агента.
+          if (projection.actionMode !== 'mark_paid') return '';
+          const labelPaid = ({
+            ru:'Я перевёл бонус агенту',
+            he:'העברתי את הבונוס לסוכן',
+            en:"I've paid the agent",
+            ar:'حوّلت المكافأة إلى الوكيل'
+          }[lang] || 'Я перевёл бонус агенту');
+          return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%);color:#fff;box-shadow:0 4px 14px rgba(47,128,237,.32);border:none;" onclick="event.stopPropagation();submitBizPaidDirect(${row.id})">
+              💸 ${labelPaid}
+            </button>
+          </div>`;
+        })()}
         <div class="deal-extra" id="deal_extra_${row.id}">
           ${renderTimelineSteps(d.timeline)}
           ${renderContactBlock(({ru:'Клиент',he:'לקוח',en:'Client',ar:'العميل'}[lang]||'Клиент'), d.client_name, d.client_contact, { stopPropagation:true })}
@@ -5122,6 +5142,32 @@ async function remindClientGift(dealId) {
       btn.style.opacity = '1';
     }
     showNotice(L.save_err || 'Save error');
+  }
+}
+
+// Прямой вызов biz_paid с карточки (без модалки).
+// Параллельный с submitDealAction, но не зависит от activeDealId/m_amount/m_spinner.
+async function submitBizPaidDirect(dealId) {
+  const L = i18n[lang] || i18n.ru;
+  const errorMap = {
+    ru:'Не удалось отправить. Попробуйте ещё раз.',
+    he:'לא ניתן לשלוח. נסו שוב.',
+    en:'Could not send. Try again.',
+    ar:'تعذر الإرسال. حاول مرة أخرى.'
+  };
+  try {
+    const res = await fetch(`${API_URL}/api/deals/action`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, deal_id: dealId, action: 'biz_paid' })
+    });
+    if (!res.ok) throw new Error('biz_paid failed');
+    await refreshBusinessDataFromBackend();
+    showNotice(L.action_success || 'Готово');
+    renderDeals();
+    renderStats();
+  } catch(e) {
+    showNotice(errorMap[lang] || errorMap.ru);
   }
 }
 
