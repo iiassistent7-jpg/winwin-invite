@@ -4011,20 +4011,6 @@ async function submitReceiptConfirmation(leadId, actionType) {
         en: 'Could not save the response.',
         ar: 'تعذر حفظ الرد.'
     };
-    const successLabelMap = {
-        confirm_receipt: {
-            ru: L.confirm_receipt_success || 'Получение подтверждено.',
-            he: L.confirm_receipt_success || 'הקבלה אושרה.',
-            en: L.confirm_receipt_success || 'Receipt confirmed.',
-            ar: L.confirm_receipt_success || 'تم تأكيد الاستلام.'
-        },
-        agent_not_got: {
-            ru: 'Отметили, что благодарность не получена.',
-            he: 'סימנו שהתגמול לא התקבל.',
-            en: 'Marked as not received.',
-            ar: 'تم تعليمها على أنها لم تُستلم.'
-        }
-    };
     try {
         const res = await fetch(`${API_URL}/api/deals/action?token=${token}`, {
             method: 'POST',
@@ -4040,8 +4026,6 @@ async function submitReceiptConfirmation(leadId, actionType) {
         showBlockBannerIfNeeded(dashData);
         const refreshedLead = getDashboardLeads().find(item => String(item.id) === String(leadId));
         if (refreshedLead) openWalletDealDetail(refreshedLead);
-        const successMap = successLabelMap[actionType];
-        alert((successMap && (successMap[lang] || successMap.ru)) || (L.action_success || 'Готово.'));
     } catch (e) {
         alert(errorLabelMap[lang] || errorLabelMap.ru);
     }
