@@ -3387,7 +3387,7 @@ function renderDeals() {
       if (projection.listActionMode === 'remind_decision') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
         innerAction = `<button class="btn-primary btn-outline" onclick="event.stopPropagation();remindDecision(${row.id})"><i data-feather="bell" style="width:16px;height:16px;"></i> ${remindLabel[lang] || remindLabel.ru}</button>`;
-      } else if (projection.actionMode === 'mark_paid') {
+      } else if (projection.actionMode === 'mark_paid' || projection.actionMode === 'view_only') {
         // Прямая кнопка "Я перевёл бонус агенту" вынесена на верхний уровень карточки.
         // Кнопку "Управление сделкой" внутри deal-extra не дублируем.
         innerAction = '';
