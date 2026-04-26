@@ -597,6 +597,7 @@
     .deal-status-badge.st-progress { background:rgba(242,153,74,.15); color:#F2994A; border:1px solid rgba(242,153,74,.35); }
     .deal-status-badge.st-closed   { background:rgba(39,174,96,.15);  color:#27AE60; border:1px solid rgba(39,174,96,.35); }
     .deal-status-badge.st-debt     { background:rgba(235,87,87,.15);  color:#EB5757; border:1px solid rgba(235,87,87,.35); }
+    .deal-status-badge.st-rejected { background:rgba(235,87,87,.15);  color:#EB5757; border:1px solid rgba(235,87,87,.35); }
     .deal-status-badge.st-done     { background:rgba(155,155,155,.15); color:var(--text2); border:1px solid var(--border); }
     .card-toggle-hint { color:var(--text2); transition:transform .25s ease; display:flex; align-items:center; }
     .deal-card.is-open .card-toggle-hint { transform:rotate(180deg); }
@@ -3534,7 +3535,7 @@ function dealItemHtml(lead) {
 
     let badgeCls = 'st-new';
     if (projection.bucket === 'history') {
-        badgeCls = projection.counter === 'rejected' ? 'st-done' : 'st-closed';
+        badgeCls = projection.counter === 'rejected' ? 'st-rejected' : 'st-closed';
     } else if (projection.bucket === 'active') {
         badgeCls = projection.debt ? 'st-debt' : 'st-progress';
     }
@@ -3545,7 +3546,7 @@ function dealItemHtml(lead) {
 
     let stepTone = 'tone-info';
     if (projection.debt) stepTone = 'tone-danger';
-    else if (projection.bucket === 'history') stepTone = 'tone-success';
+    else if (projection.bucket === 'history') stepTone = projection.counter === 'rejected' ? 'tone-danger' : 'tone-success';
     else if (projection.bucket === 'active') stepTone = 'tone-warning';
     const miniBoxCls = stepTone === 'tone-danger' ? 'deal-mini-box-danger' :
                        stepTone === 'tone-warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive';
