@@ -981,7 +981,6 @@
                 <div class="instruction-text" id="t_scan_qr">Или дайте отсканировать QR-код:</div>
                 <div class="qr-container" style="margin-bottom: 20px;"><canvas id="qrCanvas"></canvas></div>
                 <button class="btn-primary btn-accent" onclick="closeRecommend()" id="t_btn_back_rec_mid">Назад в каталог</button>
-                <a href="#" id="waReturnLink" class="btn-primary btn-wa" style="display:block;text-align:center;text-decoration:none;margin-top:10px;">Вернуться в WhatsApp</a>
             </div>
         </div>
     </div>
@@ -4364,7 +4363,6 @@ async function loadCatalog() {
         const catRes = await fetch(`${API_URL}/api/catalog?token=${catTok}`);
         const catData = await catRes.json();
         allBusinesses = catData.businesses || [];
-        document.getElementById('waReturnLink').href = `https://wa.me/${catalogBotPhone}`;
         extractNiches();
         renderCatalog();
     } catch(e) {
