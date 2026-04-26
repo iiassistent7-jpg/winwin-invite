@@ -179,6 +179,7 @@
     .st-progress { background:rgba(86,204,242,.15); color:var(--accent1); }
     .st-closed   { background:rgba(39,174,96,.15);  color:var(--green); }
     .st-rejected { background:rgba(235,87,87,.15);  color:var(--red); }
+    .st-debt     { background:rgba(235,87,87,.15);  color:var(--red); }
     .st-pending  { background:rgba(242,153,74,.15); color:var(--gold); }
     .deal-pending-note { font-size:.75rem; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px; }
     .deal-pending-note.warning { color:var(--gold); background:rgba(242,153,74,.12); }
@@ -2272,7 +2273,7 @@ function getStatusData(status, deal = null) {
     closed:               { text:getUnifiedClosedStatusText(), cls:'st-closed', icon:'check-circle' },
     rejected:             { text:L.st_rej,     cls:'st-rejected', icon:'x-circle' },
     pending_confirmation: { text:L.st_pending, cls:'st-pending',  icon:'alert-circle' },
-    pending_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
+    pending_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-debt', icon:'credit-card' },
     awaiting_business_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
     pending_reward_payment: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
     awaiting_reward: { text:payoutPendingText[lang] || payoutPendingText.ru, cls:'st-pending', icon:'credit-card' },
