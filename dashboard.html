@@ -3636,6 +3636,15 @@ function dealItemHtml(lead) {
             </button>
           </div>`;
         }
+        if (lead.waiting_business_payment === true) {
+          const labelRemind = (L.remind_debt || ({ ru:'Напомнить о долге', he:'להזכיר על החוב', en:'Remind about debt', ar:'تذكير بالدين' }[lang] || 'Напомнить о долге'));
+          const safeBizName = String(lead.biz_name || '').replace(/'/g, "\\'");
+          return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+            <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#F2C94C 0%,#F2994A 100%);color:#1A1A2E;box-shadow:0 4px 14px rgba(242,153,74,.32);border:none;" onclick="event.stopPropagation();remindDebt(${lead.id}, '${safeBizName}')">
+              🔔 ${escapeHtml(labelRemind)}
+            </button>
+          </div>`;
+        }
         return '';
       })()}
       <div class="deal-extra" id="deal_extra_${lead.id}">
