@@ -3537,16 +3537,14 @@ function dealItemHtml(lead) {
     if (projection.bucket === 'history') {
         badgeCls = projection.counter === 'rejected' ? 'st-rejected' : 'st-closed';
     } else if (projection.bucket === 'active') {
-        badgeCls = projection.debt ? 'st-debt' : 'st-progress';
+        badgeCls = 'st-progress';
     }
 
     let cardToneCls = '';
-    if (projection.debt) cardToneCls = ' unpaid';
-    else if (projection.bucket === 'active' && projection.cls === 'pill-gold') cardToneCls = ' pending';
+    if (projection.bucket === 'active') cardToneCls = ' pending';
 
     let stepTone = 'tone-info';
-    if (projection.debt) stepTone = 'tone-danger';
-    else if (projection.bucket === 'history') stepTone = projection.counter === 'rejected' ? 'tone-danger' : 'tone-success';
+    if (projection.bucket === 'history') stepTone = projection.counter === 'rejected' ? 'tone-danger' : 'tone-success';
     else if (projection.bucket === 'active') stepTone = 'tone-warning';
     const miniBoxCls = stepTone === 'tone-danger' ? 'deal-mini-box-danger' :
                        stepTone === 'tone-warning' ? 'deal-mini-box-warning' : 'deal-mini-box-positive';
