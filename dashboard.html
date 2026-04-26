@@ -2825,7 +2825,7 @@ function normalizeDashboardLead(lead) {
     normalized.auto_closed = parseTruthBool(normalized.auto_closed);
     normalized.pay_dispute_pending = parseTruthBool(normalized.pay_dispute_pending);
     normalized.agent_pay_disputes = parseTruthNumber(normalized.agent_pay_disputes);
-    // Нормализуем backend-флаги: если приходят как строки/числа — приводим к boolean
+    // Нормализация backend-флагов в строгий boolean
     normalized.can_confirm_receipt = parseTruthBool(normalized.can_confirm_receipt) === true;
     normalized.can_report_not_received = parseTruthBool(normalized.can_report_not_received) === true;
     normalized.receipt_confirmation_pending = parseTruthBool(normalized.receipt_confirmation_pending) === true;
@@ -3602,6 +3602,15 @@ function dealItemHtml(lead) {
         <span class="deal-meta-pill">💵 ${amountVal}</span>
         <span class="deal-meta-pill">🎁 ${commVal}</span>
       </div>
+      ${(() => {
+        // КНОПКИ confirm_receipt НА ВЕРХНЕМ УРОВНЕ карточки — сразу видны без раскрытия.
+        // Это критическое действие, агент не должен искать его в скрытых секциях.
+        if (lead.can_confirm_receipt === true) {
+          const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
+          if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
+        }
+        return '';
+      })()}
       <div class="deal-extra" id="deal_extra_${lead.id}">
         ${renderTimelineSteps(lead.timeline)}
         ${renderContactBlock(lbl.client, lead.client_name, lead.client_contact, { stopPropagation:true })}
@@ -3617,11 +3626,8 @@ function dealItemHtml(lead) {
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
         ${(() => {
-          // На этапе подтверждения получения — кнопки 'Получил/Не получил' напрямую на карточке (приоритет)
-          if (lead.can_confirm_receipt === true) {
-            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
-            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
-          }
+          // Если can_confirm_receipt=true — кнопки уже отрендерены сверху, в модалке не дублируем
+          if (lead.can_confirm_receipt === true) return '';
           // Show actionable buttons ONLY when the agent actually has something to do.
           const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
           const nsKey = getNextStepKey(lead);
@@ -4656,20 +4662,6 @@ async function init() {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
-        // ВРЕМЕННЫЙ ДИАГНОСТИЧЕСКИЙ ЛОГ — посмотреть какие данные приходят с API
-        try {
-            const diag = (dashData.leads || []).map(l => ({
-                id: l.id,
-                biz: l.biz_name,
-                status: l.status,
-                settlement_status: l.settlement_status,
-                settlement_mode: l.settlement_mode,
-                can_confirm_receipt: l.can_confirm_receipt,
-                waiting_business_payment: l.waiting_business_payment,
-                receipt_confirmation_pending: l.receipt_confirmation_pending
-            }));
-            console.log('🔍 WIN-WIN DIAG — leads from API:', JSON.stringify(diag, null, 2));
-        } catch(e) {}
         window._botPhone = dashData.bot_phone;
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
