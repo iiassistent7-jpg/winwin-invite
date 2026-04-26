@@ -591,8 +591,8 @@
     body.rtl .deal-card-header { flex-direction:row-reverse; }
     .deal-client { font-size:1.05rem; font-weight:800; color:var(--text); line-height:1.25; }
     .deal-date { font-size:.78rem; color:var(--text2); margin-top:2px; }
-    .deal-card-status-row { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .deal-status-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.72rem; font-weight:700; line-height:1.2; }
+    .deal-card-status-row { display:flex; align-items:flex-start; gap:10px; flex-shrink:1; min-width:0; max-width:60%; }
+    .deal-status-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.72rem; font-weight:700; line-height:1.2; white-space:normal; text-align:center; max-width:100%; }
     .deal-status-badge.st-new      { background:rgba(86,204,242,.15); color:#56CCF2; border:1px solid rgba(86,204,242,.35); }
     .deal-status-badge.st-progress { background:rgba(242,153,74,.15); color:#F2994A; border:1px solid rgba(242,153,74,.35); }
     .deal-status-badge.st-closed   { background:rgba(39,174,96,.15);  color:#27AE60; border:1px solid rgba(39,174,96,.35); }
@@ -2024,7 +2024,7 @@ const TIMELINE_STEP_LABELS = {
     deal_closed:         'Сделка закрыта',
     deal_closed_pending: 'Сделка в работе',
     agent_decision:      'Я выбрал способ расчёта',
-    agent_decision_pending: 'Жду своего решения',
+    agent_decision_pending: 'Выбор способа расчёта',
     execution_take:      'Бизнес перевёл мой бонус',
     execution_take_pending: 'Жду выплату от бизнеса',
     execution_gift:      'Я подарил бонус клиенту',
@@ -2044,7 +2044,7 @@ const TIMELINE_STEP_LABELS = {
     deal_closed:         'העסקה נסגרה',
     deal_closed_pending: 'העסקה בתהליך',
     agent_decision:      'בחרתי שיטת חישוב',
-    agent_decision_pending: 'ממתין להחלטתי',
+    agent_decision_pending: 'בחירת דרך התחשבנות',
     execution_take:      'העסק העביר את הבונוס שלי',
     execution_take_pending: 'ממתין לתשלום מהעסק',
     execution_gift:      'הענקתי בונוס ללקוח',
@@ -2064,7 +2064,7 @@ const TIMELINE_STEP_LABELS = {
     deal_closed:         'Deal closed',
     deal_closed_pending: 'Deal in progress',
     agent_decision:      'I chose settlement method',
-    agent_decision_pending: 'Waiting for my decision',
+    agent_decision_pending: 'Choosing settlement method',
     execution_take:      'Business paid my bonus',
     execution_take_pending: 'Waiting for payout from business',
     execution_gift:      'I gifted bonus to client',
@@ -2084,7 +2084,7 @@ const TIMELINE_STEP_LABELS = {
     deal_closed:         'تم إغلاق الصفقة',
     deal_closed_pending: 'الصفقة قيد التنفيذ',
     agent_decision:      'اخترت طريقة التسوية',
-    agent_decision_pending: 'بانتظار قراري',
+    agent_decision_pending: 'اختيار طريقة التسوية',
     execution_take:      'دفع النشاط مكافأتي',
     execution_take_pending: 'بانتظار الدفع من النشاط',
     execution_gift:      'أهديت المكافأة للعميل',
