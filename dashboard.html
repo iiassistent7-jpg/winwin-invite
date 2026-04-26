@@ -3268,11 +3268,12 @@ function getWalletStageMeta(lead) {
     if (projection.bucket === 'history' && projection.counter === 'closed') {
         return { key:'closed', label:getLabel('closed'), cls:'pill-green', icon:'check-circle', color:'var(--green)', action:null };
     }
-    if (status === 'pending_business_payment') {
-        return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
-    }
-    if (status === 'pending_agent_receipt') {
+    // Backend отдаёт готовые флаги can_confirm_receipt и waiting_business_payment — используем их в первую очередь
+    if (lead.can_confirm_receipt === true || status === 'pending_agent_receipt') {
         return { key:'awaiting_receipt', label:getLabel('awaiting_receipt'), cls:'pill-gold', icon:'clock', color:'var(--gold)', action: lead.id != null ? 'confirm_receipt' : null };
+    }
+    if (lead.waiting_business_payment === true || status === 'pending_business_payment') {
+        return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
     }
     if (projection.debt) {
         return { key:'awaiting_payment', label:getLabel('awaiting_payment'), cls:'pill-gold', icon:'alert-circle', color:'var(--gold)', action: lead.id != null ? 'remind' : null };
@@ -3609,12 +3610,15 @@ function dealItemHtml(lead) {
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
         ${(() => {
+          // На этапе подтверждения получения — кнопки 'Получил/Не получил' напрямую на карточке (приоритет)
+          if (lead.can_confirm_receipt === true) {
+            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
+            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
+          }
           // Show actionable buttons ONLY when the agent actually has something to do.
           const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
           const nsKey = getNextStepKey(lead);
           if (!actionableKeys.includes(nsKey)) return '';
-          // На этапе confirm_receipt — сразу показываем 2 кнопки «Получил/Не получил»,
-          // не отправляя в модалку. Это критическое действие, лишних шагов быть не должно.
           if (nsKey === 'confirm_receipt') {
             const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
             if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
