@@ -2825,6 +2825,13 @@ function normalizeDashboardLead(lead) {
     normalized.auto_closed = parseTruthBool(normalized.auto_closed);
     normalized.pay_dispute_pending = parseTruthBool(normalized.pay_dispute_pending);
     normalized.agent_pay_disputes = parseTruthNumber(normalized.agent_pay_disputes);
+    // Нормализуем backend-флаги: если приходят как строки/числа — приводим к boolean
+    normalized.can_confirm_receipt = parseTruthBool(normalized.can_confirm_receipt) === true;
+    normalized.can_report_not_received = parseTruthBool(normalized.can_report_not_received) === true;
+    normalized.receipt_confirmation_pending = parseTruthBool(normalized.receipt_confirmation_pending) === true;
+    normalized.waiting_business_payment = parseTruthBool(normalized.waiting_business_payment) === true;
+    normalized.agent_action_required = parseTruthBool(normalized.agent_action_required) === true;
+    normalized.can_choose_settlement = parseTruthBool(normalized.can_choose_settlement) === true;
     normalized.debt_amount = parseTruthNumber(
         hasOwn(rawLead, 'debt_amount')
             ? normalized.debt_amount
@@ -4649,6 +4656,20 @@ async function init() {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
+        // ВРЕМЕННЫЙ ДИАГНОСТИЧЕСКИЙ ЛОГ — посмотреть какие данные приходят с API
+        try {
+            const diag = (dashData.leads || []).map(l => ({
+                id: l.id,
+                biz: l.biz_name,
+                status: l.status,
+                settlement_status: l.settlement_status,
+                settlement_mode: l.settlement_mode,
+                can_confirm_receipt: l.can_confirm_receipt,
+                waiting_business_payment: l.waiting_business_payment,
+                receipt_confirmation_pending: l.receipt_confirmation_pending
+            }));
+            console.log('🔍 WIN-WIN DIAG — leads from API:', JSON.stringify(diag, null, 2));
+        } catch(e) {}
         window._botPhone = dashData.bot_phone;
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
