@@ -3391,7 +3391,9 @@ function renderWalletActionButton(lead, context = 'card') {
     if (action.kind === 'choose_settlement') {
         return renderSettlementChoiceButtons(lead, context);
     }
-    if (action.kind === 'confirm_receipt') return '';
+    if (action.kind === 'confirm_receipt') {
+        return renderReceiptConfirmationButtons(lead, context);
+    }
     const onclick = context === 'card' ? `event.stopPropagation(); ${action.onclick}` : action.onclick;
     const cls = context === 'card' ? 'btn-primary wallet-card-btn' : 'btn-primary';
     return `
@@ -3601,11 +3603,16 @@ function dealItemHtml(lead) {
           <div class="receipt-line total"><span>✅ ${lbl.income}:</span><span class="net-profit">${incomeVal}</span></div>
         </div>
         ${(() => {
-          // Show "Manage deal" button ONLY when the agent actually has something to do.
-          // Hide for waiting/info-only stages.
+          // Show actionable buttons ONLY when the agent actually has something to do.
           const actionableKeys = ['choose_settlement', 'awaiting_payout', 'confirm_receipt', 'awaiting_gift_to_client'];
           const nsKey = getNextStepKey(lead);
           if (!actionableKeys.includes(nsKey)) return '';
+          // На этапе confirm_receipt — сразу показываем 2 кнопки «Получил/Не получил»,
+          // не отправляя в модалку. Это критическое действие, лишних шагов быть не должно.
+          if (nsKey === 'confirm_receipt') {
+            const receiptBtns = renderReceiptConfirmationButtons(lead, 'card');
+            if (receiptBtns) return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="margin-top:14px;">${receiptBtns}</div>`;
+          }
           return `<button type="button" class="deal-manage-btn" onclick='event.stopPropagation();openWalletDealDetail(${serializeLeadForAttr(lead)})'>
           <i data-feather="sliders" style="width:16px;height:16px;"></i> ${lbl.manage}
         </button>`;
