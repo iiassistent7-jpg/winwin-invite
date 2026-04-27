@@ -619,15 +619,6 @@
       flex-shrink: 0;
     }
 
-    .nav-drawer__languages {
-      display: grid;
-      gap: 8px;
-      padding: 14px;
-      border-radius: 24px;
-      background: color-mix(in srgb, var(--surface) 92%, transparent);
-      border: 1px solid var(--border);
-    }
-
     .nav-drawer__divider {
       block-size: 1px;
       background: var(--border);
@@ -665,13 +656,13 @@
     }
 
     .page {
-      padding-block: var(--s-5) var(--s-16);
+      padding-block: var(--s-4) var(--s-16);
       max-width: 100%;
       overflow-x: hidden;
     }
 
     .section {
-      padding-block: var(--s-8) 0;
+      padding-block: var(--s-16);
       max-width: 100%;
       overflow-x: hidden;
     }
@@ -715,18 +706,14 @@
       flex-shrink: 0;
     }
 
-    .hero {
-      padding-block-start: var(--s-5);
-    }
-
     .hero__grid {
       display: grid;
-      gap: var(--s-6);
+      gap: var(--s-8);
     }
 
     .hero__content {
       display: grid;
-      gap: var(--s-5);
+      gap: var(--s-6);
       max-width: 100%;
       overflow-x: hidden;
     }
@@ -763,6 +750,8 @@
       margin-block: var(--s-8) var(--s-6);
       max-width: 100%;
       overflow-x: hidden;
+      position: relative;
+      isolation: isolate;
     }
 
     .hero-orbit__image {
@@ -770,11 +759,12 @@
       max-width: 360px;
       height: auto;
       display: block;
+      position: relative;
+      z-index: 1;
       filter: drop-shadow(0 24px 48px rgba(31, 79, 204, 0.16));
     }
 
     .hero__actions,
-    .pricing-cta-group,
     .final-actions {
       display: grid;
       gap: 12px;
@@ -837,6 +827,7 @@
       gap: 14px;
       padding: 16px 18px;
       border-radius: 22px;
+      margin-block-start: var(--s-3);
     }
 
     .strip-card__icons,
@@ -900,8 +891,8 @@
 
     .section-header {
       display: grid;
-      gap: 10px;
-      margin-block-end: var(--s-5);
+      gap: var(--s-3);
+      margin-block-end: var(--s-8);
     }
 
     .section-title {
@@ -924,7 +915,7 @@
       display: grid;
       gap: 14px;
       position: relative;
-      margin-block-end: var(--s-5);
+      margin-block-end: var(--s-8);
     }
 
     .step-card {
@@ -1007,7 +998,7 @@
 
     .triple-grid {
       display: grid;
-      gap: 12px;
+      gap: var(--s-4);
     }
 
     .feature-card {
@@ -1075,7 +1066,7 @@
       grid-template-columns: 1fr 1fr;
       gap: var(--s-3);
       align-items: stretch;
-      margin-block-start: 2px;
+      margin-block-start: var(--s-4);
     }
 
     .role-mini-card {
@@ -1112,24 +1103,15 @@
       flex-shrink: 0;
     }
 
-    .closing-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 18px;
-      border-radius: 24px;
-      margin-block-start: 12px;
-    }
-
     .trust-panel {
       display: grid;
-      gap: 14px;
+      gap: var(--s-4);
     }
 
     .trust-lead {
       display: grid;
       gap: 14px;
-      margin-block-end: 4px;
+      margin-block-end: var(--s-3);
     }
 
     .trust-lead__icon {
@@ -1142,17 +1124,8 @@
       display: flex;
       align-items: start;
       gap: 14px;
-      padding: 16px;
+      padding: 18px;
       border-radius: 22px;
-    }
-
-    .trust-card--highlight {
-      border-color: var(--accent-border);
-      box-shadow: 0 0 0 1px rgba(47,102,232,0.14), var(--shadow-md);
-    }
-
-    .trust-card--highlight .trust-card__title {
-      color: var(--accent);
     }
 
     .trust-footer {
@@ -1176,7 +1149,7 @@
 
     .pricing-panel {
       display: grid;
-      gap: 18px;
+      gap: var(--s-4);
     }
 
     .pricing-subline {
@@ -1197,8 +1170,8 @@
 
     .tier-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-3);
     }
 
     .tier-card {
@@ -1238,15 +1211,15 @@
 
     .tier-list {
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .tier-row {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      align-items: baseline;
+      justify-content: space-between;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px 10px;
       min-width: 0;
     }
 
@@ -1273,22 +1246,33 @@
 
     .pricing-features {
       display: grid;
-      gap: 10px;
+      gap: var(--s-3);
+      overflow: hidden;
+      padding-inline: var(--s-5);
     }
 
     .pricing-feature {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 14px 16px;
+      padding: 16px 18px;
       border-radius: 18px;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .pricing-feature__title,
+    .pricing-feature__sub {
+      overflow-wrap: anywhere;
+      word-break: normal;
+      hyphens: auto;
     }
 
     .pricing-featured {
       display: flex;
       align-items: center;
       gap: 16px;
-      padding: 18px var(--s-5);
+      padding: 22px var(--s-5);
       border-radius: 28px;
       background:
         radial-gradient(circle at 12% 30%, rgba(47,102,232,0.18), transparent 24%),
@@ -1352,11 +1336,11 @@
 
     .final-panel {
       position: relative;
-      padding: 26px 20px 24px;
+      padding: 30px 22px 26px;
       border-radius: 30px;
       text-align: center;
       display: grid;
-      gap: 18px;
+      gap: var(--s-5);
       overflow: hidden;
     }
 
@@ -1408,7 +1392,7 @@
     }
 
     .footer {
-      padding-block: var(--s-8) var(--s-4);
+      padding-block: var(--s-16) var(--s-6);
       text-align: center;
     }
 
@@ -1447,33 +1431,6 @@
       color: var(--text);
     }
 
-    .footer-langs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-block-end: 22px;
-    }
-
-    .footer-langs .lang-btn {
-      min-height: 40px;
-      padding-inline: 10px;
-      border-radius: 12px;
-      color: var(--text-2);
-      background: transparent;
-      border: 1px solid transparent;
-      font-size: var(--t-small);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .footer-langs .lang-btn.active {
-      color: var(--accent);
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      text-decoration-thickness: 1.5px;
-    }
-
     .footer-brand {
       display: inline-flex;
       align-items: center;
@@ -1490,24 +1447,10 @@
       font-size: var(--t-subhead);
     }
 
-    .footer-badge {
-      min-height: 28px;
-      padding-inline: 10px;
-      border-radius: var(--r-full);
-      border: 1px solid var(--accent-border);
-      background: var(--accent-bg);
-      color: var(--text-2);
-      font-size: var(--t-small);
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-    }
-
     .footer-copy {
       color: var(--text-3);
       font-size: var(--t-caption);
       letter-spacing: 0.06em;
-      text-transform: uppercase;
     }
 
     .legacy-form {
@@ -1626,8 +1569,20 @@
     }
 
     .role-card .icon {
-      font-size: 24px;
-      line-height: 1;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .role-card .icon svg {
+      width: 22px;
+      height: 22px;
     }
 
     .role-card .role-name {
@@ -1836,15 +1791,39 @@
       }
     }
 
-    @media (max-width: 379px) {
-      .role-mini-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 380px) {
+      .brand-name {
+        display: none;
+      }
+
+      .topbar__row {
+        gap: 10px;
+      }
+
+      .topbar__actions {
+        gap: 6px;
+      }
+
+      .lang-dropdown > summary {
+        padding-inline: 10px;
+        gap: 6px;
+      }
+
+      .lang-dropdown__chevron {
+        width: 14px;
+        height: 14px;
       }
     }
 
-    @media (min-width: 480px) {
-      .tier-grid {
-        grid-template-columns: 1fr 1fr;
+    @media (max-width: 359px) {
+      .tier-row__price {
+        font-size: var(--t-small);
+      }
+    }
+
+    @media (max-width: 379px) {
+      .role-mini-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1852,6 +1831,10 @@
       .container,
       .legacy-form__shell {
         width: min(100% - 40px, 720px);
+      }
+
+      .section {
+        padding-block: var(--s-20);
       }
 
       .hero-orbit__image {
@@ -1864,7 +1847,7 @@
 
       .pricing-panel,
       .trust-panel {
-        gap: 20px;
+        gap: var(--s-5);
       }
 
       .pricing-features {
@@ -1892,8 +1875,8 @@
         width: min(100% - 56px, 1080px);
       }
 
-      .page {
-        padding-block-start: var(--s-6);
+      .section {
+        padding-block: var(--s-24);
       }
 
       .topbar__nav {
@@ -1950,6 +1933,40 @@
         transition-delay: 0ms !important;
       }
     }
+
+    @media (prefers-color-scheme: dark) {
+      .hero-orbit::before {
+        content: "";
+        position: absolute;
+        inset: 50% 50%;
+        width: 80%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(ellipse at center,
+          rgba(94, 132, 232, 0.18) 0%,
+          rgba(47, 102, 232, 0.08) 40%,
+          transparent 70%);
+        filter: blur(40px);
+        z-index: 0;
+        pointer-events: none;
+      }
+    }
+
+    [data-theme="dark"] .hero-orbit::before {
+      content: "";
+      position: absolute;
+      inset: 50% 50%;
+      width: 80%;
+      height: 80%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center,
+        rgba(94, 132, 232, 0.18) 0%,
+        rgba(47, 102, 232, 0.08) 40%,
+        transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -1980,7 +1997,7 @@
         </nav>
 
         <div class="topbar__actions">
-          <details class="lang-dropdown">
+          <details class="lang-dropdown" id="langDropdown">
             <summary aria-label="Choose language">
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path class="icon-stroke" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/>
@@ -1994,9 +2011,9 @@
               </svg>
             </summary>
             <div class="lang-menu">
-              <button type="button" class="lang-btn lang-option" data-lang="ru">
-                <span class="lang-option__code">RU</span>
-                <span class="lang-option__name" id="t_langLabelRU_desktop">Русский</span>
+              <button type="button" class="lang-btn lang-option" data-lang="en">
+                <span class="lang-option__code">EN</span>
+                <span class="lang-option__name" id="t_langLabelEN_desktop">English</span>
                 <svg class="lang-option__check" viewBox="0 0 20 20" aria-hidden="true">
                   <path class="icon-stroke" d="m4 10 4 4 8-8"/>
                 </svg>
@@ -2008,16 +2025,16 @@
                   <path class="icon-stroke" d="m4 10 4 4 8-8"/>
                 </svg>
               </button>
-              <button type="button" class="lang-btn lang-option" data-lang="en">
-                <span class="lang-option__code">EN</span>
-                <span class="lang-option__name" id="t_langLabelEN_desktop">English</span>
+              <button type="button" class="lang-btn lang-option" data-lang="ar">
+                <span class="lang-option__code">AR</span>
+                <span class="lang-option__name" id="t_langLabelAR_desktop">العربية</span>
                 <svg class="lang-option__check" viewBox="0 0 20 20" aria-hidden="true">
                   <path class="icon-stroke" d="m4 10 4 4 8-8"/>
                 </svg>
               </button>
-              <button type="button" class="lang-btn lang-option" data-lang="ar">
-                <span class="lang-option__code">AR</span>
-                <span class="lang-option__name" id="t_langLabelAR_desktop">العربية</span>
+              <button type="button" class="lang-btn lang-option" data-lang="ru">
+                <span class="lang-option__code">RU</span>
+                <span class="lang-option__name" id="t_langLabelRU_desktop">Русский</span>
                 <svg class="lang-option__check" viewBox="0 0 20 20" aria-hidden="true">
                   <path class="icon-stroke" d="m4 10 4 4 8-8"/>
                 </svg>
@@ -2169,25 +2186,6 @@
               </a>
             </div>
 
-            <div class="strip-card" id="entry-links">
-              <div class="strip-card__icons">
-                <span class="messenger-badge messenger-badge--wa">
-                  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-                    <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
-                    <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
-                  </svg>
-                </span>
-                <span class="messenger-badge messenger-badge--tg">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
-                  </svg>
-                </span>
-              </div>
-              <div>
-                <p class="strip-card__title" id="t_waTgStripTitle_hero">WhatsApp &amp; Telegram entry</p>
-                <p class="strip-card__sub" id="t_waTgStripSub_hero">for business and recommenders</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -2456,7 +2454,7 @@
               </div>
             </article>
 
-            <article class="trust-card trust-card--highlight">
+            <article class="trust-card">
               <div class="trust-card__icon trust-card__icon--blue">
                 <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
                   <path class="icon-stroke" d="M4 19h16"/>
@@ -2623,40 +2621,6 @@
             </div>
           </article>
 
-          <div class="pricing-cta-group">
-            <a href="#legacyFormContainer" class="button button--primary" data-cta="business">
-              <svg class="button__icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path class="icon-stroke" d="M3 21h18"/>
-                <path class="icon-stroke" d="M5 21V7l7-4 7 4v14"/>
-                <path class="icon-stroke" d="M9 11h1"/>
-                <path class="icon-stroke" d="M9 15h1"/>
-                <path class="icon-stroke" d="M14 11h1"/>
-                <path class="icon-stroke" d="M14 15h1"/>
-              </svg>
-              <span id="t_joinBusiness_pricing">Join as a Business</span>
-            </a>
-          </div>
-
-          <div class="price-strip">
-            <div class="price-strip__icons">
-              <span class="messenger-badge messenger-badge--wa">
-                <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-                  <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
-                  <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
-                </svg>
-              </span>
-              <span class="messenger-badge messenger-badge--tg">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
-                </svg>
-              </span>
-            </div>
-            <div class="price-strip__copy">
-              <p class="price-strip__title" id="t_waTgStripTitle_pricing">WhatsApp &amp; Telegram entry</p>
-              <p class="price-strip__sub" id="t_waTgStripSub_pricing">for business and recommenders</p>
-            </div>
-            <div class="price-strip__langs">RU · HE · EN · AR</div>
-          </div>
         </div>
       </div>
     </section>
@@ -2712,25 +2676,6 @@
             </a>
           </div>
 
-          <div class="strip-card">
-            <div class="strip-card__icons">
-              <span class="messenger-badge messenger-badge--wa">
-                <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-                  <path d="M19.11 17.23c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.19.28-.72.9-.89 1.09-.16.19-.33.21-.61.07-.28-.14-1.2-.44-2.28-1.41-.85-.76-1.42-1.7-1.58-1.99-.17-.28-.02-.43.12-.57.13-.13.28-.33.42-.49.14-.16.18-.28.28-.46.09-.19.05-.35-.02-.49-.07-.14-.62-1.49-.85-2.05-.22-.53-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.19 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.23.17 1.69.1.52-.08 1.64-.67 1.87-1.32.23-.65.23-1.21.16-1.32-.06-.12-.25-.19-.53-.33Z"/>
-                  <path d="M27.2 4.78A15.8 15.8 0 0 0 4.77 27.2L3 32l4.93-1.72A15.8 15.8 0 1 0 27.2 4.78Zm-11.4 25a13.08 13.08 0 0 1-6.67-1.83l-.48-.29-2.93 1.02.99-2.86-.31-.49A13.06 13.06 0 1 1 15.8 29.78Z"/>
-                </svg>
-              </span>
-              <span class="messenger-badge messenger-badge--tg">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M21.94 4.67c.18-.84-.62-1.53-1.4-1.2L2.24 10.7c-.86.34-.81 1.58.07 1.85l4.64 1.45 1.8 5.59c.25.78 1.24 1.01 1.82.42l2.59-2.63 4.95 3.65c.78.58 1.88.15 2.06-.8l1.77-15.56ZM9.16 13.55l9.27-7.02-7.28 8.39a.88.88 0 0 0-.18.36l-.72 2.95-1.09-3.37a.86.86 0 0 0-.57-.55l-2.76-.86 13.6-5.4-9.9 7.5a.88.88 0 0 0-.37.48Z"/>
-                </svg>
-              </span>
-            </div>
-            <div>
-              <p class="strip-card__title" id="t_waTgStripTitle_final">WhatsApp &amp; Telegram entry</p>
-              <p class="strip-card__sub" id="t_waTgStripSub_final">for business and recommenders</p>
-            </div>
-          </div>
         </div>
 
         <footer class="footer">
@@ -2761,7 +2706,6 @@
               </svg>
               <span class="brand-name">Win-Win Network</span>
             </a>
-            <span class="footer-badge">V2</span>
           </div>
 
           <p class="footer-copy">© 2025 Win-Win Network. All rights reserved.</p>
@@ -2789,13 +2733,29 @@
           <div class="role-grid">
             <label class="role-card" id="cardBusiness">
               <input type="radio" name="role" value="business">
-              <span class="icon">🏢</span>
+              <span class="icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="icon-stroke" d="M3 21h18"/>
+                  <path class="icon-stroke" d="M5 21V7l7-4 7 4v14"/>
+                  <path class="icon-stroke" d="M9 11h1"/>
+                  <path class="icon-stroke" d="M9 15h1"/>
+                  <path class="icon-stroke" d="M14 11h1"/>
+                  <path class="icon-stroke" d="M14 15h1"/>
+                </svg>
+              </span>
               <span class="role-name" id="roleBizName">Business Owner</span>
               <span class="role-desc" id="roleBizDesc">I want to grow my client base</span>
             </label>
             <label class="role-card" id="cardAgent">
               <input type="radio" name="role" value="agent">
-              <span class="icon">🤝</span>
+              <span class="icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="icon-stroke" d="M15 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
+                  <path class="icon-stroke" d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                  <path class="icon-stroke" d="M19 8v6"/>
+                  <path class="icon-stroke" d="M16 11h6"/>
+                </svg>
+              </span>
               <span class="role-name" id="roleAgentName">Happy Client</span>
               <span class="role-desc" id="roleAgentDesc">I want to recommend</span>
             </label>
@@ -2951,11 +2911,11 @@
       step1Body: "Вы соединяете подходящих людей.",
       step2Title: "Сделка в работе",
       step2Body: "Мы безопасно отслеживаем сделку в реальном времени.",
-      step3Title: "Клиент подтвердил",
-      step3Body: "Клиент подтверждает, что сделка состоялась.",
+      step3Title: "Сделка состоялась",
+      step3Body: "Сделка с клиентом успешно завершена.",
       step4Title: "Благодарность отправлена",
       step4Body: "Бонус идёт по выбранному вами пути.",
-      tripleTitle: "Тройной путь",
+      tripleTitle: "Три пути благодарности",
       tripleSub: "Выберите, как работает благодарность",
       keepReward: "Забрать бонус",
       keepRewardSub: "Честное профессиональное вознаграждение за вашу экспертизу.",
@@ -3073,12 +3033,12 @@
       step1Body: "You introduce the right connection.",
       step2Title: "Deal in progress",
       step2Body: "We track the deal securely in real time.",
-      step3Title: "Client confirmed",
-      step3Body: "The client confirms the deal was successful.",
+      step3Title: "Deal completed",
+      step3Body: "The deal with the client was successful.",
       step4Title: "Gratitude completed",
       step4Body: "Reward is shared through your chosen path.",
-      tripleTitle: "The Triple Path",
-      tripleSub: "Choose how gratitude works",
+      tripleTitle: "Three Paths of Gratitude",
+      tripleSub: "Choose how gratitude flows",
       keepReward: "Keep the reward",
       keepRewardSub: "Honest professional reward for your expertise.",
       giftClient: "Gift it to the client",
@@ -3103,7 +3063,7 @@
       recordsStatusSub: "We don't hold or move funds. We record, verify, and protect.",
       trustIndex: "Trust Index",
       trustIndexSub: "Built from real client confirmations, not opinions.",
-      trustFooter: "Secure ֲ· Private ֲ· Verified ֲ· Built for trust",
+      trustFooter: "Secure · Private · Verified · Built for trust",
       pricingEyebrow: "Trust-based recommendation network",
       pricingTitle: "Pricing for businesses",
       pricingFreeRec: "Recommenders join free",
@@ -3195,12 +3155,12 @@
       step1Body: "אתם מקשרים בין האנשים הנכונים.",
       step2Title: "העסקה בעיצומה",
       step2Body: "אנחנו עוקבים אחר העסקה בזמן אמת ובאופן מאובטח.",
-      step3Title: "הלקוח אישר",
-      step3Body: "הלקוח מאשר שהעסקה הצליחה.",
+      step3Title: "העסקה התקיימה",
+      step3Body: "העסקה עם הלקוח הסתיימה בהצלחה.",
       step4Title: "התודה הושלמה",
       step4Body: "התגמול מועבר במסלול שבחרתם.",
-      tripleTitle: "המסלול המשולש",
-      tripleSub: "בחרו איך התודה פועלת",
+      tripleTitle: "שלוש דרכי תודה",
+      tripleSub: "בחרו איך התודה זורמת",
       keepReward: "לשמור את התגמול",
       keepRewardSub: "תגמול מקצועי הוגן על המומחיות שלכם.",
       giftClient: "להעניק ללקוח",
@@ -3317,12 +3277,12 @@
       step1Body: "أنت تجمع بين الأشخاص المناسبين.",
       step2Title: "الصفقة قيد التنفيذ",
       step2Body: "نتابع الصفقة بأمان في الوقت الفعلي.",
-      step3Title: "العميل أكّد",
-      step3Body: "يؤكد العميل أن الصفقة تمت بنجاح.",
+      step3Title: "الصفقة تمت",
+      step3Body: "تمت الصفقة مع العميل بنجاح.",
       step4Title: "اكتمل الشكر",
       step4Body: "تُمنح المكافأة عبر المسار الذي اخترته.",
-      tripleTitle: "المسار الثلاثي",
-      tripleSub: "اختر كيف يعمل الشكر",
+      tripleTitle: "ثلاثة مسارات للشكر",
+      tripleSub: "اختر مسار الشكر",
       keepReward: "احتفظ بالمكافأة",
       keepRewardSub: "مكافأة مهنية عادلة مقابل خبرتك.",
       giftClient: "اهدِها للعميل",
@@ -3496,10 +3456,10 @@
     setText(['t_heroTitle1'], t.heroTitle1);
     setText(['t_heroTitleAccent'], t.heroTitleAccent);
     setText(['t_heroSub'], t.heroSub);
-    setText(['t_joinBusiness_hero', 't_joinBusiness_pricing', 't_joinBusiness_final'], t.joinBusiness);
+    setText(['t_joinBusiness_hero', 't_joinBusiness_final'], t.joinBusiness);
     setText(['t_joinRecommender_hero', 't_joinRecommender_final'], t.joinRecommender);
-    setText(['t_waTgStripTitle_hero', 't_waTgStripTitle_how', 't_waTgStripTitle_pricing', 't_waTgStripTitle_final'], t.waTgStripTitle);
-    setText(['t_waTgStripSub_hero', 't_waTgStripSub_how', 't_waTgStripSub_pricing', 't_waTgStripSub_final'], t.waTgStripSub);
+    setText(['t_waTgStripTitle_how'], t.waTgStripTitle);
+    setText(['t_waTgStripSub_how'], t.waTgStripSub);
     setText(['t_howTitle'], t.howTitle);
     setText(['t_howSub'], t.howSub);
     setText(['t_step1Title'], t.step1Title);
@@ -3522,8 +3482,6 @@
     setText(['t_forBusinessSub'], t.forBusinessSub);
     setText(['t_forRecTitle'], t.forRecTitle);
     setText(['t_forRecSub'], t.forRecSub);
-    setText(['t_infraClosingTitle'], t.infraClosingTitle);
-    setText(['t_infraClosingSub'], t.infraClosingSub);
     setText(['t_infraTitle'], t.infraTitle);
     setText(['t_infraSub'], t.infraSub);
     setText(['t_transparentTrack'], t.transparentTrack);
@@ -3556,7 +3514,6 @@
     setText(['t_salesForce'], t.salesForce);
     setText(['t_salesForceAccent'], t.salesForceAccent);
     setText(['t_salesForceSub'], t.salesForceSub);
-    setText(['t_seeHow'], t.seeHow);
     setText(['t_finalTitle'], t.finalTitle);
     setText(['t_finalAccent'], t.finalAccent);
     setText(['t_finalSub'], t.finalSub);
@@ -3900,6 +3857,29 @@
     b.addEventListener('click', function(e){ e.preventDefault(); openForm('agent'); });
   });
 
+  // Language dropdown open/close
+  const langDropdown = document.getElementById('langDropdown');
+  if (langDropdown) {
+    const summary = langDropdown.querySelector('summary');
+    if (summary) {
+      summary.addEventListener('click', function(e){
+        e.preventDefault();
+        langDropdown.open = !langDropdown.open;
+      });
+    }
+    langDropdown.querySelectorAll('.lang-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        langDropdown.open = false;
+      });
+    });
+    document.addEventListener('click', function(e){
+      if (!langDropdown.contains(e.target)) langDropdown.open = false;
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') langDropdown.open = false;
+    });
+  }
+
   // Hamburger menu open/close
   const burger = document.getElementById('navToggle');
   const drawer = document.getElementById('navDrawer');
@@ -3917,61 +3897,6 @@
       });
     });
   }
-})();
-</script>
-<script>
-(function(){
-  const textPatch = {
-    ru: {
-      step3Title: 'Сделка состоялась',
-      step3Body: 'Сделка с клиентом успешно завершена.',
-      tripleTitle: 'Три пути благодарности',
-      tripleSub: 'Выберите, как работает благодарность'
-    },
-    en: {
-      step3Title: 'Deal completed',
-      step3Body: 'The deal with the client was successful.',
-      tripleTitle: 'Three Paths of Gratitude',
-      tripleSub: 'Choose how gratitude flows'
-    },
-    he: {
-      step3Title: 'העסקה התקיימה',
-      step3Body: 'העסקה עם הלקוח הסתיימה בהצלחה.',
-      tripleTitle: 'שלוש דרכי תודה',
-      tripleSub: 'בחרו איך התודה זורמת'
-    },
-    ar: {
-      step3Title: 'الصفقة تمت',
-      step3Body: 'تمت الصفقة مع العميل بنجاح.',
-      tripleTitle: 'ثلاثة مسارات للشكر',
-      tripleSub: 'اختر مسار الشكر'
-    }
-  };
-
-  function getLang() {
-    const active = document.querySelector('.lang-btn.active');
-    return active ? active.dataset.lang : (document.documentElement.lang || 'ru');
-  }
-
-  function setPatchedText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  }
-
-  function applyPatch(lang) {
-    const t = textPatch[lang] || textPatch.ru;
-    setPatchedText('t_step3Title', t.step3Title);
-    setPatchedText('t_step3Body', t.step3Body);
-    setPatchedText('t_tripleTitle', t.tripleTitle);
-    setPatchedText('t_tripleSub', t.tripleSub);
-  }
-
-  applyPatch(getLang());
-  document.querySelectorAll('.lang-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      setTimeout(function(){ applyPatch(btn.dataset.lang); }, 0);
-    });
-  });
 })();
 </script>
 </body>
