@@ -439,9 +439,7 @@
     }
 
     .lang-menu {
-      position: absolute;
-      inset-block-start: calc(100% + 10px);
-      inset-inline-end: 0;
+      position: fixed;
       width: min(264px, calc(100vw - 32px));
       padding: var(--s-3);
       border-radius: 22px;
@@ -450,7 +448,7 @@
       box-shadow: var(--shadow-lg);
       display: grid;
       gap: 4px;
-      z-index: 1100;
+      z-index: 9999;
     }
 
     .lang-btn.lang-option {
@@ -4414,8 +4412,26 @@
   const langTrigger = document.getElementById('langTrigger');
   const langMenu = document.getElementById('langMenu');
   if (langDropdown && langTrigger && langMenu) {
+    function positionLangMenu(){
+      const rect = langTrigger.getBoundingClientRect();
+      const isRtl = document.body.dir === 'rtl';
+      const menuWidth = Math.min(264, window.innerWidth - 32);
+      const top = rect.bottom + 10;
+      let left;
+      if (isRtl) {
+        left = rect.left;
+      } else {
+        left = rect.right - menuWidth;
+      }
+      if (left < 16) left = 16;
+      if (left + menuWidth > window.innerWidth - 16) left = window.innerWidth - 16 - menuWidth;
+      langMenu.style.top = top + 'px';
+      langMenu.style.left = left + 'px';
+      langMenu.style.right = 'auto';
+    }
     function openLangMenu(){
       langMenu.removeAttribute('hidden');
+      positionLangMenu();
       langDropdown.setAttribute('data-open', 'true');
       langTrigger.setAttribute('aria-expanded', 'true');
     }
@@ -4435,11 +4451,17 @@
       });
     });
     document.addEventListener('click', function(e){
-      if (!langDropdown.contains(e.target)) closeLangMenu();
+      if (!langDropdown.contains(e.target) && !langMenu.contains(e.target)) closeLangMenu();
     });
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') closeLangMenu();
     });
+    window.addEventListener('resize', function(){
+      if (!langMenu.hasAttribute('hidden')) positionLangMenu();
+    });
+    window.addEventListener('scroll', function(){
+      if (!langMenu.hasAttribute('hidden')) positionLangMenu();
+    }, { passive: true });
   }
 
   // Hamburger menu open/close
