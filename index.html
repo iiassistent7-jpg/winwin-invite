@@ -1179,10 +1179,10 @@
     }
 
     .tier-card {
-      padding: 16px;
+      padding: 22px 18px;
       border-radius: 24px;
       display: grid;
-      gap: 14px;
+      gap: 18px;
       min-width: 0;
     }
 
@@ -2317,9 +2317,9 @@
     }
 
     .tier-card {
-      padding: 14px 12px;
+      padding: 20px 14px;
       border-radius: 22px;
-      gap: 12px;
+      gap: 16px;
       min-width: 0;
       align-content: start;
       height: 100%;
@@ -2351,24 +2351,25 @@
 
     .tier-row {
       display: grid;
-      grid-template-columns: minmax(46px, .82fr) minmax(0, 1fr);
+      grid-template-columns: minmax(60px, auto) minmax(0, 1fr);
       align-items: baseline;
       justify-content: initial;
-      gap: 4px;
-      white-space: nowrap;
+      gap: 6px 8px;
+      white-space: normal;
+      padding-block: 4px;
     }
 
     .tier-row__period {
-      font-size: 11.5px;
-      line-height: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     .tier-row__price {
       justify-self: end;
-      font-size: 16px;
-      line-height: 1;
+      font-size: 18px;
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
     .tier-row__price small {
@@ -2506,9 +2507,9 @@
       .lead { font-size: 14.5px; }
       .button { min-height: 54px; }
       .tier-card { padding-inline: 10px; }
-      .tier-row { grid-template-columns: minmax(42px, .78fr) minmax(0, 1fr); }
-      .tier-row__period { font-size: 10.5px; }
-      .tier-row__price { font-size: 14.5px; }
+      .tier-row { grid-template-columns: minmax(54px, auto) minmax(0, 1fr); }
+      .tier-row__period { font-size: 11.5px; }
+      .tier-row__price { font-size: 16px; }
     }
 
     @media (min-width: 768px) {
