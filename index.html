@@ -311,7 +311,7 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 1000;
       padding-block: var(--s-4);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -339,8 +339,9 @@
     .brand-mark {
       width: 32px;
       height: 32px;
+      border-radius: var(--r-full);
+      display: block;
       flex-shrink: 0;
-      filter: drop-shadow(0 8px 22px rgba(47,102,232,0.22));
     }
 
     .brand-name {
@@ -395,8 +396,7 @@
       position: relative;
     }
 
-    .lang-dropdown > summary {
-      list-style: none;
+    .lang-trigger {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -408,28 +408,34 @@
       color: var(--text);
       box-shadow: var(--shadow-sm);
       cursor: pointer;
+      font-family: inherit;
       user-select: none;
+      transition: border-color var(--t-base) var(--ease), background var(--t-base) var(--ease);
     }
 
-    .lang-dropdown > summary::-webkit-details-marker {
-      display: none;
+    .lang-trigger:hover {
+      border-color: var(--accent);
     }
 
-    .lang-dropdown__code {
+    .lang-trigger__code {
       font-size: var(--t-small);
       font-weight: 700;
       letter-spacing: 0.03em;
     }
 
-    .lang-dropdown__chevron {
+    .lang-trigger__chevron {
       width: 16px;
       height: 16px;
       color: var(--text-2);
       transition: transform var(--t-base) var(--ease);
     }
 
-    .lang-dropdown[open] .lang-dropdown__chevron {
+    .lang-dropdown[data-open="true"] .lang-trigger__chevron {
       transform: rotate(180deg);
+    }
+
+    .lang-menu[hidden] {
+      display: none !important;
     }
 
     .lang-menu {
@@ -444,7 +450,7 @@
       box-shadow: var(--shadow-lg);
       display: grid;
       gap: 4px;
-      z-index: 20;
+      z-index: 1100;
     }
 
     .lang-btn.lang-option {
@@ -662,7 +668,7 @@
     }
 
     .section {
-      padding-block: var(--s-16);
+      padding-block: var(--s-10);
       max-width: 100%;
       overflow-x: hidden;
     }
@@ -713,7 +719,7 @@
 
     .hero__content {
       display: grid;
-      gap: var(--s-6);
+      gap: 15px;
       max-width: 100%;
       overflow-x: hidden;
     }
@@ -892,7 +898,7 @@
     .section-header {
       display: grid;
       gap: var(--s-3);
-      margin-block-end: var(--s-8);
+      margin-block-end: var(--s-6);
     }
 
     .section-title {
@@ -998,7 +1004,7 @@
 
     .triple-grid {
       display: grid;
-      gap: var(--s-4);
+      gap: var(--s-2);
     }
 
     .feature-card {
@@ -1183,8 +1189,8 @@
     }
 
     .tier-card--pro {
-      border-color: var(--accent-border);
-      box-shadow: 0 0 0 1px rgba(47,102,232,0.12), 0 18px 38px rgba(31, 79, 204, 0.18);
+      border-color: var(--border);
+      box-shadow: none;
     }
 
     .tier-card__head {
@@ -1203,7 +1209,7 @@
     }
 
     .tier-card__badge {
-      color: var(--accent);
+      color: var(--text);
       font-size: var(--t-body);
       font-weight: 800;
       letter-spacing: -0.02em;
@@ -1246,7 +1252,7 @@
 
     .pricing-features {
       display: grid;
-      gap: var(--s-3);
+      gap: var(--s-2);
       overflow: hidden;
       padding-inline: var(--s-5);
     }
@@ -1834,7 +1840,7 @@
       }
 
       .section {
-        padding-block: var(--s-20);
+        padding-block: var(--s-12);
       }
 
       .hero-orbit__image {
@@ -1857,7 +1863,7 @@
       .trust-panel__grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 14px;
+        gap: var(--s-3);
       }
 
       .trust-panel__grid .trust-card:last-child {
@@ -1876,7 +1882,7 @@
       }
 
       .section {
-        padding-block: var(--s-24);
+        padding-block: 56px;
       }
 
       .topbar__nav {
@@ -1967,6 +1973,573 @@
       z-index: 0;
       pointer-events: none;
     }
+  
+
+    /* ===============================
+       V2 Trust Orbit pixel refinement
+       CSS-only visual pass
+       =============================== */
+
+    :root {
+      --shadow-sm: 0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.04);
+      --shadow-md: 0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.06);
+      --shadow-lg: 0 10px 26px rgba(15,23,42,0.10), 0 24px 56px rgba(47,102,232,0.08);
+      --page-x: 24px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.16);
+        --shadow-md: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.25);
+        --shadow-lg: 0 16px 40px rgba(0,0,0,0.44), 0 28px 70px rgba(47,102,232,0.12);
+      }
+    }
+
+    [data-theme="dark"] {
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.16);
+      --shadow-md: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.25);
+      --shadow-lg: 0 16px 40px rgba(0,0,0,0.44), 0 28px 70px rgba(47,102,232,0.12);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 50% -10%, rgba(47,102,232,0.12), transparent 34%),
+        radial-gradient(circle at 100% 16%, rgba(42,171,238,0.10), transparent 26%),
+        linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 94%, #fff 6%) 100%);
+    }
+
+    [data-theme="dark"] body,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) body {
+        background:
+          radial-gradient(circle at 50% -8%, rgba(47,102,232,0.20), transparent 32%),
+          radial-gradient(circle at 100% 16%, rgba(42,171,238,0.10), transparent 25%),
+          linear-gradient(180deg, var(--bg) 0%, #070B18 100%);
+      }
+    }
+
+    .container {
+      width: min(100% - var(--page-x), 430px);
+    }
+
+    .topbar {
+      padding-block: 10px;
+      border-bottom-color: color-mix(in srgb, var(--border) 68%, transparent);
+    }
+
+    .topbar__row {
+      min-height: 48px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+    }
+
+    .brand-name {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.034em;
+    }
+
+    .nav-toggle,
+    .lang-dropdown > summary {
+      min-height: 40px;
+      border-color: color-mix(in srgb, var(--border) 86%, transparent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .page {
+      padding-block: 0 var(--s-12);
+    }
+
+    .section {
+      padding-block: var(--s-10);
+    }
+
+    .hero.section {
+      padding-block-start: var(--s-6);
+      padding-block-end: var(--s-8);
+    }
+
+    .hero__content {
+      gap: 15px;
+    }
+
+    .eyebrow {
+      min-height: 30px;
+      padding-inline: 12px;
+      font-size: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero__title {
+      font-size: clamp(35px, 9.8vw, 48px);
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.042em;
+      max-width: 10.5em;
+    }
+
+    .lead {
+      font-size: 15.5px;
+      line-height: 1.46;
+      letter-spacing: -0.025em;
+      max-width: 34em;
+    }
+
+    .hero-orbit {
+      margin-block: 0;
+      overflow: visible;
+    }
+
+    .hero-orbit::before {
+      content: "";
+      position: absolute;
+      inset: 50% 50%;
+      width: min(92vw, 430px);
+      height: min(72vw, 340px);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center,
+        rgba(47,102,232,0.12) 0%,
+        rgba(42,171,238,0.07) 38%,
+        transparent 72%);
+      filter: blur(32px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-orbit__image {
+      width: min(100%, 350px);
+      max-width: 350px;
+      margin-inline: auto;
+      transform: translateZ(0);
+      filter: drop-shadow(0 22px 44px rgba(31,79,204,0.20));
+      -webkit-mask: radial-gradient(ellipse 60% 60% at center, #000 60%, transparent 80%);
+              mask: radial-gradient(ellipse 60% 60% at center, #000 60%, transparent 80%);
+    }
+
+    .hero__actions,
+    .final-actions {
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 58px;
+      padding-inline: 20px;
+      border-radius: 16px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .button--primary {
+      background: linear-gradient(180deg, #4E82FF 0%, #2462F2 52%, #1F4FCC 100%);
+      box-shadow: 0 14px 30px rgba(47,102,232,0.30), inset 0 1px 0 rgba(255,255,255,0.28);
+    }
+
+    .button--secondary {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      box-shadow: 0 1px 2px rgba(15,23,42,0.03);
+    }
+
+    [data-theme="dark"] .button--secondary {
+      color: #DCE7FF;
+      background: rgba(255,255,255,0.02);
+      border-color: rgba(91,135,255,0.42);
+    }
+
+    .strip-card,
+    .feature-card,
+    .step-card__panel,
+    .pricing-feature,
+    .trust-card,
+    .tier-card,
+    .role-mini-card,
+    .final-panel,
+    .legacy-form__shell {
+      box-shadow: var(--shadow-md);
+    }
+
+    .strip-card {
+      padding: 14px 16px;
+      border-radius: 20px;
+      margin-block-start: 18px;
+    }
+
+    .messenger-badge {
+      width: 42px;
+      height: 42px;
+    }
+
+    .section-header {
+      gap: 8px;
+      margin-block-end: var(--s-6);
+    }
+
+    .section-title,
+    .trust-lead .section-title {
+      font-size: clamp(30px, 8.2vw, 40px);
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .section-sub {
+      font-size: 15.5px;
+      line-height: 1.48;
+      letter-spacing: -0.025em;
+    }
+
+    .stepper {
+      gap: 12px;
+      margin-block-end: 20px;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      inset-block: 22px;
+      inset-inline-start: 21px;
+      border-inline-start: 2px dashed color-mix(in srgb, var(--accent) 34%, transparent);
+      z-index: 0;
+    }
+
+    .step-card:not(:last-child)::after {
+      display: none;
+    }
+
+    .step-card {
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 12px;
+      z-index: 1;
+    }
+
+    .step-card__index {
+      z-index: 2;
+      box-shadow: 0 12px 24px rgba(47,102,232,0.28), inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .step-card__panel {
+      min-height: 86px;
+      padding: 14px 14px 14px 16px;
+      border-radius: 20px;
+    }
+
+    .step-card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+    }
+
+    .step-card__title,
+    .feature-card__title,
+    .pricing-feature__title,
+    .trust-card__title,
+    .strip-card__title,
+    .price-strip__title {
+      font-weight: 800;
+      letter-spacing: -0.032em;
+    }
+
+    .triple-grid {
+      gap: var(--s-2);
+    }
+
+    .feature-card {
+      padding: 15px 16px;
+      border-radius: 20px;
+    }
+
+    .feature-card__icon,
+    .trust-card__icon,
+    .pricing-feature__icon,
+    .pricing-featured__icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+    }
+
+    .role-mini-grid {
+      gap: 12px;
+      margin-block-start: 14px;
+    }
+
+    .role-mini-card {
+      padding: 15px;
+      border-radius: 19px;
+    }
+
+    .role-mini-card__head {
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .role-mini-card__sub {
+      font-size: 12px;
+      line-height: 1.34;
+    }
+
+    .trust-panel,
+    .pricing-panel {
+      gap: 16px;
+    }
+
+    .trust-lead {
+      gap: 12px;
+      margin-block-end: 0;
+    }
+
+    .trust-lead__icon {
+      width: 38px;
+      height: 38px;
+    }
+
+    .trust-panel__grid {
+      display: grid;
+      gap: var(--s-2);
+    }
+
+    .trust-card {
+      padding: 16px;
+      border-radius: 20px;
+      align-items: center;
+    }
+
+    .trust-footer {
+      padding-block-start: 0;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .tier-grid {
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .tier-card {
+      padding: 14px 12px;
+      border-radius: 22px;
+      gap: 12px;
+      min-width: 0;
+      align-content: start;
+      height: 100%;
+    }
+
+    .tier-card--pro {
+      border-color: var(--border);
+      box-shadow: none;
+    }
+
+    .tier-card__name {
+      font-size: 20px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .tier-card--pro .tier-card__name,
+    .tier-card__badge {
+      color: var(--text);
+    }
+
+    .tier-card__badge {
+      display: none;
+    }
+
+    .tier-list {
+      gap: 10px;
+    }
+
+    .tier-row {
+      display: grid;
+      grid-template-columns: minmax(46px, .82fr) minmax(0, 1fr);
+      align-items: baseline;
+      justify-content: initial;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .tier-row__period {
+      font-size: 11.5px;
+      line-height: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tier-row__price {
+      justify-self: end;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .tier-row__price small {
+      font-size: .64em;
+      white-space: nowrap;
+    }
+
+    .pricing-features {
+      gap: var(--s-2);
+      padding-inline: 0;
+    }
+
+    .pricing-feature {
+      padding: 15px 16px;
+      border-radius: 18px;
+      gap: 13px;
+    }
+
+    .pricing-feature__icon {
+      width: 42px;
+      height: 42px;
+    }
+
+    .pricing-featured {
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px 18px;
+      border-radius: 24px;
+    }
+
+    .pricing-featured__title {
+      font-size: clamp(27px, 7.2vw, 36px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .final-panel {
+      padding: 26px 20px 24px;
+      border-radius: 28px;
+      gap: 16px;
+    }
+
+    .final-logo {
+      min-height: 90px;
+      margin-block-end: 0;
+    }
+
+    .final-logo__brand .brand-mark {
+      width: 50px;
+      height: 50px;
+    }
+
+    .final-panel__title {
+      font-size: clamp(34px, 8.8vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.044em;
+    }
+
+    .footer {
+      padding-block: 36px 22px;
+    }
+
+    .footer-nav,
+    .footer-subnav {
+      gap: 8px 20px;
+    }
+
+    .footer-subnav {
+      margin-block-end: 16px;
+    }
+
+    .footer-brand {
+      margin-block-end: 10px;
+    }
+
+    .footer-copy {
+      letter-spacing: 0.01em;
+    }
+
+    .legacy-form {
+      padding-block: 18px 0;
+    }
+
+    .legacy-form__shell {
+      border-radius: 30px 30px 0 0;
+      padding: 18px;
+      gap: 16px;
+    }
+
+    .field input[type="text"],
+    .field input[type="url"],
+    .field select,
+    #rewardValue {
+      min-height: 50px;
+      border-radius: 15px;
+    }
+
+    .role-card {
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .role-card .icon {
+      width: 42px;
+      height: 42px;
+    }
+
+    .seg {
+      min-height: 46px;
+      border-radius: 13px;
+    }
+
+    /* Visual-only role label fix, no JS touched */
+    body:has(input[name="role"][value="agent"]:checked) #nameLabel {
+      font-size: 0;
+      color: transparent;
+    }
+
+    body:has(input[name="role"][value="agent"]:checked) #nameLabel::after {
+      display: inline;
+      font-size: var(--t-small);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    html[lang="ru"] body:has(input[name="role"][value="agent"]:checked) #nameLabel::after { content: "Ваше имя"; }
+    html[lang="en"] body:has(input[name="role"][value="agent"]:checked) #nameLabel::after { content: "Your name"; }
+    html[lang="he"] body:has(input[name="role"][value="agent"]:checked) #nameLabel::after { content: "שמך"; }
+    html[lang="ar"] body:has(input[name="role"][value="agent"]:checked) #nameLabel::after { content: "اسمك"; }
+
+    @media (max-width: 359px) {
+      :root { --page-x: 18px; }
+      .hero__title { font-size: 32px; }
+      .lead { font-size: 14.5px; }
+      .button { min-height: 54px; }
+      .tier-card { padding-inline: 10px; }
+      .tier-row { grid-template-columns: minmax(42px, .78fr) minmax(0, 1fr); }
+      .tier-row__period { font-size: 10.5px; }
+      .tier-row__price { font-size: 14.5px; }
+    }
+
+    @media (min-width: 768px) {
+      .section { padding-block: var(--s-12); }
+      .hero.section { padding-block: var(--s-10) var(--s-12); }
+      .hero__content { gap: 18px; }
+      .hero-orbit { margin-block: 0; }
+      .hero-orbit__image { max-width: 410px; width: min(100%, 410px); }
+      .section-header { margin-block-end: var(--s-6); }
+      .pricing-features { grid-template-columns: 1fr; }
+      .tier-card { padding: 18px; }
+      .tier-card__name { font-size: 24px; }
+      .tier-row__period { font-size: 13px; }
+      .tier-row__price { font-size: 20px; }
+    }
+
+    @media (min-width: 1024px) {
+      .container,
+      .legacy-form__shell {
+        width: min(100% - 56px, 760px);
+      }
+      .section { padding-block: 56px; }
+      .hero.section { padding-block-start: var(--s-10); }
+      .hero__actions { max-width: 430px; }
+      .tier-card { padding: 20px; }
+      .pricing-features { grid-template-columns: 1fr 1fr; }
+      .trust-panel__grid { gap: var(--s-3); }
+    }
+
   </style>
 </head>
 <body>
@@ -1975,16 +2548,13 @@
     <div class="container">
       <div class="topbar__row">
         <a href="/" class="brand" aria-label="Win-Win Network">
-          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-            <defs>
-              <linearGradient id="wmark-grad-top" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#4A7CEC"/>
-                <stop offset="100%" stop-color="#1F4FCC"/>
-              </linearGradient>
-            </defs>
-            <circle cx="16" cy="16" r="15" fill="url(#wmark-grad-top)"/>
-            <path d="M8 11 L11 22 L14 14 L16 19 L18 14 L21 22 L24 11" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-          </svg>
+          <img src="favicon-192.png"
+               alt=""
+               class="brand-mark"
+               width="32"
+               height="32"
+               decoding="async"
+               loading="eager">
           <span class="brand-name">Win-Win Network</span>
         </a>
 
@@ -1993,24 +2563,23 @@
           <a href="#how-it-works" id="t_menuHowWorks_top">How it works</a>
           <a href="#pricing" id="t_menuPricing_top">Pricing</a>
           <a href="about.html" id="t_menuAbout_top">About</a>
-          <a href="#entry-links" id="t_menuSignIn_top">Sign in</a>
         </nav>
 
         <div class="topbar__actions">
-          <details class="lang-dropdown" id="langDropdown">
-            <summary aria-label="Choose language">
+          <div class="lang-dropdown" id="langDropdown" data-open="false">
+            <button type="button" class="lang-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose language">
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path class="icon-stroke" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/>
                 <path class="icon-stroke" d="M2 12h20"/>
                 <path class="icon-stroke" d="M12 2a15 15 0 0 1 0 20"/>
                 <path class="icon-stroke" d="M12 2a15 15 0 0 0 0 20"/>
               </svg>
-              <span class="lang-dropdown__code" id="desktopLangCode">RU</span>
-              <svg class="lang-dropdown__chevron" viewBox="0 0 20 20" aria-hidden="true">
+              <span class="lang-trigger__code" id="desktopLangCode">RU</span>
+              <svg class="lang-trigger__chevron" viewBox="0 0 20 20" aria-hidden="true">
                 <path class="icon-stroke" d="m5 7 5 5 5-5"/>
               </svg>
-            </summary>
-            <div class="lang-menu">
+            </button>
+            <div class="lang-menu" id="langMenu" role="listbox" hidden>
               <button type="button" class="lang-btn lang-option" data-lang="en">
                 <span class="lang-option__code">EN</span>
                 <span class="lang-option__name" id="t_langLabelEN_desktop">English</span>
@@ -2040,7 +2609,7 @@
                 </svg>
               </button>
             </div>
-          </details>
+          </div>
 
           <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-controls="navDrawer" aria-expanded="false">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2058,16 +2627,13 @@
     <div class="nav-drawer__panel">
       <div class="nav-drawer__head">
         <a href="/" class="brand" aria-label="Win-Win Network">
-          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-            <defs>
-              <linearGradient id="wmark-grad-drawer" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#4A7CEC"/>
-                <stop offset="100%" stop-color="#1F4FCC"/>
-              </linearGradient>
-            </defs>
-            <circle cx="16" cy="16" r="15" fill="url(#wmark-grad-drawer)"/>
-            <path d="M8 11 L11 22 L14 14 L16 19 L18 14 L21 22 L24 11" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-          </svg>
+          <img src="favicon-192.png"
+               alt=""
+               class="brand-mark"
+               width="32"
+               height="32"
+               decoding="async"
+               loading="eager">
           <span class="brand-name">Win-Win Network</span>
         </a>
         <button type="button" class="nav-drawer__close" aria-label="Close menu">
@@ -2113,13 +2679,6 @@
               <path class="icon-stroke" d="M11 12h1v4h1"/>
             </svg>
             <span id="t_menuAbout_drawer">About</span>
-          </a>
-          <a href="#entry-links" class="nav-link">
-            <svg class="nav-link__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path class="icon-stroke" d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
-              <path class="icon-stroke" d="M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
-            </svg>
-            <span id="t_menuSignIn_drawer">Sign in</span>
           </a>
         </nav>
 
@@ -2636,16 +3195,13 @@
               <circle cx="200" cy="28" r="2" fill="currentColor" fill-opacity=".58"/>
             </svg>
             <a href="/" class="brand final-logo__brand" aria-label="Win-Win Network">
-              <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-                <defs>
-                  <linearGradient id="wmark-grad-final" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#4A7CEC"/>
-                    <stop offset="100%" stop-color="#1F4FCC"/>
-                  </linearGradient>
-                </defs>
-                <circle cx="16" cy="16" r="15" fill="url(#wmark-grad-final)"/>
-                <path d="M8 11 L11 22 L14 14 L16 19 L18 14 L21 22 L24 11" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-              </svg>
+              <img src="favicon-192.png"
+                   alt=""
+                   class="brand-mark"
+                   width="54"
+                   height="54"
+                   decoding="async"
+                   loading="eager">
             </a>
           </div>
 
@@ -2687,23 +3243,19 @@
           </nav>
 
           <nav class="footer-subnav" aria-label="Footer secondary">
-            <a href="#entry-links" id="t_menuSignIn_footer">Sign in</a>
             <a href="about.html" id="t_menuTerms_footer">Terms</a>
             <a href="about.html" id="t_menuPrivacy_footer">Privacy</a>
           </nav>
 
           <div class="footer-brand">
             <a href="/" class="brand" aria-label="Win-Win Network">
-              <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-                <defs>
-                  <linearGradient id="wmark-grad-footer" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#4A7CEC"/>
-                    <stop offset="100%" stop-color="#1F4FCC"/>
-                  </linearGradient>
-                </defs>
-                <circle cx="16" cy="16" r="15" fill="url(#wmark-grad-footer)"/>
-                <path d="M8 11 L11 22 L14 14 L16 19 L18 14 L21 22 L24 11" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-              </svg>
+              <img src="favicon-192.png"
+                   alt=""
+                   class="brand-mark"
+                   width="28"
+                   height="28"
+                   decoding="async"
+                   loading="eager">
               <span class="brand-name">Win-Win Network</span>
             </a>
           </div>
@@ -2877,7 +3429,7 @@
       namePh: "Введите имя...",
       roleLabel: "Присоединиться как:",
       roleBizName: "Владелец бизнеса", roleBizDesc: "Хочу увеличить базу клиентов",
-      roleAgentName: "Довольный клиент", roleAgentDesc: "Хочу рекомендовать",
+      roleAgentName: "Рекомендатель", roleAgentDesc: "Хочу рекомендовать",
       nicheLabel: "Категория бизнеса", nicheDefault: "Выберите категорию...",
       niche_sub_label: "Специализация",
       subcat_hint: "(можно выбрать несколько)",
@@ -3859,24 +4411,34 @@
 
   // Language dropdown open/close
   const langDropdown = document.getElementById('langDropdown');
-  if (langDropdown) {
-    const summary = langDropdown.querySelector('summary');
-    if (summary) {
-      summary.addEventListener('click', function(e){
-        e.preventDefault();
-        langDropdown.open = !langDropdown.open;
-      });
+  const langTrigger = document.getElementById('langTrigger');
+  const langMenu = document.getElementById('langMenu');
+  if (langDropdown && langTrigger && langMenu) {
+    function openLangMenu(){
+      langMenu.removeAttribute('hidden');
+      langDropdown.setAttribute('data-open', 'true');
+      langTrigger.setAttribute('aria-expanded', 'true');
     }
-    langDropdown.querySelectorAll('.lang-btn').forEach(function(btn){
+    function closeLangMenu(){
+      langMenu.setAttribute('hidden', '');
+      langDropdown.setAttribute('data-open', 'false');
+      langTrigger.setAttribute('aria-expanded', 'false');
+    }
+    langTrigger.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (langMenu.hasAttribute('hidden')) openLangMenu();
+      else closeLangMenu();
+    });
+    langMenu.querySelectorAll('.lang-btn').forEach(function(btn){
       btn.addEventListener('click', function(){
-        langDropdown.open = false;
+        setTimeout(closeLangMenu, 0);
       });
     });
     document.addEventListener('click', function(e){
-      if (!langDropdown.contains(e.target)) langDropdown.open = false;
+      if (!langDropdown.contains(e.target)) closeLangMenu();
     });
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') langDropdown.open = false;
+      if (e.key === 'Escape') closeLangMenu();
     });
   }
 
