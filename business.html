@@ -2352,7 +2352,11 @@ function renderAll() {
   try { renderEditForm(); } catch(e) { console.error('[Biz] renderEditForm:', e); }
   try { updateReturnBtns(); } catch(e) { console.error('[Biz] updateReturnBtns:', e); }
   updateLockedNavState();
-  if (isBusinessLocked() && currentTab !== 'profile') {
+  // Hard locks (admin block, expired subscription pre-soft) → land on profile
+  // because that's the only working tab. Soft blocks (payment-debt, trial-
+  // expired) keep full navigation, so we leave currentTab alone — the user
+  // sees deals/stats/agents normally with just a banner on top.
+  if (isBusinessLocked() && !isSoftCatalogBlock() && currentTab !== 'profile') {
     const profileBtn = document.querySelector('.nav-item[data-tab="profile"]');
     switchTab('profile', profileBtn);
   }
