@@ -105,6 +105,38 @@
     .debt-mini-val { color:var(--text); font-weight:700; word-break:break-word; }
     .debt-empty { color:var(--text2); line-height:1.5; }
     .block-banner { background:rgba(235,87,87,0.1); border:1px solid rgba(235,87,87,0.3); border-radius:16px; padding:16px; margin-bottom:14px; box-shadow:var(--shadow); display:none; }
+
+    /* Compact, persistent banner for "hidden_payment" blocks (agent dispute).
+       Shown across ALL tabs without disabling navigation — user must keep
+       access to deals to press "I transferred" and unblock themselves. */
+    .payment-debt-banner {
+      display:none;
+      background:linear-gradient(135deg, rgba(235,87,87,0.18), rgba(235,87,87,0.08));
+      border:1px solid rgba(235,87,87,0.45);
+      border-radius:14px;
+      padding:12px 14px;
+      margin:0 0 14px 0;
+      box-shadow:0 2px 14px rgba(235,87,87,0.18);
+      animation: pdb-pulse 2.4s ease-in-out infinite;
+    }
+    .payment-debt-banner.show { display:block; }
+    .payment-debt-banner-title {
+      font-family:'Sora',sans-serif;
+      font-size:.92rem;
+      font-weight:800;
+      color:var(--red);
+      margin-bottom:6px;
+      line-height:1.3;
+    }
+    .payment-debt-banner-text {
+      font-size:.8rem;
+      line-height:1.45;
+      color:var(--text);
+    }
+    @keyframes pdb-pulse {
+      0%, 100% { box-shadow:0 2px 14px rgba(235,87,87,0.18); }
+      50%      { box-shadow:0 2px 22px rgba(235,87,87,0.42); }
+    }
     .trial-counter {
       display: none;
       background: linear-gradient(135deg, rgba(47,128,237,.10), rgba(86,204,242,.07));
@@ -546,6 +578,12 @@
       <button class="icon-btn" id="themeBtn" onclick="toggleTheme()"><i data-feather="sun"></i></button>
     </div>
   </header>
+
+  <!-- Persistent debt banner (shown across all tabs when block_reason="hidden_payment") -->
+  <div class="payment-debt-banner" id="paymentDebtBanner" style="margin:14px 16px 0;">
+    <div class="payment-debt-banner-title" id="paymentDebtBannerTitle">🚨 Ваш бизнес скрыт из каталога</div>
+    <div class="payment-debt-banner-text" id="paymentDebtBannerText">Агенты не могут вас рекомендовать. Закройте долг перед агентом и нажмите «Я перевёл» в активной сделке.</div>
+  </div>
 
   <!-- Views wrapper -->
   <div class="views-wrapper" id="viewsWrapper">
@@ -1577,11 +1615,20 @@ function isBusinessLocked() {
   return !!(bizData && (bizData.is_blocked || bizData.subscription === 'start_expired'));
 }
 
+// "Soft" block: agent dispute (block_reason="hidden_payment").
+// User stays in catalog-hidden state but keeps full LK access — they need
+// to reach the deal and press "I transferred" to clear the debt and unhide.
+function isPaymentDebtBlock() {
+  return !!(bizData && bizData.is_blocked && bizData.block_reason === 'hidden_payment');
+}
+
 function updateLockedNavState() {
   const navButtons = document.querySelectorAll('.nav-item');
   const isLocked = isBusinessLocked();
+  const isPaymentDebt = isPaymentDebtBlock();
   navButtons.forEach(btn => {
-    btn.style.opacity = isLocked && btn.dataset.tab !== 'profile' ? '0.4' : '';
+    // Payment-debt block keeps full nav available so the user can act.
+    btn.style.opacity = (isLocked && !isPaymentDebt && btn.dataset.tab !== 'profile') ? '0.4' : '';
   });
 }
 
@@ -1623,11 +1670,13 @@ document.querySelector('.app').addEventListener('touchend', e => {
 
 // ══ NAVIGATION ════════════════════════════════════════════════════════
 function switchTab(tabId, btnEl) {
-  // Block navigation when account is locked
+  // Block navigation when account is locked, EXCEPT for payment-debt blocks
+  // — those keep full access so the user can clear the debt themselves.
   const isLocked = bizData && (bizData.is_blocked ||
     bizData.subscription === 'start_expired');
+  const isPaymentDebt = isPaymentDebtBlock();
   const allowedWhenLocked = ['profile'];
-  if (isLocked && !allowedWhenLocked.includes(tabId)) {
+  if (isLocked && !isPaymentDebt && !allowedWhenLocked.includes(tabId)) {
     const lockMsg = {
       ru: 'Аккаунт заблокирован. Доступен только профиль и форма запроса.',
       he: 'החשבון חסום. זמינים רק הפרופיל וטופס הבקשה.',
@@ -1679,6 +1728,18 @@ function showBlockBannerIfNeeded(data) {
   const input = document.getElementById('blockAppealInput');
   const submitBtn = banner ? banner.querySelector('button') : null;
   if (!banner || !title || !reason || !input || !submitBtn) return;
+
+  // Payment-debt block (agent dispute) — show compact persistent banner
+  // instead of the big appeal form. User must clear the debt by pressing
+  // "I transferred" in the active deal; then the bot/api unblocks them.
+  const isPaymentDebt = !!(data && data.is_blocked && data.block_reason === 'hidden_payment');
+  if (isPaymentDebt) {
+    banner.style.display = 'none';
+    showPaymentDebtBanner(true);
+    return;
+  } else {
+    showPaymentDebtBanner(false);
+  }
 
   // Show trial-expired banner even if not admin-blocked
   if (data && data.subscription === 'start_expired' && !data.is_blocked) {
@@ -1760,6 +1821,32 @@ function showBlockBannerIfNeeded(data) {
     input.value = '';
     reason.textContent = '';
   }
+}
+
+// Compact red banner shown across all tabs while block_reason="hidden_payment".
+// Texts are lang-aware. The banner disappears as soon as the API stops
+// returning is_blocked=true (i.e. agent confirmed receipt → bot unblocks).
+function showPaymentDebtBanner(show) {
+  const el = document.getElementById('paymentDebtBanner');
+  const titleEl = document.getElementById('paymentDebtBannerTitle');
+  const textEl = document.getElementById('paymentDebtBannerText');
+  if (!el || !titleEl || !textEl) return;
+  if (!show) { el.classList.remove('show'); return; }
+  const titles = {
+    ru: '🚨 Ваш бизнес скрыт из каталога',
+    he: '🚨 העסק שלך מוסתר מהקטלוג',
+    en: '🚨 Your business is hidden from the catalog',
+    ar: '🚨 عملك مخفي من الكتالوج',
+  };
+  const texts = {
+    ru: 'Агенты не могут вас рекомендовать. Закройте долг перед агентом и нажмите «Я перевёл» в активной сделке.',
+    he: 'סוכנים לא יכולים להמליץ עליך. סגור את החוב מול הסוכן ולחץ "העברתי" בעסקה הפעילה.',
+    en: 'Agents cannot recommend you. Settle the debt with the agent and press "I transferred" in the active deal.',
+    ar: 'لا يمكن للوكلاء التوصية بك. سدد دينك للوكيل واضغط "حوّلت" في الصفقة النشطة.',
+  };
+  titleEl.textContent = titles[lang] || titles.ru;
+  textEl.textContent = texts[lang] || texts.ru;
+  el.classList.add('show');
 }
 
 async function submitBlockAppeal() {
