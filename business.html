@@ -1016,6 +1016,91 @@ const CAT_TR = {
 };
 function getCatName(name,l){ return (l==='ru'||!CAT_TR[name])?name:(CAT_TR[name][l]||name); }
 
+// Universal niche label: subcategory takes priority (more specific), then
+// category, then RU fallback. Used wherever a label may be either.
+function getNicheLabel(name, l) {
+  if (l === 'ru' || !name) return name;
+  if (typeof SUB_TR !== 'undefined' && SUB_TR[name] && SUB_TR[name][l]) return SUB_TR[name][l];
+  if (CAT_TR[name] && CAT_TR[name][l]) return CAT_TR[name][l];
+  return name;
+}
+
+const SUB_TR = {
+  "Косметология":{he:"קוסמטולוגיה",en:"Cosmetology",ar:"التجميل"},
+  "Инъекционная косметология":{he:"קוסמטולוגיה בהזרקות",en:"Injectable cosmetology",ar:"التجميل بالحقن"},
+  "Лазерная эпиляция":{he:"הסרת שיער בלייזר",en:"Laser hair removal",ar:"إزالة الشعر بالليزر"},
+  "Эпиляция":{he:"הסרת שיער",en:"Hair removal",ar:"إزالة الشعر"},
+  "Перманентный макияж":{he:"איפור קבוע",en:"Permanent makeup",ar:"المكياج الدائم"},
+  "Удаление тату и татуажа":{he:"הסרת קעקועים ואיפור קבוע",en:"Tattoo & PMU removal",ar:"إزالة الوشم والتاتو التجميلي"},
+  "Стилисты по волосам и барберы":{he:"מעצבי שיער וברברים",en:"Hair stylists & barbers",ar:"مصففو الشعر والحلاقون"},
+  "Ногтевой сервис":{he:"שירותי ציפורניים",en:"Nail services",ar:"خدمات الأظافر"},
+  "Брови и ресницы":{he:"גבות וריסים",en:"Brows & lashes",ar:"الحواجب والرموش"},
+  "Макияж":{he:"איפור",en:"Makeup",ar:"المكياج"},
+  "SPA и релакс-массаж":{he:"ספא ועיסוי מרגיע",en:"SPA & relaxation massage",ar:"السبا والمساج الاسترخائي"},
+  "Коррекция фигуры":{he:"עיצוב הגוף",en:"Body contouring",ar:"نحت الجسم"},
+  "Рестораны и кафе":{he:"מסעדות ובתי קפה",en:"Restaurants & cafes",ar:"المطاعم والمقاهي"},
+  "Доставка еды и рационы":{he:"משלוחי אוכל ותפריטים",en:"Food delivery & meal plans",ar:"توصيل الطعام والوجبات"},
+  "Авторская выпечка и десерты":{he:"מאפים וקינוחים בעבודת יד",en:"Artisan pastries & desserts",ar:"المخبوزات والحلويات الحرفية"},
+  "Бары и пабы":{he:"ברים ופאבים",en:"Bars & pubs",ar:"البارات والحانات"},
+  "Кейтеринг и банкеты":{he:"קייטרינג ואירועים",en:"Catering & banquets",ar:"التموين والولائم"},
+  "Одежда, обувь и аксессуары":{he:"ביגוד, נעליים ואקססוריז",en:"Clothing, shoes & accessories",ar:"الملابس والأحذية والإكسسوارات"},
+  "Мебель и товары для дома":{he:"ריהוט ומוצרי בית",en:"Furniture & home goods",ar:"الأثاث ومنتجات المنزل"},
+  "Ювелирные изделия":{he:"תכשיטים",en:"Jewelry",ar:"المجوهرات"},
+  "Цветы и подарки":{he:"פרחים ומתנות",en:"Flowers & gifts",ar:"الزهور والهدايا"},
+  "Косметика и парфюмерия":{he:"קוסמטיקה ובשמים",en:"Cosmetics & perfumes",ar:"مستحضرات التجميل والعطور"},
+  "Стоматология":{he:"רפואת שיניים",en:"Dentistry",ar:"طب الأسنان"},
+  "Психология и психотерапия":{he:"פסיכולוגיה ופסיכותרפיה",en:"Psychology & psychotherapy",ar:"علم النفس والعلاج النفسي"},
+  "Физиотерапия и остеопатия":{he:"פיזיותרפיה ואוסטאופתיה",en:"Physiotherapy & osteopathy",ar:"العلاج الطبيعي وتقويم العظام"},
+  "Диетология и нутрициология":{he:"דיאטולוגיה ותזונה",en:"Dietetics & nutrition",ar:"التغذية والحمية"},
+  "Альтернативная медицина":{he:"רפואה אלטרנטיבית",en:"Alternative medicine",ar:"الطب البديل"},
+  "Лечебный массаж":{he:"עיסוי טיפולי",en:"Therapeutic massage",ar:"المساج العلاجي"},
+  "Оптика и зрение":{he:"אופטיקה וראייה",en:"Optics & vision",ar:"البصريات والنظر"},
+  "Коммерческое право":{he:"משפט מסחרי",en:"Commercial law",ar:"القانون التجاري"},
+  "Недвижимость":{he:"נדל\"ן",en:"Real estate law",ar:"العقارات"},
+  "Семейное право":{he:"דיני משפחה",en:"Family law",ar:"قانون الأسرة"},
+  "Иммиграция и визы":{he:"הגירה ואשרות",en:"Immigration & visas",ar:"الهجرة والتأشيرات"},
+  "Уголовное право":{he:"משפט פלילי",en:"Criminal law",ar:"القانون الجنائي"},
+  "Травмы и Битуах Леуми":{he:"פציעות וביטוח לאומי",en:"Injuries & Bituach Leumi",ar:"الإصابات والتأمين الوطني"},
+  "Нотариусы и переводы":{he:"נוטריונים ותרגומים",en:"Notary & translations",ar:"التوثيق والترجمة"},
+  "Недвижимость (купля/продажа/аренда)":{he:"נדל\"ן (קנייה/מכירה/השכרה)",en:"Real estate (buy/sell/rent)",ar:"العقارات (شراء/بيع/إيجار)"},
+  "Ипотека и рефинансирование":{he:"משכנתאות ומיחזור",en:"Mortgages & refinancing",ar:"الرهن العقاري وإعادة التمويل"},
+  "Бухгалтерия и налоги":{he:"הנהלת חשבונות ומסים",en:"Accounting & taxes",ar:"المحاسبة والضرائب"},
+  "Страхование (все виды)":{he:"ביטוח (כל הסוגים)",en:"Insurance (all types)",ar:"التأمين (جميع الأنواع)"},
+  "Ремонт под ключ":{he:"שיפוץ מלא",en:"Turnkey renovation",ar:"التجديد الكامل"},
+  "Электрика":{he:"חשמל",en:"Electrical work",ar:"الأعمال الكهربائية"},
+  "Сантехника":{he:"אינסטלציה",en:"Plumbing",ar:"السباكة"},
+  "Кондиционеры":{he:"מיזוג אוויר",en:"Air conditioning",ar:"التكييف"},
+  "Клининг и химчистка":{he:"ניקיון וניקוי יבש",en:"Cleaning & dry cleaning",ar:"التنظيف والتنظيف الجاف"},
+  "Дизайн интерьера":{he:"עיצוב פנים",en:"Interior design",ar:"التصميم الداخلي"},
+  "Сборка и ремонт мебели":{he:"הרכבה ותיקון רהיטים",en:"Furniture assembly & repair",ar:"تركيب الأثاث وإصلاحه"},
+  "Ремонт и СТО":{he:"מוסך ותיקון",en:"Repair & service station",ar:"الإصلاح ومراكز الخدمة"},
+  "Детейлинг и мойка":{he:"דיטיילינג ושטיפת רכב",en:"Detailing & car wash",ar:"العناية بالسيارات والغسيل"},
+  "Автоподбор и продажа":{he:"איתור רכבים ומכירה",en:"Car selection & sales",ar:"اختيار السيارات وبيعها"},
+  "Аренда авто":{he:"השכרת רכב",en:"Car rental",ar:"تأجير السيارات"},
+  "Фото и видеосъемка":{he:"צילום וידאו וסטילס",en:"Photo & video",ar:"التصوير الفوتوغرافي والفيديو"},
+  "Ведущие и музыканты":{he:"מנחים ומוזיקאים",en:"Hosts & musicians",ar:"مقدمو الحفلات والموسيقيون"},
+  "Организация мероприятий":{he:"הפקת אירועים",en:"Event planning",ar:"تنظيم الفعاليات"},
+  "Декораторы":{he:"מעצבים ודקורטורים",en:"Decorators",ar:"الديكور"},
+  "Фитнес и тренеры":{he:"כושר ומאמנים",en:"Fitness & trainers",ar:"اللياقة والمدربون"},
+  "Репетиторы и курсы":{he:"מורים פרטיים וקורסים",en:"Tutors & courses",ar:"الدروس الخاصة والدورات"},
+  "Языковые школы":{he:"בתי ספר לשפות",en:"Language schools",ar:"مدارس اللغات"},
+  "Детские кружки и секции":{he:"חוגים ופעילויות לילדים",en:"Children's clubs & activities",ar:"أنشطة الأطفال والنوادي"},
+  "Ветеринария":{he:"וטרינריה",en:"Veterinary care",ar:"الطب البيطري"},
+  "Груминг":{he:"טיפוח חיות",en:"Grooming",ar:"العناية بالحيوانات"},
+  "Зоомагазины":{he:"חנויות חיות",en:"Pet stores",ar:"متاجر الحيوانات"},
+  "Передержка и выгул":{he:"פנסיון והליכה",en:"Pet boarding & walking",ar:"الإيواء وتمشية الحيوانات"},
+  "Турагентства":{he:"סוכנויות נסיעות",en:"Travel agencies",ar:"وكالات السفر"},
+  "Отели и апартаменты":{he:"מלונות ודירות",en:"Hotels & apartments",ar:"الفنادق والشقق"},
+  "Гиды и экскурсии":{he:"מדריכים וסיורים",en:"Guides & tours",ar:"المرشدون والجولات"},
+  "Маркетинг и SMM":{he:"שיווק ו-SMM",en:"Marketing & SMM",ar:"التسويق ووسائل التواصل"},
+  "Разработка сайтов и ПО":{he:"פיתוח אתרים ותוכנה",en:"Websites & software development",ar:"تطوير المواقع والبرمجيات"},
+  "Дизайн и брендинг":{he:"עיצוב ומיתוג",en:"Design & branding",ar:"التصميم والعلامة التجارية"},
+  "Консалтинг и коучинг":{he:"ייעוץ וקואצ'ינג",en:"Consulting & coaching",ar:"الاستشارات والتدريب"},
+  "Логистика и доставка":{he:"לוגיסטיקה ומשלוחים",en:"Logistics & delivery",ar:"اللوجستيات والتوصيل"},
+  "Типография":{he:"בית דפוס",en:"Printing & press",ar:"مطبعة"}
+};
+function getSubName(name,l){ return (l==="ru"||!SUB_TR[name])?name:(SUB_TR[name][l]||name); }
+
 // ══ I18N ══════════════════════════════════════════════════════════════
 const i18n = {
   ru:{
@@ -1622,13 +1707,27 @@ function isPaymentDebtBlock() {
   return !!(bizData && bizData.is_blocked && bizData.block_reason === 'hidden_payment');
 }
 
+// Trial expired: 5 free deals used up, business hidden from catalog
+// until they upgrade to start/pro. UX-symmetric to payment-debt block:
+// compact persistent banner + full navigation, no big modal, user can
+// freely browse stats/deals while making the upgrade decision.
+function isTrialExpiredBlock() {
+  return !!(bizData && bizData.subscription === 'start_expired' && !bizData.is_blocked);
+}
+
+// Combined: any "soft" block where we keep navigation open and just
+// show a thin red banner across the top.
+function isSoftCatalogBlock() {
+  return isPaymentDebtBlock() || isTrialExpiredBlock();
+}
+
 function updateLockedNavState() {
   const navButtons = document.querySelectorAll('.nav-item');
   const isLocked = isBusinessLocked();
-  const isPaymentDebt = isPaymentDebtBlock();
+  const isSoft = isSoftCatalogBlock();
   navButtons.forEach(btn => {
-    // Payment-debt block keeps full nav available so the user can act.
-    btn.style.opacity = (isLocked && !isPaymentDebt && btn.dataset.tab !== 'profile') ? '0.4' : '';
+    // Soft blocks keep full nav available so the user can act.
+    btn.style.opacity = (isLocked && !isSoft && btn.dataset.tab !== 'profile') ? '0.4' : '';
   });
 }
 
@@ -1670,13 +1769,14 @@ document.querySelector('.app').addEventListener('touchend', e => {
 
 // ══ NAVIGATION ════════════════════════════════════════════════════════
 function switchTab(tabId, btnEl) {
-  // Block navigation when account is locked, EXCEPT for payment-debt blocks
-  // — those keep full access so the user can clear the debt themselves.
+  // Block navigation when account is locked, EXCEPT for soft catalog blocks
+  // (payment-debt or trial-expired) — those keep full access so the user
+  // can clear the debt or upgrade their plan.
   const isLocked = bizData && (bizData.is_blocked ||
     bizData.subscription === 'start_expired');
-  const isPaymentDebt = isPaymentDebtBlock();
+  const isSoft = isSoftCatalogBlock();
   const allowedWhenLocked = ['profile'];
-  if (isLocked && !isPaymentDebt && !allowedWhenLocked.includes(tabId)) {
+  if (isLocked && !isSoft && !allowedWhenLocked.includes(tabId)) {
     const lockMsg = {
       ru: 'Аккаунт заблокирован. Доступен только профиль и форма запроса.',
       he: 'החשבון חסום. זמינים רק הפרופיל וטופס הבקשה.',
@@ -1729,19 +1829,21 @@ function showBlockBannerIfNeeded(data) {
   const submitBtn = banner ? banner.querySelector('button') : null;
   if (!banner || !title || !reason || !input || !submitBtn) return;
 
-  // Payment-debt block (agent dispute) — show compact persistent banner
-  // instead of the big appeal form. User must clear the debt by pressing
-  // "I transferred" in the active deal; then the bot/api unblocks them.
+  // Soft catalog blocks (payment-debt OR trial-expired) — show compact
+  // persistent banner instead of the big appeal/upgrade form.
+  // User must clear the debt or upgrade their plan; UI stays usable.
   const isPaymentDebt = !!(data && data.is_blocked && data.block_reason === 'hidden_payment');
-  if (isPaymentDebt) {
+  const isTrialExpired = !!(data && data.subscription === 'start_expired' && !data.is_blocked);
+  if (isPaymentDebt || isTrialExpired) {
     banner.style.display = 'none';
-    showPaymentDebtBanner(true);
+    showPaymentDebtBanner(true, isTrialExpired ? 'trial' : 'debt');
     return;
   } else {
     showPaymentDebtBanner(false);
   }
 
   // Show trial-expired banner even if not admin-blocked
+  // (legacy big banner — kept for cases where data.is_blocked is also true)
   if (data && data.subscription === 'start_expired' && !data.is_blocked) {
     const lang = window._lang || 'ru';
     const titles = {
@@ -1823,29 +1925,52 @@ function showBlockBannerIfNeeded(data) {
   }
 }
 
-// Compact red banner shown across all tabs while block_reason="hidden_payment".
-// Texts are lang-aware. The banner disappears as soon as the API stops
-// returning is_blocked=true (i.e. agent confirmed receipt → bot unblocks).
-function showPaymentDebtBanner(show) {
+// Compact red banner shown across all tabs for soft catalog blocks.
+// `variant` is either 'debt' (agent payment dispute) or 'trial'
+// (5 free deals exhausted). Texts are lang-aware. Banner disappears
+// as soon as the API stops returning the corresponding flag.
+function showPaymentDebtBanner(show, variant) {
   const el = document.getElementById('paymentDebtBanner');
   const titleEl = document.getElementById('paymentDebtBannerTitle');
   const textEl = document.getElementById('paymentDebtBannerText');
   if (!el || !titleEl || !textEl) return;
   if (!show) { el.classList.remove('show'); return; }
+
+  variant = variant || 'debt';
+
   const titles = {
-    ru: '🚨 Ваш бизнес скрыт из каталога',
-    he: '🚨 העסק שלך מוסתר מהקטלוג',
-    en: '🚨 Your business is hidden from the catalog',
-    ar: '🚨 عملك مخفي من الكتالوج',
+    debt: {
+      ru: '🚨 Ваш бизнес скрыт из каталога',
+      he: '🚨 העסק שלך מוסתר מהקטלוג',
+      en: '🚨 Your business is hidden from the catalog',
+      ar: '🚨 عملك مخفي من الكتالوج',
+    },
+    trial: {
+      ru: '🚨 Ваш бизнес скрыт из каталога',
+      he: '🚨 העסק שלך מוסתר מהקטלוג',
+      en: '🚨 Your business is hidden from the catalog',
+      ar: '🚨 عملك مخفي من الكتالوج',
+    },
   };
   const texts = {
-    ru: 'Агенты не могут вас рекомендовать. Закройте долг перед агентом и нажмите «Я перевёл» в активной сделке.',
-    he: 'סוכנים לא יכולים להמליץ עליך. סגור את החוב מול הסוכן ולחץ "העברתי" בעסקה הפעילה.',
-    en: 'Agents cannot recommend you. Settle the debt with the agent and press "I transferred" in the active deal.',
-    ar: 'لا يمكن للوكلاء التوصية بك. سدد دينك للوكيل واضغط "حوّلت" في الصفقة النشطة.',
+    debt: {
+      ru: 'Агенты не могут вас рекомендовать. Закройте долг перед агентом и нажмите «Я перевёл» в активной сделке.',
+      he: 'סוכנים לא יכולים להמליץ עליך. סגור את החוב מול הסוכן ולחץ "העברתי" בעסקה הפעילה.',
+      en: 'Agents cannot recommend you. Settle the debt with the agent and press "I transferred" in the active deal.',
+      ar: 'لا يمكن للوكلاء التوصية بك. سدد دينك للوكيل واضغط "حوّلت" في الصفقة النشطة.',
+    },
+    trial: {
+      ru: 'Перейдите на тариф Старт или PRO, чтобы вернуть свой бизнес в каталог.',
+      he: 'עברו לתוכנית Start או PRO כדי להחזיר את העסק לקטלוג.',
+      en: 'Switch to Start or PRO plan to return your business to the catalog.',
+      ar: 'انتقل إلى خطة Start أو PRO لإعادة عملك إلى الكتالوج.',
+    },
   };
-  titleEl.textContent = titles[lang] || titles.ru;
-  textEl.textContent = texts[lang] || texts.ru;
+
+  const t = titles[variant] || titles.debt;
+  const x = texts[variant] || texts.debt;
+  titleEl.textContent = t[lang] || t.ru;
+  textEl.textContent = x[lang] || x.ru;
   el.classList.add('show');
 }
 
@@ -1933,6 +2058,8 @@ function setLang(l) {
   populateCategories();
   switchTab(currentTab);
   if (bizData) renderAll();
+  // Re-render persistent banners with the new language.
+  if (bizData) showBlockBannerIfNeeded(bizData);
 }
 
 function applyI18n() {
@@ -3738,7 +3865,7 @@ function renderLeadersInline() {
     if (a.rank === 1) { badge = '🥇'; rankClass = 'lb-rank-1'; }
     else if (a.rank === 2) { badge = '🥈'; rankClass = 'lb-rank-2'; }
     else if (a.rank === 3) { badge = '🥉'; rankClass = 'lb-rank-3'; }
-    const niches = (a.niche_categories || []).map(n => `<span class="meta-pill">${(typeof getCatName==='function') ? getCatName(n,lang) : n}</span>`).join('');
+    const niches = (a.niche_categories || []).map(n => `<span class="meta-pill">${(typeof getNicheLabel==='function') ? getNicheLabel(n,lang) : n}</span>`).join('');
     let cta = `<button class="btn-primary btn-outline" onclick="switchTab('profile', null)">${L.rd_promo_btn}</button>`;
     if (isPro && a.wa_phone) {
       const waLink = 'https://wa.me/' + String(a.wa_phone).replace(/\D/g,'');
@@ -4851,12 +4978,12 @@ function renderProfile() {
     linkRow.style.display = 'none';
   }
 
-  // Niche as tags
+  // Niche as tags (use SUB_TR translations: niches in DB are subcategories like "Косметология")
   const nicheEl = document.getElementById('pr_niche');
   const niches  = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
   if (niches.length) {
     nicheEl.innerHTML = niches.map(n =>
-      `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${getCatName(n,lang)}</span>`
+      `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${getSubName(n,lang)}</span>`
     ).join(' ');
   } else {
     nicheEl.textContent = '—';
@@ -5501,7 +5628,7 @@ function renderLeaderboardUI() {
       style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent1);background:var(--accent1);color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;"
     >${L.filt_all || 'Все'}</button>`;
     allNiches.forEach(function(n) {
-      var label = (typeof getCatName === 'function') ? getCatName(n, lang) : n;
+      var label = (typeof getNicheLabel === 'function') ? getNicheLabel(n, lang) : n;
       html += `<button onclick="filterLbNiche('${n.replace(/'/g,"\'")}')" id="lbTab_${n.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')}"
         style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;"
       >${label}</button>`;
@@ -5556,7 +5683,7 @@ function buildLbAgents(agents, isPro, curr, L, nicheFilter) {
     }
 
     var niches = (a.niche_categories || []).map(function(n) {
-      return `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.25);color:var(--accent1);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:2px 2px 0 0;">${(typeof getCatName==='function')?getCatName(n,lang):n}</span>`;
+      return `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.25);color:var(--accent1);border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:700;margin:2px 2px 0 0;">${(typeof getNicheLabel==='function')?getNicheLabel(n,lang):n}</span>`;
     }).join('');
 
     return `<div style="background:var(--surface);border-radius:14px;padding:12px 14px;border:1px solid var(--border);">
