@@ -671,17 +671,18 @@
       flex: 1;
       overflow: hidden;
       position: relative; z-index: 2;
-      display: flex;
     }
     .welcome-track {
-      width: 300%;
       display: flex;
+      flex-wrap: nowrap;
+      width: 300vw;
+      height: 100%;
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
     }
     .welcome-slide {
-      width: 33.3333%;
-      flex: 0 0 33.3333%;
+      width: 100vw;
+      flex: 0 0 100vw;
       display: flex; flex-direction: column;
       align-items: center; justify-content: flex-start;
       padding: 8px 24px 0;
@@ -5054,10 +5055,8 @@ function welcomeGoTo(idx) {
   _welcomeIndex = Math.max(0, Math.min(2, idx));
   const track = document.getElementById('welcomeTrack');
   if (track) {
-    // Track is 300% wide; each slide takes 33.333% of track. To move slide i
-    // into view we shift the track left by (i / 3 * 100)% of its own width.
-    const shift = (_welcomeIndex / 3) * 100;
-    track.style.transform = `translateX(-${shift}%)`;
+    // Each slide is exactly one viewport wide. Shift in vw.
+    track.style.transform = `translateX(-${_welcomeIndex * 100}vw)`;
   }
   document.querySelectorAll('.welcome-dots .d').forEach((el, i) => {
     el.classList.toggle('active', i === _welcomeIndex);
