@@ -1269,6 +1269,92 @@
       font-weight: 600;
     }
 
+    /* ═══ Premium tier cards (matching GPT mockup) ═══════════════════════ */
+    .tier-card {
+      position: relative;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      transition: transform .2s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .tier-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .tier-card__icon {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(86,204,242,0.18), rgba(47,128,237,0.22));
+      color: #56CCF2;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .tier-card__icon svg {
+      width: 22px; height: 22px;
+    }
+    .tier-card__head {
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* PRO tier — glowing blue rim like the GPT mockup */
+    .tier-card--pro {
+      border: 1.5px solid #2F80ED;
+      box-shadow: 0 0 0 1px rgba(86,204,242,0.18),
+                  0 8px 32px rgba(47,128,237,0.25),
+                  inset 0 0 24px rgba(86,204,242,0.05);
+    }
+    .tier-card--pro:hover {
+      box-shadow: 0 0 0 1px rgba(86,204,242,0.3),
+                  0 14px 38px rgba(47,128,237,0.4),
+                  inset 0 0 32px rgba(86,204,242,0.08);
+    }
+    .tier-card--pro .tier-card__icon {
+      background: linear-gradient(135deg, #56CCF2, #2F80ED);
+      color: #FFFFFF;
+    }
+
+    /* "Popular" pill in the top-right corner of the PRO card */
+    .tier-card__popular {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #56CCF2, #2F80ED);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(47,128,237,0.4);
+      white-space: nowrap;
+      z-index: 2;
+    }
+    [dir="rtl"] .tier-card__popular {
+      right: auto;
+      left: 14px;
+    }
+
+    /* Bigger, more prominent prices like in the mockup */
+    .tier-row__price {
+      font-size: clamp(22px, 5vw, 28px);
+      color: var(--accent, #2F80ED);
+    }
+    .tier-row__price small {
+      font-size: 0.5em;
+      color: var(--text-2);
+      font-weight: 600;
+      margin-left: 4px;
+      vertical-align: 0.15em;
+    }
+    .tier-card--pro .tier-row__price {
+      color: #56CCF2;
+    }
+
+    /* Hide the old "PRO" text badge — replaced by glowing card border */
+    .tier-card__badge { display: none; }
+    /* ═══════════════════════════════════════════════════════════════════ */
+
     .pricing-features {
       display: grid;
       gap: var(--s-2);
@@ -3085,6 +3171,12 @@
           <div class="tier-grid">
             <article class="tier-card">
               <div class="tier-card__head">
+                <span class="tier-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
                 <h3 class="tier-card__name" id="t_tierStandard">Standard</h3>
               </div>
               <div class="tier-list">
@@ -3104,9 +3196,17 @@
             </article>
 
             <article class="tier-card tier-card--pro">
+              <span class="tier-card__popular" id="t_tierPopular">★ Popular</span>
               <div class="tier-card__head">
+                <span class="tier-card__icon tier-card__icon--pro" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 7l4 3 5-6 5 6 4-3-2 12H5L3 7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/>
+                    <circle cx="3" cy="7" r="1.2" fill="currentColor"/>
+                    <circle cx="21" cy="7" r="1.2" fill="currentColor"/>
+                    <circle cx="12" cy="4" r="1.2" fill="currentColor"/>
+                  </svg>
+                </span>
                 <h3 class="tier-card__name" id="t_tierPro">PRO</h3>
-                <span class="tier-card__badge">PRO</span>
               </div>
               <div class="tier-list">
                 <div class="tier-row">
@@ -3523,6 +3623,7 @@
       pricingFreeRec: "Рекомендатели — бесплатно",
       tierStandard: "Стандарт",
       tierPro: "PRO",
+      tierPopular: "★ Популярно",
       period1m: "1 месяц",
       period6m: "6 месяцев",
       period12m: "12 месяцев",
@@ -3645,6 +3746,7 @@
       pricingFreeRec: "Recommenders join free",
       tierStandard: "Standard",
       tierPro: "PRO",
+      tierPopular: "★ Popular",
       period1m: "1 month",
       period6m: "6 months",
       period12m: "12 months",
@@ -3767,6 +3869,7 @@
       pricingFreeRec: "ממליצים מצטרפים בחינם",
       tierStandard: "סטנדרט",
       tierPro: "PRO",
+      tierPopular: "★ פופולרי",
       period1m: "חודש",
       period6m: "6 חודשים",
       period12m: "12 חודשים",
@@ -3889,6 +3992,7 @@
       pricingFreeRec: "ينضم الموصون مجاناً",
       tierStandard: "ستاندرد",
       tierPro: "PRO",
+      tierPopular: "★ شائع",
       period1m: "شهر واحد",
       period6m: "6 أشهر",
       period12m: "12 شهراً",
@@ -4076,6 +4180,7 @@
     setText(['t_pricingFreeRec'], t.pricingFreeRec);
     setText(['t_tierStandard'], t.tierStandard);
     setText(['t_tierPro'], t.tierPro);
+    setText(['t_tierPopular'], t.tierPopular);
     setText(['t_period1m_standard', 't_period1m_pro'], t.period1m);
     setText(['t_period6m_standard', 't_period6m_pro'], t.period6m);
     setText(['t_period12m_standard', 't_period12m_pro'], t.period12m);
