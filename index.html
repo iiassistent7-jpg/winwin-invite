@@ -767,13 +767,20 @@
       z-index: 1;
       filter: drop-shadow(0 24px 48px rgba(31, 79, 204, 0.16));
     }
-    /* Theme-aware swap: show light variant by default, dark variant when
-       data-theme="dark" is set on <html>. */
+    /* Theme-aware swap: show light by default, dark when system theme is
+       dark OR when [data-theme="dark"] is explicitly set on <html>. */
     .hero-orbit__image--dark { display: none; }
     [data-theme="dark"] .hero-orbit__image--light { display: none; }
     [data-theme="dark"] .hero-orbit__image--dark  { display: block; }
     [data-theme="dark"] .hero-orbit__image--dark {
       filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .hero-orbit__image--light { display: none; }
+      :root:not([data-theme="light"]) .hero-orbit__image--dark  { display: block; }
+      :root:not([data-theme="light"]) .hero-orbit__image--dark  {
+        filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
+      }
     }
 
     .hero__actions,
