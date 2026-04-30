@@ -636,10 +636,13 @@
     /* ═══ Welcome carousel (first-visit onboarding) ═══════════════════════ */
     .welcome-overlay {
       position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg);
+      background: #0A1428; /* matches dark illustration background */
       display: none;
       flex-direction: column;
       overflow: hidden;
+    }
+    body:not(.brand-theme) .welcome-overlay {
+      background: #FFFFFF; /* matches light illustration background */
     }
     .welcome-overlay.show { display: flex; }
     .welcome-overlay::before {
