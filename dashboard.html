@@ -1566,7 +1566,7 @@ const i18n = {
     catalog_sub:"Выберите нишу, которой готовы делиться с уверенностью.",
     catalog_guide_title:"Как пользоваться каталогом",
     catalog_guide_text:"Сначала выберите категорию и поиск. Откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте приглашение ниже.",
-    catalog_intro:"Выберите из каталога бизнес, которого хотите рекомендовать своим друзьям и знакомым. Отправьте им ссылку или покажите QR-код. Если нужного бизнеса в каталоге нет — пригласите его в систему кнопкой ниже.",
+    catalog_intro:"Выберите из каталога бизнес, который хотите рекомендовать своим друзьям и знакомым. Отправьте им ссылку или покажите QR-код. Если вы не можете найти этот бизнес в каталоге — пригласите его в систему кнопкой ниже и следуйте инструкциям.",
     invite_btn_main:"Пригласите бизнес в Win-Win",
     history_title:"Мои рекомендации",
     history_sub:"Здесь видно, что в работе, что ждёт выплату и что уже завершилось.",
@@ -1807,7 +1807,7 @@ const CLEAN_I18N = {
     catalog_sub:"בחרו נישה שאתם מוכנים לשתף בביטחון.",
     catalog_guide_title:"איך משתמשים בקטלוג",
     catalog_guide_text:"קודם בוחרים קטגוריה וחיפוש. אחר כך פותחים כרטיס עסק כדי לשלוח המלצה. אם העסק לא נמצא, משתמשים בהזמנה הכחולה למטה.",
-    catalog_intro:"בחרו מהקטלוג עסק שאתם רוצים להמליץ עליו לחברים ומכרים. שלחו להם קישור או הראו קוד QR. אם העסק שאתם מחפשים לא בקטלוג — הזמינו אותו למערכת בלחיצה על הכפתור למטה.",
+    catalog_intro:"בחרו מהקטלוג עסק שאתם רוצים להמליץ עליו לחברים ומכרים. שלחו להם קישור או הראו קוד QR. אם אינכם מוצאים את העסק בקטלוג — הזמינו אותו למערכת בלחיצה על הכפתור למטה ופעלו לפי ההוראות.",
     invite_btn_main:"הזמינו עסק ל-Win-Win",
     history_title:"ההמלצות שלי",
     history_sub:"כאן רואים מה בתהליך, מה ממתין לתשלום ומה כבר הושלם.",
@@ -1972,7 +1972,7 @@ const CLEAN_I18N = {
     catalog_sub:"Choose a niche you feel confident sharing.",
     catalog_guide_title:"How to use the catalog",
     catalog_guide_text:"Start with category and search. Open a business card to send a recommendation. If the business is missing, use the invite block below.",
-    catalog_intro:"Pick a business from the catalog you want to recommend to your friends and acquaintances. Send them a link or show the QR code. If the business you need is not in the catalog yet — invite them to the system using the button below.",
+    catalog_intro:"Pick a business from the catalog you want to recommend to your friends and acquaintances. Send them a link or show the QR code. If you cannot find this business in the catalog — invite them to the system using the button below and follow the instructions.",
     invite_btn_main:"Invite a business to Win-Win",
     history_title:"My recommendations",
     history_sub:"This shows what is in progress, what is awaiting payout, and what is already completed.",
@@ -2137,7 +2137,7 @@ const CLEAN_I18N = {
     catalog_sub:"اختر مجالاً تشعر بالثقة في مشاركته.",
     catalog_guide_title:"كيف تستخدم الكتالوج",
     catalog_guide_text:"ابدأ بالفئة والبحث. افتح بطاقة العمل لإرسال التوصية. وإذا كان العمل غير موجود فاستخدم بطاقة الدعوة الزرقاء في الأسفل.",
-    catalog_intro:"اختر من الكتالوج عملاً تريد التوصية به لأصدقائك ومعارفك. أرسل لهم الرابط أو اعرض رمز QR. إذا لم يكن العمل المطلوب في الكتالوج — ادعه إلى النظام بالضغط على الزر أدناه.",
+    catalog_intro:"اختر من الكتالوج عملاً تريد التوصية به لأصدقائك ومعارفك. أرسل لهم الرابط أو اعرض رمز QR. إذا لم تجد هذا العمل في الكتالوج — ادعه إلى النظام بالضغط على الزر أدناه واتبع التعليمات.",
     invite_btn_main:"ادعُ عملاً إلى Win-Win",
     history_title:"توصياتي",
     history_sub:"هنا ترى ما هو قيد العمل وما ينتظر الدفع وما اكتمل بالفعل.",
@@ -4795,7 +4795,10 @@ function copyLink() {
 }
 
 function openInviteScreen() {
-    const link = `https://invite.winwinnetwork.pro/register.html?sender=${catalogAgentId}&lang=${lang}`;
+    // No &lang= — recipient's device language is detected on the landing
+    // (navigator.language), so they see it in their own language regardless
+    // of which language the inviting agent uses in the dashboard.
+    const link = `https://invite.winwinnetwork.pro/?ref=${catalogAgentId}`;
     document.getElementById('inviteLinkInput').value = link;
     const L = i18n[lang]||i18n.ru;
     const copyBtn = document.getElementById('inviteCopyBtn');

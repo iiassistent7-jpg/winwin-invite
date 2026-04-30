@@ -767,6 +767,14 @@
       z-index: 1;
       filter: drop-shadow(0 24px 48px rgba(31, 79, 204, 0.16));
     }
+    /* Theme-aware swap: show light variant by default, dark variant when
+       data-theme="dark" is set on <html>. */
+    .hero-orbit__image--dark { display: none; }
+    [data-theme="dark"] .hero-orbit__image--light { display: none; }
+    [data-theme="dark"] .hero-orbit__image--dark  { display: block; }
+    [data-theme="dark"] .hero-orbit__image--dark {
+      filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
+    }
 
     .hero__actions,
     .final-actions {
@@ -2716,9 +2724,15 @@
             <div class="hero-orbit">
               <img src="/trust-orbit.png"
                    alt="Win-Win Network — trust diagram"
-                   class="hero-orbit__image"
+                   class="hero-orbit__image hero-orbit__image--light"
                    loading="eager"
                    decoding="async">
+              <img src="/trust-orbit-dark.png"
+                   alt=""
+                   class="hero-orbit__image hero-orbit__image--dark"
+                   loading="eager"
+                   decoding="async"
+                   aria-hidden="true">
             </div>
 
             <div class="hero__actions">
