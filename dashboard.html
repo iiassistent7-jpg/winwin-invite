@@ -667,14 +667,21 @@
     }
     .welcome-skip:hover { color: var(--text); }
 
+    .welcome-track-clip {
+      flex: 1;
+      overflow: hidden;
+      position: relative; z-index: 2;
+      display: flex;
+    }
     .welcome-track {
-      flex: 1; overflow: hidden; position: relative; z-index: 2;
+      width: 300%;
       display: flex;
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
     }
     .welcome-slide {
-      flex: 0 0 100%;
+      width: 33.3333%;
+      flex: 0 0 33.3333%;
       display: flex; flex-direction: column;
       align-items: center; justify-content: flex-start;
       padding: 8px 24px 0;
@@ -837,6 +844,7 @@
       <button class="welcome-skip" id="welcomeSkipBtn" type="button">Пропустить</button>
     </div>
 
+    <div class="welcome-track-clip">
     <div class="welcome-track" id="welcomeTrack">
 
       <!-- Slide 1 -->
@@ -884,6 +892,7 @@
         <span class="welcome-trust-pill" id="wpill"></span>
       </section>
 
+    </div>
     </div>
 
     <div class="welcome-footer">
@@ -5045,10 +5054,10 @@ function welcomeGoTo(idx) {
   _welcomeIndex = Math.max(0, Math.min(2, idx));
   const track = document.getElementById('welcomeTrack');
   if (track) {
-    // Keep horizontal direction of the track itself in LTR even on RTL pages —
-    // RTL is handled per-slide inner content; the track always slides left
-    // to right which matches "next/back" muscle memory across all languages.
-    track.style.transform = `translateX(-${_welcomeIndex * 100}%)`;
+    // Track is 300% wide; each slide takes 33.333% of track. To move slide i
+    // into view we shift the track left by (i / 3 * 100)% of its own width.
+    const shift = (_welcomeIndex / 3) * 100;
+    track.style.transform = `translateX(-${shift}%)`;
   }
   document.querySelectorAll('.welcome-dots .d').forEach((el, i) => {
     el.classList.toggle('active', i === _welcomeIndex);
