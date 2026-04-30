@@ -22,8 +22,8 @@
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
-    html { overflow-x: hidden; }
-    body { background: var(--bg-1); color: #fff; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+    body { background: var(--bg-1); color: #fff; line-height: 1.6; scroll-behavior: smooth; }
     
     [dir="rtl"] { text-align: right; }
     
@@ -32,7 +32,8 @@
     .blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: rgba(108, 99, 255, 0.2); }
     .blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: rgba(0, 212, 170, 0.15); }
 
-    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 1; }
+    .container { width: 100%; max-width: 1100px; margin: 0 auto;
+      padding: 0 16px; position: relative; z-index: 1; box-sizing: border-box; }
 
     /* Шапка */
     .header { text-align: center; margin-bottom: 16px; padding-top: 24px; }
@@ -170,7 +171,6 @@
       .feature-list li { gap: 8px; font-size: 0.8rem; }
       .check-icon, .lock-icon { width: 16px; height: 16px; }
     }
-    /* Role switcher */
     .role-switcher { margin-bottom: 48px; }
     .role-tabs {
       display: grid;
@@ -222,15 +222,52 @@
     }
     .role-panel { display: none; }
     .role-panel.active { display: block; }
-    .role-panel-title { text-align: center; font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 900;
-      letter-spacing: -0.5px; margin-bottom: 20px; color: var(--accent-1); }
-    .role-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-    .role-step { background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; padding: 22px; }
-    .role-step-num { font-size: 2rem; font-weight: 900; color: var(--accent-1); line-height: 1; margin-bottom: 8px; }
-    .role-step-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .role-step-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
-    .role-panel-note { text-align: center; margin-top: 16px; font-size: 0.9rem; color: var(--text-muted);
-      font-style: italic; padding: 0 16px; }
+    .role-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .role-step {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px 16px;
+    }
+    .role-step-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent-1);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .role-step-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .role-step-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .role-panel-title {
+      text-align: center;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
+      color: var(--accent-1);
+    }
+    .role-panel-note {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 0 12px;
+    }
   </style>
 </head>
 <body>
@@ -274,7 +311,6 @@
         <button class="role-tab active" id="tabBiz" onclick="switchRoleTab('biz')"></button>
         <button class="role-tab" id="tabAgent" onclick="switchRoleTab('agent')"></button>
       </div>
-
       <div class="role-panel active" id="panelBiz">
         <div class="role-panel-title" id="t_biz_panel_title"></div>
         <div class="role-steps-grid">
@@ -286,7 +322,6 @@
         </div>
         <div class="role-panel-note" id="t_biz_note"></div>
       </div>
-
       <div class="role-panel" id="panelAgent">
         <div class="role-panel-title" id="t_agent_panel_title"></div>
         <div class="role-steps-grid">
@@ -314,7 +349,7 @@
       <div class="roles-grid">
         <div class="role-card">
           <div class="role-icon">🤝</div>
-          <h3 class="role-title" id="t_role_agent_t">Довольный клиент (Рекомендатель)</h3>
+          <h3 class="role-title" id="t_role_agent_t">Рекомендатель</h3>
           <div class="role-desc" id="t_role_agent_d"></div>
         </div>
 
@@ -443,7 +478,7 @@
         excl_title: "Это место не для всех",
         excl_text: "<p>Мы создали эту платформу исключительно для тех, кто обладает действительно качественным продуктом или сервисом.</p><p>Если вы делаете свою работу на 10/10, клиенты сами захотят вас рекомендовать.</p><p>Научите их это делать на этой платформе и они будут это делать с удовольствием.</p><p>Здесь только те, кого рекомендуют, посредственность здесь не задерживается.</p>",
         
-        role_agent_t: "Довольный клиент (Рекомендатель)",
+        role_agent_t: "Рекомендатель",
         role_agent_d: "<p>Знаете крутого специалиста?</p><p>Отправьте другу ссылку или покажите QR-код.</p><p>Когда сделка состоится, владелец бизнеса начислит вам бонус.</p><p>Вы можете забрать бонус себе, <span class='role-highlight'>сделать скидку-подарок другу</span> или отказаться от него, чтобы просто <span class='role-highlight'>поддержать бизнес</span>.</p><p>Это история про взаимопомощь.</p>",
         
         role_biz_t: "Владелец бизнеса",
@@ -497,7 +532,7 @@
         
         cta_title: "Станьте частью экосистемы",
         btn_join: "Присоединиться к Win-Win",
-        btn_back: "← Вернуться",
+        btn_back: "← Назад",
         tab_biz: "🏢\nДля бизнеса",
         tab_agent: "🤝\nРекомендовать",
         biz_panel_title: "Как это работает для бизнеса",
@@ -526,7 +561,7 @@
         agent_note: "Рекомендация остаётся вашей, а благодарность — под вашим контролем.",
         faq_title: "Частые вопросы",
         faq: [
-          { q: "Как сделать рекомендацию?", a: "Вы выбираете в каталоге бизнес, который хотите порекомендовать другу или другому бизнесу, копируете ссылку и отправляете её. Если человек рядом, можно просто показать ему QR-код. Когда человек переходит по вашей ссылке и становится новым клиентом, рекомендация фиксируется в системе, а дальше вы следите за её статусом в личном кабинете." },
+          { q: "Как сделать рекомендацию?", a: "Вы выбираете в каталоге бизнес, который хотите порекомендовать другу или другому бизнесу, копируете ссылку и отправляете её. Если человек рядом, можно просто показать ему QR-код. Когда он переходит по вашей ссылке и становится новым клиентом, рекомендация фиксируется в системе, а дальше вы следите за её статусом в личном кабинете." },
           { q: "Когда и как я получу бонус?", a: "Бонус появляется только после того, как новый клиент реально пришёл и оплатил услугу. Бизнес переводит его вам напрямую тем способом, который указан у него в карточке. Например: сделка 1000₪, бонус 8% — вы получаете 80₪." },
           { q: "Кто устанавливает размер и форму вознаграждения?", a: "Размер и формат вознаграждения бизнес устанавливает заранее сам. Это может быть процент от сделки, фиксированная сумма или другой понятный вариант. Вы видите эти условия до рекомендации и заранее понимаете, за что и в каком формате вас могут отблагодарить." },
           { q: "Что можно сделать с бонусом от бизнеса?", a: "После успешной сделки вы сами решаете, что делать с благодарностью. Можно забрать бонус себе, подарить его клиенту как скидку, либо поддержать бизнес и отказаться от выплаты. Решение остаётся за вами." },
@@ -548,7 +583,7 @@
         mission_text: "<p>Our mission is to give a voice to true professionals.</p><p>In a world where ratings are manipulated and ads cost a fortune, we return value to the most sincere format: human-to-human recommendation.</p><p>No cold sales.</p><p>Just an honest Win-Win.</p>",
         excl_title: "This place is not for everyone",
         excl_text: "<p>We created this platform exclusively for those with a truly high-quality product or service.</p><p>If you do your job 10/10, clients will want to recommend you.</p><p>Teach them to do it here, and they will do it gladly.</p><p>Mediocrity doesn't last here.</p>",
-        role_agent_t: "Happy Client (Referrer)",
+        role_agent_t: "Recommender",
         role_agent_d: "<p>Know a great specialist?</p><p>Send a friend a link or show a QR code.</p><p>When the deal happens, the business owner will reward you.</p><p>You can keep the bonus, <span class='role-highlight'>give it as a discount to a friend</span>, or decline it just to <span class='role-highlight'>support the business</span>.</p><p>It's a story of mutual help.</p>",
         role_biz_t: "Business Owner",
         role_biz_d: "<p>Complement your ad channels with the most powerful tool — digitized, transparent word-of-mouth.</p><p>In Win-Win, loyal clients become ambassadors.</p><p>You give a bonus or gift <span class='role-highlight'>only for a successfully closed deal</span> and set the reward yourself.</p>",
@@ -595,7 +630,7 @@
         
         cta_title: "Join the ecosystem",
         btn_join: "Join Win-Win",
-        btn_back: "← Return",
+        btn_back: "← Back",
         tab_biz: "🏢\nFor business",
         tab_agent: "🤝\nRecommend",
         biz_panel_title: "How it works for businesses",
@@ -647,7 +682,7 @@
         excl_title: "המקום הזה אינו לכולם",
         excl_text: "<p>הפלטפורמה נוצרה אך ורק עבור בעלי שירות או מוצר איכותי באמת.</p><p>אם העבודה שלך היא 10/10, הלקוחות ירצו להמליץ עליך בעצמם.</p><p>למדו אותם לעשות זאת כאן והם יעשו זאת בשמחה.</p><p>בינוניות לא מחזיקה כאן מעמד.</p>",
         
-        role_agent_t: "לקוח מרוצה (ממליץ)",
+        role_agent_t: "ממליץ",
         role_agent_d: "<p>מכירים מומחה?</p><p>שלחו קישור או הראו קוד QR.</p><p>כשהעסקה נסגרת, בעל העסק מעניק לכם הטבה על המלצה.</p><p>אפשר לשמור את ההטבה, <span class='role-highlight'>להעניק הנחה לחבר</span> או לוותר כדי <span class='role-highlight'>לתמוך בעסק</span>.</p><p>זה סיפור על עזרה הדדית.</p>",
         
         role_biz_t: "בעל עסק",
@@ -701,7 +736,7 @@
         
         cta_title: "הפכו לחלק מהמערכת האקולוגית",
         btn_join: "הצטרף ל-Win-Win",
-        btn_back: "→ חזרה למערכת",
+        btn_back: "→ חזרה",
         tab_biz: "🏢\nלעסקים",
         tab_agent: "🤝\nלהמליץ",
         biz_panel_title: "איך זה עובד לעסקים",
@@ -752,7 +787,7 @@
         mission_text: "<p>مهمتنا إعطاء صوت للمحترفين الحقيقيين.</p><p>في عالم يتم فيه التلاعب بالتقييمات، نعيد القيمة للتوصية الصادقة من إنسان لإنسان.</p><p>لا مبيعات باردة.</p><p>فقط Win-Win عادل.</p>",
         excl_title: "هذا المكان ليس للجميع",
         excl_text: "<p>تم إنشاء المنصة حصريًا لأصحاب المنتجات أو الخدمات العالية الجودة.</p><p>إذا كان عملك 10/10، سيرغب العملاء في التوصية بك.</p><p>علّمهم القيام بذلك هنا، وسيفعلون ذلك بكل سرور.</p><p>لا مكان للرداءة هنا.</p>",
-        role_agent_t: "عميل راضٍ (موصي)",
+        role_agent_t: "موصٍ",
         role_agent_d: "<p>تعرف خبيراً؟</p><p>أرسل رابطاً أو اعرض رمز QR.</p><p>عند إتمام الصفقة، سيكافئك صاحب العمل.</p><p>يمكنك أخذ المكافأة، <span class='role-highlight'>أو إهداؤها كخصم لصديق</span>، أو التنازل <span class='role-highlight'>لدعم العمل</span>.</p><p>إنها قصة مساعدة متبادلة.</p>",
         role_biz_t: "صاحب العمل",
         role_biz_d: "<p>أكمل إعلاناتك بأقوى أداة — التسويق الشفهي الرقمي والشفاف.</p><p>يصبح عملاؤك سفراء لك في Win-Win.</p><p>تقدم مكافأة أو هدية <span class='role-highlight'>فقط عند إغلاق الصفقة بنجاح</span>، وتحدد أنت قيمتها.</p>",
@@ -799,7 +834,7 @@
         
         cta_title: "كن جزءاً من النظام البيئي",
         btn_join: "الانضمام إلى Win-Win",
-        btn_back: "→ رجوع للنظام",
+        btn_back: "→ رجوع",
         tab_biz: "🏢\nللأعمال",
         tab_agent: "🤝\nللتوصية",
         biz_panel_title: "كيف يعمل النظام للأعمال",
@@ -968,9 +1003,11 @@
       const joinBtn = document.getElementById('t_btn_join');
       const joinTitle = document.getElementById('t_cta_title');
       if (backBtn) backBtn.textContent = L.btn_back;
-      if (backWrap) backWrap.style.display = 'block';
-      if (joinBtn) joinBtn.style.display = 'none';
-      if (joinTitle) joinTitle.style.display = 'none';
+      const urlP = new URLSearchParams(window.location.search);
+      const isBack = urlP.get('back') === '1';
+      if (backWrap) backWrap.style.display = isBack ? 'block' : 'none';
+      if (joinBtn) joinBtn.style.display = isBack ? 'none' : '';
+      if (joinTitle) joinTitle.style.display = isBack ? 'none' : '';
     }
     
     // Парсим URL и устанавливаем нужный язык (по умолчанию русский)
