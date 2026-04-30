@@ -324,6 +324,36 @@
         
         .btn-invite-special { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; border: none; box-shadow: 0 6px 20px rgba(47,128,237,0.25); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem;}
 
+        /* Catalog intro paragraph (above invite-CTA) */
+        .catalog-intro {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text2);
+            padding: 4px 4px 0;
+            margin: 4px 0 18px;
+        }
+
+        /* Big CTA "Пригласите бизнес в Win-Win" — matches welcome carousel style */
+        .btn-invite-cta {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 0 0 20px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);
+            color: #fff;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            line-height: 1.3;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(47,128,237,0.35);
+            transition: transform .15s ease, box-shadow .18s ease;
+        }
+        .btn-invite-cta:hover  { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(47,128,237,0.45); }
+        .btn-invite-cta:active { transform: translateY(0) scale(.98); }
+
         .empty-state { text-align:center; padding:32px 16px; }
         .empty-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
         .empty-sub { font-size:.82rem; color:var(--text2); line-height:1.5; }
@@ -1002,31 +1032,19 @@
         </div>
 
         <div id="view-catalog" class="view">
-            <h2 class="sec-title" style="margin-top:4px;" id="t_catalog_title">Каталог бизнесов</h2>
-            <div class="section-caption" id="t_catalog_sub">Выберите нишу, которой готовы делиться с уверенностью.</div>
-            
+            <div class="catalog-intro" id="t_catalog_intro">Выберите из каталога бизнес, которого хотите рекомендовать своим друзьям и знакомым. Отправьте им ссылку или покажите QR-код. Если нужного бизнеса в каталоге нет — пригласите его в систему кнопкой ниже.</div>
+
+            <button class="btn-invite-cta" onclick="openInviteScreen()">
+                <span id="t_invite_btn_main">Пригласите бизнес в Win-Win</span>
+            </button>
+
+            <div class="cat-filters" id="catFilters" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()">
+                </div>
+
             <div class="cat-search">
                 <i data-feather="search" class="cat-search-icon" style="width:18px;height:18px;"></i>
                 <input type="text" id="catSearch" placeholder="Поиск бизнеса или услуги..." oninput="renderCatalog()">
             </div>
-
-            <div class="catalog-guide">
-                <div class="catalog-guide-title" id="t_catalog_guide_title">Как пользоваться каталогом</div>
-                <div class="catalog-guide-text" id="t_catalog_guide_text">Сначала выберите категорию и поиск. Откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте приглашение ниже.</div>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <button class="btn-primary btn-invite-special" onclick="openInviteScreen()">
-                    <div style="line-height:1.4;">
-                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_1">Если нужного бизнеса нет,</span><br>
-                        <span style="font-weight:500; font-size:0.8rem; text-transform:none;" id="t_invite_btn_2">и вы хотите его рекомендовать,</span><br>
-                        <span style="font-size:0.95rem; font-weight:800;" id="t_invite_btn_3">пригласите его в Win-Win</span>
-                    </div>
-                </button>
-            </div>
-            
-            <div class="cat-filters" id="catFilters" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()">
-                </div>
 
             <div class="cat-grid" id="catGrid">
                 <div class="card" style="text-align:center;color:var(--text2);padding:32px;">Загрузка каталога...</div>
@@ -1548,6 +1566,8 @@ const i18n = {
     catalog_sub:"Выберите нишу, которой готовы делиться с уверенностью.",
     catalog_guide_title:"Как пользоваться каталогом",
     catalog_guide_text:"Сначала выберите категорию и поиск. Откройте карточку бизнеса, чтобы отправить рекомендацию. Если нужного бизнеса нет, используйте приглашение ниже.",
+    catalog_intro:"Выберите из каталога бизнес, которого хотите рекомендовать своим друзьям и знакомым. Отправьте им ссылку или покажите QR-код. Если нужного бизнеса в каталоге нет — пригласите его в систему кнопкой ниже.",
+    invite_btn_main:"Пригласите бизнес в Win-Win",
     history_title:"Мои рекомендации",
     history_sub:"Здесь видно, что в работе, что ждёт выплату и что уже завершилось.",
     active_sec:"В работе",
@@ -1787,6 +1807,8 @@ const CLEAN_I18N = {
     catalog_sub:"בחרו נישה שאתם מוכנים לשתף בביטחון.",
     catalog_guide_title:"איך משתמשים בקטלוג",
     catalog_guide_text:"קודם בוחרים קטגוריה וחיפוש. אחר כך פותחים כרטיס עסק כדי לשלוח המלצה. אם העסק לא נמצא, משתמשים בהזמנה הכחולה למטה.",
+    catalog_intro:"בחרו מהקטלוג עסק שאתם רוצים להמליץ עליו לחברים ומכרים. שלחו להם קישור או הראו קוד QR. אם העסק שאתם מחפשים לא בקטלוג — הזמינו אותו למערכת בלחיצה על הכפתור למטה.",
+    invite_btn_main:"הזמינו עסק ל-Win-Win",
     history_title:"ההמלצות שלי",
     history_sub:"כאן רואים מה בתהליך, מה ממתין לתשלום ומה כבר הושלם.",
     active_sec:"בתהליך",
@@ -1950,6 +1972,8 @@ const CLEAN_I18N = {
     catalog_sub:"Choose a niche you feel confident sharing.",
     catalog_guide_title:"How to use the catalog",
     catalog_guide_text:"Start with category and search. Open a business card to send a recommendation. If the business is missing, use the invite block below.",
+    catalog_intro:"Pick a business from the catalog you want to recommend to your friends and acquaintances. Send them a link or show the QR code. If the business you need is not in the catalog yet — invite them to the system using the button below.",
+    invite_btn_main:"Invite a business to Win-Win",
     history_title:"My recommendations",
     history_sub:"This shows what is in progress, what is awaiting payout, and what is already completed.",
     active_sec:"In work",
@@ -2113,6 +2137,8 @@ const CLEAN_I18N = {
     catalog_sub:"اختر مجالاً تشعر بالثقة في مشاركته.",
     catalog_guide_title:"كيف تستخدم الكتالوج",
     catalog_guide_text:"ابدأ بالفئة والبحث. افتح بطاقة العمل لإرسال التوصية. وإذا كان العمل غير موجود فاستخدم بطاقة الدعوة الزرقاء في الأسفل.",
+    catalog_intro:"اختر من الكتالوج عملاً تريد التوصية به لأصدقائك ومعارفك. أرسل لهم الرابط أو اعرض رمز QR. إذا لم يكن العمل المطلوب في الكتالوج — ادعه إلى النظام بالضغط على الزر أدناه.",
+    invite_btn_main:"ادعُ عملاً إلى Win-Win",
     history_title:"توصياتي",
     history_sub:"هنا ترى ما هو قيد العمل وما ينتظر الدفع وما اكتمل بالفعل.",
     active_sec:"قيد العمل",
@@ -2854,6 +2880,7 @@ function applyLang() {
         't_pay_cash':'pay_cash','t_pay_bank':'pay_bank','t_pay_cash_reg':'pay_cash','t_pay_bank_reg':'pay_bank','t_lb_title':'lb_title','t_lb_widget_title':'lb_widget_title',
         't_lb_widget_sub':'lb_widget_sub','t_btn_lb_profile_1':'lb_profile_btn','t_btn_lb_profile_2':'lb_profile_btn',
         't_invite_btn_1':'invite_btn_1','t_invite_btn_2':'invite_btn_2','t_invite_btn_3':'invite_btn_3',
+        't_catalog_intro':'catalog_intro','t_invite_btn_main':'invite_btn_main',
         't_invite_title':'invite_title','t_invite_desc':'invite_desc','t_copy_link_inv':'copy_link','t_scan_qr_inv':'scan_qr',
         't_rew_type':'rew_type', 't_rew_pct':'rew_pct', 't_rew_fix':'rew_fix', 't_rew_gift':'rew_gift', 't_biz_reg_comm_lbl': 'biz_reg_comm_lbl',
         't_btn_cancel_prof': 'btn_back', 't_copy_link': 'copy_link',
