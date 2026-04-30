@@ -632,10 +632,262 @@
     .deal-manage-btn { width:100%; margin-top:14px; padding:14px; border-radius:14px; border:none; background:linear-gradient(135deg,#56CCF2 0%,#2F80ED 100%); color:#fff; font-size:.92rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(47,128,237,.32); transition:transform .12s ease, box-shadow .18s ease; }
     .deal-manage-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(47,128,237,.42); }
     .deal-manage-btn:active { transform:translateY(0) scale(.98); }
+
+    /* ═══ Welcome carousel (first-visit onboarding) ═══════════════════════ */
+    .welcome-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .welcome-overlay.show { display: flex; }
+    .welcome-overlay::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(47,128,237,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .welcome-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      position: relative; z-index: 2;
+    }
+    .welcome-brand {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800; font-size: 1.05rem;
+      color: var(--accent1);
+      letter-spacing: -0.01em;
+    }
+    .welcome-skip {
+      background: none; border: none;
+      color: var(--text2); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .welcome-skip:hover { color: var(--text); }
+
+    .welcome-track {
+      flex: 1; overflow: hidden; position: relative; z-index: 2;
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+    .welcome-slide {
+      flex: 0 0 100%;
+      display: flex; flex-direction: column;
+      align-items: center;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+    .welcome-illustration {
+      width: 100%; max-width: 420px;
+      aspect-ratio: 1 / 1;
+      margin: 4px auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .welcome-illustration img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+    /* Theme-aware image swap.
+       brand-theme class means dark (default); absence of it means light. */
+    .welcome-illustration .img-light { display: none; }
+    .welcome-illustration .img-dark  { display: block; }
+    body:not(.brand-theme) .welcome-illustration .img-light { display: block; }
+    body:not(.brand-theme) .welcome-illustration .img-dark  { display: none; }
+
+    .welcome-title {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800; font-size: 1.7rem;
+      line-height: 1.2;
+      text-align: center;
+      color: var(--text);
+      margin: 8px 0 12px;
+    }
+    .welcome-body {
+      font-size: 0.95rem; line-height: 1.55;
+      text-align: center;
+      color: var(--text2);
+      max-width: 360px;
+      margin: 0 auto 8px;
+    }
+    .welcome-paths {
+      display: flex; flex-direction: column;
+      gap: 10px;
+      margin: 18px auto 0;
+      width: 100%; max-width: 360px;
+    }
+    .welcome-path-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .welcome-path-row .dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+    }
+    .welcome-path-row .dot.blue   { background: rgba(47,128,237,0.15); }
+    .welcome-path-row .dot.green  { background: rgba(39,174,96,0.15); }
+    .welcome-path-row .dot.purple { background: rgba(155,81,224,0.15); }
+    .welcome-path-row .label {
+      font-size: 0.86rem; color: var(--text);
+      line-height: 1.4;
+    }
+    .welcome-path-row .label b {
+      font-weight: 800; color: var(--text);
+    }
+
+    .welcome-trust-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin: 18px auto 0;
+      padding: 10px 16px;
+      background: rgba(39,174,96,0.10);
+      border: 1px solid rgba(39,174,96,0.22);
+      border-radius: 999px;
+      font-size: 0.84rem; color: var(--text);
+      font-weight: 600;
+    }
+    .welcome-trust-pill::before {
+      content: '🛡️'; font-size: 1rem;
+    }
+
+    .welcome-footer {
+      padding: 14px 24px 28px;
+      position: relative; z-index: 2;
+    }
+    .welcome-dots {
+      display: flex; justify-content: center; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .welcome-dots .d {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(127, 127, 127, 0.3);
+      transition: all 0.25s ease;
+    }
+    .welcome-dots .d.active {
+      background: var(--accent1);
+      width: 24px;
+      border-radius: 4px;
+    }
+    .welcome-cta {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(47,128,237,0.35);
+      transition: transform .15s ease, box-shadow .18s ease;
+    }
+    .welcome-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(47,128,237,0.45); }
+    .welcome-cta:active { transform: translateY(0) scale(.98); }
+    .welcome-back {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text2);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .welcome-helper {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text2);
+      margin-top: 12px;
+    }
+
+    /* RTL adjustments */
+    body.rtl .welcome-track { direction: ltr; } /* track scrolls in original direction; content flips inside */
+    body.rtl .welcome-slide { direction: rtl; text-align: right; }
+    body.rtl .welcome-title,
+    body.rtl .welcome-body { text-align: center; }
+    body.rtl .welcome-path-row { text-align: right; }
     </style>
 </head>
 <body class="brand-theme">
-  
+
+  <!-- Welcome carousel (3 screens) — shown when dashData.onboarding_seen === false -->
+  <div class="welcome-overlay" id="welcomeOverlay" aria-hidden="true">
+    <div class="welcome-header">
+      <span class="welcome-brand">Win-Win Network</span>
+      <button class="welcome-skip" id="welcomeSkipBtn" type="button">Пропустить</button>
+    </div>
+
+    <div class="welcome-track" id="welcomeTrack">
+
+      <!-- Slide 1 -->
+      <section class="welcome-slide" data-slide="0">
+        <div class="welcome-illustration">
+          <img class="img-light" src="assets/onboarding/welcome-1-light.png" alt="">
+          <img class="img-dark"  src="assets/onboarding/welcome-1-dark.png"  alt="">
+        </div>
+        <h2 class="welcome-title" id="wt1"></h2>
+        <p class="welcome-body"  id="wb1"></p>
+      </section>
+
+      <!-- Slide 2 -->
+      <section class="welcome-slide" data-slide="1">
+        <div class="welcome-illustration">
+          <img class="img-light" src="assets/onboarding/welcome-2-light.png" alt="">
+          <img class="img-dark"  src="assets/onboarding/welcome-2-dark.png"  alt="">
+        </div>
+        <h2 class="welcome-title" id="wt2"></h2>
+        <p class="welcome-body"  id="wb2"></p>
+        <div class="welcome-paths">
+          <div class="welcome-path-row">
+            <span class="dot blue">💙</span>
+            <span class="label" id="wp1"></span>
+          </div>
+          <div class="welcome-path-row">
+            <span class="dot green">💚</span>
+            <span class="label" id="wp2"></span>
+          </div>
+          <div class="welcome-path-row">
+            <span class="dot purple">💜</span>
+            <span class="label" id="wp3"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3 -->
+      <section class="welcome-slide" data-slide="2">
+        <div class="welcome-illustration">
+          <img class="img-light" src="assets/onboarding/welcome-3-light.png" alt="">
+          <img class="img-dark"  src="assets/onboarding/welcome-3-dark.png"  alt="">
+        </div>
+        <h2 class="welcome-title" id="wt3"></h2>
+        <p class="welcome-body"  id="wb3"></p>
+        <span class="welcome-trust-pill" id="wpill"></span>
+      </section>
+
+    </div>
+
+    <div class="welcome-footer">
+      <div class="welcome-dots">
+        <span class="d active" data-dot="0"></span>
+        <span class="d" data-dot="1"></span>
+        <span class="d" data-dot="2"></span>
+      </div>
+      <button class="welcome-cta" id="welcomeCta" type="button"></button>
+      <button class="welcome-back" id="welcomeBack" type="button" style="display:none"></button>
+    </div>
+  </div>
+
   <div class="loader" id="globalLoader">
     <div class="loader-brand">Win-Win</div>
     <div class="loader-sub" id="loaderText">Загрузка данных...</div>
@@ -4657,16 +4909,225 @@ function submitBlockAppeal() {
 }
 
 // ג”€ג”€ Init ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+// ═══ Welcome carousel ══════════════════════════════════════════════════
+// Shown once on first dashboard visit. Dismissal POSTs to backend
+// /api/onboarding/dismiss and the flag is also cached locally so
+// returning to the dashboard during the same session doesn't re-show
+// the carousel even if the backend response is stale.
+
+const WELCOME_I18N = {
+  ru: {
+    skip: 'Пропустить',
+    back: 'Назад',
+    next: 'Дальше',
+    finalCta: 'Открыть каталог →',
+    title1: 'Добро пожаловать\nв сеть доверия',
+    body1:  'Win-Win — это инфраструктура благодарности между друзьями и бизнесами. Здесь ваша рекомендация — это репутация, а не товар.',
+    title2: 'Тройной путь\nблагодарности',
+    body2:  'После закрытой сделки выбор всегда за вами. Каждый выбор строит ваш социальный капитал.',
+    p1: '<b>Принять</b> — честное профессиональное вознаграждение',
+    p2: '<b>Подарить</b> клиенту — превратить деньги в благодарность',
+    p3: '<b>Поддержать</b> бизнес — помочь росту проверенной компании',
+    title3: 'Всё готово\nк первому шагу',
+    body3:  'Откройте каталог проверенных бизнесов и сделайте первую рекомендацию. Помогите хорошему бизнесу — и он обязательно отблагодарит.',
+    pill:   'Ваши данные защищены и зашифрованы',
+  },
+  he: {
+    skip: 'דלגו',
+    back: 'חזרה',
+    next: 'הבא',
+    finalCta: 'פתחו את הקטלוג ←',
+    title1: 'ברוכים הבאים\nלרשת האמון',
+    body1:  'Win-Win היא תשתית של הכרת תודה בין חברים לעסקים. כאן ההמלצה שלכם היא מוניטין, לא מוצר.',
+    title2: 'נתיב משולש\nשל הכרת תודה',
+    body2:  'לאחר עסקה סגורה הבחירה תמיד שלכם. כל בחירה בונה את ההון החברתי שלכם.',
+    p1: '<b>קבלו</b> — תגמול מקצועי הוגן',
+    p2: '<b>העניקו</b> ללקוח — הפכו כסף להכרת תודה',
+    p3: '<b>תמכו</b> בעסק — עזרו לחברה מאומתת לצמוח',
+    title3: 'הכל מוכן\nלצעד הראשון',
+    body3:  'פתחו את הקטלוג של עסקים מאומתים ובצעו את ההמלצה הראשונה. עזרו לעסק טוב — והוא בוודאי יודה לכם.',
+    pill:   'הנתונים שלכם מוגנים ומוצפנים',
+  },
+  en: {
+    skip: 'Skip',
+    back: 'Back',
+    next: 'Next',
+    finalCta: 'Open catalog →',
+    title1: 'Welcome to\nthe trust network',
+    body1:  'Win-Win is the infrastructure of gratitude between friends and businesses. Here your recommendation is reputation, not a product.',
+    title2: 'Triple path\nof gratitude',
+    body2:  'After a closed deal the choice is always yours. Every choice builds your social capital.',
+    p1: '<b>Keep</b> — honest professional reward',
+    p2: '<b>Gift</b> the client — turn money into gratitude',
+    p3: '<b>Support</b> the business — help a verified company grow',
+    title3: 'Everything ready\nfor your first step',
+    body3:  'Open the catalog of verified businesses and make your first recommendation. Help a good business — and they will surely thank you.',
+    pill:   'Your data is protected and encrypted',
+  },
+  ar: {
+    skip: 'تخطّى',
+    back: 'رجوع',
+    next: 'التالي',
+    finalCta: 'افتح الكتالوج ←',
+    title1: 'أهلاً بكم\nفي شبكة الثقة',
+    body1:  'Win-Win هي بنية الامتنان بين الأصدقاء والشركات. هنا توصيتك هي سمعة، وليست منتجاً.',
+    title2: 'الطريق الثلاثي\nللامتنان',
+    body2:  'بعد إتمام الصفقة الخيار دائماً لك. كل اختيار يبني رأسمالك الاجتماعي.',
+    p1: '<b>الاحتفاظ</b> — مكافأة مهنية عادلة',
+    p2: '<b>الإهداء</b> للعميل — تحويل المال إلى امتنان',
+    p3: '<b>الدعم</b> للشركة — مساعدة شركة موثوقة على النمو',
+    title3: 'كل شيء جاهز\nلخطوتك الأولى',
+    body3:  'افتح كتالوج الشركات الموثوقة وقم بأول توصية. ساعد شركة جيدة — وستشكرك بالتأكيد.',
+    pill:   'بياناتك محمية ومشفّرة',
+  },
+};
+
+let _welcomeIndex = 0;
+
+function welcomeShouldShow(data) {
+  if (!data) return false;
+  if (data.onboarding_seen === true) return false;
+  // Local cache — guard against stale backend during the same session.
+  try {
+    if (sessionStorage.getItem('ww_onboard_done') === '1') return false;
+  } catch (_) {}
+  return true;
+}
+
+function welcomeApplyTexts() {
+  const t = WELCOME_I18N[lang] || WELCOME_I18N.ru;
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  const setHTML = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = value;
+  };
+  setText('wt1', t.title1);
+  setText('wb1', t.body1);
+  setText('wt2', t.title2);
+  setText('wb2', t.body2);
+  setHTML('wp1', t.p1);
+  setHTML('wp2', t.p2);
+  setHTML('wp3', t.p3);
+  setText('wt3', t.title3);
+  setText('wb3', t.body3);
+  setText('wpill', t.pill);
+
+  const skip = document.getElementById('welcomeSkipBtn');
+  if (skip) skip.textContent = t.skip;
+  const back = document.getElementById('welcomeBack');
+  if (back) back.textContent = t.back;
+  // CTA label depends on slide index
+  welcomeUpdateCta();
+}
+
+function welcomeUpdateCta() {
+  const cta = document.getElementById('welcomeCta');
+  const back = document.getElementById('welcomeBack');
+  const t = WELCOME_I18N[lang] || WELCOME_I18N.ru;
+  if (!cta) return;
+  cta.textContent = (_welcomeIndex === 2) ? t.finalCta : t.next;
+  if (back) back.style.display = (_welcomeIndex > 0) ? 'block' : 'none';
+}
+
+function welcomeGoTo(idx) {
+  _welcomeIndex = Math.max(0, Math.min(2, idx));
+  const track = document.getElementById('welcomeTrack');
+  if (track) {
+    // Keep horizontal direction of the track itself in LTR even on RTL pages —
+    // RTL is handled per-slide inner content; the track always slides left
+    // to right which matches "next/back" muscle memory across all languages.
+    track.style.transform = `translateX(-${_welcomeIndex * 100}%)`;
+  }
+  document.querySelectorAll('.welcome-dots .d').forEach((el, i) => {
+    el.classList.toggle('active', i === _welcomeIndex);
+  });
+  welcomeUpdateCta();
+}
+
+async function welcomeDismiss(finished) {
+  // Hide the overlay immediately for snappy UX, then fire-and-forget POST.
+  const overlay = document.getElementById('welcomeOverlay');
+  if (overlay) overlay.classList.remove('show');
+  try { sessionStorage.setItem('ww_onboard_done', '1'); } catch (_) {}
+  try {
+    await fetch(`${API_URL}/api/onboarding/dismiss?token=${token}`, {
+      method: 'POST',
+    });
+  } catch (_) {
+    // Backend save can fail — we still keep the user out of onboarding for
+    // this session via sessionStorage. They'll see it again next session if
+    // backend really didn't persist. Acceptable trade-off.
+  }
+  // After finishing the carousel the natural next step is the catalog.
+  if (finished && typeof switchTab === 'function') {
+    try { switchTab('catalog'); } catch (_) {}
+  }
+}
+
+function welcomeInit() {
+  // Buttons
+  const cta  = document.getElementById('welcomeCta');
+  const back = document.getElementById('welcomeBack');
+  const skip = document.getElementById('welcomeSkipBtn');
+  if (cta)  cta.addEventListener('click', () => {
+    if (_welcomeIndex < 2) welcomeGoTo(_welcomeIndex + 1);
+    else welcomeDismiss(true);
+  });
+  if (back) back.addEventListener('click', () => welcomeGoTo(_welcomeIndex - 1));
+  if (skip) skip.addEventListener('click', () => welcomeDismiss(false));
+
+  // Touch swipe
+  const track = document.getElementById('welcomeTrack');
+  if (track) {
+    let startX = 0, dx = 0, dragging = false;
+    track.addEventListener('touchstart', (e) => {
+      dragging = true; startX = e.touches[0].clientX; dx = 0;
+    }, { passive: true });
+    track.addEventListener('touchmove', (e) => {
+      if (!dragging) return;
+      dx = e.touches[0].clientX - startX;
+    }, { passive: true });
+    track.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      if (Math.abs(dx) > 60) {
+        if (dx < 0 && _welcomeIndex < 2) welcomeGoTo(_welcomeIndex + 1);
+        if (dx > 0 && _welcomeIndex > 0) welcomeGoTo(_welcomeIndex - 1);
+      }
+    });
+  }
+}
+
+function welcomeMaybeShow(data) {
+  if (!welcomeShouldShow(data)) return;
+  // The user's stored language has already been applied via setLang()
+  // before init() runs the dashboard fetch — texts pick that up.
+  welcomeApplyTexts();
+  _welcomeIndex = 0;
+  welcomeGoTo(0);
+  const overlay = document.getElementById('welcomeOverlay');
+  if (overlay) overlay.classList.add('show');
+}
+
 async function init() {
     populateCategories();
     applyTheme();
     if (i18n[lang]) setLang(lang);
     else { lang='ru'; applyLang(); }
+    welcomeInit();
     if (!token) { showError(); return; }
     try {
         const res = await fetch(`${API_URL}/api/dashboard?token=${token}`);
         if (!res.ok) throw new Error('auth');
         dashData = await res.json();
+        // Apply server-side language preference (may differ from URL ?lang=).
+        if (dashData.language && i18n[dashData.language] && dashData.language !== lang) {
+          lang = dashData.language;
+          setLang(lang);
+        }
         window._botPhone = dashData.bot_phone;
         document.getElementById('globalLoader').style.display='none';
         document.getElementById('mainShell').style.display='block';
@@ -4678,6 +5139,7 @@ async function init() {
         renderAll();
         showBlockBannerIfNeeded(dashData);
         loadCatalog();
+        welcomeMaybeShow(dashData);
     } catch(e) { showError(); }
 }
 
