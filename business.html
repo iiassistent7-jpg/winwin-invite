@@ -3617,6 +3617,7 @@ function renderDeals() {
           </div>` : '';
 
     let innerAction = '';
+    let topAction = '';
     if (dealFilter === 'active') {
       if (projection.listActionMode === 'remind_decision') {
         const remindLabel = { ru:'Напомнить о выборе', he:'להזכיר על הבחירה', en:'Remind about the choice', ar:'ذكّر بالاختيار' };
@@ -3626,8 +3627,14 @@ function renderDeals() {
         // Кнопку "Управление сделкой" внутри deal-extra не дублируем.
         innerAction = '';
       } else {
-        const manageLabel = { ru:'Открыть управление', he:'פתח ניהול', en:'Open management', ar:'افتح الإدارة' };
-        innerAction = `<button class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${row.id})"><i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}</button>`;
+        // "Управление сделкой" теперь рендерится наверху карточки (см. topAction ниже),
+        // чтобы случайные клики при разворачивании не открывали sheet.
+        const manageLabel = { ru:'Управление сделкой', he:'ניהול עסקה', en:'Manage deal', ar:'إدارة الصفقة' };
+        topAction = `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+          <button type="button" class="btn-primary btn-accent" onclick="event.stopPropagation();openManageDeal(${row.id})">
+            <i data-feather="sliders" style="width:16px;height:16px;"></i> ${L.card_manage || manageLabel[lang] || manageLabel.ru}
+          </button>
+        </div>`;
       }
     }
 
@@ -3692,6 +3699,7 @@ function renderDeals() {
           }
           return '';
         })()}
+        ${topAction}
         <div class="deal-extra" id="deal_extra_${row.id}">
           ${renderTimelineSteps(d.timeline)}
           ${renderContactBlock(({ru:'Клиент',he:'לקוח',en:'Client',ar:'العميل'}[lang]||'Клиент'), d.client_name, d.client_contact, { stopPropagation:true })}
