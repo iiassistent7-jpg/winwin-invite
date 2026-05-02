@@ -535,6 +535,14 @@
     .biz-btn-copy{flex-shrink:0;background:var(--accent2);border:none;color:#fff;font-weight:700;padding:0 18px;border-radius:11px;cursor:pointer;transition:.2s;white-space:nowrap;font-family:inherit}
     .biz-btn-copy.copied{background:var(--green)}
     .biz-qr-container{text-align:center;padding:16px;background:#fff;border-radius:16px;display:inline-block;margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+    /* Single-deal mode (QR-scan flow): isolate the page to one deal card. */
+    body.single-mode #bottomNav,
+    body.single-mode #dealsSegmentedTabs,
+    body.single-mode #dealsMiniStats,
+    body.single-mode #dealsSummaryMount,
+    body.single-mode #dealsPromoMount,
+    body.single-mode .deals-main-cta-wrap,
+    body.single-mode .deals-filter { display: none !important; }
   </style>
 </head>
 <body class="brand-theme">
@@ -1638,6 +1646,10 @@ function renderTimelineSteps(timeline) {
 const API_URL  = "https://amlatsa-bot-production.up.railway.app";
 const token    = new URLSearchParams(window.location.search).get('token');
 let lang       = new URLSearchParams(window.location.search).get('lang') || 'ru';
+// Single-deal mode (QR-scan flow): show ONLY the focused deal, hide nav/segments.
+const singleMode = new URLSearchParams(window.location.search).get('single') === '1';
+const focusedDealId = parseInt(new URLSearchParams(window.location.search).get('deal') || '', 10) || null;
+if (singleMode && document.body) document.body.classList.add('single-mode');
 let bizData    = null;
 let agentDashData = null;
 let agentDashToken = '';
@@ -2222,13 +2234,15 @@ async function init() {
     if (!cached) showError();
   }
 
-  // Deep link tab
-  const requestedTab = new URLSearchParams(window.location.search).get('tab');
-  const urlTab = requestedTab === 'recommend' ? 'deals' : requestedTab;
-  const allTabs = [...LTR_TABS];
-  if (urlTab && allTabs.includes(urlTab)) {
-    const navBtn = document.querySelector(`.nav-item[data-tab="${urlTab}"]`);
-    switchTab(urlTab, navBtn);
+  // Deep link tab — disabled in single-deal mode (we focus the deals view only).
+  if (!singleMode) {
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    const urlTab = requestedTab === 'recommend' ? 'deals' : requestedTab;
+    const allTabs = [...LTR_TABS];
+    if (urlTab && allTabs.includes(urlTab)) {
+      const navBtn = document.querySelector(`.nav-item[data-tab="${urlTab}"]`);
+      switchTab(urlTab, navBtn);
+    }
   }
 
   feather.replace();
@@ -3514,11 +3528,13 @@ function renderDeals() {
   const deals = bizData.deals || [];
   const curr  = bizData.currency || '₪';
 
-  const filtered = deals.filter(d => {
-    return dealFilter === 'active'
-      ? isBusinessActiveDeal(d)
-      : isBusinessHistoryDeal(d);
-  });
+  const filtered = (singleMode && focusedDealId)
+    ? deals.filter(d => Number(d.id) === Number(focusedDealId))
+    : deals.filter(d => {
+        return dealFilter === 'active'
+          ? isBusinessActiveDeal(d)
+          : isBusinessHistoryDeal(d);
+      });
 
   const s = bizData.stats || {};
   const totalClosed = s.closed || 0;
