@@ -3500,14 +3500,36 @@ async function remindDecision(id) {
     const res = await fetch(`${API_URL}/api/deals/action`, {
       method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error();
-    const msg = {
-      ru:'Напоминание отправлено рекомендателю.',
-      he:'התזכורת נשלחה לממליץ.',
-      en:'Reminder sent to recommender.',
-      ar:'تم إرسال تذكير إلى الموصي.'
-    };
-    showNotice((msg[lang] || msg.ru));
+    let data = null;
+    try { data = await res.json(); } catch(_) { data = null; }
+    if (!res.ok) {
+      // 400 (e.g. wrong deal state) - surface server message if any.
+      const fallback = {
+        ru:'Не удалось отправить напоминание.',
+        he:'לא ניתן לשלוח תזכורת.',
+        en:'Could not send reminder.',
+        ar:'تعذر إرسال التذكير.'
+      };
+      const text = (data && (data.message || data.error)) || (fallback[lang] || fallback.ru);
+      showNotice(text);
+      return;
+    }
+    // Backend returns result in {sent_now, blocked_24h, scheduled_0900}
+    // and a pre-localized `message` (per _dashboard_reminder_confirmation).
+    if (data && data.message) {
+      showNotice(data.message);
+    } else {
+      const ok = {
+        ru:'Напоминание отправлено рекомендателю.',
+        he:'התזכורת נשלחה לממליץ.',
+        en:'Reminder sent to recommender.',
+        ar:'تم إرسال تذكير إلى الموصي.'
+      };
+      showNotice(ok[lang] || ok.ru);
+    }
+    // Refresh the deals list - listActionMode/UI may toggle once
+    // server-side state advances.
+    try { if (typeof loadDeals === 'function') { await loadDeals(); } } catch(_) {}
   } catch(e) {
     const msg = {
       ru:'Не удалось отправить напоминание.',
