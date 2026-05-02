@@ -3845,6 +3845,14 @@ function walletDealCardHtml(lead) {
 
 function dealItemHtml(lead) {
     lead = normalizeDashboardLead(lead);
+    // ── GIFT Stage 2: gift-recipient card (twin-role concept) ─────────
+    // Backend tags lead.role === 'gift_recipient' for deals where this
+    // partner is the client receiving the agent's gifted bonus. Renders
+    // a distinct card with confirm/dispute buttons; bypasses all the
+    // agent-side UI (settlement choice, timeline, manage sheet).
+    if (lead && lead.role === 'gift_recipient') {
+        return giftRecipientCardHtml(lead);
+    }
     const projection = getDealProjection(lead);
     const closedMeta = isUnifiedClosedProjection(projection) ? getUnifiedClosedLeadMeta(lead) : null;
     const curr = dashData?.currency || '₪';
@@ -4311,6 +4319,101 @@ async function confirmReceipt(leadId) {
         alert(L.confirm_receipt_error || 'Не удалось подтвердить получение.');
     }
 }
+
+function giftRecipientCardHtml(lead) {
+    const curr = (typeof dashData !== 'undefined' && dashData?.currency) ? dashData.currency : '₪';
+    const agentName = lead.gift_from_agent_name || '—';
+    const bizName   = lead.biz_name || '—';
+    const commVal   = (lead.commission != null && String(lead.commission).trim() !== '')
+        ? `${escapeHtml(lead.commission)} ${curr}` : '—';
+
+    const settle = (lead.settlement_status || '').trim();
+    const histReady = !!lead.history_ready;
+
+    // Status mapping: pending_business_payment / pending_client_confirmation
+    // / disputed / settled (or history_ready).
+    let badgeCls = 'st-progress';
+    let badgeText = '';
+    let actionsHtml = '';
+    let cardToneCls = ' pending';
+
+    if (histReady || settle === 'settled' || settle === 'gift_closed') {
+        badgeCls = 'st-closed';
+        cardToneCls = '';
+        badgeText = ({ ru:'Подарок получен', he:'המתנה התקבלה', en:'Gift received', ar:'تم استلام الهدية' }[lang] || 'Подарок получен');
+    } else if (settle === 'disputed') {
+        badgeCls = 'st-rejected';
+        cardToneCls = ' unpaid';
+        badgeText = ({ ru:'Спор: бизнес не подтвердил перевод', he:'מחלוקת: העסק לא אישר העברה', en:'Dispute: business has not confirmed', ar:'نزاع: لم يؤكد العمل التحويل' }[lang] || 'Спор');
+    } else if (settle === 'pending_client_confirmation') {
+        badgeCls = 'st-progress';
+        badgeText = ({ ru:'Бизнес перевёл — подтвердите получение', he:'העסק העביר — אשרו קבלה', en:'Business sent — confirm receipt', ar:'حوّل العمل — أكّد الاستلام' }[lang] || 'Подтвердите получение');
+        const lblGot   = ({ ru:'Получил подарок', he:'קיבלתי את המתנה', en:'I received the gift', ar:'استلمت الهدية' }[lang] || 'Получил подарок');
+        const lblNotGot = ({ ru:'Не получил', he:'לא קיבלתי', en:"Didn't receive", ar:'لم أستلم' }[lang] || 'Не получил');
+        actionsHtml = `
+        <div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+          <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitClientGiftAction(${lead.id}, 'client_gift_received')">
+            ✅ ${escapeHtml(lblGot)}
+          </button>
+          <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#F2994A 0%,#EB5757 100%);color:#fff;box-shadow:0 4px 14px rgba(235,87,87,.32);border:none;" onclick="event.stopPropagation();submitClientGiftAction(${lead.id}, 'client_gift_not_received')">
+            ❌ ${escapeHtml(lblNotGot)}
+          </button>
+        </div>`;
+    } else {
+        // pending_business_payment (or anything else not yet sent)
+        badgeText = ({ ru:'Ждём, что бизнес передаст подарок', he:'ממתינים שהעסק יעביר את המתנה', en:'Waiting for the business to deliver', ar:'بانتظار تسليم العمل' }[lang] || 'Ждём передачи подарка');
+    }
+
+    const lblFromAgent = ({ ru:'Подарок от', he:'מתנה מאת', en:'Gift from', ar:'هدية من' }[lang] || 'Подарок от');
+    const lblBiz       = ({ ru:'Бизнес', he:'עסק', en:'Business', ar:'عمل تجاري' }[lang] || 'Бизнес');
+    const lblBonus     = ({ ru:'Подарок', he:'מתנה', en:'Gift', ar:'هدية' }[lang] || 'Подарок');
+
+    return `
+    <div class="deal-card${cardToneCls}" style="border-left:4px solid #BB86FC;" onclick="event.stopPropagation();">
+      <div class="deal-card-header">
+        <div>
+          <div class="deal-client">🎁 ${escapeHtml(lblFromAgent)} ${escapeHtml(agentName)}</div>
+          <div class="deal-date">${escapeHtml(lead.date || '')}</div>
+        </div>
+        <div class="deal-card-status-row">
+          <span class="deal-status-badge ${badgeCls}">${escapeHtml(badgeText)}</span>
+        </div>
+      </div>
+      <div class="deal-summary-pills">
+        <span class="deal-meta-pill">🏢 ${escapeHtml(lblBiz)}: ${escapeHtml(bizName)}</span>
+        <span class="deal-meta-pill">🎁 ${escapeHtml(lblBonus)}: ${commVal}</span>
+      </div>
+      ${actionsHtml}
+    </div>`;
+}
+
+
+async function submitClientGiftAction(leadId, actionType) {
+    if (!['client_gift_received', 'client_gift_not_received'].includes(actionType)) return;
+    const errorLabelMap = {
+        ru: 'Не удалось сохранить ответ.',
+        he: 'לא ניתן לשמור את התשובה.',
+        en: 'Could not save the response.',
+        ar: 'تعذر حفظ الرد.'
+    };
+    try {
+        const res = await fetch(`${API_URL}/api/deals/action?token=${token}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ token: token, action: actionType, lead_id: leadId, deal_id: leadId })
+        });
+        if (!res.ok) throw new Error('Server error');
+        const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+        if (!dashRes.ok) throw new Error('Refresh error');
+        dashData = await dashRes.json();
+        window._botPhone = dashData.bot_phone;
+        renderAll();
+        showBlockBannerIfNeeded(dashData);
+    } catch (e) {
+        alert(errorLabelMap[lang] || errorLabelMap.ru);
+    }
+}
+
 
 async function submitReceiptConfirmation(leadId, actionType) {
     const L = i18n[lang] || i18n.ru;
