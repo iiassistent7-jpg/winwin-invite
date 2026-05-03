@@ -4361,7 +4361,31 @@ function giftRecipientCardHtml(lead) {
         </div>`;
     } else {
         // pending_business_payment (or anything else not yet sent)
-        badgeText = ({ ru:'Ждём, что бизнес передаст подарок', he:'ממתינים שהעסק יעביר את המתנה', en:'Waiting for the business to deliver', ar:'بانتظار تسليم العمل' }[lang] || 'Ждём передачи подарка');
+        badgeText = ({ ru:'Ожидаем перевод подарка', he:'ממתינים להעברת המתנה', en:'Waiting for the gift transfer', ar:'بانتظار تحويل الهدية' }[lang] || 'Ожидаем перевод подарка');
+
+        // GIFT Stage 3: "Remind business" button — visible ONLY after
+        // 24h have passed since the agent picked GIFT (read from the
+        // timeline step "agent_decision"). For the first 24h the
+        // business has just been notified — don't poke them.
+        let agentDecisionAt = null;
+        if (Array.isArray(lead.timeline)) {
+            const step = lead.timeline.find(s => s && s.step === 'agent_decision');
+            if (step && step.at) {
+                const t = Date.parse(step.at);
+                if (!Number.isNaN(t)) agentDecisionAt = t;
+            }
+        }
+        const ageMs = agentDecisionAt ? (Date.now() - agentDecisionAt) : 0;
+        const canRemind = agentDecisionAt && ageMs >= 24 * 60 * 60 * 1000;
+        if (canRemind) {
+            const lblRemind = ({ ru:'Напомнить бизнесу', he:'להזכיר לעסק', en:'Remind the business', ar:'تذكير العمل' }[lang] || 'Напомнить бизнесу');
+            actionsHtml = `
+            <div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+              <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#F2994A 0%,#E67E22 100%);color:#fff;box-shadow:0 4px 14px rgba(230,126,34,.32);border:none;" onclick="event.stopPropagation();submitGiftRemind(${lead.id})">
+                ${escapeHtml(lblRemind)}
+              </button>
+            </div>`;
+        }
     }
 
     const lblFromAgent = ({ ru:'Подарок от', he:'מתנה מאת', en:'Gift from', ar:'هدية من' }[lang] || 'Подарок от');
@@ -4385,6 +4409,50 @@ function giftRecipientCardHtml(lead) {
       </div>
       ${actionsHtml}
     </div>`;
+}
+
+
+async function submitGiftRemind(leadId) {
+    const errorLabelMap = {
+        ru: 'Не удалось отправить напоминание.',
+        he: 'לא ניתן לשלוח תזכורת.',
+        en: 'Could not send reminder.',
+        ar: 'تعذر إرسال التذكير.'
+    };
+    try {
+        const res = await fetch(`${API_URL}/api/dashboard/action`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ token: token, action: 'remind', deal_id: leadId, lead_id: leadId })
+        });
+        let data = null;
+        try { data = await res.json(); } catch(_) { data = null; }
+
+        const noticeText = (data && (data.message || data.error))
+            || (res.ok ? '' : (errorLabelMap[lang] || errorLabelMap.ru));
+        if (noticeText) {
+            if (typeof showNotice === 'function') {
+                showNotice(noticeText);
+            } else {
+                alert(noticeText);
+            }
+        }
+
+        // Refresh dashboard so any state changes show up.
+        try {
+            const dashRes = await fetch(`${API_URL}/api/dashboard?token=${token}`);
+            if (dashRes.ok) {
+                dashData = await dashRes.json();
+                window._botPhone = dashData.bot_phone;
+                renderAll();
+                showBlockBannerIfNeeded(dashData);
+            }
+        } catch(_) {}
+    } catch (e) {
+        const fallback = errorLabelMap[lang] || errorLabelMap.ru;
+        if (typeof showNotice === 'function') showNotice(fallback);
+        else alert(fallback);
+    }
 }
 
 
