@@ -3387,13 +3387,17 @@ function getBusinessDealProjection(deal) {
   const tone = getDealTone(statusCode, isPayoutPending);
   const waitingRecommenderDecision = statusCode === 'pending_confirmation' && !settlementInfo.decisionKey;
   const waitingAgentConfirmation = statusCode === 'pending_receipt';
+  // GIFT Stage 2: after business pressed "I gave the gift" the deal
+  // sits in pending_client_confirmation waiting for the client to
+  // tap ✅/❌ in their LK. Business has nothing to do — view-only.
+  const waitingClientConfirmation = statusCode === 'pending_client_confirmation';
   const isFinalState = ['closed','rejected'].includes(statusCode);
   const canCloseSettlement = statusCode === 'pending_confirmation' && ['gift_client','support_business'].includes(settlementInfo.decisionKey);
 
   let actionMode = 'close_or_reject';
   if (statusCode === 'new') {
     actionMode = 'accept_or_reject';
-  } else if (waitingRecommenderDecision || waitingAgentConfirmation || isFinalState) {
+  } else if (waitingRecommenderDecision || waitingAgentConfirmation || waitingClientConfirmation || isFinalState) {
     actionMode = 'view_only';
   } else if (isPayoutPending) {
     actionMode = 'mark_paid';
