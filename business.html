@@ -3339,17 +3339,45 @@ function getBusinessDealSettlementInfo(deal) {
   if (decisionKey === 'gift_client') {
     const isGiftDisputePending = truth.giftDisputePending === true;
     const isWaitingClientConfirmation = statusCode === 'pending_client_confirmation';
+    const isPayoutPending = statusCode === 'pending_business_payment';
+    // Build "Нужно оплатить долг клиенту: 55 ₪" with the actual amount
+    // (paritet с TAKE-веткой).
+    const debtAmt = (truth.debtAmount && truth.debtAmount > 0)
+      ? truth.debtAmount
+      : (deal && deal.commission ? deal.commission : 0);
+    const currUnit = (typeof bizData !== 'undefined' && bizData?.currency) ? bizData.currency : '₪';
+    const payClientLabel = ({
+      ru:`Нужно оплатить долг клиенту: ${debtAmt} ${currUnit}`,
+      he:`יש לסגור את החוב ללקוח: ${debtAmt} ${currUnit}`,
+      en:`You need to pay the client: ${debtAmt} ${currUnit}`,
+      ar:`يجب تسوية المستحقات للعميل: ${debtAmt} ${currUnit}`
+    }[lang] || `Нужно оплатить долг клиенту: ${debtAmt} ${currUnit}`);
+
+    let nextStep, nextStepTone;
+    if (isGiftDisputePending) {
+      nextStep = (L.client_gift_dispute || i18n.ru.client_gift_dispute);
+      nextStepTone = 'danger';
+    } else if (isWaitingClientConfirmation) {
+      nextStep = (L.waiting_client_confirmation || i18n.ru.waiting_client_confirmation);
+      nextStepTone = 'warning';
+    } else if (isClosedLike) {
+      nextStep = copy.nextGiftDone;
+      nextStepTone = 'success';
+    } else if (isPayoutPending) {
+      nextStep = payClientLabel;
+      nextStepTone = 'danger';
+    } else {
+      nextStep = copy.nextSendClient;
+      nextStepTone = 'warning';
+    }
+
     return {
       decisionKey,
       decisionLabel:formatRecommendDecisionPlain('gift_client', L),
       decisionPill:formatDecision('gift_client', L),
-      nextStep: isGiftDisputePending
-        ? (L.client_gift_dispute || i18n.ru.client_gift_dispute)
-        : (isWaitingClientConfirmation
-          ? (L.waiting_client_confirmation || i18n.ru.waiting_client_confirmation)
-          : (isClosedLike ? copy.nextGiftDone : copy.nextSendClient)),
+      nextStep,
       targetDetail:`${copy.targetSendClient}: ${clientName}`,
-      nextStepTone: isGiftDisputePending ? 'danger' : (isClosedLike ? 'success' : 'warning'),
+      nextStepTone,
       targetTone:'warning'
     };
   }
@@ -3689,6 +3717,22 @@ function renderDeals() {
           // Прямые HTML-кнопки бизнес-действий на верхнем уровне карточки.
           // Видны сразу без раскрытия. Аналог confirm_receipt/choose_settlement у агента.
           if (projection.actionMode === 'mark_paid') {
+            // Разные кнопки для TAKE и GIFT: бизнес платит либо агенту, либо клиенту.
+            const isGiftPay = projection.settlementInfo
+              && projection.settlementInfo.decisionKey === 'gift_client';
+            if (isGiftPay) {
+              const labelGiftSent = ({
+                ru:'Я передал клиенту',
+                he:'העברתי ללקוח',
+                en:"I gave the gift to the client",
+                ar:'سلّمت الهدية للعميل'
+              }[lang] || 'Я передал клиенту');
+              return `<div class="deal-receipt-actions" onclick="event.stopPropagation();" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+                <button type="button" class="btn-primary" style="background:linear-gradient(135deg,#6FCF97 0%,#27AE60 100%);color:#fff;box-shadow:0 4px 14px rgba(39,174,96,.32);border:none;" onclick="event.stopPropagation();submitBizGaveClientDirect(${row.id})">
+                  🎁 ${labelGiftSent}
+                </button>
+              </div>`;
+            }
             const labelPaid = ({
               ru:'Я перевёл бонус агенту',
               he:'העברתי את הבונוס לסוכן',
@@ -5439,6 +5483,68 @@ async function remindClientGift(dealId) {
 
 // Прямой вызов biz_paid с карточки (без модалки).
 // Параллельный с submitDealAction, но не зависит от activeDealId/m_amount/m_spinner.
+async function submitBizGaveClientDirectLegacy(dealId) {
+    const errorLabelMap = {
+        ru: 'Не удалось отправить подтверждение.',
+        he: 'לא ניתן לשלוח אישור.',
+        en: 'Could not send confirmation.',
+        ar: 'تعذر إرسال التأكيد.'
+    };
+    try {
+        const res = await fetch(`${API_URL}/api/deals/action`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ token: token, action: 'biz_gave_client', deal_id: dealId })
+        });
+        if (!res.ok) {
+            let data = null;
+            try { data = await res.json(); } catch(_) {}
+            const text = (data && (data.message || data.error)) || (errorLabelMap[lang] || errorLabelMap.ru);
+            if (typeof showNotice === 'function') showNotice(text); else alert(text);
+            return;
+        }
+        // Refresh business cabinet so the card moves to its next state
+        // (pending_client_confirmation).
+        try {
+            const bizRes = await fetch(`${API_URL}/api/business?token=${token}`);
+            if (bizRes.ok) {
+                bizData = await bizRes.json();
+                renderAll();
+            }
+        } catch(_) {}
+    } catch(e) {
+        const fallback = errorLabelMap[lang] || errorLabelMap.ru;
+        if (typeof showNotice === 'function') showNotice(fallback); else alert(fallback);
+    }
+}
+
+
+// Прямой вызов biz_gave_client с карточки (без модалки) — GIFT-ветка.
+// Параллельный с submitDealAction, но не зависит от activeDealId/m_amount/m_spinner.
+async function submitBizGaveClientDirect(dealId) {
+  const L = i18n[lang] || i18n.ru;
+  const errorMap = {
+    ru:'Не удалось отправить. Попробуйте ещё раз.',
+    he:'לא ניתן לשלוח. נסו שוב.',
+    en:'Could not send. Try again.',
+    ar:'تعذر الإرسال. حاول مرة أخرى.'
+  };
+  try {
+    const res = await fetch(`${API_URL}/api/deals/action`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, deal_id: dealId, action: 'biz_gave_client' })
+    });
+    if (!res.ok) throw new Error('biz_gave_client failed');
+    await refreshBusinessDataFromBackend();
+    showNotice(L.action_success || 'Готово');
+    renderDeals();
+    renderStats();
+  } catch(e) {
+    showNotice(errorMap[lang] || errorMap.ru);
+  }
+}
+
 async function submitBizPaidDirect(dealId) {
   const L = i18n[lang] || i18n.ru;
   const errorMap = {
