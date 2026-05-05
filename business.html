@@ -2735,6 +2735,19 @@ function getDisplayDealStatus(deal) {
     }
     if (isBusinessDealFinalized(deal, truth)) return 'closed';
 
+    if (
+      truth.settlementMode === 'gift_client' &&
+      truth.giftClosed !== true &&
+      (
+        truth.bizClaimedPaid === false ||
+        truth.bizClaimedPaid === null ||
+        ['pending_business_payment','awaiting_business_payment'].includes(truth.settlementStatus) ||
+        (truth.debtAmount > 0 && truth.settlementStatus !== 'pending_client_confirmation' && truth.settlementStatus !== 'awaiting_client_confirmation')
+      )
+    ) {
+      return 'pending_business_payment';
+    }
+
     if (truth.settlementMode === 'take') {
       if (isTakeSettlementFinalized(truth)) return 'closed';
       if (isTakeSettlementDisputed(truth)) return 'pending_business_payment';
