@@ -2149,7 +2149,7 @@ function applyI18n() {
   if (payBank) payBank.textContent = L.f_pay_bank;
 
   // Build prefill message silently — baked into WA button href, never shown to user
-  const pointer = (lang === 'he' || lang === 'ar') ? '👈' : '👉';
+  const pointer = '👉';
   const prefill = (L.err_prefill || i18n.ru.err_prefill).replace('{pointer}', pointer);
   const phone   = (bizData && bizData.bot_phone) ? bizData.bot_phone : '972534218573';
   const btnWa   = document.getElementById('errBtnWa');
