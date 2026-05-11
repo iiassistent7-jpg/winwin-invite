@@ -967,7 +967,7 @@
         </div>
       </div>
       <div class="sticky-footer" style="padding:10px 16px 24px;">
-        <button class="btn-primary" id="btnSaveProfile" onclick="submitEdit()" style="background:var(--green);color:#fff;" id="t_btn_save">Сохранить</button>
+        <button class="btn-primary" id="btnSaveProfile" onclick="submitEdit()" style="background:var(--green);color:#fff;">Сохранить</button>
         <button class="btn-primary btn-accent" onclick="closeProfileEdit()" id="t_btn_cancel_edit">Назад</button>
       </div>
     </div>
@@ -1137,7 +1137,7 @@ const i18n = {
     f_subniche:"Специализация", f_comm:"Вознаграждение (напр. 10% или 500)",
     f_pay:"Способ выплаты", f_link:"Ссылка (Сайт / Соцсети)",
     f_pay_cash:"Наличные", f_pay_bank:"Перевод",
-    btn_save:"Сохранить", btn_cancel_edit:"Назад",
+    btn_save:"Сохранить", btn_cancel_edit:"Назад", subcat_done:"✅ Подтвердить выбор", subcat_edit:"✏️ Изменить", select_placeholder:"Выберите...",
     action_processing:"Обработка...", action_success:"Успешно!", action_close:"Закрыть",
     save_ok:"Изменения сохранены!", save_err:"Ошибка сохранения",
     empty_deals:"Здесь пока пусто.",
@@ -1174,7 +1174,7 @@ const i18n = {
     f_subniche:"התמחות", f_comm:"תגמול",
     f_pay:"אופן תשלום", f_link:"קישור",
     f_pay_cash:"מזומן", f_pay_bank:"העברה",
-    btn_save:"שמור", btn_cancel_edit:"חזור",
+    btn_save:"שמור", btn_cancel_edit:"חזור", subcat_done:"✅ אישור הבחירה", subcat_edit:"✏️ עריכה", select_placeholder:"בחר...",
     action_processing:"מעבד...", action_success:"בוצע!", action_close:"סגור",
     save_ok:"נשמר!", save_err:"שגיאה",
     empty_deals:"ריק כאן.",
@@ -1211,7 +1211,7 @@ const i18n = {
     f_subniche:"Specialization", f_comm:"Reward",
     f_pay:"Payment Method", f_link:"Link (Website / Social)",
     f_pay_cash:"Cash", f_pay_bank:"Transfer",
-    btn_save:"Save", btn_cancel_edit:"Back",
+    btn_save:"Save", btn_cancel_edit:"Back", subcat_done:"✅ Confirm selection", subcat_edit:"✏️ Edit", select_placeholder:"Select...",
     action_processing:"Processing...", action_success:"Done!", action_close:"Close",
     save_ok:"Changes saved!", save_err:"Save error",
     empty_deals:"Nothing here yet.",
@@ -1248,7 +1248,7 @@ const i18n = {
     f_subniche:"تخصص", f_comm:"مكافأة",
     f_pay:"طريقة الدفع", f_link:"رابط (موقع / سوشيال)",
     f_pay_cash:"نقداً", f_pay_bank:"تحويل",
-    btn_save:"حفظ", btn_cancel_edit:"رجوع",
+    btn_save:"حفظ", btn_cancel_edit:"رجوع", subcat_done:"✅ تأكيد الاختيار", subcat_edit:"✏️ تعديل", select_placeholder:"اختر...",
     action_processing:"جاري...", action_success:"تم!", action_close:"إغلاق",
     save_ok:"تم الحفظ!", save_err:"خطأ",
     empty_deals:"فارغ هنا.",
@@ -2108,7 +2108,7 @@ function applyI18n() {
     't_edit_title':'edit_title', 't_edit_back':'m_cancel',
     't_f_name':'f_name', 't_f_niche':'f_niche', 't_f_subniche':'f_subniche',
     't_f_comm':'f_comm', 't_f_pay':'f_pay', 't_f_link':'f_link',
-    't_btn_save':'btn_save', 't_btn_cancel_edit':'btn_cancel_edit',
+    'btnSaveProfile':'btn_save', 'btnSubcatDone':'subcat_done', 'btnSubcatEdit':'subcat_edit', 't_btn_cancel_edit':'btn_cancel_edit',
     'nav_deals':'nav_deals', 'nav_stats':'nav_stats', 'nav_recommenders':'nav_recommenders',
     'nav_recommend':'nav_recommend', 'nav_profile':'nav_profile', 'm_remind_client_sent':'remind_client_gift_sent',
     't_err_btn_wa':'err_btn_wa', 't_err_btn_tg':'err_btn_tg'
@@ -2160,7 +2160,7 @@ function applyI18n() {
 function populateCategories() {
   const sel = document.getElementById('f_niche');
   if (!sel) return;
-  sel.innerHTML = `<option value="" disabled selected>Выберите...</option>`;
+  sel.innerHTML = `<option value="" disabled selected>${(i18n[lang] && i18n[lang].select_placeholder) || 'Выберите...'}</option>`;
   for (const cat in CATEGORIES) {
     const opt = document.createElement('option');
     opt.value = cat;
@@ -5094,7 +5094,7 @@ function renderProfile() {
   const niches  = Array.isArray(bizData.niche) ? bizData.niche : (bizData.niche ? [bizData.niche] : []);
   if (niches.length) {
     nicheEl.innerHTML = niches.map(n =>
-      `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${getSubName(n,lang)}</span>`
+      `<span style="display:inline-block;background:rgba(86,204,242,.1);border:1px solid rgba(86,204,242,.3);color:var(--accent1);border-radius:8px;padding:2px 8px;font-size:.75rem;margin:2px;font-weight:700;">${(typeof getNicheLabel==='function')?getNicheLabel(n,lang):getSubName(n,lang)}</span>`
     ).join(' ');
   } else {
     nicheEl.textContent = '—';
@@ -5220,7 +5220,7 @@ function updateSubniches(preselected = []) {
     cb.checked = preselected.includes(s);
     cb.addEventListener('change', () => item.classList.toggle('checked', cb.checked));
     const span = document.createElement('span');
-    span.textContent = s;
+    span.textContent = (typeof getNicheLabel==='function') ? getNicheLabel(s, lang) : s;
     item.appendChild(cb); item.appendChild(span);
     list.appendChild(item);
   });
@@ -5237,7 +5237,7 @@ function confirmSubniches() {
   if (!checked.length) return;
   const tags = document.getElementById('f_subniche_tags');
   tags.innerHTML = checked.map(s =>
-    `<span class="niche-tag">${s}</span>`
+    `<span class="niche-tag">${(typeof getNicheLabel==='function')?getNicheLabel(s,lang):s}</span>`
   ).join('');
   tags.style.display = 'flex';
   document.getElementById('f_subniche_list').style.display = 'none';
